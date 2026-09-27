@@ -1,0 +1,41 @@
+; EDUCANET v59 · vzorové produkční php.ini / pool .conf direktivy
+;
+; Zkopíruj relevantní řádky do php.ini použitého FPM poolem (nebo do
+; php_admin_value/php_admin_flag v pool .conf souboru – ISPConfig/aaPanel oboje
+; podporují) a restartuj php-fpm. tools/preflight.php --php-ini=<tento soubor>
+; slouží jen jako dokumentační odkaz – CLI proces cizí FPM php.ini nenačítá,
+; produkční nastavení proto ověř i ručně (php -i na serveru, nebo
+; phpinfo() dočasně za autentizací).
+
+; --- Chyby: nikdy nezobrazovat uživatelům, vždy logovat ----------------------
+display_errors = Off
+display_startup_errors = Off
+log_errors = On
+error_log = /var/log/educanet/php-error.log
+expose_php = Off
+
+; --- Session ------------------------------------------------------------------
+session.use_strict_mode = 1
+session.use_only_cookies = 1
+session.cookie_httponly = 1
+session.cookie_samesite = Lax
+; Secure se řídí i v kódu (educanet_is_https), ale nastav i tady jako pojistku,
+; pokud FPM pool běží jen za HTTPS terminací:
+;session.cookie_secure = 1
+session.cache_limiter = nocache
+
+; --- Uploady (viz MAX_UPLOAD_BYTES = 12 MiB v bootstrap.php) ------------------
+upload_max_filesize = 16M
+post_max_size = 20M
+
+; --- Výkon ---------------------------------------------------------------------
+opcache.enable = 1
+opcache.validate_timestamps = 1
+opcache.revalidate_freq = 2
+opcache.memory_consumption = 128
+
+; --- Časové pásmo (EDUCANET_TIMEZONE v prostředí má přednost, tohle je fallback) --
+date.timezone = Europe/Prague
+
+; --- Doporučená rozšíření: mbstring (povinné), json, session, fileinfo, hash,
+; openssl nebo sodium, volitelně intl a apcu (cache mezi requesty).

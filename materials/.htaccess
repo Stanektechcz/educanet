@@ -1,0 +1,22 @@
+# v59 · materials/ obsahuje testové banky otázek a odpovědí (ASSESSMENT_BANK.md,
+# TEST_STUDENT_ACCOUNT.md apod.) čtené jen serverovým kódem (teacher_calendar.php,
+# teacher_curriculum.php, teacher_lesson_mode.php, teacher_overview_dashboard.php,
+# visual_labs_3a_v48_1.php). Z webu zakázáno úplně – prozrazení odpovědí by
+# poškodilo diagnostiku i soutěže.
+<IfModule mod_authz_core.c>
+    Require all denied
+    <!-- SEC59-01: hlubší <FilesMatch> vyhrává nad kořenovým allowlistem PHP skriptů.
+         materials/school_year/.htaccess je ještě hlubší, takže jeho výjimka pro
+         SCHOOL_YEAR_*.md dál funguje (merguje se až po této sekci). -->
+    <FilesMatch ".">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+    <FilesMatch ".">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>

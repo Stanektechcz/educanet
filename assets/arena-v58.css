@@ -1,0 +1,57 @@
+/* EDUCANET v58 · Aréna – Týdenní hádanka (ARN-01), Záznam závodu (ARN-05), férové režimy (ARN-06).
+ * Doplňuje assets/arena-v57.css (stejné CSS proměnné --a57-*), nemění ho. Prefix arena58-/arena58w-.
+ * Kontrast AA, respektuje prefers-reduced-motion, žádná informace jen barvou (vždy i text/ikona). */
+
+.arena58w-boards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.arena58w-board table caption { text-align: left; }
+.arena58w-solution td { padding-top: 0; border-bottom: 1px dashed var(--a57-line); }
+.arena58w-solution code { font-size: .82rem; background: var(--a57-soft); padding: 2px 6px; border-radius: 6px; overflow-wrap: anywhere; display: inline-block; }
+.arena58w-me p { margin: 4px 0; }
+.arena58w-history table { font-size: .9rem; }
+.arena58w-modenav { margin-top: -6px; }
+
+.arena57-rank-toggle { margin: 0 0 12px; }
+.arena57-rank-toggle .link-button { font-size: .88rem; }
+
+/* Kategorie a osobní rekord ve výsledkové liště (arena57-side) */
+.arena57-side details.arena57-card summary { cursor: pointer; font-weight: 700; }
+.arena57-side details.arena57-card[open] summary { margin-bottom: 8px; }
+
+/* Projektor: osobní rekord bez žebříčku */
+.arena57-proj-inclusive { text-align: center; padding: clamp(24px, 6vh, 72px) 16px; }
+.arena57-proj-inclusive p { font-size: clamp(1.1rem, 1.8vw, 1.6rem); color: #b8c7d1; max-width: 60ch; margin: 0 auto; }
+
+/* -------------------------------------------------------------------------
+   Záznam závodu (ARN-05) – timeline vždy jako viditelný seznam, JS jen dohrává přehrávání.
+   ------------------------------------------------------------------------- */
+.arena58-replay-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 14px; }
+.arena58-replay-controls form { margin: 0; }
+.arena58-replay-speed { display: inline-flex; align-items: center; gap: 6px; font-size: .9rem; color: #b8c7d1; }
+.arena58-replay-speed select { font: inherit; padding: 4px 6px; border-radius: 8px; border: 1px solid #3a4d58; background: #13303a; color: #fff; }
+.arena58-replay-clock {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px;
+  background: #13303a; border: 2px solid #4fd6e3; font-variant-numeric: tabular-nums; font-weight: 800; font-size: 1.3rem;
+}
+.arena58-replay-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; max-width: 1100px; }
+.arena58-replay-item {
+  display: grid; grid-template-columns: 4.5em 1fr; gap: 10px; padding: 8px 12px; border-radius: 10px;
+  border: 1px solid #2a3b45; background: #13232b; font-size: clamp(1rem, 1.6vw, 1.25rem); opacity: .78;
+}
+.arena58-replay-item time { color: #7fe3ee; font-variant-numeric: tabular-nums; }
+.arena58-replay-item.is-first_blood { border-color: #ffd166; }
+.arena58-replay-item.is-goal { border-color: #7ee2a1; background: #16281d; }
+.arena58-replay-item.is-start, .arena58-replay-item.is-end { font-weight: 700; }
+.arena58-replay-item.is-current { opacity: 1; outline: 3px solid #4fd6e3; outline-offset: -1px; background: #17323b; }
+.arena58-replay-item.is-done { opacity: .55; }
+.arena58-replay-item.is-upcoming { opacity: .35; }
+
+@media (max-width: 640px) {
+  .arena58w-boards { grid-template-columns: minmax(0, 1fr); }
+  .arena58-replay-item { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Beze změny chování obsahu – jen se nic samo neposouvá a nezvýrazňuje animovaně; seznam zůstává celý vidět. */
+  .arena58-replay-item { opacity: 1 !important; transition: none !important; }
+  .arena58-replay-list { scroll-behavior: auto !important; }
+}

@@ -1,0 +1,140 @@
+# EDUCANET v59 · kořenový .htaccess (Apache 2.4+)
+#
+# Cíl: z webu smí být dostupné jen skutečné vstupní PHP skripty (index.php,
+# teacher.php a JSON API), statické assety, offline stránka labu a service worker.
+# Vše ostatní (dokumentace, zdrojová data, konfigurace, historické markdowny)
+# musí zůstat nedostupné, i kdyby chybělo .htaccess v podadresáři.
+#
+# Vstupní skripty byly ověřeny grepem (viz zpráva build agenta): jediné root
+# *.php soubory, které přímo dělají `require bootstrap.php`, jsou index.php,
+# teacher.php, lab_v57_api.php, arena_v58_events_api.php, robots_v58_api.php,
+# teamgames_v58_api.php, progress.php, calendar.ics.php, export_extra_csv.php.
+# Všechny ostatní *.php v kořeni jsou datové/knihovní soubory (vracejí pole
+# nebo definují funkce) a nemají být volány přímo přes HTTP.
+
+Options -Indexes
+Options -MultiViews
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # --- SEC59-01 obrana do hloubky --------------------------------------
+    # Apache slučuje <Files>/<FilesMatch> sekce ze všech .htaccess po cestě
+    # k adresáři a novější (hlubší) sekce vyhrávají nad staršími (mělčími) –
+    # allowlist PHP skriptů níže v tomto souboru by tak mohl přebít
+    # "Require all denied" z .htaccess podadresáře (např. V1/teacher.php by
+    # matchoval kořenový vzor "...|teacher|..."). Tato pravidla fungují
+    # nezávisle na .htaccess podadresářů a nezávisle na tom, jestli je
+    # aplikace nainstalovaná v kořeni domény, nebo v podadresáři (vzory jsou
+    # relativní – bez počátečního "^/").
+    RewriteCond %{REQUEST_URI} (^|/)(V1|storage|private|tools|tests|app|docs|lang|migrations|database|lab-runtime|cache|\.claude)(/|$) [NC]
+    RewriteRule ^ - [F,L]
+
+    # materials/ je zakázané celé, kromě materials/school_year/SCHOOL_YEAR_*.md
+    # (odkazuje na něj učitelský kalendář – viz materials/school_year/.htaccess).
+    RewriteCond %{REQUEST_URI} (^|/)materials(/|$) [NC]
+    RewriteCond %{REQUEST_URI} !(^|/)materials/school_year/SCHOOL_YEAR_[0-9_]+\.md$ [NC]
+    RewriteRule ^ - [F,L]
+</IfModule>
+
+# --- Skryté soubory a citlivé přípony -----------------------------------
+<IfModule mod_authz_core.c>
+    <FilesMatch "^\.">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    <FilesMatch "^\.">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_authz_core.c>
+    <FilesMatch "\.(md|sql|py|sh|lock|csv|ini|log|example|dist|bak|tmp)$">
+        Require all denied
+    </FilesMatch>
+    <FilesMatch "\.json\.php$">
+        Require all denied
+    </FilesMatch>
+    <Files "educanet.secrets.example.php">
+        Require all denied
+    </Files>
+    <FilesMatch "^composer\.">
+        Require all denied
+    </FilesMatch>
+    <Files "CLAUDE.md">
+        Require all denied
+    </Files>
+    <!-- SEC59-11: RELEASE_MANIFEST.json (vytvořený tools/build_release.php) obsahuje
+         sha256 každého souboru vydání a nepatří na web. -->
+    <Files "RELEASE_MANIFEST.json">
+        Require all denied
+    </Files>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    <FilesMatch "\.(md|sql|py|sh|lock|csv|ini|log|example|dist|bak|tmp)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+    <FilesMatch "\.json\.php$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+    <Files "educanet.secrets.example.php">
+        Order allow,deny
+        Deny from all
+    </Files>
+    <FilesMatch "^composer\.">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+    <Files "CLAUDE.md">
+        Order allow,deny
+        Deny from all
+    </Files>
+    <Files "RELEASE_MANIFEST.json">
+        Order allow,deny
+        Deny from all
+    </Files>
+</IfModule>
+
+# --- PHP v kořeni: povolit jen ověřené vstupní skripty ------------------
+# (soubory bez knihovního guardu, které je bezpečné volat přímo).
+# SEC59-01c: tento vzor je čistě podle jména souboru ("^(index|teacher|...)\.php$"),
+# takže na sdíleném hostingu s AllowOverride jen pro kořen (typický aaPanel/ISPConfig
+# case) matchuje i stejnojmenné soubory v podadresářích, protože Apache slučuje
+# <FilesMatch> ze všech .htaccess po cestě k adresáři a tahle sekce je definovaná
+# v kořenovém .htaccess, tedy nejméně specifická (mělká) – hlubší .htaccess ji podle
+# dokumentace přebíjí, ALE jen pokud v ní existuje odpovídající <FilesMatch>/<Files>
+# sekce (ne obyčejná direktiva mimo Files). Skutečná obrana proti tomuto souboru
+# samotnému proto NENÍ spolehlivá jen touto sekcí – viz níže "SEC59-01 obrana do
+# hloubky" v mod_rewrite bloku (403 na úrovni cesty, nezávisle na FilesMatch) a
+# <FilesMatch "."> Require all denied v .htaccess každého interního podadresáře
+# (V1, storage, private, tools, tests, app, docs, lang, migrations, materials,
+# database, lab-runtime, cache/runtime, .claude). Instalace do podadresáře domény
+# (ne kořene) funguje beze změny – tahle sekce se váže na jméno souboru, ne na cestu.
+<IfModule mod_authz_core.c>
+    <FilesMatch "\.php$">
+        Require all denied
+    </FilesMatch>
+    <FilesMatch "^(index|teacher|lab_v57_api|arena_v58_events_api|robots_v58_api|teamgames_v58_api|progress|calendar\.ics|export_extra_csv)\.php$">
+        Require all granted
+    </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    <FilesMatch "\.php$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+    <FilesMatch "^(index|teacher|lab_v57_api|arena_v58_events_api|robots_v58_api|teamgames_v58_api|progress|calendar\.ics|export_extra_csv)\.php$">
+        Order allow,deny
+        Allow from all
+    </FilesMatch>
+</IfModule>
+
+# --- Výslovně povolené statické cesty (nesmí je zasáhnout obecný deny výše) ---
+# assets/*.json (manuál labu / offline katalogy načítané JS-em), manifest.webmanifest,
+# sw.js a lab-offline.html zůstávají čitelné – nejsou zasaženy pravidly nahoře,
+# protože nemají přípony .php/.md/... a nejsou skryté soubory. Řádek je zde jen
+# jako dokumentace záměru pro budoucí úpravy tohoto souboru.

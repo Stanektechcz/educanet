@@ -1,0 +1,111 @@
+# EDUCANET v59 · pravidla nginx pro aaPanel – is.stanektech.cz
+#
+# Na serveru ulož jako:  /www/server/educanet/educanet-rules.conf   (vlastník root, 0644)
+# a do konfigurace webu (aaPanel → Website → is.stanektech.cz → Config) vlož JEDEN řádek
+#     include /www/server/educanet/educanet-rules.conf;
+# hned ZA blok #SSL-END a PŘED #PHP-INFO-START (viz is.stanektech.cz.nginx.conf.example).
+#
+# Proč include a ne přepsání celé konfigurace: aaPanel přepisuje části mezi svými značkami
+# (#SSL-START…#SSL-END, #PHP-INFO-START…#PHP-INFO-END) při obnově certifikátu nebo změně
+# verze PHP. Vlastní soubor mimo panel tyto zásahy přežije. nginx bere u regex location
+# PRVNÍ shodu v pořadí souboru – proto musí include stát před panelovým
+# `include enable-php-83.conf;` i před panelovými bloky `location ~ .*\.(gif|jpg|…)$`,
+# jinak by obecná pravidla panelu přebila zákazy níže.
+#
+# Verze PHP: socket /tmp/php-cgi-83.sock = PHP 8.3 z aaPanelu. Při jiné verzi změň číslo
+# v OBOU místech (tento soubor + #PHP-INFO v konfiguraci webu). Minimum je PHP 8.1.
+
+# --- Bezpečnostní hlavičky (doplňují hlavičky z bootstrap.php) -----------------------
+# HSTS (SEC59-13): zapnout AŽ po potvrzení, že stanektech.cz i VŠECHNY subdomény běží
+# trvale jen přes HTTPS – includeSubDomains je v prohlížečích nevratné do vypršení max-age.
+# add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+add_header X-Content-Type-Options "nosniff" always;
+add_header X-Frame-Options "DENY" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+
+client_max_body_size 20m;   # >= post_max_size níže (MAX_UPLOAD_BYTES = 12 MiB)
+
+# --- Skryté soubory a rizikové přípony ------------------------------------------------
+# /.well-known/ je výjimka pro ACME ověření (Let's Encrypt z aaPanelu). Vlastní
+# location pro acme-challenge tu záměrně není: aaPanel ji vkládá sám
+# (#CERT-APPLY-CHECK / well-known include) a duplicitní location by nginx odmítl.
+location ~ /\.(?!well-known/) { deny all; return 404; }
+location = /RELEASE_MANIFEST.json { deny all; return 404; }
+# Veřejný roční plán (odkazuje na něj učitelský kalendář) – před zákazem *.md a materials/.
+location ~ ^/materials/school_year/SCHOOL_YEAR_[0-9_]+\.md$ {
+    default_type "text/plain; charset=utf-8";
+    types { }
+}
+location ~* \.(md|sql|py|sh|lock|csv|ini|log|example|dist|bak|tmp|zip|pem|key)$ { deny all; return 404; }
+location ~* \.json\.php$ { deny all; return 404; }
+location = /educanet.secrets.example.php { deny all; return 404; }
+
+# --- Interní adresáře nikdy z webu ------------------------------------------------------
+location ~ ^/(storage|private|tools|tests|app|docs|lang|migrations|database|lab-runtime|cache|V1|materials)(/|$) {
+    deny all;
+    return 404;
+}
+
+# uploads/ smí vracet soubory, nikdy nespouštět PHP.
+location ^~ /uploads/ {
+    location ~* \.php { deny all; return 404; }
+    try_files $uri =404;
+}
+
+# --- Statické soubory aplikace ----------------------------------------------------------
+location = /lab-offline.html { try_files $uri =404; }
+location = /sw.js { try_files $uri =404; expires off; }
+location = /manifest.webmanifest { try_files $uri =404; }
+location ^~ /assets/ {
+    # assets/*.json (manuál labu, offline katalogy) musí zůstat čitelné pro JS.
+    location ~* \.php { deny all; return 404; }
+    try_files $uri =404;
+    expires 7d;   # soubory mají ?v= verzi, po nasazení se načtou nové
+}
+
+# --- PHP whitelist (jediné vstupní body aplikace) ----------------------------------------
+location ~ ^/(index|teacher|lab_v57_api|arena_v58_events_api|robots_v58_api|teamgames_v58_api|progress|calendar\.ics|export_extra_csv)\.php$ {
+    try_files $uri =404;
+    fastcgi_pass unix:/tmp/php-cgi-83.sock;
+    fastcgi_index index.php;
+    # Záměrně fastcgi_params (ne panelové fastcgi.conf): panelová verze posílá vlastní
+    # PHP_ADMIN_VALUE open_basedir bez cesty k secrets. Nastavujeme ho jednou, níže.
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param HTTPS on;
+
+    # open_basedir: web + secrets + /tmp (sessions, upload_tmp_dir). Zálohy dělá jen CLI.
+    fastcgi_param PHP_ADMIN_VALUE "open_basedir=/www/wwwroot/is.stanektech.cz/:/www/server/educanet/:/tmp/";
+    # Produkční php.ini hodnoty jen pro tento web (sdílené php.ini verze PHP se nemění).
+    fastcgi_param PHP_VALUE "display_errors=Off
+display_startup_errors=Off
+log_errors=On
+error_log=/www/wwwlogs/is.stanektech.cz.php-error.log
+session.use_strict_mode=1
+session.use_only_cookies=1
+session.cookie_httponly=1
+session.cookie_secure=1
+session.cookie_samesite=Lax
+upload_max_filesize=16M
+post_max_size=20M
+date.timezone=Europe/Prague";
+
+    # Prostředí aplikace (čte ho getenv() v PHP-FPM). Musí odpovídat
+    # /www/server/educanet/educanet.env, který používají cron a CLI nástroje.
+    fastcgi_param EDUCANET_APP_URL https://is.stanektech.cz;
+    fastcgi_param EDUCANET_HSTS 0;
+    fastcgi_param EDUCANET_TIMEZONE Europe/Prague;
+    fastcgi_param EDUCANET_SECRETS_FILE /www/server/educanet/educanet.secrets.php;
+    fastcgi_param EDUCANET_BACKUP_DIR /www/backup/educanet;
+    # Odkomentuj po vytvoření prvního učitelského admina (docs/NASAZENI_AAPANEL.md §3 krok 1):
+    # fastcgi_param EDUCANET_TEACHER_ACCOUNTS_REQUIRED 1;
+}
+
+# Jakékoli jiné PHP (knihovny, datové soubory, i s PATH_INFO /x.php/…) – nikdy přímo.
+location ~ \.php(/|$) { deny all; return 404; }
+
+# --- Ostatní požadavky -------------------------------------------------------------------
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}

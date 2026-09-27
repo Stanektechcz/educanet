@@ -1,0 +1,16 @@
+# v59 · Výjimka ze zákazu materials/ a *.md: roční plán je veřejná informace o výuce
+# a odkazuje na něj učitelský kalendář (teacher_calendar.php, odkaz „Roční plán ↗“).
+# SEC59-22: WEEKLY_SCHEDULE.md (rozvrh) veřejný NENÍ – teacher_calendar.php na něj
+# neodkazuje, jen na SCHOOL_YEAR_*.md. Nic jiného v materials/ (banky otázek a
+# odpovědí, WEEKLY_SCHEDULE.md) z webu dostupné není – materials/.htaccess a
+# kořenový .htaccess (včetně mod_rewrite obrany) platí dál.
+<IfModule mod_authz_core.c>
+    <FilesMatch "^SCHOOL_YEAR_[0-9_]+\.md$">
+        Require all granted
+    </FilesMatch>
+</IfModule>
+<IfModule mod_mime.c>
+    <FilesMatch "\.md$">
+        ForceType "text/plain; charset=utf-8"
+    </FilesMatch>
+</IfModule>

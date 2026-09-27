@@ -1,0 +1,100 @@
+# EDUCANET v59 · vzorová nginx konfigurace (nginx + php-fpm)
+#
+# Whitelist vstupních PHP skriptů byl ověřen grepem (viz zpráva build agenta):
+# jediné root *.php soubory, které přímo dělají `require bootstrap.php`, jsou
+# index.php, teacher.php, lab_v57_api.php, arena_v58_events_api.php,
+# robots_v58_api.php, teamgames_v58_api.php, progress.php, calendar.ics.php,
+# export_extra_csv.php. Než nasadíš, spusť znovu:
+#   grep -L "SCRIPT_FILENAME" *.php | xargs grep -l "require.*bootstrap.php"
+# a uprav seznam, pokud přibyl nový vstupní bod.
+
+server {
+    listen 80;
+    server_name skola.example;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name skola.example;
+    root /var/www/clients/client1/web1/web;   # kořen vydání (tools/build_release.php --out=...)
+    index index.php;
+
+    ssl_certificate     /etc/letsencrypt/live/skola.example/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/skola.example/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers off;
+
+    client_max_body_size 20m;   # >= post_max_size (viz php-fpm-educanet.ini.example, MAX_UPLOAD_BYTES=12MiB)
+
+    # --- Bezpečnostní hlavičky (doplňují ty z bootstrap.php, nejsou náhradou) ---
+    # SEC59-13: HSTS s includeSubDomains je nevratné v prohlížečích, dokud nevyprší
+    # max-age – zapni AŽ PO ověření, že úplně celá doména VČETNĚ všech subdomén běží
+    # trvale jen přes HTTPS. Do té doby nech zakomentované.
+    # add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+
+    # --- Skryté soubory a rizikové přípony ---------------------------------
+    # SEC59-19: výjimka pro ACME HTTP-01 ověření (Let's Encrypt/certbot) MUSÍ stát
+    # PŘED zákazem skrytých souborů níže (nginx bere první shodující se prefix
+    # location, u regex "location ~ /\." dřívější/specifičtější location s "^~"
+    # vyhrává bez ohledu na pořadí, ale kvůli čitelnosti ji necháváme první).
+    location ^~ /.well-known/acme-challenge/ {
+        default_type "text/plain";
+        try_files $uri =404;
+    }
+    location ~ /\. { deny all; }
+    location = /RELEASE_MANIFEST.json { deny all; }
+    # v59 · výjimka: roční plán a týdenní rozvrh (veřejné informace o výuce) – odkazuje na ně učitelský kalendář.
+    # Musí stát PŘED zákazem *.md a materials/ (u regex location vyhrává první shoda).
+    location ~ ^/materials/school_year/(SCHOOL_YEAR_[0-9_]+|WEEKLY_SCHEDULE)\.md$ {
+        default_type "text/plain; charset=utf-8";
+        types { }
+    }
+    location ~* \.(md|sql|py|sh|lock|csv|ini|log|example|dist|bak|tmp)$ { deny all; }
+    location ~* \.json\.php$ { deny all; }
+    location = /educanet.secrets.example.php { deny all; }
+    location = /CLAUDE.md { deny all; }
+
+    # --- Interní adresáře nikdy z webu -------------------------------------
+    location ~ ^/(storage|private|tools|tests|app|docs|lang|migrations|database|lab-runtime|\.claude|cache|V1|materials)(/|$) {
+        deny all;
+        return 404;
+    }
+
+    # uploads/ smí sloužit soubory, ale nikdy PHP.
+    location ^~ /uploads/ {
+        location ~* \.php$ { deny all; }
+    }
+
+    # --- Explicitně povolené statické cesty ---------------------------------
+    location = /lab-offline.html { try_files $uri =404; }
+    location = /sw.js { try_files $uri =404; }
+    location = /manifest.webmanifest { try_files $uri =404; }
+    location ^~ /assets/ {
+        try_files $uri =404;
+        # assets/*.json (manuál labu, offline katalogy) musí zůstat čitelné pro JS.
+    }
+
+    # --- PHP whitelist -------------------------------------------------------
+    location ~ ^/(index|teacher|lab_v57_api|arena_v58_events_api|robots_v58_api|teamgames_v58_api|progress|calendar\.ics|export_extra_csv)\.php$ {
+        try_files $uri =404;
+        include fastcgi_params;
+        fastcgi_pass unix:/run/php/php8.1-fpm-educanet.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param HTTPS on;                       # educanet_is_https() – i za TLS terminací na tomto serveru
+        fastcgi_param HTTP_X_FORWARDED_PROTO https;    # pro případ reverzní proxy před nginxem
+    }
+
+    # Jakékoli jiné *.php v kořeni (datové/knihovní soubory) – nikdy přímo.
+    location ~ \.php$ { deny all; return 404; }
+
+    # --- Zbytek (statické assety, žákovské SPA fallbacky…) ------------------
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+}

@@ -1,0 +1,87 @@
+/* EDUCANET v58 · Provoz (ops_v58_views.php) */
+
+.ops58-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.ops58-card .teacher-panel-head h2 {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.ops58-stat-list,
+.ops58-ext-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ops58-stat-list li,
+.ops58-ext-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border, #e2e2e2);
+  font-size: 0.95rem;
+}
+
+.ops58-stat-list li:last-child,
+.ops58-ext-list li:last-child {
+  border-bottom: none;
+}
+
+.ops58-ext-list li.ok b {
+  color: #1a7f37;
+}
+
+.ops58-ext-list li.missing b {
+  color: #b42318;
+}
+
+.ops58-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.ops58-table th,
+.ops58-table td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border, #e2e2e2);
+  font-size: 0.92rem;
+}
+
+.ops58-table code {
+  word-break: break-all;
+}
+
+.ops58-preview-list {
+  margin: 10px 0 0;
+  padding-left: 20px;
+}
+
+.ops58-preview-list li {
+  margin-bottom: 6px;
+  font-size: 0.92rem;
+}
+
+.ops58-top-files,
+.ops58-retention {
+  margin-top: 16px;
+}
+
+@media (max-width: 640px) {
+  .ops58-table th:nth-child(2),
+  .ops58-table td:nth-child(2) {
+    white-space: nowrap;
+  }
+}

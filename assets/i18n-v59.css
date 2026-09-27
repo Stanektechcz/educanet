@@ -1,0 +1,101 @@
+/* v59 · OPS-02 – přepínač jazyka (edu_lang_switcher_html()) a poznámka k obsahu (edu_content_note_html()).
+   Používá stávající barevné proměnné z assets/app.css (--text, --muted, --line, --surface-2, --accent, --accent-soft);
+   funguje i bez app.css (rozumné výchozí hodnoty). Cíle dotyku >= 44 px, viditelný fokus (WCAG 2.2 AA). */
+
+.edu-lang-switcher {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.edu-lang-switcher__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-height: 44px;
+}
+
+.edu-lang-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--muted, #65717e);
+  white-space: nowrap;
+}
+
+.edu-lang-label span[lang] {
+  white-space: nowrap;
+}
+
+.edu-lang-switcher__select {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 10px;
+  border: 1px solid var(--line, #d9e0e6);
+  border-radius: 10px;
+  background: var(--surface-2, #eef2f5);
+  color: var(--text, #111827);
+  font: inherit;
+  font-size: 0.78rem;
+}
+
+.edu-lang-switcher__apply {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--line, #d9e0e6);
+  border-radius: 10px;
+  background: var(--accent, #2459ff);
+  color: #fff;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.edu-lang-switcher__apply:hover {
+  filter: brightness(1.05);
+}
+
+.edu-lang-switcher__select:focus-visible,
+.edu-lang-switcher__apply:focus-visible {
+  outline: 3px solid var(--accent, #2459ff);
+  outline-offset: 2px;
+}
+
+/* Poznámka „Učební obsah je zatím jen česky.“ (edu_content_note_html()) vedle obsahu v en/uk. */
+.edu-content-note {
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  border: 1px solid var(--line, #d9e0e6);
+  border-radius: 10px;
+  background: var(--surface-2, #eef2f5);
+  /* v59 · A11Y-06: #65717e na #eef2f5 mělo ~4.42:1 – #4d5762 dává >=4.5:1. */
+  color: #4d5762;
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+@media (prefers-color-scheme: dark) {
+  .edu-content-note {
+    /* Tmavý --surface-2 (#1d2732) potřebuje světlejší text – --muted (#9eabba) tam má dostatečný kontrast. */
+    color: var(--muted, #9eabba);
+  }
+}
+
+@media (max-width: 480px) {
+  .edu-lang-switcher {
+    width: 100%;
+  }
+
+  .edu-lang-switcher__label {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .edu-lang-switcher__select {
+    flex: 1 1 auto;
+  }
+}

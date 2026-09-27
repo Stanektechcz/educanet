@@ -1,0 +1,17 @@
+# v59 · migrations/ obsahuje jen definice migrací spouštěné přes tools/migrate.php (CLI).
+# Přímý přístup z webu zakázán.
+<IfModule mod_authz_core.c>
+    Require all denied
+    <!-- SEC59-01: hlubší <FilesMatch> vyhrává nad kořenovým allowlistem PHP skriptů. -->
+    <FilesMatch ".">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+    <FilesMatch ".">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>

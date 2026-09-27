@@ -1,0 +1,679 @@
+/* EDUCANET v50.7.3 · Content Density & Component Purge */
+/* Active consolidated student UI. Legacy source assets stay in the release only for backwards compatibility/audits and are no longer linked. */
+
+/* ---- source: student-ux-v50-2.css ---- */
+/* EDUCANET v50.2 — student-first UX layer
+   Principle: one clear next action, progressive disclosure, zero feature-name hunting. */
+
+body:not(.assessment-mode){--student-radius:22px;--student-shadow:0 14px 34px rgba(17,24,39,.055)}
+body:not(.assessment-mode) .shell{width:min(1240px,calc(100% - 32px))}
+body:not(.assessment-mode) main{padding-top:26px}
+
+/* Navigation ------------------------------------------------------------ */
+.student-main-menu{display:flex;align-items:center;gap:5px;margin:0 auto;padding:4px;border:1px solid var(--line);border-radius:15px;background:color-mix(in srgb,var(--surface-2) 70%,transparent)}
+.student-main-menu>a,.student-nav-group>summary{min-height:40px;padding:0 11px;border-radius:11px;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-size:.72rem;font-weight:850;cursor:pointer;white-space:nowrap;transition:.16s ease}
+.student-main-menu>a>i,.student-nav-group>summary>i{width:24px;height:24px;border-radius:8px;display:grid;place-items:center;font-style:normal;background:transparent;color:inherit}
+.student-main-menu>a:hover,.student-nav-group>summary:hover,.student-main-menu>a.active,.student-nav-group.active>summary,.student-nav-group[open]>summary{background:var(--surface);color:var(--text);box-shadow:0 5px 14px rgba(17,24,39,.06)}
+.student-main-menu>a.active>i,.student-nav-group.active>summary>i{background:var(--accent-soft);color:var(--accent)}
+.student-nav-group{position:relative}
+.student-nav-group>summary{list-style:none}.student-nav-group>summary::-webkit-details-marker{display:none}.student-nav-group>summary>b{font-size:.72rem;color:var(--muted);transition:transform .16s ease}.student-nav-group[open]>summary>b{transform:rotate(180deg)}
+.student-nav-popover{position:absolute;z-index:260;top:calc(100% + 10px);left:50%;transform:translateX(-50%);width:330px;padding:8px;border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:0 24px 65px rgba(17,24,39,.16);display:grid;gap:3px}
+.student-nav-popover>header{padding:10px 11px 8px;border-bottom:1px solid var(--line);margin-bottom:3px}.student-nav-popover>header strong{display:block;font-size:.79rem}.student-nav-popover>header small{display:block;margin-top:2px;font-size:.62rem;color:var(--muted)}
+.student-nav-popover>a,.student-nav-popover>span.disabled{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;min-height:55px;padding:8px 10px;border-radius:12px;text-decoration:none;color:inherit}
+.student-nav-popover>a:hover,.student-nav-popover>a.active{background:var(--surface-2)}.student-nav-popover>a.active{box-shadow:inset 3px 0 0 var(--accent)}
+.student-nav-popover>a>i,.student-nav-popover>span.disabled>i{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-style:normal;background:var(--accent-soft);color:var(--accent);font-weight:900}
+.student-nav-popover span>strong{display:block;font-size:.72rem}.student-nav-popover span>small{display:block;margin-top:2px;font-size:.59rem;color:var(--muted);line-height:1.3}.student-nav-popover>a>b{font-size:.75rem;color:var(--muted)}
+.student-nav-popover>span.disabled{opacity:.45}.student-nav-popover>span.disabled>b{font-size:.53rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+
+.student-page-context{display:flex;align-items:center;gap:7px;margin:9px 2px 0;padding:0 4px;color:var(--muted);font-size:.64rem;min-height:28px}.student-page-context a{text-decoration:none;font-weight:800}.student-page-context strong,.student-page-context b{color:var(--text);font-weight:800}.student-page-context small{margin-left:auto;padding:4px 8px;border-radius:999px;background:var(--surface-2);font-size:.56rem}
+
+/* Give feature pages calmer hierarchy without rewriting their internals. */
+body:not(.view-dashboard):not(.assessment-mode) main>.hero:first-child,body:not(.view-dashboard):not(.assessment-mode) main>.hero-center:first-child{padding-top:8px;padding-bottom:26px}
+body:not(.view-dashboard):not(.assessment-mode) main>.hero:first-child h1,body:not(.view-dashboard):not(.assessment-mode) main>.hero-center:first-child h1{font-size:clamp(2rem,4vw,3.55rem);max-width:900px}
+body:not(.view-dashboard):not(.assessment-mode) .panel,body:not(.view-dashboard):not(.assessment-mode) .dashboard-panel{box-shadow:0 10px 28px rgba(17,24,39,.035)}
+
+/* Dashboard — default state is action-oriented, not analytics-oriented. --- */
+.student-cockpit-v502{display:grid;gap:18px;max-width:1120px;margin:0 auto}.student-cockpit-v502 .student-cockpit-main{display:grid;gap:14px}
+.student-welcome-row{display:grid;grid-template-columns:46px 1fr auto;gap:13px;align-items:center;padding:3px 2px}.student-welcome-row .student-avatar{width:46px;height:46px;border-radius:15px;background:var(--text);color:var(--surface);display:grid;place-items:center;font-size:1rem;font-weight:950}.student-welcome-copy span{display:block;font-size:.62rem;color:var(--muted);font-weight:750}.student-welcome-copy h1{font-size:clamp(1.35rem,2.5vw,2rem);margin:3px 0 0}.student-profile-link{display:flex;align-items:center;gap:8px;padding:9px 11px;border:1px solid var(--line);border-radius:11px;text-decoration:none;font-size:.65rem;font-weight:850;background:var(--surface)}
+
+.student-do-now-card{display:grid;grid-template-columns:52px minmax(0,1fr) minmax(210px,auto);gap:18px;align-items:center;padding:24px;border-radius:26px;border:1px solid color-mix(in srgb,var(--accent) 26%,var(--line));background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 9%,var(--surface)),var(--surface) 58%);box-shadow:0 20px 52px color-mix(in srgb,var(--accent) 10%,transparent)}
+.student-do-now-number{width:52px;height:52px;border-radius:17px;display:grid;place-items:center;background:var(--accent);color:#fff;font-size:1.15rem;font-weight:950;box-shadow:0 10px 24px color-mix(in srgb,var(--accent) 24%,transparent)}
+.student-do-now-copy .eyebrow{margin-bottom:5px}.student-do-now-copy h2{font-size:clamp(1.3rem,2.6vw,2.05rem);margin:0 0 7px}.student-do-now-copy p{margin:0;font-size:.78rem;line-height:1.45;max-width:68ch}.student-do-now-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.student-do-now-meta span{padding:5px 8px;border-radius:999px;background:color-mix(in srgb,var(--surface) 82%,transparent);border:1px solid color-mix(in srgb,var(--line) 80%,transparent);font-size:.56rem;font-weight:800;color:var(--muted)}.student-do-now-meta span.attention{color:#9a5b00;background:#fff8e7}.student-do-now-meta span.ok{color:var(--ok);background:var(--ok-soft)}
+.student-do-now-action{display:grid;gap:7px;justify-items:stretch}.student-primary-cta{min-height:56px;padding-inline:22px;border-radius:16px;font-size:.8rem;gap:10px}.student-primary-cta span{font-size:1.05rem}.student-do-now-action small{max-width:230px;text-align:center;color:var(--muted);font-size:.56rem;line-height:1.35}
+
+.student-route-card{padding:17px 18px;border:1px solid var(--line);border-radius:20px;background:var(--surface);box-shadow:var(--student-shadow)}.student-route-head{display:flex;justify-content:space-between;gap:14px;align-items:end;margin-bottom:12px}.student-route-head span{display:block;font-size:.56rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:850}.student-route-head strong{display:block;font-size:.86rem;margin-top:2px}.student-route-head>a{font-size:.61rem;color:var(--accent);font-weight:850;text-decoration:none}
+.student-route-steps{display:grid;grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr);align-items:stretch;gap:5px}.student-route-step{display:grid;grid-template-columns:34px 1fr;gap:9px;align-items:center;padding:10px;border-radius:14px;background:var(--surface-2);text-decoration:none;color:inherit;min-width:0;border:1px solid transparent}.student-route-step:hover{border-color:color-mix(in srgb,var(--accent) 30%,var(--line));background:var(--surface)}.student-route-step.current{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 20%,var(--line))}.student-route-step.direction{background:color-mix(in srgb,var(--ok) 7%,var(--surface))}.student-route-step>i{width:32px;height:32px;border-radius:10px;background:var(--surface);display:grid;place-items:center;font-style:normal;font-size:.63rem;font-weight:950}.student-route-step.current>i{background:var(--accent);color:#fff}.student-route-step span{display:block;font-size:.49rem;letter-spacing:.08em;font-weight:950;color:var(--muted)}.student-route-step strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.68rem;margin-top:2px}.student-route-step small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:.53rem;margin-top:1px}.student-route-arrow{display:grid;place-items:center;color:var(--muted);font-size:.8rem}
+
+.student-intent-panel{display:grid;grid-template-columns:minmax(190px,.42fr) 1fr;gap:14px;align-items:stretch}.student-intent-head{padding:15px 2px;align-self:center}.student-intent-head span{display:block;font-size:.61rem;color:var(--muted)}.student-intent-head strong{display:block;font-size:.9rem;margin-top:2px}.student-intent-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.student-intent-card,.student-intent-card button{width:100%;height:100%;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:10px;display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;text-align:left;text-decoration:none;color:inherit;cursor:pointer}.student-intent-card{margin:0}.student-intent-card button{border:0;padding:0;background:transparent;border-radius:0}.student-intent-card:hover{border-color:color-mix(in srgb,var(--accent) 32%,var(--line));transform:translateY(-1px)}.student-intent-card.primary{border-color:color-mix(in srgb,var(--accent) 28%,var(--line))}.student-intent-card>i,.student-intent-card button>i{width:30px;height:30px;border-radius:9px;background:var(--surface-2);display:grid;place-items:center;font-style:normal;font-weight:950;color:var(--accent)}.student-intent-card span strong,.student-intent-card button span strong{display:block;font-size:.63rem}.student-intent-card span small,.student-intent-card button span small{display:block;font-size:.52rem;color:var(--muted);line-height:1.25;margin-top:2px}.student-intent-card>b,.student-intent-card button>b{font-size:.65rem;color:var(--muted)}
+
+.student-attention-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;border:1px solid #efcf82;border-radius:15px;background:#fff9e9}.student-attention-bar>div:first-child{display:flex;align-items:center;gap:10px}.student-attention-bar>div:first-child>i{width:32px;height:32px;border-radius:10px;background:#ffe8a6;display:grid;place-items:center;font-style:normal;font-weight:950;color:#8b5a00}.student-attention-bar strong{display:block;font-size:.67rem}.student-attention-bar small{display:block;color:#806e43;font-size:.55rem;margin-top:1px}.student-attention-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.student-attention-actions a{padding:6px 8px;border-radius:9px;background:rgba(255,255,255,.78);border:1px solid #eed89f;text-decoration:none;font-size:.55rem;font-weight:800}.student-attention-actions b{color:#8b5a00}
+
+.student-dashboard-more{border:1px solid var(--line);border-radius:18px;background:var(--surface);overflow:hidden}.student-dashboard-more>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 16px;cursor:pointer}.student-dashboard-more>summary::-webkit-details-marker{display:none}.student-dashboard-more>summary>span{display:grid;grid-template-columns:34px 1fr;column-gap:10px;align-items:center}.student-dashboard-more>summary i{grid-row:1/3;width:34px;height:34px;border-radius:10px;background:var(--surface-2);display:grid;place-items:center;font-style:normal;font-size:.74rem}.student-dashboard-more>summary strong{font-size:.72rem}.student-dashboard-more>summary small{font-size:.55rem;color:var(--muted)}.student-dashboard-more>summary>b{font-size:.58rem;color:var(--accent);padding:6px 9px;border-radius:999px;background:var(--accent-soft)}.student-dashboard-more[open]>summary{border-bottom:1px solid var(--line)}.student-dashboard-more[open]>summary i{transform:rotate(45deg)}.student-dashboard-more[open]>summary>b{font-size:0}.student-dashboard-more[open]>summary>b:after{content:'Skrýt';font-size:.58rem}.student-dashboard-more-body{display:grid;gap:16px;padding:16px;background:color-mix(in srgb,var(--bg) 52%,var(--surface))}
+.student-dashboard-more-body>.dashboard-metrics{margin:0}.student-dashboard-more-body>.dashboard-panel,.student-dashboard-more-body>.dashboard-primary-grid,.student-dashboard-more-body>.dashboard-secondary-grid,.student-dashboard-more-body>.ml-card{margin-top:0;margin-bottom:0}
+
+/* v50.2 no longer relies on the old focus-mode hiding rules. */
+body.student-focus-mode .student-dashboard-more{display:block}body.student-focus-mode .student-dashboard-more .dashboard-metrics,body.student-focus-mode .student-dashboard-more .dashboard-primary-grid,body.student-focus-mode .student-dashboard-more .achievements-panel,body.student-focus-mode .student-dashboard-more .course-roadmap-panel,body.student-focus-mode .student-dashboard-more .dashboard-secondary-grid,body.student-focus-mode .student-dashboard-more .project-results-preview{display:grid}
+
+/* Mobile: navigation turns into a simple stacked chooser. */
+@media(max-width:1120px){
+  .topbar-right .hud-xp,.topbar-right .hud-badges,.topbar-right .class-chip{display:none}
+  .student-main-menu{margin-left:auto;margin-right:4px}
+  .student-main-menu>a,.student-nav-group>summary{padding-inline:8px}.student-main-menu>a span,.student-nav-group>summary span{display:none}
+}
+@media(max-width:820px){
+  body:not(.assessment-mode) .shell{width:min(100% - 18px,1240px)}
+  .topbar{top:6px}.brand>span:last-child{display:none}
+  .menu-toggle{display:block;margin-left:auto}.student-main-menu{position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:240;display:none;margin:0;padding:8px;background:var(--surface);border-radius:17px;box-shadow:0 24px 60px rgba(17,24,39,.16)}.student-main-menu.open{display:grid;grid-template-columns:1fr}
+  .student-main-menu>a,.student-nav-group>summary{min-height:46px;padding:0 10px}.student-main-menu>a span,.student-nav-group>summary span{display:inline}.student-nav-group{display:block}.student-nav-group>summary{justify-content:flex-start}.student-nav-group>summary>b{margin-left:auto}.student-nav-popover{position:static;transform:none;width:auto;margin:4px 0 7px;padding:5px;box-shadow:none;border-radius:13px;background:var(--surface-2)}.student-nav-popover>header{display:none}.student-nav-popover>a,.student-nav-popover>span.disabled{background:var(--surface)}
+  .student-page-context{overflow:auto;white-space:nowrap}.student-page-context small{display:none}
+  .student-do-now-card{grid-template-columns:42px 1fr;gap:12px;padding:17px}.student-do-now-number{width:42px;height:42px;border-radius:13px}.student-do-now-action{grid-column:1/-1}.student-do-now-action small{max-width:none}.student-primary-cta{width:100%}
+  .student-route-steps{grid-template-columns:1fr}.student-route-arrow{height:15px;transform:rotate(90deg)}.student-route-step strong,.student-route-step small{white-space:normal}.student-intent-panel{grid-template-columns:1fr}.student-intent-head{padding-bottom:0}.student-intent-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.student-attention-bar{align-items:flex-start;flex-direction:column}.student-attention-actions{justify-content:flex-start}
+}
+@media(max-width:560px){
+  .student-welcome-row{grid-template-columns:40px 1fr}.student-welcome-row .student-avatar{width:40px;height:40px;border-radius:12px}.student-profile-link{display:none}.student-welcome-copy h1{font-size:1.2rem}
+  .student-intent-grid{grid-template-columns:1fr}.student-route-head{align-items:flex-start;flex-direction:column}.student-dashboard-more>summary>span{grid-template-columns:30px 1fr}.student-dashboard-more>summary i{width:30px;height:30px}.student-dashboard-more>summary>b{display:none}
+}
+
+/* ---- source: goal-navigator-v50-4.css ---- */
+/* EDUCANET v50.4 · minimal goal-first UX */
+.v504-shell{max-width:980px;margin:0 auto;padding:clamp(18px,3vw,34px)}
+.v504-goal-hero{max-width:720px;margin:8vh auto 28px;text-align:center}.v504-goal-hero h1{font-size:clamp(2rem,5vw,3.5rem);margin:.25rem 0}.v504-goal-hero p{font-size:1.05rem;opacity:.72;line-height:1.6}
+.v504-goal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:820px;margin:0 auto}.v504-goal-choice,.v504-goal-choice button{margin:0;width:100%}.v504-goal-choice button{display:grid;grid-template-columns:46px 1fr auto;gap:14px;align-items:center;text-align:left;padding:18px;border:1px solid color-mix(in srgb,currentColor 12%,transparent);border-radius:18px;background:var(--panel,#fff);color:inherit;cursor:pointer}.v504-goal-choice button:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--accent,#4f46e5) 45%,transparent)}.v504-goal-choice i{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:color-mix(in srgb,var(--accent,#4f46e5) 10%,transparent);font-style:normal;font-weight:800}.v504-goal-choice span{display:grid;gap:4px}.v504-goal-choice strong{font-size:1rem}.v504-goal-choice small{opacity:.65;line-height:1.35}.v504-goal-choice b{font-size:.82rem;white-space:nowrap}.v504-safe-note{text-align:center;opacity:.55;font-size:.82rem;margin:18px auto 0}
+.v504-goal-summary{display:flex;justify-content:space-between;gap:28px;align-items:end;padding:26px 0 18px;border-bottom:1px solid color-mix(in srgb,currentColor 10%,transparent)}.v504-goal-summary h1{display:flex;align-items:center;gap:12px;font-size:clamp(2rem,4vw,3rem);margin:.2rem 0}.v504-goal-summary h1 i{font-style:normal;font-size:.85em}.v504-goal-summary p{margin:0;opacity:.68}.v504-goal-progress{min-width:190px;display:grid;gap:8px;text-align:right}.v504-goal-progress>strong{font-size:1.25rem}.v504-goal-progress>i{height:7px;border-radius:99px;background:color-mix(in srgb,currentColor 10%,transparent);overflow:hidden}.v504-goal-progress>i>b{display:block;height:100%;background:var(--accent,#4f46e5);border-radius:inherit}.v504-goal-progress form{margin:0}.v504-goal-progress button{border:0;background:none;color:inherit;opacity:.55;cursor:pointer;padding:0;font-size:.8rem}
+.v504-now{margin:28px 0 14px;padding:clamp(22px,4vw,34px);border-radius:22px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent,#4f46e5) 10%,var(--panel,#fff)),var(--panel,#fff));border:1px solid color-mix(in srgb,var(--accent,#4f46e5) 22%,transparent)}.v504-now>span{font-size:.75rem;font-weight:800;letter-spacing:.08em;opacity:.62}.v504-now h2{font-size:clamp(1.6rem,3vw,2.25rem);margin:.45rem 0}.v504-now p{max-width:680px;opacity:.72;line-height:1.55}.v504-now .btn{margin-top:8px}.v504-now>small{display:block;margin-top:10px;opacity:.5}
+.v504-route{list-style:none;padding:0;margin:10px 0;display:grid;gap:8px}.v504-route li{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;border:1px solid color-mix(in srgb,currentColor 9%,transparent);opacity:.72}.v504-route li.current{display:none}.v504-route li>i{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:color-mix(in srgb,currentColor 8%,transparent);font-style:normal;font-weight:800}.v504-route li div{display:grid;gap:2px}.v504-route li span{font-size:.68rem;font-weight:800;letter-spacing:.06em;opacity:.55}.v504-route li a{font-size:.8rem;text-decoration:none;color:inherit;opacity:.72}.v504-goal-details{margin-top:16px;border-top:1px solid color-mix(in srgb,currentColor 9%,transparent);padding-top:12px}.v504-goal-details summary{cursor:pointer;font-size:.85rem;opacity:.65}.v504-goal-details>div{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.v504-goal-details a{padding:12px;border-radius:12px;background:color-mix(in srgb,currentColor 4%,transparent);display:grid;text-decoration:none;color:inherit}.v504-goal-details span{font-size:.75rem;opacity:.6}
+.v504-goal-context{max-width:1180px;margin:6px auto 0;padding:7px 14px;display:flex;align-items:center;gap:9px;font-size:.78rem;border-radius:12px;background:color-mix(in srgb,var(--accent,#4f46e5) 5%,transparent)}.v504-goal-context>span{font-weight:800;opacity:.5;text-transform:uppercase;letter-spacing:.05em}.v504-goal-context>small{opacity:.56;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v504-goal-context>a{margin-left:auto;white-space:nowrap;text-decoration:none;color:inherit;font-weight:700}
+/* v50.4 reduces chrome: progress remains available inside the collapsed dashboard section. */
+.topbar .learning-hud{display:none}.student-do-now-meta span:first-child{display:none}
+/* Keep v50.3 semantics, shrink its visual footprint. */
+.guided-flow-strip{padding:7px 12px!important;min-height:0!important;gap:10px!important}.guided-flow-now small{display:none!important}.guided-flow-now span{display:none!important}.guided-flow-now strong{font-size:.82rem!important}.guided-flow-steps{gap:4px!important}.guided-flow-steps li{min-width:0!important;padding:0!important;background:none!important;border:0!important}.guided-flow-steps li i{width:18px!important;height:18px!important;font-size:.62rem!important}.guided-flow-steps li span{display:none!important}.guided-flow-steps li.active span{display:inline!important;font-size:.72rem!important}.guided-flow-help small{display:none!important}.guided-flow-help{padding:4px 7px!important}.guided-flow-help b{font-size:.72rem!important}
+/* v50.2 compatibility selectors intentionally remain in markup/audits: student-route-card, student-intent-panel. */
+.v504-dashboard-route{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}.v504-dashboard-route a,.v504-dashboard-route span{font-size:.78rem;padding:7px 10px;border-radius:999px;background:color-mix(in srgb,currentColor 5%,transparent);text-decoration:none;color:inherit}.v504-dashboard-route b{opacity:.35}.v504-dashboard-help{display:flex;gap:8px;margin-top:10px}.v504-dashboard-help a{font-size:.78rem;text-decoration:none;color:inherit;opacity:.7}
+@media(max-width:820px){.v504-goal-grid{grid-template-columns:1fr}.v504-goal-summary{display:grid}.v504-goal-progress{text-align:left;min-width:0}.v504-goal-details>div{grid-template-columns:1fr 1fr}.v504-goal-context>small{display:none}.v504-goal-context{margin:4px 10px 0}.guided-flow-steps li.active span{display:none!important}.guided-flow-now strong{max-width:190px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+
+.v50-growth-node.goal-recommended{border-color:color-mix(in srgb,var(--accent,#4f46e5) 45%,transparent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent,#4f46e5) 8%,transparent)}
+.view-skills .skill-legend{display:none}.view-skills .skill-hero{padding-top:18px;padding-bottom:18px}.view-skills .skill-hero p{max-width:700px}.view-skills .skill-hero-stats{opacity:.72}
+
+/* ---- source: zero-friction-v50-6.css ---- */
+/* EDUCANET v50.6 · Zero Friction Student UX */
+:root{--v506-radius:16px;--v506-line:color-mix(in srgb,currentColor 10%,transparent);--v506-soft:color-mix(in srgb,currentColor 4%,transparent)}
+body:not(.assessment-mode){--shell-max:1180px}
+body:not(.assessment-mode) .shell{width:min(100% - 28px,var(--shell-max,1180px))}
+body:not(.assessment-mode) main{padding-top:14px}
+body:not(.assessment-mode) .footer{display:none}
+body:not(.assessment-mode) .topbar{min-height:58px;padding:7px 10px;border-radius:15px;box-shadow:none;border:1px solid var(--v506-line);background:color-mix(in srgb,var(--surface,#fff) 96%,transparent);backdrop-filter:blur(14px)}
+body:not(.assessment-mode) .brand{gap:8px}.brand-mark{width:31px;height:31px;border-radius:10px}.brand>span:last-child{font-size:.82rem;font-weight:750}.brand>span:last-child{font-size:0}.brand>span:last-child:after{content:'EDUCANET';font-size:.82rem}
+.topbar .learning-hud,.topbar .class-chip{display:none!important}
+.topbar-right{gap:6px}.account-chip{padding:4px 6px!important;gap:7px!important;border:0!important;background:transparent!important;box-shadow:none!important}.account-chip img,.account-chip>i{width:31px!important;height:31px!important}.account-chip span{display:block!important}.account-chip span strong{font-size:.78rem!important}.account-chip span small{display:none!important}
+.v506-top-help{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;text-decoration:none;color:inherit;background:var(--v506-soft);font-weight:850}
+.student-main-menu{gap:4px}.student-main-menu>a,.student-nav-group>summary{min-height:38px;border-radius:11px;padding:0 10px;font-size:.78rem}.student-main-menu>a i,.student-nav-group>summary i{font-style:normal;opacity:.7}.student-nav-home.active,.student-nav-group.active>summary{background:var(--v506-soft)}
+.student-nav-continue{background:var(--accent,#4f46e5)!important;color:#fff!important;font-weight:850!important}.student-nav-continue i{opacity:1!important}.student-nav-continue:hover{filter:brightness(.98)}
+.student-nav-popover{width:290px;padding:7px;border-radius:15px;box-shadow:0 18px 50px rgba(17,24,39,.12)}.student-nav-popover>header{padding:7px 9px 9px}.student-nav-popover>header small{font-size:.72rem}.student-nav-popover>a,.student-nav-popover>span.disabled{padding:9px;border-radius:10px}.student-nav-popover>a span small,.student-nav-popover>span.disabled span small{font-size:.7rem}
+
+/* One compact orientation layer replaces breadcrumb + goal context + guided strip. */
+.v506-compass{min-height:38px;margin:7px 0 0;padding:5px 8px 5px 10px;display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:10px;border:1px solid var(--v506-line);border-radius:12px;background:var(--surface,#fff);font-size:.75rem}
+.v506-compass-location,.v506-compass-context,.v506-compass-actions{display:flex;align-items:center;gap:7px;min-width:0}.v506-compass-location a{display:grid;place-items:center;width:25px;height:25px;border-radius:8px;text-decoration:none;color:inherit;background:var(--v506-soft)}.v506-compass-location span{opacity:.56}.v506-compass-location b{opacity:.25}.v506-compass-location strong{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v506-compass-context{justify-content:flex-end}.v506-compass-context span{padding:4px 7px;border-radius:999px;background:var(--v506-soft);white-space:nowrap}.v506-compass-context .goal{max-width:190px;overflow:hidden;text-overflow:ellipsis}.v506-compass-context small{opacity:.48;white-space:nowrap}.v506-help{display:grid;place-items:center;width:27px;height:27px;border-radius:8px;background:var(--v506-soft);text-decoration:none;color:inherit;font-weight:850}.v506-continue{display:flex;align-items:center;gap:5px;min-height:28px;padding:0 10px;border-radius:9px;background:var(--accent,#4f46e5);color:#fff;text-decoration:none;font-weight:850}
+/* Legacy orientation surfaces intentionally replaced by .v506-compass. */
+.student-page-context,.v504-goal-context,.guided-flow-strip{display:none!important}
+
+/* Global surface hierarchy: quiet maps, strong current action. */
+body:not(.assessment-mode) .hero{padding:clamp(18px,3vw,30px)!important;margin-bottom:14px!important;border-radius:var(--v506-radius)!important;box-shadow:none!important}
+body:not(.assessment-mode) .hero h1{font-size:clamp(1.65rem,3.3vw,2.5rem)!important;line-height:1.06;margin:.35rem 0 .55rem!important}
+body:not(.assessment-mode) .hero p{max-width:720px!important;font-size:.94rem!important;line-height:1.52!important;opacity:.68}
+body:not(.assessment-mode) .dashboard-panel,body:not(.assessment-mode) .panel{box-shadow:none!important;border-color:var(--v506-line)!important;border-radius:var(--v506-radius)!important}
+body:not(.assessment-mode) .dashboard-panel-head h2{font-size:1.15rem!important}.dashboard-panel-head p{font-size:.84rem!important;line-height:1.45!important;opacity:.65}
+body:not(.assessment-mode) .btn{border-radius:10px!important;min-height:38px!important;font-size:.8rem!important;font-weight:800!important;box-shadow:none!important}.btn.secondary{background:transparent!important;border:1px solid var(--v506-line)!important}.btn.primary{box-shadow:none!important}
+body:not(.assessment-mode) .eyebrow{font-size:.65rem!important;letter-spacing:.08em!important;opacity:.55!important}
+
+/* Dashboard = greeting + exactly one action. */
+.view-dashboard main{max-width:930px;margin-inline:auto}.view-dashboard .student-cockpit{gap:12px}.student-welcome-row{padding:4px 2px 8px!important}.student-welcome-row .student-avatar{display:none}.student-welcome-copy>span{font-size:.7rem!important;opacity:.5}.student-welcome-copy h1{font-size:clamp(1.35rem,3vw,1.95rem)!important;margin:.15rem 0!important}.student-profile-link{display:none!important}
+.student-do-now-card{grid-template-columns:minmax(0,1fr) auto!important;gap:18px!important;padding:clamp(19px,3vw,28px)!important;border-radius:18px!important;box-shadow:none!important;background:var(--surface,#fff)!important;border:1px solid color-mix(in srgb,var(--accent,#4f46e5) 20%,transparent)!important}.student-do-now-number{display:none!important}.student-do-now-copy h2{font-size:clamp(1.35rem,3vw,2rem)!important;line-height:1.12!important;margin:.35rem 0 .55rem!important}.student-do-now-copy p{font-size:.91rem!important;line-height:1.5!important;max-width:620px!important;opacity:.67}.student-do-now-meta{display:none!important}.student-do-now-action{align-self:center!important;min-width:190px}.student-do-now-action small{font-size:.7rem!important;opacity:.47!important;max-width:190px!important}.student-primary-cta{min-height:46px!important;padding-inline:18px!important}
+.v506-dashboard-quiet-links{display:flex;align-items:center;gap:5px;padding:0 3px}.v506-dashboard-quiet-links a{font-size:.73rem;text-decoration:none;color:inherit;opacity:.58;padding:6px 8px;border-radius:8px}.v506-dashboard-quiet-links a:hover{opacity:1;background:var(--v506-soft)}
+.student-attention-bar{margin-top:9px!important;padding:10px 12px!important;border-radius:12px!important;box-shadow:none!important}.student-attention-bar>div:first-child small{display:none!important}.student-attention-actions a{padding:5px 8px!important;font-size:.72rem!important}
+.student-dashboard-more{margin-top:8px!important;border-radius:14px!important;border:1px solid var(--v506-line)!important;background:transparent!important}.student-dashboard-more>summary{padding:12px 14px!important}.student-dashboard-more>summary>span{gap:9px!important}.student-dashboard-more>summary i{width:28px!important;height:28px!important}.student-dashboard-more>summary strong{font-size:.84rem!important}.student-dashboard-more>summary small{font-size:.69rem!important;opacity:.48}.student-dashboard-more>summary>b{font-size:.69rem!important;opacity:.5}.student-dashboard-more-body{padding-top:6px!important}.dashboard-logout{opacity:.55;font-size:.72rem}
+
+/* Course = current lesson first, entire map stays optional. */
+.view-course main{max-width:980px;margin-inline:auto}.view-course .course-map-hero{padding-bottom:10px!important;background:transparent!important;border:0!important}.view-course .course-map-hero p{margin-bottom:0}.course-focus-card{padding:20px!important;border-radius:17px!important;box-shadow:none!important}.course-focus-card>div>span{font-size:.68rem!important}.course-focus-card>div>strong{font-size:1.25rem!important}.course-focus-card p{font-size:.84rem!important;opacity:.66}.course-full-map{margin-top:12px!important;border-radius:14px!important}.course-full-map>summary{padding:13px!important}.course-full-map>summary small{opacity:.5}
+
+/* Skills = recommendation first; maps are secondary. */
+.view-skills main,.view-skill_branch main,.view-skill_detail main{max-width:1020px;margin-inline:auto}.view-skills .skill-hero{padding:16px 4px!important;background:transparent!important;border:0!important}.view-skills .skill-hero p{max-width:650px!important}.view-skills .skill-hero-stats{display:flex!important;gap:16px!important;flex-wrap:wrap}.view-skills .skill-hero-stats>div{padding:0!important;background:none!important;border:0!important}.view-skills .skill-hero-stats span{font-size:.68rem!important}.view-skills .skill-next-card{padding:19px!important;border-radius:17px!important;box-shadow:none!important}.view-skills .skill-next-card h2{font-size:1.3rem!important}.view-skills .student-skill-assignments{margin-top:10px!important}.view-skills .skill-branch-grid{gap:8px!important}.view-skills .skill-branch-card{padding:14px!important;box-shadow:none!important}.view-skills .skill-branch-card p{display:none!important}.view-skills .skill-branch-meta{display:none!important}.view-skills .skill-legend{display:none!important}
+.skill-detail-hero,.skill-branch-hero{padding:18px!important;border-radius:16px!important;box-shadow:none!important}.skill-roadmap{gap:10px!important}.skill-node{box-shadow:none!important}
+
+/* Growth = one recommended route; roadmap is reference. */
+.view-growth main,.view-growth_path main{max-width:1020px;margin-inline:auto}.view-growth .v50-hero,.view-growth_path .v50-hero{padding:16px 2px!important;background:transparent!important;border:0!important}.view-growth .v50-hero .v50-chip-row,.view-growth_path .v50-hero .v50-chip-row{display:none!important}.view-growth .v50-growth-map{gap:8px!important}.view-growth .v50-growth-node{padding:14px!important;border-radius:14px!important;box-shadow:none!important}.view-growth .v50-growth-node p{font-size:.77rem!important}.view-growth_path .v50-module-list{gap:8px!important}.view-growth_path .v50-module{box-shadow:none!important}.view-growth_path .v50-growth-cycle{grid-template-columns:1fr 1fr!important}
+
+/* Results are a readable list, not a dashboard wall. */
+.view-project_results main{max-width:900px;margin-inline:auto}.student-results-hero{padding:16px 2px!important;background:transparent!important;border:0!important}.student-results-hero h1{font-size:1.7rem!important}.student-results-hero p{font-size:.84rem!important;opacity:.62}.student-results-card-grid{display:grid!important;grid-template-columns:1fr!important;gap:7px!important}.student-result-card{padding:14px!important;border-radius:13px!important;box-shadow:none!important}.student-result-card p{display:none!important}.student-result-card h2{font-size:1rem!important;margin:.25rem 0!important}
+
+/* Calendar and community: reduce decorative density. */
+.view-calendar main,.view-community main,.view-project_lobbies main{max-width:1020px;margin-inline:auto}.school-calendar-hero{padding:17px!important}.school-calendar-summary{display:none!important}.school-calendar-legend{font-size:.7rem!important;opacity:.55}.school-week{box-shadow:none!important}.school-week:not(.current){opacity:.78}.school-week .week-plan span{font-size:.74rem!important}.school-week .week-class-focus{font-size:.74rem!important}
+
+/* Forms and reading surfaces */
+body:not(.assessment-mode) input,body:not(.assessment-mode) textarea,body:not(.assessment-mode) select{border-radius:10px!important;box-shadow:none!important}.notice{border-radius:11px!important;box-shadow:none!important;font-size:.8rem!important}.text-link,.mini-action{font-size:.76rem!important}
+
+@media(max-width:900px){
+  body:not(.assessment-mode) .shell{width:min(100% - 18px,1180px)}
+  .brand>span:last-child{display:none}.student-main-menu>a span,.student-nav-group>summary span{display:inline!important}
+  .v506-compass{grid-template-columns:minmax(0,1fr) auto}.v506-compass-context{display:none}.v506-compass-location strong{max-width:45vw}
+  .student-do-now-card{grid-template-columns:1fr!important}.student-do-now-action{min-width:0!important}.student-do-now-action small{max-width:none!important}.student-primary-cta{width:100%!important}
+}
+@media(max-width:820px){
+  .student-main-menu{grid-template-columns:1fr!important}.student-nav-continue{order:-1}.student-nav-home{order:0}.student-nav-group{order:1}.student-main-menu>a span,.student-nav-group>summary span{display:inline!important}
+  .v506-top-help{display:none}.account-chip span{display:none!important}
+  .v506-compass{margin-top:5px}.v506-compass-location span,.v506-compass-location b{display:none}.v506-compass-location strong{max-width:52vw}.v506-continue{font-size:.72rem;padding-inline:8px}
+  .v506-dashboard-quiet-links{overflow:auto;white-space:nowrap;padding-bottom:2px}.student-do-now-card{padding:17px!important}.student-do-now-copy h2{font-size:1.35rem!important}
+  .view-growth_path .v50-growth-cycle{grid-template-columns:1fr!important}
+}
+@media(max-width:520px){.v506-compass-location strong{max-width:42vw}.v506-help{display:none}.v506-dashboard-quiet-links a{font-size:.69rem}.student-welcome-copy h1{font-size:1.28rem!important}}
+.v506-map-details{margin-top:10px;border:1px solid var(--v506-line);border-radius:14px;background:transparent}.v506-map-details>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 14px}.v506-map-details>summary::-webkit-details-marker{display:none}.v506-map-details>summary span{display:grid;gap:2px}.v506-map-details>summary strong{font-size:.84rem}.v506-map-details>summary small{font-size:.7rem;opacity:.5}.v506-map-details>summary>b{font-size:.7rem;opacity:.55}.v506-map-details[open]>summary{border-bottom:1px solid var(--v506-line)}.v506-map-details>.skill-branch-grid,.v506-map-details>.skill-roadmap,.v506-map-details>.skill-evidence-timeline{margin:10px!important}
+.v506-growth-focus{margin:8px 0 12px;padding:20px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;border:1px solid color-mix(in srgb,var(--accent,#4f46e5) 20%,transparent);border-radius:17px;background:var(--surface,#fff)}.v506-growth-focus>div{display:grid;gap:5px}.v506-growth-focus span{font-size:.66rem;font-weight:850;letter-spacing:.08em;opacity:.58}.v506-growth-focus h2{margin:0;font-size:1.35rem}.v506-growth-focus p{margin:0;max-width:650px;font-size:.84rem;line-height:1.45;opacity:.66}.v506-growth-focus small{font-size:.72rem;opacity:.5}@media(max-width:720px){.v506-growth-focus{grid-template-columns:1fr}.v506-growth-focus .btn{width:100%}}
+.v506-calendar-next{margin:8px 0 12px;padding:18px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;border:1px solid var(--v506-line);border-radius:16px;background:var(--surface,#fff)}.v506-calendar-next>div{display:grid;gap:4px}.v506-calendar-next span{font-size:.65rem;font-weight:850;letter-spacing:.08em;opacity:.55}.v506-calendar-next strong{font-size:1.05rem}.v506-calendar-next p{margin:0;font-size:.84rem;opacity:.65}.v506-calendar-map>.school-calendar-legend{margin:10px 12px 0}.v506-calendar-map>.school-year-grid{margin:8px 10px 12px!important}@media(max-width:720px){.v506-calendar-next{grid-template-columns:1fr}.v506-calendar-next .btn{width:100%}}
+/* Knowledge/reference pages stay available, but decorative copy is muted. */
+.view-knowledgebase main,.view-kb_lesson main{max-width:1040px;margin-inline:auto}.view-knowledgebase .kb-hero,.view-kb_lesson .kb-hero{padding:15px 2px!important;background:transparent!important;border:0!important}.view-knowledgebase .kb-hero>p,.view-kb_lesson .kb-hero>p{font-size:.82rem!important;max-width:700px!important}.kb-mode-switch{font-size:.72rem!important}.kb-overall-progress{margin-top:9px!important}.kb-browser-head h2{font-size:1.05rem!important}.kb-browser-head p{font-size:.76rem!important;opacity:.58}.kb-topic-grid{gap:8px!important}.kb-topic-card{box-shadow:none!important;border-radius:13px!important}.kb-topic-card p{font-size:.75rem!important;line-height:1.4!important}.kb-material-facts,.kb-material-goals{font-size:.72rem!important}
+.v506-map-details>.v50-module-list,.v506-map-details>.v50-growth-map{margin:10px!important}
+
+/* ---- source: unified-page-shell-v50-7.css ---- */
+/* EDUCANET v50.7 · Unified Student Page Shell */
+:root{--v507-line:color-mix(in srgb,currentColor 10%,transparent);--v507-soft:color-mix(in srgb,currentColor 4%,transparent)}
+body.v507-shell-active main{max-width:1020px;margin-inline:auto}
+.v507-page-shell{margin:10px 0 14px;padding:18px 20px 13px;border:1px solid var(--v507-line);border-radius:16px;background:var(--surface,#fff);box-shadow:none}
+.v507-shell-kicker{display:flex;align-items:center;gap:8px;margin-bottom:9px;font-size:.69rem;font-weight:800}.v507-shell-kicker a{color:inherit;text-decoration:none;opacity:.58}.v507-shell-kicker a:hover{opacity:1}.v507-shell-kicker span{padding:3px 7px;border-radius:999px;background:var(--v507-soft);opacity:.65}
+.v507-shell-main{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:22px;align-items:end}.v507-shell-main>div:first-child>span{display:block;margin-bottom:4px;font-size:.64rem;font-weight:900;letter-spacing:.1em;opacity:.48}.v507-shell-main h1{margin:0;font-size:clamp(1.35rem,2.5vw,1.9rem);line-height:1.08}.v507-shell-main p{margin:7px 0 0;max-width:680px;font-size:.83rem;line-height:1.48;opacity:.62}.v507-shell-actions{display:flex;align-items:center;gap:7px;min-width:max-content}.v507-shell-actions .v507-primary{min-height:42px!important}.v507-shell-rule{display:flex;align-items:center;gap:9px;margin-top:12px}.v507-shell-rule>span{height:1px;flex:1;background:var(--v507-line)}.v507-shell-rule small{font-size:.65rem;opacity:.38;white-space:nowrap}
+
+/* Old view-specific hero/header layers are redundant once the shared shell exists. */
+.v507-shell-active.view-course_lesson .lesson-course-hero,
+.v507-shell-active.view-next_lesson .lesson-course-hero,
+.v507-shell-active.view-skill_detail .skill-detail-hero,
+.v507-shell-active.view-kb_lesson .kb-lesson-toolbar,
+.v507-shell-active.view-kb_lesson .kb-lesson-context-strip,
+.v507-shell-active.view-recovery .recovery-hero,
+.v507-shell-active.view-review .adaptive-review-hero,
+.v507-shell-active.view-project_workspace .pw-project-head,
+.v507-shell-active.view-project_lobbies .team-hero,
+.v507-shell-active.view-community .social-hero,
+.v507-shell-active.view-profile .social-profile-hero{display:none!important}
+
+.v507-shell-active #v507-primary-work{scroll-margin-top:105px}
+
+/* Course detail: current task stays visible, map/materials are secondary. */
+.v507-shell-active.view-course_lesson .guided-lesson-focus,
+.v507-shell-active.view-next_lesson .guided-lesson-focus{margin-top:0!important;border-radius:15px!important;box-shadow:none!important}
+.v507-shell-active.view-course_lesson .guided-lesson-map,
+.v507-shell-active.view-next_lesson .guided-lesson-map{margin-top:8px!important}
+.v507-shell-active.view-course_lesson .next-lesson-shell,
+.v507-shell-active.view-next_lesson .next-lesson-shell{margin-top:8px!important}
+
+/* Skill detail: current action dominates, mastery math is detail. */
+.v507-shell-active.view-skill_detail .skill-detail-layout{display:block!important}
+.v507-shell-active.view-skill_detail .skill-actions{max-width:760px;margin:0 auto!important;padding:18px!important;border-radius:15px!important;box-shadow:none!important}
+.v507-shell-active.view-skill_detail .skill-actions>details{margin-top:8px}.v507-shell-active.view-skill_detail .skill-actions h2{font-size:1.12rem!important}
+
+/* Knowledge: shell is the first decision; full tour is reference/detail. */
+.v507-shell-active.view-kb_lesson .kb-lesson-screen{margin-top:0!important}.v507-shell-active.view-kb_lesson .kb-lesson-layout{display:block!important}.v507-shell-active.view-kb_lesson .kb-lesson-main{max-width:900px;margin-inline:auto}.v507-shell-active.view-kb_lesson .kb-lesson-pager{margin-top:10px!important}
+
+/* Recovery: only one unfinished step is shown until details are expanded. */
+.v507-shell-active.view-recovery .recovery-roadmap{display:grid!important;gap:8px!important}.v507-shell-active.view-recovery .recovery-step{box-shadow:none!important;border-radius:13px!important}.v507-shell-active.view-recovery .recovery-step.v507-current-work{border-color:color-mix(in srgb,var(--accent,#4f46e5) 24%,transparent)!important}
+
+/* Project result: feedback is reached through One Task first; full rubric on demand. */
+.v507-shell-active.view-project_result .student-project-result.detail{margin-top:0!important}.v507-shell-active.view-project_result .student-result-back{display:none!important}
+
+/* Team surfaces: current team/work comes before planning, analytics and discovery. */
+.v507-shell-active.view-project_lobbies .team-current,
+.v507-shell-active.view-project_lobbies .team-create-grid{margin-top:0!important}.v507-shell-active.view-project_lobbies .team-current{box-shadow:none!important}
+.v507-shell-active.view-project_workspace .pw-lifecycle,.v507-shell-active.view-project_workspace .pw-tabs{margin-block:7px!important}.v507-shell-active.view-project_workspace .pw-next-action,.v507-shell-active.view-project_workspace .pw-role-onboarding{box-shadow:none!important;border-radius:15px!important}
+.v507-shell-active.view-project_workspace .pw-stat-row{gap:7px!important}.v507-shell-active.view-project_workspace .pw-stat-row article{box-shadow:none!important}
+.v507-shell-active.view-community .classmate-grid{gap:8px!important}.v507-shell-active.view-community .classmate-card{box-shadow:none!important;border-radius:13px!important}
+
+/* Profile becomes edit-first for the owner; portfolio/mastery are reference. */
+.v507-shell-active.view-profile .profile-editor{max-width:900px;margin-inline:auto;box-shadow:none!important}
+
+/* Shared low-density details across all consolidated views. */
+.v507-shell-active .dashboard-panel,.v507-shell-active .panel{box-shadow:none!important}.v507-shell-active .dashboard-panel-head p{max-width:680px}.v507-shell-active .hero-actions{gap:6px!important}.v507-shell-active .button-row{gap:6px!important}
+
+@media(max-width:760px){
+ .v507-page-shell{padding:15px 14px 11px;margin-top:7px}.v507-shell-main{grid-template-columns:1fr;gap:12px}.v507-shell-actions{display:grid;grid-template-columns:1fr auto;min-width:0}.v507-shell-actions .v507-primary{width:100%!important}.v507-shell-rule small{display:none}.v507-shell-kicker{margin-bottom:7px}
+}
+@media(max-width:520px){.v507-shell-actions{grid-template-columns:1fr}.v507-shell-main h1{font-size:1.35rem}}
+
+/* ---- source: student-design-system-v50-7-1.css ---- */
+/* EDUCANET v50.7.1 · Student UI Repair · final normalization layer */
+:root{
+  --edu-font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --edu-radius:14px;--edu-radius-sm:10px;--edu-max:1080px;
+  --edu-line:color-mix(in srgb,var(--text,#111827) 11%,transparent);
+  --edu-muted:#66717e;--edu-soft:color-mix(in srgb,var(--text,#111827) 4%,transparent);
+}
+body:not(.assessment-mode){font-family:var(--edu-font)!important;line-height:1.45;background:#f6f7f9!important;color:#111827!important}
+body:not(.assessment-mode) button,body:not(.assessment-mode) input,body:not(.assessment-mode) textarea,body:not(.assessment-mode) select{font-family:var(--edu-font)!important}
+body:not(.assessment-mode) h1,body:not(.assessment-mode) h2,body:not(.assessment-mode) h3,body:not(.assessment-mode) h4{font-family:var(--edu-font)!important;letter-spacing:-.025em!important;color:#111827}
+body:not(.assessment-mode) p{color:var(--edu-muted)}
+body:not(.assessment-mode) main{padding:28px 0 64px!important}
+body:not(.assessment-mode) main>section,body:not(.assessment-mode) main>article,body:not(.assessment-mode) main>details{scroll-margin-top:92px}
+body:not(.assessment-mode) .hero h1{font-size:clamp(1.75rem,3.1vw,2.65rem)!important;line-height:1.08!important;margin-bottom:10px!important}
+body:not(.assessment-mode) .hero p{font-size:.94rem!important;line-height:1.55!important;max-width:720px!important}
+body:not(.assessment-mode) .eyebrow{font-size:.68rem!important;letter-spacing:.09em!important;margin-bottom:7px!important}
+
+/* Header: one stable row, no competing decorative icon families. */
+body:not(.assessment-mode) .topbar{min-height:64px!important;margin-top:10px!important;padding:8px 10px!important;border:1px solid var(--edu-line)!important;border-radius:14px!important;background:#fff!important;box-shadow:none!important;position:relative!important;top:auto!important}
+body:not(.assessment-mode) .brand{gap:8px!important;font-size:.8rem!important;letter-spacing:-.01em!important}
+body:not(.assessment-mode) .brand-mark{width:30px!important;height:30px!important;border-radius:9px!important;font-size:.72rem!important;box-shadow:none!important;background:#111827!important}
+body:not(.assessment-mode) .brand>span:last-child{white-space:nowrap}
+body:not(.assessment-mode) .student-main-menu{gap:2px!important;margin:0 auto!important;padding:3px!important;border:1px solid var(--edu-line)!important;border-radius:12px!important;background:#f3f5f7!important;box-shadow:none!important}
+body:not(.assessment-mode) .student-main-menu>a,body:not(.assessment-mode) .student-nav-group>summary{min-height:36px!important;padding:0 11px!important;border-radius:9px!important;gap:0!important;font-size:.76rem!important;font-weight:700!important;box-shadow:none!important}
+body:not(.assessment-mode) .student-main-menu>a>i,body:not(.assessment-mode) .student-nav-group>summary>i{display:none!important}
+body:not(.assessment-mode) .student-nav-group>summary>b{margin-left:7px!important;font-size:.65rem!important}
+body:not(.assessment-mode) .student-main-menu>a:hover,body:not(.assessment-mode) .student-nav-group>summary:hover,body:not(.assessment-mode) .student-nav-home.active,body:not(.assessment-mode) .student-nav-group.active>summary{background:#fff!important;box-shadow:none!important;transform:none!important}
+body:not(.assessment-mode) .student-nav-continue{background:var(--accent,#6d3df5)!important;color:#fff!important;padding-inline:14px!important}
+body:not(.assessment-mode) .student-nav-popover{width:300px!important;border-radius:12px!important;box-shadow:0 16px 40px rgba(17,24,39,.10)!important}
+body:not(.assessment-mode) .student-nav-popover>a,body:not(.assessment-mode) .student-nav-popover>span.disabled{grid-template-columns:1fr auto!important;min-height:48px!important;padding:8px 10px!important}
+body:not(.assessment-mode) .student-nav-popover>a>i,body:not(.assessment-mode) .student-nav-popover>span.disabled>i{display:none!important}
+body:not(.assessment-mode) .topbar-right{gap:5px!important}
+body:not(.assessment-mode) .learning-hud,body:not(.assessment-mode) .class-chip{display:none!important}
+body:not(.assessment-mode) .account-chip{width:34px!important;height:34px!important;padding:0!important;display:grid!important;place-items:center!important;border:1px solid var(--edu-line)!important;border-radius:10px!important;background:#fff!important}
+body:not(.assessment-mode) .account-chip span{display:none!important}
+body:not(.assessment-mode) .account-chip img,body:not(.assessment-mode) .account-chip>i{width:28px!important;height:28px!important;border:0!important;border-radius:8px!important;background:#f3f5f7!important;font-size:.72rem!important}
+body:not(.assessment-mode) .v506-top-help{width:34px!important;height:34px!important;border-radius:10px!important;background:#f3f5f7!important;font-size:.78rem!important}
+
+/* Compass / shell use the same visual grammar. */
+body:not(.assessment-mode) .v506-compass{min-height:40px!important;margin-top:8px!important;padding:5px 7px 5px 9px!important;border:1px solid var(--edu-line)!important;border-radius:11px!important;background:#fff!important;box-shadow:none!important}
+body:not(.assessment-mode) .v506-compass-location a{background:#f3f5f7!important}
+body:not(.assessment-mode) .v506-compass-location strong{font-size:.76rem!important}
+body:not(.assessment-mode) .v506-compass-context{font-size:.7rem!important}
+body:not(.assessment-mode) .v506-continue{min-height:30px!important;border-radius:8px!important;padding:0 11px!important;font-size:.72rem!important}
+body.v507-shell-active:not(.assessment-mode) main{max-width:var(--edu-max)!important}
+body:not(.assessment-mode) .v507-page-shell{margin:9px 0 14px!important;padding:17px 18px 13px!important;border:1px solid var(--edu-line)!important;border-radius:14px!important;background:#fff!important}
+body:not(.assessment-mode) .v507-shell-main{gap:18px!important;align-items:center!important}
+body:not(.assessment-mode) .v507-shell-main h1{font-size:clamp(1.35rem,2.5vw,1.85rem)!important}
+body:not(.assessment-mode) .v507-shell-main p{font-size:.86rem!important;color:var(--edu-muted)!important;opacity:1!important}
+
+/* Shared components: consistent radii, typography and spacing. */
+body:not(.assessment-mode) .panel,body:not(.assessment-mode) .dashboard-panel,body:not(.assessment-mode) .action-card,body:not(.assessment-mode) .question-card,body:not(.assessment-mode) .kb-article,body:not(.assessment-mode) .student-result-card{border-radius:var(--edu-radius)!important;box-shadow:none!important;border-color:var(--edu-line)!important}
+body:not(.assessment-mode) .btn{min-height:42px!important;padding:0 16px!important;border-radius:10px!important;font-size:.78rem!important;font-weight:750!important;box-shadow:none!important;transform:none!important}
+body:not(.assessment-mode) .btn:hover{transform:none!important;filter:brightness(.98)}
+body:not(.assessment-mode) .btn.secondary{background:#fff!important;border-color:var(--edu-line)!important}
+body:not(.assessment-mode) .button-row{gap:8px!important;margin-top:18px!important}
+body:not(.assessment-mode) input,body:not(.assessment-mode) textarea,body:not(.assessment-mode) select{border-radius:9px!important;border-color:var(--edu-line)!important;box-shadow:none!important;font-size:.85rem!important}
+body:not(.assessment-mode) details>summary{font-family:var(--edu-font)!important}
+
+/* Dashboard regression fix: legacy grid column survived v50.6 and broke the page. */
+.view-dashboard main{max-width:920px!important}
+.view-dashboard .student-cockpit{max-width:920px!important;gap:12px!important}
+.view-dashboard .student-cockpit-main{display:grid!important;grid-template-columns:1fr!important;gap:12px!important}
+.view-dashboard .student-welcome-row{display:block!important;padding:8px 2px 5px!important}
+.view-dashboard .student-welcome-copy>span{font-size:.72rem!important;color:var(--edu-muted)!important;opacity:1!important}
+.view-dashboard .student-welcome-copy h1{font-size:clamp(1.55rem,3vw,2.15rem)!important;line-height:1.12!important;max-width:720px!important}
+.view-dashboard .student-do-now-card{width:100%!important;grid-template-columns:minmax(0,1fr) auto!important;gap:22px!important;align-items:center!important;padding:24px!important;border-radius:16px!important;background:#fff!important}
+.view-dashboard .student-do-now-copy h2{font-size:clamp(1.5rem,3vw,2.15rem)!important;line-height:1.1!important;max-width:620px!important}
+.view-dashboard .student-do-now-copy p{font-size:.91rem!important;color:var(--edu-muted)!important;opacity:1!important}
+.view-dashboard .student-do-now-action{min-width:220px!important;align-self:center!important}
+.view-dashboard .student-do-now-action small{max-width:220px!important;font-size:.7rem!important;color:var(--edu-muted)!important;opacity:.8!important}
+.view-dashboard .student-primary-cta{width:100%!important;min-height:46px!important;white-space:nowrap!important}
+.view-dashboard .v506-dashboard-quiet-links{display:flex!important;gap:18px!important;padding:4px 2px!important}
+.view-dashboard .v506-dashboard-quiet-links a{font-size:.75rem!important;color:var(--edu-muted)!important;text-decoration:none!important}
+.view-dashboard .student-dashboard-more{border-radius:12px!important;background:#fff!important}
+.view-dashboard .student-dashboard-more>summary{padding:12px 14px!important}
+.view-dashboard .student-dashboard-more>summary i{display:none!important}
+
+/* Map pages: same width and same card language. */
+.view-course main,.view-skills main,.view-growth main,.view-calendar main{max-width:960px!important}
+.view-course .course-map-hero,.view-skills .skill-hero,.view-growth .v50-hero,.view-calendar .school-calendar-hero{padding:22px 8px 16px!important}
+.view-course .course-map-hero h1,.view-skills .skill-hero h1,.view-growth .v50-hero h1,.view-calendar .school-calendar-hero h1{font-size:clamp(1.8rem,3.2vw,2.55rem)!important}
+.view-course .course-focus-card,.view-skills .skill-next-card,.view-growth .v506-growth-focus,.view-calendar .v506-calendar-next{padding:20px!important;border-radius:14px!important;background:#fff!important;border:1px solid var(--edu-line)!important;box-shadow:none!important}
+.view-course .course-focus-card,.view-skills .skill-next-card{grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:20px!important}
+.view-course .course-focus-card strong,.view-skills .skill-next-card h2{font-size:1.22rem!important}
+.view-course .course-full-map,.view-skills .v506-map-details,.view-growth .v506-map-details,.view-calendar .v506-map-details{border-radius:12px!important;background:#fff!important;border-color:var(--edu-line)!important}
+
+/* Profile/team/details: avoid floating islands and oversized blank gaps. */
+.v507-shell-active.view-profile main,.v507-shell-active.view-community main,.v507-shell-active.view-project_lobbies main,.v507-shell-active.view-project_workspace main{max-width:960px!important}
+.v507-shell-active.view-profile .profile-editor,.v507-shell-active.view-profile .profile-mastery{width:100%!important;max-width:900px!important;margin:14px auto!important;padding:20px!important;border-radius:14px!important;background:#fff!important}
+.v507-shell-active.view-profile .profile-editor h2{font-size:1.25rem!important}
+.v507-shell-active.view-profile .profile-editor label{font-size:.74rem!important}
+.v507-shell-active.view-profile fieldset{border-radius:10px!important;padding:12px!important}
+
+/* Remove decorative icon noise from primary student surfaces. */
+body:not(.assessment-mode) .dashboard-panel-head i,body:not(.assessment-mode) .student-do-now-number{box-shadow:none!important}
+body:not(.assessment-mode) .v506-dashboard-quiet-links a:first-child::first-letter{font-size:0}
+
+@media(max-width:900px){
+  body:not(.assessment-mode) .shell{width:min(calc(100% - 18px),1080px)!important}
+  body:not(.assessment-mode) .brand>span:last-child{display:none!important}
+  .view-dashboard .student-do-now-card{grid-template-columns:1fr!important;gap:14px!important}
+  .view-dashboard .student-do-now-action{min-width:0!important;width:100%!important}
+  .view-dashboard .student-do-now-action small{max-width:none!important}
+  .view-course .course-focus-card,.view-skills .skill-next-card{grid-template-columns:1fr!important}
+}
+@media(max-width:820px){
+  body:not(.assessment-mode) .topbar{padding:7px 8px!important}
+  body:not(.assessment-mode) .student-main-menu{border:0!important;background:#fff!important;padding:6px!important}
+  body:not(.assessment-mode) .student-main-menu>a,body:not(.assessment-mode) .student-nav-group>summary{min-height:44px!important;padding:0 12px!important}
+  body:not(.assessment-mode) .student-nav-popover>a,body:not(.assessment-mode) .student-nav-popover>span.disabled{grid-template-columns:1fr auto!important}
+  .view-dashboard .v506-dashboard-quiet-links{overflow:auto!important;white-space:nowrap!important}
+}
+@media(max-width:560px){
+  body:not(.assessment-mode) main{padding-top:18px!important}
+  .view-dashboard .student-do-now-card{padding:18px!important}
+  .view-dashboard .student-do-now-copy h2{font-size:1.45rem!important}
+  .view-dashboard .student-welcome-copy h1{font-size:1.45rem!important}
+  body:not(.assessment-mode) .v507-page-shell{padding:14px!important}
+  body:not(.assessment-mode) .v507-shell-actions{grid-template-columns:1fr!important;width:100%!important}
+}
+/* Repair summary layout after removing its decorative icon. */
+.view-dashboard .student-dashboard-more>summary>span{grid-template-columns:1fr!important;gap:2px!important;min-width:0!important}
+.view-dashboard .student-dashboard-more>summary strong{font-size:.82rem!important;line-height:1.2!important}
+.view-dashboard .student-dashboard-more>summary small{font-size:.68rem!important;line-height:1.3!important;color:var(--edu-muted)!important;opacity:.7!important}
+
+/* ---- source: student-design-system-v50-7-2.css ---- */
+/* EDUCANET v50.7.2 · UI Consistency Pass · semantic normalization */
+:root{color-scheme:light;--edu-content:960px;--edu-content-narrow:880px;--edu-space-1:6px;--edu-space-2:10px;--edu-space-3:14px;--edu-space-4:20px;--edu-space-5:28px}
+body:not(.assessment-mode){font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body:not(.assessment-mode) h1,body:not(.assessment-mode) h2,body:not(.assessment-mode) h3{overflow-wrap:normal;word-break:normal}
+body:not(.assessment-mode) h1{font-weight:780!important} body:not(.assessment-mode) h2{font-weight:760!important} body:not(.assessment-mode) h3{font-weight:740!important}
+body:not(.assessment-mode) p,body:not(.assessment-mode) li{line-height:1.55}
+body:not(.assessment-mode) :focus-visible{outline:3px solid color-mix(in srgb,var(--accent,#6d3df5) 24%,transparent)!important;outline-offset:2px!important}
+
+/* Header: every action is understandable without decoding an icon. */
+body:not(.assessment-mode) .topbar{max-width:var(--edu-max);margin-inline:auto!important}
+body:not(.assessment-mode) .topbar-right{display:flex!important;align-items:center!important;gap:6px!important}
+body:not(.assessment-mode) .v506-top-help,body:not(.assessment-mode) .account-chip{width:auto!important;height:34px!important;min-width:auto!important;padding:0 11px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;border:1px solid var(--edu-line)!important;border-radius:9px!important;background:#fff!important;text-decoration:none!important;color:#303846!important;font-size:.72rem!important;font-weight:740!important;line-height:1!important}
+body:not(.assessment-mode) .v506-top-help:hover,body:not(.assessment-mode) .account-chip:hover{background:#f6f7f9!important}
+body:not(.assessment-mode) .account-chip span{display:block!important}
+body:not(.assessment-mode) .account-chip img{width:22px!important;height:22px!important;margin-right:7px!important;border-radius:6px!important}
+body:not(.assessment-mode) .account-chip>i{display:none!important}
+
+/* Student Compass: breadcrumb + optional goal + one action. No duplicated help/state badges. */
+body:not(.assessment-mode) .v506-compass{grid-template-columns:minmax(0,1fr) auto auto!important;gap:10px!important;min-height:42px!important;padding:6px 7px 6px 12px!important}
+body:not(.assessment-mode) .v506-compass-location{gap:7px!important;overflow:hidden!important}
+body:not(.assessment-mode) .v506-compass-location span{opacity:.58!important;white-space:nowrap!important}
+body:not(.assessment-mode) .v506-compass-location b{opacity:.24!important;font-weight:500!important}
+body:not(.assessment-mode) .v506-compass-location strong{max-width:42vw!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+body:not(.assessment-mode) .v506-compass-context{justify-content:flex-end!important}
+body:not(.assessment-mode) .v506-compass-context .goal{padding:4px 8px!important;background:#f4f5f7!important;border-radius:7px!important;color:#66717e!important;font-size:.68rem!important;font-weight:700!important;max-width:180px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+body:not(.assessment-mode) .v506-compass-actions{justify-content:flex-end!important}
+body:not(.assessment-mode) .v506-continue{min-height:31px!important;padding:0 12px!important;font-size:.72rem!important}
+
+/* One disclosure row across dashboard, maps and secondary detail. */
+body:not(.assessment-mode) .student-dashboard-more,body:not(.assessment-mode) .v506-progressive,body:not(.assessment-mode) .course-full-map{overflow:hidden!important;border:1px solid var(--edu-line)!important;border-radius:12px!important;background:#fff!important;box-shadow:none!important}
+body:not(.assessment-mode) .student-dashboard-more>summary,body:not(.assessment-mode) .v506-progressive>summary,body:not(.assessment-mode) .course-full-map>summary{min-height:58px!important;padding:11px 14px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:16px!important;list-style:none!important}
+body:not(.assessment-mode) .student-dashboard-more>summary::-webkit-details-marker,body:not(.assessment-mode) .v506-progressive>summary::-webkit-details-marker,body:not(.assessment-mode) .course-full-map>summary::-webkit-details-marker{display:none!important}
+body:not(.assessment-mode) .student-dashboard-more>summary>span,body:not(.assessment-mode) .v506-progressive>summary>span,body:not(.assessment-mode) .course-full-map>summary>span{display:grid!important;grid-template-columns:1fr!important;gap:2px!important;flex:1 1 auto!important;min-width:0!important;width:auto!important;max-width:none!important}
+body:not(.assessment-mode) .student-dashboard-more>summary strong,body:not(.assessment-mode) .v506-progressive>summary strong,body:not(.assessment-mode) .course-full-map>summary>span{font-size:.82rem!important;font-weight:760!important;line-height:1.25!important;white-space:normal!important}
+body:not(.assessment-mode) .student-dashboard-more>summary small,body:not(.assessment-mode) .v506-progressive>summary small,body:not(.assessment-mode) .course-full-map>summary small{font-size:.68rem!important;line-height:1.35!important;color:var(--edu-muted)!important;opacity:.7!important}
+body:not(.assessment-mode) .student-dashboard-more>summary>b,body:not(.assessment-mode) .v506-progressive>summary>b,body:not(.assessment-mode) .course-full-map>summary>strong{flex:0 0 auto!important;font-size:.68rem!important;font-weight:740!important;color:#626b78!important;background:#f3f5f7!important;border-radius:8px!important;padding:6px 9px!important;white-space:nowrap!important}
+body:not(.assessment-mode) .student-dashboard-more[open]>summary,body:not(.assessment-mode) .v506-progressive[open]>summary,body:not(.assessment-mode) .course-full-map[open]>summary{border-bottom:1px solid var(--edu-line)!important}
+
+/* Dashboard: preserve a single reading column and remove redundant account/footer noise. */
+.view-dashboard .student-dashboard-more>summary>span.student-dashboard-more-copy{display:grid!important;flex:1 1 auto!important;min-width:240px!important}
+.view-dashboard .student-dashboard-more>summary strong{white-space:nowrap!important}
+.view-dashboard .dashboard-logout{display:none!important}
+.view-dashboard .v506-dashboard-quiet-links{gap:8px!important;flex-wrap:wrap!important}
+.view-dashboard .v506-dashboard-quiet-links a{padding:6px 9px!important;border-radius:8px!important;background:transparent!important;color:#697381!important;font-size:.72rem!important;font-weight:650!important}
+.view-dashboard .v506-dashboard-quiet-links a:hover{background:#eef1f4!important;color:#303846!important}
+.view-dashboard .student-do-now-number{display:none!important}
+.view-dashboard .student-do-now-card{border-color:color-mix(in srgb,var(--accent,#6d3df5) 20%,var(--edu-line))!important}
+
+/* Map surfaces share exactly the same vertical rhythm. */
+.view-course main,.view-skills main,.view-growth main,.view-calendar main{width:100%!important;max-width:var(--edu-content)!important}
+.view-course .course-map-hero,.view-skills .skill-hero,.view-growth .v50-hero,.view-calendar .school-calendar-hero{margin:0!important;padding:28px 8px 20px!important}
+.view-course .course-map-hero h1,.view-skills .skill-hero h1,.view-growth .v50-hero h1,.view-calendar .school-calendar-hero h1{font-size:clamp(1.8rem,3vw,2.35rem)!important;line-height:1.08!important;margin:.2rem 0 .55rem!important}
+.view-course .course-map-hero p,.view-skills .skill-hero p,.view-growth .v50-hero p,.view-calendar .school-calendar-hero p{font-size:.88rem!important;max-width:660px!important;color:#74808e!important}
+.view-course .course-focus-card,.view-skills .skill-next-card,.view-growth .v506-growth-focus,.view-calendar .v506-calendar-next{margin:8px 0 14px!important;padding:20px!important;min-height:126px!important}
+.view-course .course-focus-card p,.view-skills .skill-next-card p,.view-growth .v506-growth-focus p,.view-calendar .v506-calendar-next p{margin-bottom:0!important;color:#74808e!important}
+
+/* Skills: the default view is the recommendation; mastery metrics belong to detail. */
+.view-skills .skill-hero-stats{display:none!important}
+.view-skills .skill-next-card>div:last-child{min-width:205px!important;display:flex!important;justify-content:flex-end!important;align-items:center!important}
+.view-skills .skill-next-card>div:last-child>strong,.view-skills .skill-next-card>div:last-child>.skill-bar{display:none!important}
+.view-skills .skill-overview-meta{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:1px!important;margin:0!important;border-bottom:1px solid var(--edu-line)!important;background:var(--edu-line)!important}
+.view-skills .skill-overview-meta>div{padding:14px 16px!important;background:#fff!important;min-width:0!important}
+.view-skills .skill-overview-meta strong{display:block!important;font-size:1rem!important;line-height:1.2!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.view-skills .skill-overview-meta span{display:block!important;margin-top:3px!important;font-size:.66rem!important;color:var(--edu-muted)!important}
+.view-skills .skill-branch-grid{padding:14px!important;margin:0!important}
+
+/* Unified Page Shell: one hierarchy and one predictable control row. */
+body.v507-shell-active:not(.assessment-mode) main{max-width:var(--edu-content)!important}
+body:not(.assessment-mode) .v507-page-shell{padding:18px!important;margin:9px 0 16px!important}
+body:not(.assessment-mode) .v507-shell-main{grid-template-columns:minmax(0,1fr) auto!important;gap:24px!important}
+body:not(.assessment-mode) .v507-shell-main h1{margin:.15rem 0 .35rem!important;line-height:1.1!important}
+body:not(.assessment-mode) .v507-shell-main p{max-width:660px!important;margin:0!important;line-height:1.5!important}
+body:not(.assessment-mode) .v507-shell-actions{gap:7px!important}
+
+/* Forms and empty states look like normal system surfaces, not separate mini-apps. */
+body:not(.assessment-mode) label{color:#4f5967}
+body:not(.assessment-mode) input,body:not(.assessment-mode) textarea,body:not(.assessment-mode) select{min-height:42px!important;background:#fff!important;color:#111827!important;padding:10px 12px!important}
+body:not(.assessment-mode) textarea{min-height:96px!important;resize:vertical}
+body:not(.assessment-mode) fieldset{border:1px solid var(--edu-line)!important;box-shadow:none!important}
+body:not(.assessment-mode) .student-result-empty,body:not(.assessment-mode) .adaptive-empty,body:not(.assessment-mode) .empty-state{padding:28px!important;border:1px solid var(--edu-line)!important;border-radius:14px!important;background:#fff!important;text-align:left!important;box-shadow:none!important}
+body:not(.assessment-mode) .student-result-empty>span,body:not(.assessment-mode) .adaptive-empty>span,body:not(.assessment-mode) .empty-state>i{display:none!important}
+body:not(.assessment-mode) .student-result-empty h2,body:not(.assessment-mode) .adaptive-empty h2,body:not(.assessment-mode) .empty-state h2{font-size:1.15rem!important;margin-top:0!important}
+
+/* Profile + team surfaces use a consistent content width and form density. */
+.v507-shell-active.view-profile .profile-editor,.v507-shell-active.view-profile .social-about,.v507-shell-active.view-community .friend-requests,.v507-shell-active.view-project_lobbies .team-current,.v507-shell-active.view-project_lobbies .team-create-grid,.v507-shell-active.view-project_workspace #v507-primary-work{max-width:var(--edu-content-narrow)!important;margin:14px auto!important}
+.v507-shell-active.view-profile .profile-editor{padding:22px!important}
+.v507-shell-active.view-profile .social-profile-form{gap:14px!important}
+.v507-shell-active.view-profile .social-profile-form label>span,.v507-shell-active.view-profile .profile-editor label{font-size:.7rem!important;font-weight:720!important}
+
+/* Make secondary text actually readable without competing with primary content. */
+body:not(.assessment-mode) small{line-height:1.4}
+body:not(.assessment-mode) .text-link{font-weight:680!important;text-decoration:none!important}
+body:not(.assessment-mode) .notice{border-radius:11px!important;box-shadow:none!important}
+
+@media(max-width:900px){
+  body:not(.assessment-mode) .v506-top-help,body:not(.assessment-mode) .account-chip{padding-inline:9px!important}
+  body:not(.assessment-mode) .v506-compass{grid-template-columns:minmax(0,1fr) auto!important}
+  body:not(.assessment-mode) .v506-compass-context{display:none!important}
+  .view-skills .skill-next-card>div:last-child{min-width:0!important;justify-content:stretch!important}
+  .view-skills .skill-next-card .btn{width:100%!important}
+}
+@media(max-width:820px){
+  body:not(.assessment-mode) .v506-top-help{display:none!important}
+  body:not(.assessment-mode) .account-chip{height:38px!important;padding:0 10px!important}
+  body:not(.assessment-mode) .account-chip img{display:none!important}
+  body:not(.assessment-mode) .v506-compass{padding-inline:10px 6px!important}
+  body:not(.assessment-mode) .v506-compass-location span{display:none!important}
+  body:not(.assessment-mode) .v506-compass-location b{display:none!important}
+  body:not(.assessment-mode) .v506-compass-location strong{max-width:48vw!important}
+  body:not(.assessment-mode) .student-dashboard-more>summary>b,body:not(.assessment-mode) .v506-progressive>summary>b,body:not(.assessment-mode) .course-full-map>summary>strong{display:none!important}
+  .view-skills .skill-overview-meta{grid-template-columns:1fr!important}
+  body:not(.assessment-mode) .v507-shell-main{grid-template-columns:1fr!important;gap:14px!important}
+  body:not(.assessment-mode) .v507-shell-actions{width:100%!important;grid-template-columns:1fr!important}
+}
+@media(max-width:560px){
+  body:not(.assessment-mode) main{padding-bottom:44px!important}
+  body:not(.assessment-mode) .topbar{min-height:58px!important;margin-top:8px!important}
+  body:not(.assessment-mode) .brand-mark{width:28px!important;height:28px!important}
+  body:not(.assessment-mode) .account-chip{font-size:.7rem!important}
+  body:not(.assessment-mode) .v506-compass{margin-top:6px!important;min-height:38px!important}
+  body:not(.assessment-mode) .v506-compass-location strong{max-width:42vw!important;font-size:.72rem!important}
+  body:not(.assessment-mode) .v506-continue{padding-inline:9px!important}
+  .view-dashboard .student-dashboard-more>summary>span.student-dashboard-more-copy{min-width:0!important}
+  .view-dashboard .student-dashboard-more>summary strong{white-space:normal!important}
+  .view-course .course-map-hero,.view-skills .skill-hero,.view-growth .v50-hero,.view-calendar .school-calendar-hero{padding:20px 2px 14px!important}
+  .view-course .course-focus-card,.view-skills .skill-next-card,.view-growth .v506-growth-focus,.view-calendar .v506-calendar-next{padding:17px!important;min-height:0!important}
+}
+
+/* v50.7.2 resilience: do not depend on a cosmetic JS race for primary hierarchy. */
+.view-dashboard .v506-dashboard-quiet-links a:first-child::first-letter{font-size:inherit!important}
+
+/* ---- v50.7.3 density/purge refinements ---- */
+:root{--edu-reading:900px;--edu-control-h:40px}
+body:not(.assessment-mode) main{padding-top:16px!important;padding-bottom:34px!important}
+body:not(.assessment-mode) .shell{width:min(calc(100% - 28px),1080px)!important}
+body:not(.assessment-mode) .topbar{min-height:52px!important;padding-block:6px!important}
+body:not(.assessment-mode) .student-main-menu>a,
+body:not(.assessment-mode) .student-nav-group>summary{min-height:38px!important}
+body:not(.assessment-mode) .btn{min-height:var(--edu-control-h)!important}
+body:not(.assessment-mode) input,
+body:not(.assessment-mode) select{min-height:var(--edu-control-h)!important}
+body:not(.assessment-mode) textarea{min-height:104px!important}
+
+/* Fewer floating islands: major student surfaces follow one vertical rhythm. */
+body:not(.assessment-mode) main>section,
+body:not(.assessment-mode) main>div{scroll-margin-top:76px}
+body:not(.assessment-mode) .panel,
+body:not(.assessment-mode) .dashboard-panel,
+body:not(.assessment-mode) .action-card,
+body:not(.assessment-mode) .question-card,
+body:not(.assessment-mode) .kb-article,
+body:not(.assessment-mode) .student-result-card{margin-block:10px!important}
+body:not(.assessment-mode) .panel>h2:first-child,
+body:not(.assessment-mode) .dashboard-panel h2:first-child{margin-top:0!important}
+
+/* Details are secondary by design; keep their headers compact and consistent. */
+body:not(.assessment-mode) details:not(.student-nav-group)>summary{min-height:46px!important;padding-block:10px!important}
+body:not(.assessment-mode) details[open]:not(.student-nav-group)>summary{margin-bottom:0!important}
+body:not(.assessment-mode) .v506-progressive>summary,
+body:not(.assessment-mode) .student-dashboard-more>summary,
+body:not(.assessment-mode) .course-full-map>summary{min-height:50px!important}
+
+/* Unified Page Shell is the only orientation hero on detail pages. */
+body.v507-shell-active:not(.assessment-mode) .v507-page-shell{margin:8px 0 10px!important;padding:15px 16px 12px!important}
+body.v507-shell-active:not(.assessment-mode) .v507-shell-main{gap:14px!important}
+body.v507-shell-active:not(.assessment-mode) .v507-shell-main p{max-width:680px!important;margin-bottom:0!important}
+body.v507-shell-active:not(.assessment-mode) #v507-primary-work{margin-top:10px!important}
+
+/* Dashboard: reduce dead space while preserving one dominant task. */
+.view-dashboard .student-cockpit{gap:9px!important}
+.view-dashboard .student-welcome-row{padding:5px 2px 2px!important}
+.view-dashboard .student-do-now-card{padding:20px!important;gap:18px!important;min-height:0!important}
+.view-dashboard .student-do-now-copy h2{margin:.25rem 0 .45rem!important}
+.view-dashboard .student-do-now-copy p{margin:.35rem 0!important}
+.view-dashboard .v506-dashboard-quiet-links{padding:1px 2px 3px!important;gap:8px!important}
+.view-dashboard .student-dashboard-more{margin-top:2px!important}
+
+/* Map pages: recommendation first, map second, no oversized hero spacing. */
+.view-course .course-map-hero,
+.view-skills .skill-hero,
+.view-growth .v50-hero,
+.view-calendar .school-calendar-hero{padding:16px 4px 10px!important}
+.view-course .course-focus-card,
+.view-skills .skill-next-card,
+.view-growth .v506-growth-focus,
+.view-calendar .v506-calendar-next{margin:5px 0 10px!important;padding:17px!important;min-height:0!important}
+
+/* Long explanatory copy never competes visually with the next action. */
+body:not(.assessment-mode) .muted,
+body:not(.assessment-mode) small{line-height:1.4}
+body:not(.assessment-mode) .v507-shell-main p,
+body:not(.assessment-mode) .student-do-now-copy p,
+body:not(.assessment-mode) .course-focus-card p,
+body:not(.assessment-mode) .skill-next-card p{max-width:68ch}
+
+/* Empty states use the same compact component instead of page-sized blanks. */
+body:not(.assessment-mode) .adaptive-empty,
+body:not(.assessment-mode) .pw-empty-hero,
+body:not(.assessment-mode) .empty-state{min-height:0!important;padding:20px!important;border:1px solid var(--edu-line)!important;border-radius:12px!important;background:#fff!important;box-shadow:none!important}
+
+/* Mobile: preserve breathing room, remove horizontal decision rows. */
+@media(max-width:820px){
+  body:not(.assessment-mode) .shell{width:min(calc(100% - 16px),1080px)!important}
+  body:not(.assessment-mode) main{padding-top:12px!important;padding-bottom:28px!important}
+  body:not(.assessment-mode) .v506-compass{margin-top:6px!important}
+  .view-dashboard .student-do-now-card{padding:17px!important}
+  .view-dashboard .v506-dashboard-quiet-links{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important;overflow:visible!important;white-space:normal!important}
+  .view-dashboard .v506-dashboard-quiet-links a{text-align:center!important;padding:7px 5px!important;white-space:normal!important}
+}
+@media(max-width:560px){
+  body:not(.assessment-mode) .topbar{min-height:48px!important}
+  body:not(.assessment-mode) .v507-page-shell{padding:13px!important}
+  body:not(.assessment-mode) details:not(.student-nav-group)>summary{min-height:44px!important}
+  .view-dashboard .v506-dashboard-quiet-links{grid-template-columns:1fr!important}
+}
+
+
+/* EDUCANET v50.7.5 · Minimal Surface Pass */
+:root{--v5075-content:960px;--v5075-line:rgba(17,24,39,.09)}
+body:not(.assessment-mode){background:#f7f8fa!important;color:#111827}
+body:not(.assessment-mode) main{max-width:var(--v5075-content);margin-inline:auto;padding-top:18px!important}
+body:not(.assessment-mode) .topbar{min-height:58px!important}
+body:not(.assessment-mode) .brand-mark{display:none!important}
+body:not(.assessment-mode) .brand>span:last-child{font-size:.82rem!important;font-weight:850!important}
+.student-main-menu{border:0!important;background:transparent!important;padding:0!important;gap:2px!important}
+.student-main-menu>a,.student-nav-group>summary{min-height:36px!important;border-radius:9px!important;font-size:.72rem!important;padding-inline:9px!important}
+.student-nav-group>summary>b,.student-nav-popover>a>b{display:none!important}
+.v5075-compass{max-width:var(--v5075-content);margin:6px auto 0!important;padding:7px 0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+.v5075-compass .v506-compass-location strong{font-size:.72rem!important;color:var(--muted)!important;font-weight:750!important}
+.v5075-compass .v506-continue{min-height:32px!important;padding:0 10px!important;border-radius:8px!important;font-size:.7rem!important}
+.student-cockpit-v502{max-width:var(--v5075-content)!important;gap:12px!important}
+.v5075-welcome{display:block!important;padding:8px 2px 2px!important}
+.v5075-welcome .student-welcome-copy span{font-size:.65rem!important}
+.v5075-welcome .student-welcome-copy h1{font-size:clamp(1.45rem,2.5vw,2rem)!important;letter-spacing:-.025em!important}
+.v5075-do-now{grid-template-columns:minmax(0,1fr) auto!important;gap:20px!important;padding:22px!important;border-radius:18px!important;background:#fff!important;border:1px solid var(--v5075-line)!important;box-shadow:none!important}
+.v5075-do-now .student-do-now-copy h2{font-size:clamp(1.2rem,2.2vw,1.65rem)!important;line-height:1.15!important}
+.v5075-do-now .student-do-now-copy p{font-size:.82rem!important;line-height:1.45!important;max-width:620px!important;color:#667085!important}
+.v5075-do-now .student-do-now-action{min-width:0!important}
+.v5075-do-now .student-primary-cta{min-height:42px!important;border-radius:10px!important;padding-inline:16px!important;box-shadow:none!important}
+.v5075-dashboard-detail-link{justify-content:flex-start!important;margin-top:-2px!important}.v5075-dashboard-detail-link a{padding:6px 2px!important;border:0!important;background:transparent!important;font-size:.72rem!important}
+.student-attention-bar{border-radius:12px!important;box-shadow:none!important;padding:12px 14px!important}.student-attention-bar small{display:none!important}
+.student-dashboard-more{border-radius:14px!important;box-shadow:none!important}.student-dashboard-more>summary{padding:12px 14px!important}.student-dashboard-more>summary small{display:none!important}
+.dashboard-metrics{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}.dashboard-metrics article:nth-child(n+4){display:none!important}.dashboard-metrics article{border-radius:12px!important;box-shadow:none!important;min-height:92px!important;padding:12px!important}.dashboard-metrics article i{display:none!important}.dashboard-metrics article small{font-size:.65rem!important}
+.v507-page-shell{padding:14px 16px!important;border-radius:14px!important;margin:7px 0 10px!important}.v507-shell-main{gap:16px!important}.v507-shell-main h1{font-size:clamp(1.2rem,2.2vw,1.65rem)!important}.v507-shell-main p{font-size:.79rem!important;max-width:600px!important}.v507-shell-rule{display:none!important}
+.course-hero,.skill-hero,.growth-hero,.school-calendar-hero,.social-profile-hero{box-shadow:none!important}
+.course-focus-card,.skill-next-card,.v506-growth-focus,.v506-calendar-next{border-radius:14px!important;box-shadow:none!important;padding:16px!important}
+.course-card,.skill-card,.kb-topic-card,.recovery-step,.dashboard-panel{box-shadow:none!important}
+.footer{font-size:.66rem!important;opacity:.62!important;padding-block:18px!important}
+@media(max-width:760px){body:not(.assessment-mode) main{padding-top:12px!important}.v5075-do-now{grid-template-columns:1fr!important;padding:16px!important}.v5075-do-now .student-primary-cta{width:100%!important}.dashboard-metrics{grid-template-columns:1fr!important}.v5075-compass{padding-inline:2px!important}.v507-page-shell{padding:13px!important}.v507-shell-main{grid-template-columns:1fr!important}.v507-shell-actions{min-width:0!important;flex-wrap:wrap!important}.v507-shell-actions .btn{width:100%!important}.student-nav-group>summary{padding-inline:7px!important}}
+
+/* EDUCANET v50.7.6 · Quiet Focus */
+:root{--v5076-content:900px;--v5076-radius:12px}
+body:not(.assessment-mode) main{max-width:var(--v5076-content)!important}
+body:not(.assessment-mode) .brand>span:last-child{letter-spacing:.01em!important}
+.student-nav-popover header small,.student-nav-popover a small{display:none!important}
+.student-nav-popover a{grid-template-columns:1fr!important;min-height:38px!important;padding:9px 11px!important}
+.student-nav-popover header{padding:9px 11px!important}
+.student-nav-group>summary{gap:0!important}
+.v507-page-shell{padding:12px 14px!important;border-radius:var(--v5076-radius)!important}
+.v507-shell-kicker{margin-bottom:6px!important}.v507-shell-kicker span{display:none!important}.v507-shell-kicker a{font-size:.68rem!important;text-decoration:none!important}
+.v507-shell-main{grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important}
+.v507-shell-main>div:first-child>span{display:none!important}
+.v507-shell-main h1{font-size:clamp(1.15rem,2vw,1.45rem)!important;margin:.08rem 0 .25rem!important}
+.v507-shell-main p{font-size:.75rem!important;line-height:1.42!important;margin:0!important;max-width:56ch!important}
+.v507-shell-actions{gap:6px!important}.v507-shell-actions .btn{min-height:36px!important;padding:0 11px!important;border-radius:9px!important}
+.v5076-attention{padding:0!important;border-radius:10px!important}.v5076-attention>summary{min-height:42px!important;padding:8px 12px!important}.v5076-attention>summary b{font-size:.68rem!important}.v5076-attention .student-attention-actions{padding:0 12px 10px!important;gap:5px!important}
+.student-dashboard-more>summary{min-height:44px!important}.student-dashboard-more>summary b{font-size:.68rem!important}
+.v5076-core-metrics{grid-template-columns:repeat(3,minmax(0,1fr))!important;margin:4px 0 10px!important}.v5076-core-metrics article{min-height:76px!important;display:flex!important;align-items:center!important;padding:11px 12px!important}.v5076-core-metrics article strong{font-size:1.15rem!important}.v5076-core-metrics article span{font-size:.68rem!important;color:var(--muted)!important}.v5076-core-metrics article small,.v5076-core-metrics article i{display:none!important}
+.v5076-progress-advanced{margin-top:10px!important;border:1px solid var(--v5075-line)!important;border-radius:11px!important;background:#fff!important}.v5076-progress-advanced>summary{min-height:44px!important;padding:9px 12px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important}.v5076-progress-advanced>summary span{font-size:.67rem!important;color:var(--muted)!important}.v5076-progress-advanced-body{padding:4px 10px 12px!important}.v5076-progress-advanced-body>*{margin-top:8px!important}
+.view-dashboard .dashboard-row{gap:8px!important}.view-dashboard .dashboard-panel{border-radius:11px!important}.view-dashboard .dashboard-panel-head p{display:none!important}.view-dashboard .quick-action-grid a span{display:none!important}.view-dashboard .quick-action-grid a i{display:none!important}
+@media(max-width:760px){.v507-shell-main{grid-template-columns:1fr!important}.v507-shell-actions{display:grid!important;grid-template-columns:1fr auto!important}.v507-shell-actions .btn{width:auto!important}.v5076-core-metrics{grid-template-columns:repeat(3,minmax(0,1fr))!important}.v5076-core-metrics article{min-height:66px!important;padding:9px!important}.v5076-progress-advanced>summary span{display:none!important}}
+@media(max-width:480px){.v5076-core-metrics{grid-template-columns:1fr!important}.v5076-core-metrics article{min-height:54px!important}.v507-shell-actions{grid-template-columns:1fr!important}.v507-shell-actions .btn{width:100%!important}}
+
+
+/* v50.7.7 Calm Navigation */
+html { color-scheme: light; }
+.student-main-menu.v5077-calm-nav { gap:.45rem; margin-left:auto; }
+.student-main-menu.v5077-calm-nav > .student-nav-continue { min-height:38px; padding:.55rem .9rem; }
+.student-nav-menu { position:relative; }
+.student-nav-menu > summary { list-style:none; cursor:pointer; min-height:38px; display:flex; align-items:center; padding:.55rem .8rem; border:1px solid var(--line,#e5e7eb); border-radius:10px; font-weight:700; background:var(--panel,#fff); }
+.student-nav-menu > summary::-webkit-details-marker { display:none; }
+.v5077-menu-popover { position:absolute; right:0; top:calc(100% + .45rem); z-index:80; min-width:220px; display:grid; gap:.2rem; padding:.45rem; border:1px solid var(--line,#e5e7eb); border-radius:12px; background:#fff; box-shadow:0 18px 45px rgba(15,23,42,.12); }
+.v5077-menu-popover a { display:block; padding:.62rem .7rem; border-radius:8px; color:inherit; text-decoration:none; font-weight:650; }
+.v5077-menu-popover a:hover,.v5077-menu-popover a:focus-visible { background:#f3f4f6; }
+.v5077-menu-popover hr { width:100%; border:0; border-top:1px solid #e5e7eb; margin:.2rem 0; }
+.topbar .menu-toggle,.topbar .v506-top-help,.topbar .account-chip { display:none!important; }
+.v5077-compass { min-height:auto; padding:.25rem 0 .5rem; border:0; background:transparent; box-shadow:none; }
+.v5077-compass .v506-compass-location strong { font-size:.8rem; color:#64748b; font-weight:650; }
+.v5077-kb-hero { padding-bottom:.75rem!important; }
+.v5077-kb-hero h1 { max-width:none; margin-bottom:.35rem; }
+.v5077-kb-hero p { max-width:650px; margin-bottom:.75rem; }
+.v5077-other-classes { margin:.65rem 0; border:0; background:transparent; }
+.v5077-other-classes > summary,.v5077-kb-filters > summary { cursor:pointer; font-weight:700; list-style:none; width:max-content; }
+.v5077-other-classes > summary::-webkit-details-marker,.v5077-kb-filters > summary::-webkit-details-marker { display:none; }
+.v5077-other-classes > summary::after,.v5077-kb-filters > summary::after { content:' +'; color:#94a3b8; }
+.v5077-other-classes[open] > summary::after,.v5077-kb-filters[open] > summary::after { content:' −'; }
+.v5077-other-classes[open] { padding:.75rem 0; }
+.v5077-kb-browser-head { margin-bottom:.45rem!important; }
+.v5077-kb-browser-head h2 { font-size:1rem!important; }
+.v5077-kb-tools { display:grid!important; grid-template-columns:minmax(0,1fr) auto!important; gap:.6rem!important; align-items:end; }
+.v5077-kb-tools .kb-search-field { grid-column:auto!important; }
+.v5077-kb-tools .kb-search-field kbd { display:none!important; }
+.v5077-kb-filters { align-self:center; position:relative; }
+.v5077-filter-grid { margin-top:.6rem; display:grid; grid-template-columns:repeat(2,minmax(160px,1fr)); gap:.6rem; padding:.75rem; border:1px solid #e5e7eb; border-radius:12px; background:#fff; }
+.v5077-kb-summary { min-height:auto!important; padding:.35rem 0!important; border:0!important; background:transparent!important; }
+.kb-status-legend { display:none!important; }
+@media (max-width:720px){
+  .topbar { gap:.4rem; }
+  .brand .brand-mark { display:none; }
+  .student-main-menu.v5077-calm-nav { margin-left:auto; }
+  .v5077-menu-popover { position:fixed; left:12px; right:12px; top:64px; min-width:0; }
+  .v5077-kb-tools { grid-template-columns:1fr auto!important; }
+  .v5077-filter-grid { grid-template-columns:1fr; }
+}

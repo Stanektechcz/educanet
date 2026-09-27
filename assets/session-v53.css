@@ -1,0 +1,95 @@
+/* EDUCANET v53 · hodina s kódem + barevnější a přehlednější vrstva */
+:root {
+  --s53-1: #3056d3;   /* modrá · postup a akce */
+  --s53-2: #7b3fe4;   /* fialová · grafika */
+  --s53-3: #0f9d8b;   /* tyrkysová · sítě a systémy */
+  --s53-4: #f2994a;   /* oranžová · pozor a nápovědy */
+  --s53-5: #e0457b;   /* růžová · odevzdání a hodnocení */
+  --s53-ok: #0f7b4f;
+  --s53-tint-1: #eef2ff;
+  --s53-tint-2: #f5eefe;
+  --s53-tint-3: #e7f7f4;
+  --s53-tint-4: #fff3e6;
+  --s53-tint-5: #fdeaf1;
+}
+
+/* Vstup kódem a dnešní hodina */
+.s53 { display: grid; gap: 14px; }
+.s53-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; flex-wrap: wrap; padding: 18px 20px; border-radius: 18px; background: linear-gradient(120deg, var(--s53-tint-1), var(--s53-tint-3)); border: 1px solid var(--u-line, #e3e6eb); }
+.s53-head h1 { margin: 4px 0 6px; font-size: clamp(1.4rem, 3vw, 2rem); }
+.s53-head p { margin: 0; color: var(--u-muted, #5f6b7a); max-width: 640px; }
+.s53-badges { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.s53-points { display: inline-flex; align-items: baseline; gap: 5px; padding: 8px 14px; border-radius: 999px; background: #fff; border: 1px solid var(--s53-4); color: #8a4b00; font-size: .82rem; font-weight: 650; }
+.s53-points b { font-size: 1.1rem; }
+.s53-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 12px; }
+.s53-instructions { border-left: 4px solid var(--s53-4); background: var(--s53-tint-4); }
+.s53-instructions p { margin: 6px 0 0; }
+.s53-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: s53; }
+.s53-steps li { counter-increment: s53; display: grid; gap: 4px; padding: 12px 14px 12px 48px; position: relative; border-radius: 12px; background: var(--u-soft, #f1f3f6); }
+.s53-steps li::before { content: counter(s53); position: absolute; left: 12px; top: 12px; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--s53-1); color: #fff; font-size: .8rem; font-weight: 750; }
+.s53-steps span { color: var(--u-muted, #5f6b7a); font-size: .86rem; }
+.s53-steps .btn { justify-self: start; margin-top: 4px; }
+.s53-work .t52-checklist label { align-items: flex-start; }
+.s53-work .t52-checklist span { display: grid; gap: 2px; }
+.s53-work .t52-checklist small { color: var(--u-muted, #5f6b7a); font-size: .8rem; }
+.s53-work .t52-checklist em { margin-left: auto; font-style: normal; font-size: .72rem; color: var(--u-faint, #8a94a3); white-space: nowrap; }
+.s53-feedback { margin-top: 12px; padding: 12px 14px; border-radius: 12px; background: var(--s53-tint-5); border-left: 4px solid var(--s53-5); }
+.s53-feedback p { margin: 6px 0 0; }
+
+/* Učitel: karty tříd, kód a promítání */
+.s53-teacher-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.s53-class-card.active { border-color: var(--s53-1); box-shadow: 0 0 0 3px var(--s53-tint-1); }
+.s53-code { font: 800 2.2rem/1.1 ui-monospace, Consolas, monospace; letter-spacing: .22em; text-align: center; padding: 14px 8px; margin: 8px 0; border-radius: 14px; background: var(--s53-tint-1); color: var(--s53-1); }
+.s53-open-form { display: grid; gap: 8px; }
+.s53-projection { position: fixed; inset: 0; z-index: 90; display: grid; place-content: center; justify-items: center; gap: 10px; text-align: center; background: #0b1020; color: #fff; padding: 40px; }
+.s53-projection[hidden] { display: none; }
+.s53-projection span { font-size: clamp(1rem, 3vw, 1.6rem); letter-spacing: .12em; text-transform: uppercase; opacity: .7; }
+.s53-projection strong { font: 800 clamp(4rem, 22vw, 16rem)/1 ui-monospace, Consolas, monospace; letter-spacing: .12em; }
+.s53-projection small { font-size: clamp(1rem, 2.4vw, 1.6rem); opacity: .85; }
+.s53-projection p { font-size: clamp(.9rem, 2vw, 1.3rem); opacity: .7; max-width: 30ch; }
+.s53-projection .btn { margin-top: 18px; }
+.s53-instructions-form { display: grid; gap: 8px; margin-top: 12px; }
+.s53-grade-form { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.s53-grade-form select { min-width: 130px; padding: 6px 8px; }
+.s53-grade-form input { min-width: 160px; padding: 6px 10px; }
+.s53-grade-form .btn { min-height: 34px !important; }
+
+/* Nápovědy za body v tutoriálu */
+.t52-hints { display: grid; gap: 8px; padding: 12px 14px; border-radius: 12px; background: var(--s53-tint-4); border: 1px solid #f3dcc0; }
+.t52-hints-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: .82rem; font-weight: 650; color: #8a4b00; }
+.t52-hint-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+.t52-hint-buttons button { border: 1px solid #edc89a; background: #fff; color: #8a4b00; border-radius: 999px; padding: 7px 12px; font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer; }
+.t52-hint-buttons button:hover:not(:disabled) { border-color: var(--s53-4); }
+.t52-hint-buttons button:disabled { opacity: .55; cursor: not-allowed; }
+.t52-hint-out { display: grid; gap: 6px; }
+.t52-hint-out p { margin: 0; padding: 8px 10px; border-radius: 10px; background: #fff; font-size: .88rem; }
+.t52-hint-out p b { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: #8a4b00; }
+
+/* Barevnější, přehlednější vrstva pro studenta */
+body.accent-graphics { --u-accent: #7b3fe4; --u-accent-soft: #f5eefe; --t52-accent: #7b3fe4; --t52-accent-soft: #f5eefe; }
+body.accent-network { --u-accent: #3056d3; --u-accent-soft: #eef2ff; --t52-accent: #3056d3; --t52-accent-soft: #eef2ff; }
+body.accent-advanced { --u-accent: #0f9d8b; --u-accent-soft: #e7f7f4; --t52-accent: #0f9d8b; --t52-accent-soft: #e7f7f4; }
+.t52-hero-lesson, .t52-next-class { background: linear-gradient(120deg, var(--t52-accent-soft), #fff 60%); }
+.t52-lesson.current a { background: linear-gradient(120deg, var(--t52-accent-soft), #fff 55%); }
+.t52-chips span:nth-child(4n+1) { background: var(--s53-tint-1); color: #24357a; }
+.t52-chips span:nth-child(4n+2) { background: var(--s53-tint-3); color: #0a5f55; }
+.t52-chips span:nth-child(4n+3) { background: var(--s53-tint-2); color: #4b1f95; }
+.t52-chips span:nth-child(4n+4) { background: var(--s53-tint-4); color: #8a4b00; }
+.t52-deck-tabs button b, .t52-dots b { transition: background-color .2s; }
+.u51-first-step { background: linear-gradient(120deg, var(--u-accent-soft), #fff 60%); border-color: color-mix(in srgb, var(--u-accent) 30%, var(--u-line)); }
+.student-do-now-card { border-left: 4px solid var(--u-accent) !important; }
+
+@media (max-width: 860px) {
+  .s53-grid { grid-template-columns: 1fr; }
+  .s53-head { flex-direction: column; }
+}
+
+/* v56 · fáze žáka v učitelském přehledu */
+.s53-phase-detail { display: block; margin-top: 4px; font-size: .72rem; color: #8a94a3; white-space: nowrap; }
+
+/* v56 · co dnes projdou žáci (režim hodiny) */
+.v56-teach-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+.v56-teach-grid article { display: flex; gap: 11px; padding: 13px 15px; border-radius: 13px; border: 1px solid #e3e6eb; background: #fff; }
+.v56-teach-grid b { flex: 0 0 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: #ec6b10; color: #fff; font-size: .8rem; }
+.v56-teach-grid strong { display: block; font-size: .92rem; }
+.v56-teach-grid small { display: block; margin-top: 3px; font-size: .78rem; color: #5f6b7a; line-height: 1.45; }

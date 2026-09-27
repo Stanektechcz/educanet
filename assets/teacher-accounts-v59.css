@@ -1,0 +1,75 @@
+/* v59 · AUTHZ58-07 – učitelské účty (přihlášení, vlastní účet, správa, kartička). Barvy z proměnných app.css. */
+.t59-standalone { max-width: 760px; margin: 0 auto; padding: 32px 16px; }
+.t59-card {
+  background: var(--surface, #fff); color: var(--text, #111827); border: 1px solid var(--line, #d9e0e6);
+  border-radius: var(--radius, 18px); padding: 20px; margin: 0 0 16px; box-shadow: var(--shadow, none);
+}
+.t59-card h1 { margin: 4px 0 10px; font-size: clamp(1.4rem, 3vw, 2rem); }
+.t59-card h2 { margin: 0 0 12px; font-size: 1.15rem; }
+.t59-card > summary { cursor: pointer; list-style: none; min-height: 44px; display: flex; align-items: center; }
+.t59-card > summary h2 { margin: 0; }
+.t59-card > summary::-webkit-details-marker { display: none; }
+.t59-card > summary::after { content: "⌄"; margin-left: auto; font-weight: 700; }
+.t59-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
+.t59-form { display: grid; gap: 12px; }
+.t59-form label { display: grid; gap: 6px; font-weight: 600; }
+.t59-form input, .t59-form select, .t59-classes select {
+  min-height: 44px; padding: 8px 12px; border: 1px solid var(--line, #d9e0e6); border-radius: 12px;
+  background: var(--surface, #fff); color: var(--text, #111827); font: inherit;
+}
+.t59-btn, .btn.t59-btn, .btn.small.t59-btn { min-height: 44px; min-width: 44px; }
+.t59-btn:focus-visible, .t59-form input:focus-visible, .t59-form select:focus-visible, .t59-classes input:focus-visible,
+.t59-card summary:focus-visible, .t59-edit summary:focus-visible, .t59-card a:focus-visible {
+  outline: 3px solid var(--accent, #2459ff); outline-offset: 2px;
+}
+.t59-inline { display: inline-block; margin: 0; }
+.t59-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+.t59-muted { color: var(--muted, #5b6672); font-size: .92rem; }
+.t59-dl { display: grid; grid-template-columns: minmax(120px, max-content) 1fr; gap: 6px 16px; margin: 0 0 12px; }
+.t59-dl dt { font-weight: 600; color: var(--muted, #5b6672); }
+.t59-dl dd { margin: 0; overflow-wrap: anywhere; }
+.t59-classes { border: 1px solid var(--line, #d9e0e6); border-radius: 12px; padding: 10px 12px; display: grid; gap: 8px; margin: 0; }
+.t59-classes legend { font-weight: 600; padding: 0 4px; }
+.t59-class-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.t59-class-row > label { display: flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 600; }
+.t59-class-row input[type="checkbox"] { width: 22px; height: 22px; }
+.t59-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.t59-list { display: grid; gap: 12px; }
+.t59-account header { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; justify-content: space-between; }
+.t59-account h3 { margin: 0; font-size: 1.05rem; }
+.t59-account.is-disabled { opacity: .78; }
+.t59-chips { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 10px 0; }
+.t59-chips li { border: 1px solid var(--line, #d9e0e6); border-radius: 999px; padding: 3px 10px; font-size: .85rem; }
+.t59-chips li.warn { border-color: var(--bad, #b63434); color: var(--bad, #b63434); font-weight: 600; }
+.t59-edit { margin-top: 10px; }
+.t59-edit > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-weight: 600; }
+.t59-reveal { border-color: var(--accent, #2459ff); }
+.t59-otp { font-size: 1.2rem; font-weight: 700; letter-spacing: .02em; padding: 2px 6px; overflow-wrap: anywhere; }
+.t59-log { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; font-size: .9rem; }
+.t59-log time { font-variant-numeric: tabular-nums; color: var(--muted, #5b6672); }
+.t59-login .t59-form { margin-top: 8px; }
+/* v59 · A11Y-05: přihlašovací obrazovka potřebuje skutečný <h1> (dřív jen <strong>) – stejný vizuál. */
+.teacher-login-brand .teacher-login-title {
+  display: block; font: inherit; font-size: 2rem; line-height: 1.02; letter-spacing: -.05em;
+  margin: 70px 0 12px; max-width: 340px; font-weight: 700; color: inherit;
+}
+@media (max-width: 760px) {
+  .teacher-login-brand .teacher-login-title { margin-top: 34px; }
+}
+.teacher-account .teacher-account-link {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; font-size: .82rem; font-weight: 700;
+  color: inherit; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap;
+}
+.teacher-account .teacher-account-link:focus-visible { outline: 3px solid var(--accent, #2459ff); outline-offset: 2px; }
+.t59-print-card { max-width: 520px; margin: 0 auto; border: 2px dashed #333; border-radius: 12px; padding: 20px; background: #fff; color: #111; }
+.t59-print-card ol { padding-left: 20px; }
+@media (max-width: 480px) {
+  .t59-dl { grid-template-columns: 1fr; }
+  .t59-class-row { align-items: stretch; }
+  .t59-class-row select { width: 100%; }
+}
+@media print {
+  .t59-noprint { display: none !important; }
+  body { background: #fff !important; }
+  .t59-standalone { padding: 0; }
+}

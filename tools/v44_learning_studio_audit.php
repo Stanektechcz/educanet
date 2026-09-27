@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+require_once __DIR__ . '/lib/app_source.php';
+if(PHP_SAPI!=='cli'){http_response_code(400);exit("CLI only\n");}
+require dirname(__DIR__).'/bootstrap.php';require dirname(__DIR__).'/runtime_content.php';
+$runtime=runtime_content_load_classes(['class_1a','class_2a','class_3a','class_4a']);$nextLessons=$runtime['nextLessons'];$extendedLessons=$runtime['extendedLessons'];
+$errors=[];$counts=[];$families=[];$total=0;
+foreach(['class_1a','class_2a','class_3a','class_4a'] as $classId){$counts[$classId]=0;foreach(v42_lessons_for_class($classId) as $lesson){$counts[$classId]++;$total++;$s=v44_studio_spec($classId,$lesson,$modules[$classId]);$id=(string)($s['id']??'');$families[(string)$s['family']]=($families[(string)$s['family']]??0)+1;if($id==='')$errors[]="$classId L{$lesson['number']}: id";if(count((array)$s['representations'])!==5)$errors[]="$id: representations != 5";if(count((array)$s['model_expected'])<5)$errors[]="$id: model < 5";if(count((array)$s['teachback_markers'])<4)$errors[]="$id: teachback markers < 4";foreach(['big_idea','analogy','analogy_limit','teachback_question'] as $k)if(trim((string)($s[$k]??''))==='')$errors[]="$id: empty $k";if(count((array)$s['replay'])!==3)$errors[]="$id: replay != 3";if(empty($s['memory_seed']['sentence'])||empty($s['memory_seed']['trap'])||empty($s['memory_seed']['cue']))$errors[]="$id: memory seed";}}
+foreach($counts as $c=>$n)if($n!==28)$errors[]="$c has $n studios, expected 28";
+$root=dirname(__DIR__);foreach(['learning_studio_v44.php','learning_studio_views_v44.php','assets/learning-studio-v44.css','assets/learning-studio-v44.js'] as $f)if(!is_file($root.'/'.$f))$errors[]="missing $f";
+$index=edu_app_source()?:'';$boot=file_get_contents($root.'/bootstrap.php')?:'';$teacher=file_get_contents($root.'/teacher_lesson_mode.php')?:'';$cv=file_get_contents($root.'/cognitive_visualization_views_v43.php')?:'';
+if(!str_contains($boot,'learning_studio_v44.php'))$errors[]='bootstrap core include missing';if(!str_contains($index,'learning_studio_views_v44.php'))$errors[]='student views include missing';if(!str_contains($index,"v44_teachback"))$errors[]='v44 POST actions missing';if(!str_contains($cv,'v44_render_studio_extension'))$errors[]='Cognitive Lab extension missing';if(!str_contains($teacher,'v44_render_teacher_live_board'))$errors[]='teacher live board missing';
+$css=filesize($root.'/assets/learning-studio-v44.css')?:0;$js=filesize($root.'/assets/learning-studio-v44.js')?:0;if($css>26000)$errors[]='v44 CSS exceeds 26 KB';if($js>18000)$errors[]='v44 JS exceeds 18 KB';
+echo "v44 Learning Studio Audit\nStudios: $total / 112\n";foreach($counts as $c=>$n)echo "$c: $n\n";ksort($families);echo 'Families: ';foreach($families as $f=>$n)echo "$f=$n ";echo "\nAssets: CSS ".round($css/1024,1)." KB · JS ".round($js/1024,1)." KB\n";if($errors){foreach($errors as $e)echo "[FAIL] $e\n";exit(1);}echo "[OK] 112/112 Learning Studios, multi-representation reasoning, Difference Lens, teach-back, memory cards, Learning GPS and teacher Visual Reasoning Board.\n";

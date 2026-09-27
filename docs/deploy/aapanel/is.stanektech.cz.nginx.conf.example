@@ -1,0 +1,75 @@
+# EDUCANET v59 · konfigurace webu is.stanektech.cz v aaPanelu (nginx) – REFERENCE
+#
+# Tohle NENÍ soubor ke kopírování celý. aaPanel si konfiguraci webu vytvoří sám
+# (/www/server/panel/vhost/nginx/is.stanektech.cz.conf) – uprav ji v panelu:
+# Website → is.stanektech.cz → Config. Níže je, jak má vypadat PO úpravě; změny oproti
+# výchozí konfiguraci panelu jsou označené „EDUCANET“. Značky #…-START/#…-END nech beze
+# změny, panel podle nich při obnově certifikátu a změně PHP přepisuje své části.
+
+server
+{
+    listen 80;
+    listen 443 ssl http2;
+    server_name is.stanektech.cz;
+    index index.php;                         # EDUCANET: jen index.php (panel dává i index.html…)
+    root /www/wwwroot/is.stanektech.cz;
+
+    #CERT-APPLY-CHECK--START
+    # Konfigurace ověření souboru a přesměrování – panel, neměnit
+    include /www/server/panel/vhost/nginx/well-known/is.stanektech.cz.conf;
+    #CERT-APPLY-CHECK--END
+
+    #SSL-START
+    #HTTP_TO_HTTPS_START
+    if ($server_port !~ 443){
+        rewrite ^(/.*)$ https://$host$1 permanent;
+    }
+    #HTTP_TO_HTTPS_END
+    ssl_certificate    /www/server/panel/vhost/cert/is.stanektech.cz/fullchain.pem;
+    ssl_certificate_key    /www/server/panel/vhost/cert/is.stanektech.cz/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    # … další ssl_* řádky panelu ponech …
+    error_page 497  https://$host$request_uri;
+    #SSL-END
+
+    # EDUCANET: pravidla aplikace – MUSÍ stát tady, před #PHP-INFO a před panelovými
+    # location bloky dole (u regex location vyhrává první shoda v pořadí).
+    include /www/server/educanet/educanet-rules.conf;
+
+    #ERROR-PAGE-START
+    #error_page 404 /404.html;               # EDUCANET: vypnuto, 404 vrací aplikace/pravidla
+    #ERROR-PAGE-END
+
+    #PHP-INFO-START
+    # Panel sem vkládá `include enable-php-83.conf;`. Po EDUCANET pravidlech se na něj
+    # žádný .php požadavek nedostane (whitelist nebo 404 výš) – nech ho, panel ho stejně vrací.
+    include enable-php-83.conf;
+    #PHP-INFO-END
+
+    #REWRITE-START
+    # URL rewrite v panelu nech PRÁZDNÝ („0.Current“ bez pravidel) – vlastní `location /`
+    # je v educanet-rules.conf a druhá by skončila chybou „duplicate location“.
+    include /www/server/panel/vhost/rewrite/is.stanektech.cz.conf;
+    #REWRITE-END
+
+    # Panelové výchozí bloky (zákaz .user.ini/.git…, cache obrázků a js/css) mohou zůstat,
+    # pro EDUCANET cesty se kvůli pořadí už neuplatní.
+    location ~ ^/(\.user.ini|\.htaccess|\.git|\.env|\.svn|\.project|LICENSE|README.md)
+    {
+        return 404;
+    }
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+    {
+        expires      30d;
+        error_log /dev/null;
+        access_log /dev/null;
+    }
+    location ~ .*\.(js|css)?$
+    {
+        expires      12h;
+        error_log /dev/null;
+        access_log /dev/null;
+    }
+    access_log  /www/wwwlogs/is.stanektech.cz.log;
+    error_log  /www/wwwlogs/is.stanektech.cz.error.log;
+}

@@ -1,0 +1,234 @@
+/* EDUCANET v58 · Linux Lab offline – styly pro lab-offline.html. Bez externích fontů a CDN,
+   systémové písmo. Kontrast >= 4.5:1, cíle dotyku >= 44 px, viditelný fokus, 390 px i 1280 px. */
+:root {
+  --lab58off-ink: #12212b;
+  --lab58off-teal: #007a87;
+  --lab58off-teal-dark: #00565f;
+  --lab58off-bg: #f4f7f8;
+  --lab58off-panel: #ffffff;
+  --lab58off-border: #c8d3d6;
+  --lab58off-term-bg: #0c1a20;
+  --lab58off-term-fg: #e7f3f1;
+  --lab58off-term-err: #ffb4a8;
+  --lab58off-term-tip: #8fd6c9;
+  --lab58off-focus: #f4b400;
+  --lab58off-radius: 10px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--lab58off-bg);
+  color: var(--lab58off-ink);
+  line-height: 1.45;
+}
+.lab58off-visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.lab58off-skip {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--lab58off-teal-dark);
+  color: #fff;
+  padding: 10px 16px;
+  z-index: 10;
+  border-radius: 0 0 8px 0;
+}
+.lab58off-skip:focus {
+  left: 0;
+}
+
+a { color: var(--lab58off-teal-dark); }
+a:hover { color: var(--lab58off-ink); }
+
+:focus-visible {
+  outline: 3px solid var(--lab58off-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.lab58off-header {
+  padding: 20px 20px 16px;
+  background: linear-gradient(180deg, #e4f1f0, var(--lab58off-bg));
+  border-bottom: 1px solid var(--lab58off-border);
+}
+.lab58off-badge {
+  display: inline-block;
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--lab58off-teal-dark);
+  text-transform: uppercase;
+}
+.lab58off-header h1 { margin: 0 0 10px; font-size: clamp(1.35rem, 1rem + 1.4vw, 1.9rem); }
+.lab58off-disclaimer {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  background: #fff7e0;
+  border: 1px solid #e4c76a;
+  border-radius: var(--lab58off-radius);
+  max-width: 70ch;
+}
+.lab58off-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 6px 4px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.lab58off-main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+@media (min-width: 900px) {
+  .lab58off-main { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: start; }
+}
+
+.lab58off-panel {
+  background: var(--lab58off-panel);
+  border: 1px solid var(--lab58off-border);
+  border-radius: var(--lab58off-radius);
+  padding: 16px;
+}
+.lab58off-panel h2 { margin-top: 0; font-size: 1.2rem; }
+.lab58off-hint { font-size: 0.9rem; color: #3a4a52; margin: 0 0 10px; }
+
+.lab58off-output {
+  background: var(--lab58off-term-bg);
+  color: var(--lab58off-term-fg);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-radius: 8px;
+  padding: 12px;
+  min-height: 260px;
+  max-height: 48vh;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+.lab58off-output .lab58off-line-err { color: var(--lab58off-term-err); }
+.lab58off-output .lab58off-line-tip { color: var(--lab58off-term-tip); font-style: italic; }
+.lab58off-output .lab58off-line-cmd { color: #ffffff; font-weight: 600; }
+
+.lab58off-form {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.lab58off-prompt-label { display: none; }
+.lab58off-input {
+  flex: 1 1 220px;
+  min-height: 44px;
+  padding: 8px 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1rem;
+  border: 1px solid var(--lab58off-border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--lab58off-ink);
+}
+.lab58off-toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.lab58off-btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 16px;
+  border: 1px solid var(--lab58off-teal-dark);
+  border-radius: 8px;
+  background: var(--lab58off-teal);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+.lab58off-btn:hover { background: var(--lab58off-teal-dark); }
+.lab58off-btn-secondary {
+  background: #fff;
+  color: var(--lab58off-teal-dark);
+}
+.lab58off-btn-secondary:hover { background: #e4f1f0; }
+
+.lab58off-manual-search {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+.lab58off-manual-search label { font-weight: 600; }
+#lab58off-search {
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--lab58off-border);
+  border-radius: 8px;
+  font-size: 1rem;
+}
+.lab58off-manual-list { max-height: 60vh; overflow-y: auto; }
+.lab58off-cat-heading {
+  margin: 16px 0 6px;
+  font-size: 1rem;
+  color: var(--lab58off-teal-dark);
+}
+.lab58off-cat-heading:first-child { margin-top: 0; }
+.lab58off-cmd {
+  border: 1px solid var(--lab58off-border);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.lab58off-cmd summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-weight: 700;
+}
+.lab58off-cmd summary:hover { background: #eef5f4; }
+.lab58off-cmd-summary-text {
+  font-family: system-ui, sans-serif;
+  font-weight: 400;
+  color: #3a4a52;
+}
+.lab58off-cmd-body { padding: 4px 14px 14px; }
+.lab58off-cmd-body dt { font-weight: 700; margin-top: 10px; }
+.lab58off-cmd-body dd { margin: 2px 0 0; }
+.lab58off-cmd-body code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: #eef5f4;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+.lab58off-cmd[hidden] { display: none; }
+
+.lab58off-footer {
+  padding: 16px 20px 28px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #3a4a52;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}

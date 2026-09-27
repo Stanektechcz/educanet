@@ -1,0 +1,30 @@
+# EDUCANET v59 · vzorový crontab
+#
+# Instalace: `crontab -e -u <uzivatel-php>` a vlož (uprav cesty). Cron nevidí
+# proměnné nastavené jen pro PHP-FPM pool, proto každý řádek načítá
+# /etc/educanet.env ručně (set -a; . /etc/educanet.env; set +a).
+#
+# Ověř, že <uzivatel-php> má právo číst/psát do EDUCANET_BACKUP_DIR a storage/,
+# ale NE do web rootu jako celku (princip nejmenších oprávnění).
+
+EDUCANET_APP=/var/www/clients/client1/web1/web
+EDUCANET_ENV=/etc/educanet.env
+EDUCANET_LOG=/var/log/educanet
+
+# Denní záloha storage/ (00:15) – rotace řeší backup_storage.php samo (--keep).
+15 0 * * * cd "$EDUCANET_APP" && (set -a; . "$EDUCANET_ENV"; set +a; php tools/backup_storage.php --keep=14) >> "$EDUCANET_LOG/backup.log" 2>&1
+
+# Denní retention/archivace starých logů a událostí (00:45) – vždy --apply,
+# nejdřív ověřeno na dočasné kopii (viz tools/v58_ops_audit.php).
+45 0 * * * cd "$EDUCANET_APP" && (set -a; . "$EDUCANET_ENV"; set +a; php tools/v58_retention.php --apply) >> "$EDUCANET_LOG/retention.log" 2>&1
+
+# Týdenní automatizační tick (pondělí 03:00) – ověř funkci proti
+# tools/v46_automation_tick.php před prvním nasazením do produkce.
+0 3 * * 1 cd "$EDUCANET_APP" && (set -a; . "$EDUCANET_ENV"; set +a; php tools/v46_automation_tick.php) >> "$EDUCANET_LOG/automation.log" 2>&1
+
+# Týdenní preflight kontrola do logu (pondělí 06:00), aby админ viděl WARN/FAIL
+# i bez ručního spuštění. --strict, protože jde jen o hlídací běh (nic nemění).
+0 6 * * 1 cd "$EDUCANET_APP" && (set -a; . "$EDUCANET_ENV"; set +a; php tools/preflight.php --env-file="$EDUCANET_ENV" --strict) >> "$EDUCANET_LOG/preflight.log" 2>&1
+
+# Roční přechod školního roku (tools/v58_rollover.php) se spouští RUČNĚ, ne cronem
+# – vyžaduje rozhodnutí školy o datu a kontrolu výsledku (viz docs/NASAZENI_PRODUKCE.md).

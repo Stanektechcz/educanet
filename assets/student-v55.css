@@ -1,0 +1,144 @@
+/* EDUCANET v55 · grafický redesign studentské sekce
+   Navazuje na brand-v54.css (firemní paleta) a ui-v51.css (light clarity). */
+
+/* ---------- Horní lišta a menu ---------- */
+.topbar { gap: 14px !important; }
+.main-menu.v55-nav { display: flex !important; align-items: center; gap: 4px; margin: 0 auto 0 8px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+.main-menu.v55-nav::-webkit-scrollbar { display: none; }
+.v55-nav a { position: relative; padding: 9px 13px; border-radius: 10px; text-decoration: none; font-size: .9rem; font-weight: 600; color: var(--u-muted, #5f6b7a); white-space: nowrap; }
+.v55-nav a:hover { background: var(--u-soft, #f1f3f6); color: var(--edu-ink); }
+.v55-nav a.is-active { background: var(--edu-teal-soft); color: var(--edu-teal-dark); }
+.v55-nav a.is-today { background: var(--edu-orange); color: #fff; }
+.v55-nav a.is-today:hover { background: var(--edu-orange-dark); color: #fff; }
+.v55-nav a i { font-style: normal; margin-right: 6px; opacity: .8; }
+
+.v55-right { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+
+/* LVL prstenec */
+.v55-lvl { display: inline-flex; align-items: center; gap: 10px; padding: 5px 12px 5px 5px; border: 1px solid var(--u-line, #e3e6eb); border-radius: 999px; background: #fff; text-decoration: none; color: var(--edu-ink); }
+.v55-lvl:hover { border-color: var(--edu-teal); }
+.v55-lvl-ring { position: relative; flex: 0 0 42px; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--edu-teal) calc(var(--v55-lvl-percent, 0) * 1%), var(--u-soft, #eef1f4) 0); }
+.v55-lvl-ring::after { content: ''; position: absolute; inset: 4px; border-radius: 50%; background: #fff; }
+.v55-lvl-ring b, .v55-lvl-ring i { position: relative; z-index: 1; font-style: normal; line-height: 1; }
+.v55-lvl-ring b { font-size: .42rem; letter-spacing: .1em; color: var(--u-faint, #8a94a3); margin-bottom: 1px; }
+.v55-lvl-ring i { font-size: .95rem; font-weight: 800; color: var(--edu-teal-dark); }
+.v55-lvl-meta { display: grid; line-height: 1.25; }
+.v55-lvl-meta strong { font-size: .78rem; }
+.v55-lvl-meta small { font-size: .68rem; color: var(--u-faint, #8a94a3); }
+@media (max-width: 1080px) { .v55-lvl-meta { display: none; } .v55-lvl { padding: 4px; } }
+
+/* ---------- CTA na konci stránky ---------- */
+.v55-page-cta { display: grid; justify-items: center; gap: 8px; margin: 34px auto 10px; padding: 22px 18px; max-width: 760px; border-radius: 18px; background: linear-gradient(180deg, #fff 0%, var(--edu-teal-soft) 100%); border: 1px solid #cdeaee; text-align: center; }
+.v55-page-cta .btn.primary { min-width: 260px; min-height: 50px; font-size: 1rem; }
+.v55-page-cta small { color: var(--u-muted, #5f6b7a); font-size: .8rem; }
+
+/* ---------- Běh hodiny ---------- */
+.v55-run-head { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; }
+.v55-run-head h1 { margin: 6px 0 4px; font-size: clamp(1.4rem, 3vw, 2rem); }
+.v55-run-head p { margin: 0; color: var(--u-muted, #5f6b7a); max-width: 60ch; }
+.v55-run-meta { display: flex; align-items: center; gap: 10px; }
+.v55-clock { display: grid; justify-items: center; padding: 8px 14px; border-radius: 12px; background: var(--edu-teal-soft); border: 1px solid #b8e6ec; min-width: 96px; }
+.v55-clock b { font-size: 1.1rem; font-weight: 800; color: var(--edu-teal-dark); font-variant-numeric: tabular-nums; }
+.v55-clock small { font-size: .68rem; color: var(--u-muted, #5f6b7a); }
+.v55-clock.is-soon { background: var(--edu-orange-soft); border-color: var(--edu-orange); }
+.v55-clock.is-soon b { color: var(--edu-orange-dark); }
+.v55-sr-only { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
+
+.v55-stepbar { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; padding: 0; }
+.v55-stepbar li { display: flex; align-items: center; gap: 8px; padding: 7px 13px 7px 7px; border-radius: 999px; background: var(--u-soft, #f1f3f6); font-size: .82rem; color: var(--u-muted, #5f6b7a); }
+.v55-stepbar li b { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #fff; font-size: .74rem; color: var(--u-faint, #8a94a3); }
+.v55-stepbar li.current { background: var(--edu-orange-soft); color: var(--edu-orange-dark); font-weight: 650; }
+.v55-stepbar li.current b { background: var(--edu-orange); color: #fff; }
+.v55-stepbar li.done { background: var(--edu-teal-soft); color: var(--edu-teal-dark); }
+.v55-stepbar li.done b { background: var(--edu-teal); color: #fff; }
+
+.v55-step { border: 1px solid var(--u-line, #e3e6eb); border-radius: 16px; background: #fff; padding: 16px 18px; margin: 0 0 12px; }
+.v55-step.is-current { border-color: var(--edu-orange); box-shadow: 0 10px 30px rgba(236, 107, 16, .1); }
+.v55-step.is-done { background: #fbfcfd; opacity: .85; }
+.v55-step-head { display: flex; align-items: flex-start; gap: 12px; }
+.v55-step-head b { flex: 0 0 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--u-soft, #f1f3f6); font-size: .85rem; }
+.v55-step.is-current .v55-step-head b { background: var(--edu-orange); color: #fff; }
+.v55-step.is-done .v55-step-head b { background: var(--edu-teal); color: #fff; }
+.v55-step-head strong { display: block; font-size: 1.02rem; }
+.v55-step-head small { display: block; color: var(--u-muted, #5f6b7a); font-size: .85rem; line-height: 1.5; }
+.v55-step-body { margin-top: 14px; padding-left: 42px; }
+.v55-step-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; }
+.v55-autosave-note { font-size: .76rem; color: var(--u-faint, #8a94a3); }
+@media (max-width: 640px) { .v55-step-body { padding-left: 0; } }
+
+.v55-next-hint { display: grid; gap: 3px; margin: 14px 0; padding: 14px 16px; border-radius: 14px; background: var(--edu-yellow-soft); border: 1px dashed #f0d08a; }
+.v55-next-hint strong { font-size: .92rem; color: #7a5500; }
+.v55-next-hint span { font-size: .84rem; color: #8a6a22; }
+
+/* ---------- Bonus ---------- */
+.v55-bonus { border: 1px solid #cdeaee; border-radius: 18px; background: linear-gradient(180deg, var(--edu-teal-soft) 0%, #fff 55%); padding: 18px 20px; margin: 18px 0; }
+.v55-bonus.is-done { background: #fbfcfd; border-color: var(--u-line, #e3e6eb); }
+.v55-section-head { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; justify-content: space-between; }
+.v55-section-head h2 { margin: 4px 0 4px; font-size: 1.25rem; }
+.v55-section-head p { margin: 0; color: var(--u-muted, #5f6b7a); font-size: .9rem; max-width: 60ch; }
+.v55-bonus-time { display: grid; justify-items: center; padding: 8px 16px; border-radius: 12px; background: #fff; border: 1px solid var(--edu-teal); }
+.v55-bonus-time strong { font-size: 1.4rem; color: var(--edu-teal-dark); }
+.v55-bonus-time small { font-size: .68rem; color: var(--u-muted, #5f6b7a); }
+.v55-bonus-preview { list-style: none; display: grid; gap: 8px; margin: 16px 0; padding: 0; }
+.v55-bonus-preview li { padding: 11px 14px; border-radius: 12px; background: #fff; border: 1px solid var(--u-line, #e3e6eb); }
+.v55-bonus-preview strong { display: block; font-size: .92rem; }
+.v55-bonus-preview span { font-size: .84rem; color: var(--u-muted, #5f6b7a); line-height: 1.5; }
+.v55-bonus-deadline { display: inline-flex; align-items: baseline; gap: 6px; margin: 0 0 12px; padding: 6px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--edu-orange); font-size: .82rem; color: var(--edu-orange-dark); }
+.v55-bonus-deadline b { font-weight: 800; font-variant-numeric: tabular-nums; }
+.v55-bonus-result p { margin: 6px 0; }
+.v55-bonus-empty { color: var(--u-muted, #5f6b7a); }
+
+/* ---------- Odznaky ---------- */
+.v55-badges { margin: 26px 0; }
+.v55-badge-score { display: grid; justify-items: center; padding: 10px 18px; border-radius: 14px; background: var(--edu-yellow-soft); border: 1px solid #f4e0b2; }
+.v55-badge-score strong { font-size: 1.5rem; color: #7a5500; }
+.v55-badge-score small { font-size: .7rem; color: #8a6a22; }
+.v55-xpbar { display: flex; align-items: center; gap: 12px; margin: 16px 0 22px; font-size: .78rem; color: var(--u-muted, #5f6b7a); }
+.v55-xpbar i { flex: 1; height: 10px; border-radius: 999px; background: var(--u-soft, #eef1f4); overflow: hidden; }
+.v55-xpbar i b { display: block; height: 100%; width: calc(var(--v55-lvl-percent, 0) * 1%); border-radius: 999px; background: linear-gradient(90deg, var(--edu-teal) 0%, var(--edu-yellow) 100%); }
+.v55-badge-group { margin: 18px 0 10px; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--u-faint, #8a94a3); }
+.v55-badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+.v55-badge { display: flex; gap: 12px; padding: 13px 15px; border-radius: 14px; border: 1px solid var(--u-line, #e3e6eb); background: #fff; }
+.v55-badge.earned { border-color: var(--edu-yellow); background: linear-gradient(180deg, var(--edu-yellow-soft) 0%, #fff 70%); }
+.v55-badge-mark { flex: 0 0 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: var(--u-soft, #f1f3f6); font-weight: 800; font-size: .85rem; color: var(--u-faint, #8a94a3); }
+.v55-badge.earned .v55-badge-mark { background: var(--edu-yellow); color: #5c4000; }
+.v55-badge.earned.rarity-legendary .v55-badge-mark, .v55-badge.earned.rarity-mythic .v55-badge-mark { background: var(--edu-orange); color: #fff; }
+.v55-badge-body { display: grid; gap: 5px; min-width: 0; }
+.v55-badge-body strong { font-size: .92rem; }
+.v55-badge-body small { font-size: .78rem; color: var(--u-muted, #5f6b7a); line-height: 1.45; }
+.v55-badge-bar { display: block; height: 6px; border-radius: 999px; background: var(--u-soft, #eef1f4); overflow: hidden; }
+.v55-badge-bar i { display: block; height: 100%; background: var(--edu-teal); border-radius: 999px; }
+.v55-badge-state { font-size: .72rem; color: var(--u-faint, #8a94a3); }
+.v55-badge-state.ok { color: var(--edu-teal-dark); font-weight: 650; }
+.v55-badge-more { margin-top: 16px; }
+.v55-badge-more summary { cursor: pointer; font-size: .85rem; color: var(--edu-teal-dark); }
+.v55-badge-more > .v55-badge-grid { margin-top: 12px; }
+
+/* ---------- Zámek ---------- */
+.v55-locked-nav { pointer-events: none; opacity: .45; }
+.v55-lock-flag { display: inline-flex; align-items: center; gap: 7px; padding: 6px 13px; border-radius: 999px; background: var(--edu-orange-soft); border: 1px solid var(--edu-orange); color: var(--edu-orange-dark); font-size: .78rem; font-weight: 650; }
+.v55-lock-flag::before { content: '🔒'; font-size: .85rem; }
+.v55-lock-dialog { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 20px; background: rgba(18, 33, 43, .45); }
+.v55-lock-dialog[hidden] { display: none; }
+.v55-lock-card { max-width: 420px; background: #fff; border-radius: 18px; padding: 24px; box-shadow: 0 24px 60px rgba(18, 33, 43, .25); }
+.v55-lock-card strong { display: block; font-size: 1.1rem; margin-bottom: 8px; }
+.v55-lock-card p { margin: 0 0 18px; color: var(--u-muted, #5f6b7a); font-size: .9rem; line-height: 1.55; }
+.v55-lock-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* ---------- Kalendář: čas od–do ---------- */
+.cal54-time { white-space: nowrap; }
+
+@media (max-width: 1040px) {
+  .main-menu.v55-nav a i { display: none; }
+}
+@media (max-width: 900px) {
+  .main-menu.v55-nav { display: none !important; }
+  .v55-run-meta { width: 100%; justify-content: space-between; }
+}
+
+/* Čas hodiny v agendě kalendáře */
+.t52-day-time { display: inline-block; margin-left: 8px; padding: 2px 9px; border-radius: 999px; background: var(--edu-teal-soft); color: var(--edu-teal-dark); font-size: .72rem; font-weight: 650; white-space: nowrap; }
+
+/* Položky hlavního menu se na mobilu přesunou do rozbalovacího Více */
+.v55-mobile-only { display: none; }
+@media (max-width: 900px) { .student-nav-popover .v55-mobile-only { display: block; } }

@@ -1,0 +1,164 @@
+/* EDUCANET v54 · firemní barvy a přihlašovací stránka
+   Paleta: #f3b21f žlutá · #ec6b10 oranžová · #00a8b9 tyrkysová */
+:root, :root:not(.x) {
+  --edu-yellow: #f3b21f;
+  --edu-orange: #ec6b10;
+  --edu-teal: #00a8b9;
+  --edu-teal-dark: #007a87;
+  --edu-orange-dark: #c4550a;
+  --edu-ink: #12212b;
+
+  --edu-yellow-soft: #fef5e0;
+  --edu-orange-soft: #fdeee3;
+  --edu-teal-soft: #e2f6f8;
+
+  --u-accent: var(--edu-teal-dark);
+  --u-accent-soft: var(--edu-teal-soft);
+  --u-text: var(--edu-ink);
+  --accent: var(--edu-teal-dark);
+  --accent-soft: var(--edu-teal-soft);
+  --t52-accent: var(--edu-teal-dark);
+  --t52-accent-soft: var(--edu-teal-soft);
+  --s53-1: var(--edu-teal-dark);
+  --s53-2: var(--edu-orange);
+  --s53-4: var(--edu-yellow);
+  --s53-tint-1: var(--edu-teal-soft);
+  --s53-tint-2: var(--edu-orange-soft);
+  --s53-tint-4: var(--edu-yellow-soft);
+}
+/* Předměty: grafika oranžová, sítě tyrkysová, navazující seminář tmavší tyrkys */
+body.accent-graphics { --u-accent: var(--edu-orange-dark); --u-accent-soft: var(--edu-orange-soft); --accent: var(--edu-orange-dark); --accent-soft: var(--edu-orange-soft); --t52-accent: var(--edu-orange-dark); --t52-accent-soft: var(--edu-orange-soft); }
+body.accent-network { --u-accent: var(--edu-teal-dark); --u-accent-soft: var(--edu-teal-soft); --accent: var(--edu-teal-dark); --accent-soft: var(--edu-teal-soft); --t52-accent: var(--edu-teal-dark); --t52-accent-soft: var(--edu-teal-soft); }
+body.accent-advanced { --u-accent: #0b6470; --u-accent-soft: var(--edu-teal-soft); --accent: #0b6470; --accent-soft: var(--edu-teal-soft); --t52-accent: #0b6470; --t52-accent-soft: var(--edu-teal-soft); }
+
+.brand-mark { background: var(--edu-teal) !important; }
+.s53-points { border-color: var(--edu-yellow) !important; background: var(--edu-yellow-soft) !important; color: #7a5500 !important; }
+.t52-hints { background: var(--edu-yellow-soft); border-color: #f6dfa6; }
+.t52-hints-head, .t52-hint-buttons button, .t52-hint-out p b { color: #7a5500; }
+.t52-hint-buttons button { border-color: #f0d08a; }
+.t52-date-big, .s53-steps li::before { background: var(--edu-orange); }
+.u51-check, .t52-status.done { background: var(--edu-teal-soft); color: var(--edu-teal-dark); }
+
+/* ---------- Přihlašovací stránka ---------- */
+.auth54 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 460px); gap: 26px; align-items: start; max-width: 1060px; margin: 18px auto 60px; }
+.auth54-hero { padding: clamp(22px, 4vw, 38px); border-radius: 22px; color: #fff; background: linear-gradient(140deg, var(--edu-teal) 0%, var(--edu-teal-dark) 45%, #05616c 100%); position: relative; overflow: hidden; }
+.auth54-hero::after { content: ''; position: absolute; right: -90px; bottom: -110px; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, rgba(243, 178, 31, .28), rgba(236, 107, 16, .14) 55%, transparent 72%); pointer-events: none; }
+.auth54-hero::before { content: ''; position: absolute; left: -40px; top: -60px; width: 150px; height: 150px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .14); }
+.auth54-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(255, 255, 255, .16); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.auth54-hero h1 { margin: 16px 0 10px; font-size: clamp(1.7rem, 3.6vw, 2.6rem); line-height: 1.1; color: #fff; max-width: 15ch; }
+.auth54-hero h1 span { color: var(--edu-yellow); }
+.auth54-hero p { margin: 0; max-width: 42ch; color: rgba(255, 255, 255, .88); line-height: 1.55; }
+.auth54-points { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 10px; position: relative; z-index: 1; }
+.auth54-points li { display: flex; align-items: center; gap: 12px; font-size: .92rem; color: rgba(255, 255, 255, .95); }
+.auth54-points b { flex: 0 0 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--edu-yellow); color: var(--edu-ink); font-size: .85rem; }
+
+.auth54-panel { background: #fff; border: 1px solid var(--u-line, #e3e6eb); border-radius: 20px; padding: clamp(18px, 3vw, 28px); box-shadow: 0 18px 50px rgba(18, 33, 43, .07); }
+.auth54-flash { margin-bottom: 16px; padding: 11px 14px; border-radius: 12px; background: var(--edu-yellow-soft); border-left: 4px solid var(--edu-yellow); font-size: .9rem; color: #6b4a00; }
+.auth54-tabs { display: grid; grid-auto-flow: column; gap: 4px; padding: 4px; margin-bottom: 20px; background: var(--u-soft, #f1f3f6); border-radius: 12px; }
+.auth54-tabs button { border: 0; background: transparent; padding: 10px 12px; border-radius: 9px; font: inherit; font-size: .9rem; font-weight: 650; color: var(--u-muted, #5f6b7a); cursor: pointer; }
+.auth54-tabs button.active { background: #fff; color: var(--edu-ink); box-shadow: 0 1px 3px rgba(18, 33, 43, .12); }
+.auth54-pane { display: grid; gap: 16px; }
+.auth54-pane[hidden] { display: none; }
+.auth54-lead { margin: 0; color: var(--u-muted, #5f6b7a); font-size: .9rem; line-height: 1.55; }
+.auth54-form { display: grid; gap: 14px; margin: 0; }
+.auth54-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.auth54-field { display: grid; gap: 6px; }
+.auth54-field > span { font-size: .84rem; font-weight: 650; color: var(--edu-ink); }
+.auth54-field input { width: 100%; min-height: 46px; padding: 11px 14px; border: 1px solid var(--u-line-strong, #cfd5dd) !important; border-radius: 12px !important; font-size: .95rem; }
+.auth54-field input:focus { border-color: var(--edu-teal) !important; box-shadow: 0 0 0 3px var(--edu-teal-soft) !important; }
+.auth54 .btn.primary { background: var(--edu-teal-dark) !important; border-color: var(--edu-teal-dark) !important; min-height: 48px !important; font-size: .95rem !important; }
+.auth54 .btn.primary:hover { background: var(--edu-teal) !important; border-color: var(--edu-teal) !important; filter: none; }
+.auth54 .btn.secondary { min-height: 44px !important; }
+.auth54-hint { margin: -6px 0 0; font-size: .78rem; color: var(--u-faint, #8a94a3); }
+.auth54-divider { display: flex; align-items: center; gap: 12px; color: var(--u-faint, #8a94a3); font-size: .78rem; }
+.auth54-divider::before, .auth54-divider::after { content: ''; flex: 1; height: 1px; background: var(--u-line, #e3e6eb); }
+
+.auth54-code { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 14px; text-decoration: none; color: var(--edu-ink); background: var(--edu-orange-soft); border: 1px solid #f7d7be; transition: transform .15s, border-color .15s; }
+.auth54-code:hover { transform: translateY(-1px); border-color: var(--edu-orange); }
+.auth54-code-icon { flex: 0 0 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: var(--edu-orange); color: #fff; font-size: 1.1rem; font-weight: 800; }
+.auth54-code span strong { display: block; font-size: .95rem; }
+.auth54-code span small { color: var(--u-muted, #5f6b7a); font-size: .8rem; }
+.auth54-code b { margin-left: auto; color: var(--edu-orange); font-size: 1.1rem; }
+
+.auth54-help { border: 1px solid var(--u-line, #e3e6eb); border-radius: 14px; overflow: hidden; }
+.auth54-help summary { display: flex; align-items: center; gap: 10px; padding: 13px 16px; cursor: pointer; font-size: .9rem; font-weight: 650; list-style: none; }
+.auth54-help summary::-webkit-details-marker { display: none; }
+.auth54-help summary::after { content: '⌄'; margin-left: auto; color: var(--u-faint, #8a94a3); transition: transform .2s; }
+.auth54-help[open] summary::after { transform: rotate(180deg); }
+.auth54-help-icon { flex: 0 0 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--edu-teal-soft); color: var(--edu-teal-dark); font-weight: 800; font-size: .8rem; }
+.auth54-help-body { display: grid; gap: 16px; padding: 4px 16px 18px; border-top: 1px solid var(--u-line, #e3e6eb); }
+.auth54-help-body > p { margin: 12px 0 0; font-size: .86rem; line-height: 1.55; color: var(--u-muted, #5f6b7a); }
+.auth54-inline-form { display: grid; gap: 10px; padding: 14px; border-radius: 12px; background: var(--u-soft, #f1f3f6); }
+.auth54-help-note { margin: 0; font-size: .8rem; color: var(--u-faint, #8a94a3); }
+.auth54-foot { margin: 20px 0 0; padding-top: 16px; border-top: 1px solid var(--u-line, #e3e6eb); font-size: .8rem; color: var(--u-faint, #8a94a3); text-align: center; }
+.auth54-foot a { color: var(--edu-teal-dark); }
+
+/* Vstup kódem a aktivace ve stejném stylu */
+.u51-narrow .u51-card { border-radius: 20px; box-shadow: 0 18px 50px rgba(18, 33, 43, .06); }
+.u51-progress-dots li.current { border-color: var(--edu-teal); color: var(--edu-ink); }
+.u51-progress-dots li.done { border-color: var(--edu-orange); color: var(--edu-orange-dark); }
+.u51-code { border-color: var(--edu-teal) !important; letter-spacing: .24em; }
+
+@media (max-width: 900px) {
+  .auth54 { grid-template-columns: 1fr; gap: 18px; margin-top: 10px; }
+  .auth54-hero { padding: 22px; }
+  .auth54-hero h1 { font-size: 1.6rem; max-width: none; }
+  .auth54-points { grid-auto-flow: row; }
+  .auth54-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- Klasický kalendář třídy (v54) ---------- */
+.cal54 { background: #fff; border: 1px solid var(--u-line, #e3e6eb); border-radius: 18px; padding: 16px clamp(10px, 2vw, 18px) 14px; margin: 0 0 18px; box-shadow: 0 10px 30px rgba(18, 33, 43, .05); }
+.cal54-title { font-size: 1.05rem; font-weight: 750; color: var(--edu-ink); margin: 0 0 12px; }
+.cal54-head { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-bottom: 6px; }
+.cal54-head span { text-align: center; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--u-faint, #8a94a3); padding-bottom: 4px; }
+.cal54-head span:nth-child(n+6) { color: #b8c0cb; }
+.cal54-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.cal54-cell { position: relative; display: flex; flex-direction: column; gap: 2px; min-height: 88px; padding: 7px 8px; border: 1px solid var(--u-line, #e9ecf1); border-radius: 12px; background: #fff; text-decoration: none; color: var(--edu-ink); overflow: hidden; }
+.cal54-cell.empty { border: 0; background: transparent; min-height: 0; }
+.cal54-cell.weekend { background: #fafbfc; border-color: #f0f2f5; }
+.cal54-cell.plain { background: #fff; }
+.cal54-day { font-size: .82rem; font-weight: 700; color: var(--u-muted, #5f6b7a); }
+.cal54-cell.weekend .cal54-day { color: #b8c0cb; }
+.cal54-time { font-size: .68rem; font-weight: 700; letter-spacing: .04em; color: var(--edu-teal-dark); }
+.cal54-title-cell { font-size: .8rem; font-weight: 700; line-height: 1.2; }
+.cal54-sub { font-size: .72rem; line-height: 1.25; color: var(--u-muted, #5f6b7a); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.cal54-off { font-size: .72rem; color: var(--u-faint, #8a94a3); }
+
+.cal54-cell.planned { background: var(--edu-teal-soft); border-color: #b8e6ec; }
+.cal54-cell.planned::before, .cal54-cell.past::before, .cal54-cell.today::before, .cal54-cell.off::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--edu-teal); }
+.cal54-cell.past { background: #f7f8fa; border-color: #e6e9ee; }
+.cal54-cell.past::before { background: #c3cad4; }
+.cal54-cell.past .cal54-time { color: var(--u-faint, #8a94a3); }
+.cal54-cell.off { background: var(--edu-yellow-soft); border-color: #f4e0b2; }
+.cal54-cell.off::before { background: var(--edu-yellow); }
+.cal54-cell.today { background: var(--edu-orange-soft); border-color: var(--edu-orange); box-shadow: 0 0 0 2px rgba(236, 107, 16, .18); }
+.cal54-cell.today::before { background: var(--edu-orange); }
+.cal54-cell.today .cal54-time { color: var(--edu-orange-dark); }
+.cal54-cell.is-today .cal54-day { display: grid; place-items: center; width: 22px; height: 22px; align-self: flex-start; border-radius: 50%; background: var(--edu-orange); color: #fff; font-size: .78rem; }
+a.cal54-cell { transition: transform .12s ease, box-shadow .12s ease; }
+a.cal54-cell:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(18, 33, 43, .1); }
+
+.cal54-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--u-line, #eef0f4); font-size: .76rem; color: var(--u-muted, #5f6b7a); }
+.cal54-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.cal54-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.cal54-dot.planned { background: var(--edu-teal); }
+.cal54-dot.past { background: #c3cad4; }
+.cal54-dot.today { background: var(--edu-orange); }
+.cal54-dot.off { background: var(--edu-yellow); }
+
+.t52-day.cal54-focus { outline: 2px solid var(--edu-orange); outline-offset: 3px; border-radius: 14px; }
+
+@media (max-width: 760px) {
+  .cal54 { padding: 12px 8px 10px; }
+  .cal54-grid, .cal54-head { gap: 3px; }
+  .cal54-cell { min-height: 56px; padding: 5px 4px; border-radius: 9px; }
+  .cal54-time, .cal54-sub, .cal54-off { display: none; }
+  .cal54-title-cell { font-size: .66rem; }
+}
+
+/* Štítky témat výhradně ve firemní paletě */
+.t52-chips span:nth-child(4n+1) { background: var(--edu-teal-soft) !important; color: #065a66 !important; }
+.t52-chips span:nth-child(4n+2) { background: var(--edu-orange-soft) !important; color: #9c4408 !important; }
+.t52-chips span:nth-child(4n+3) { background: var(--edu-yellow-soft) !important; color: #7a5500 !important; }
+.t52-chips span:nth-child(4n+4) { background: #eef2f4 !important; color: #33505a !important; }

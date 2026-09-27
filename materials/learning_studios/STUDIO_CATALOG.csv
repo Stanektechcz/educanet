@@ -1,0 +1,113 @@
+class;lesson;title;family;topic;representations;model_steps;teachback_markers
+class_1a;1;"Lekce 1 · Základní dvouhodinový blok";accessibility;hierarchy;5;5;5
+class_1a;2;"Lekce 2 · Typografie + obraz: plakát bez šablony";typography;typography;5;5;5
+class_1a;3;"Lekce 3 · Barva + typografický systém";accessibility;contrast-color;5;5;5
+class_1a;4;"Lekce 4 · Mini vizuální identita";handoff;hierarchy;5;5;5
+class_1a;5;"Lekce 5 · Paleta, ikony a konzistence";image;color-harmony;5;5;5
+class_1a;6;"Lekce 6 · Redesign: z chaosu na systém";image;template-critique;5;5;5
+class_1a;7;"Lekce 7 · Jeden design, tři formáty";responsive;responsive-series;5;5;5
+class_1a;8;"Lekce 8 · Typografie I + Layout I";typography;editorial-typography-i;5;5;5
+class_1a;9;"Lekce 9 · Vizuální příběh + produkční workflow";handoff;visual-story-i;5;5;5
+class_1a;10;"Lekce 10 · Anatomie webu: hierarchie od plakátu k obrazovce";layout;web-layout-basics-i;5;5;5
+class_1a;11;"Lekce 11 · Responsive základ: jedna stránka, tři šířky";responsive;responsive-layout-i;5;5;5
+class_1a;12;"Lekce 12 · Komponenty: tlačítka, karty a opakovatelná pravidla";components;components-i;5;5;5
+class_1a;13;"Lekce 13 · Webová typografie: čitelnost, délka řádku a rytmus";typography;web-typography-i;5;5;5
+class_1a;14;"Lekce 14 · Obraz pro web: crop, rozlišení a export";image;image-web-i;5;5;5
+class_1a;15;"Lekce 15 · Formuláře a přístupnost: stav musí být pochopitelný";accessibility;forms-a11y-i;5;5;5
+class_1a;16;"Lekce 16 · Landing page: wireframe od briefu k flow";responsive;web-layout-basics-i;5;5;5
+class_1a;17;"Lekce 17 · Mini UI kit: pravidla místo náhodných hodnot";components;design-system-i;5;5;5
+class_1a;18;"Lekce 18 · Capstone: responzivní landing page";accessibility;web-layout-basics-i;5;5;5
+class_1a;19;"Lekce 19 · Visual audit clinic";usability;design-feedback;5;5;5
+class_1a;20;"Lekce 20 · Content-first landing";layout;content-first-layout;5;5;5
+class_1a;21;"Lekce 21 · Responsive hero";responsive;responsive-art-direction;5;5;5
+class_1a;22;"Lekce 22 · Microcopy & CTA";typography;microcopy-cta;5;5;5
+class_1a;23;"Lekce 23 · Accessible color & type";accessibility;forms-a11y-i;5;5;5
+class_1a;24;"Lekce 24 · Image art direction";responsive;responsive-art-direction;5;5;5
+class_1a;25;"Lekce 25 · Component starter";accessibility;components-i;5;5;5
+class_1a;26;"Lekce 26 · Critique workshop";usability;design-feedback;5;5;5
+class_1a;27;"Lekce 27 · Landing sprint";typography;content-first-layout;5;5;5
+class_1a;28;"Lekce 28 · Portfolio & mastery";usability;design-feedback;5;5;5
+class_2a;1;"Lekce 1 · Základní dvouhodinový blok";accessibility;hierarchy;5;5;5
+class_2a;2;"Lekce 2 · Z jednoho plakátu udělej malou kampaň";responsive;branding-system;5;5;5
+class_2a;3;"Lekce 3 · UI hero sekce: grafika potkává web";accessibility;hierarchy;5;5;5
+class_2a;4;"Lekce 4 · Motion storyboard pro sociální sítě";typography;hierarchy;5;5;5
+class_2a;5;"Lekce 5 · Design systém: spacing, komponenty, stavy";accessibility;ui-spacing-system;5;5;5
+class_2a;6;"Lekce 6 · Portfolio case study + mikrointerakce";motion;portfolio-case-study;5;5;5
+class_2a;7;"Lekce 7 · Accessibility & responsive UI";accessibility;accessibility-design;5;5;5
+class_2a;8;"Lekce 8 · Typografie II + Design systém II";typography;responsive-type-ii;5;5;5
+class_2a;9;"Lekce 9 · Interakce II + profesionální handoff";handoff;interaction-patterns-ii;5;5;5
+class_2a;10;"Lekce 10 · Informační architektura + user flow";information;information-architecture-ii;5;5;5
+class_2a;11;"Lekce 11 · Form UX: validace, chyby a stavy";forms;form-states-ii;5;6;5
+class_2a;12;"Lekce 12 · Auto Layout, varianty a responsive komponenty";responsive;auto-layout-ii;5;5;5
+class_2a;13;"Lekce 13 · Accessibility audit webového návrhu";accessibility;accessibility-audit-ii;5;5;5
+class_2a;14;"Lekce 14 · Design → HTML/CSS: handoff, který jde implementovat";components;html-css-handoff-ii;5;5;5
+class_2a;15;"Lekce 15 · CSS layout mindset: Flex, Grid a responsive pravidla";responsive;css-responsive-ii;5;5;5
+class_2a;16;"Lekce 16 · Usability test: pozorování místo dojmologie";usability;usability-test-ii;5;5;5
+class_2a;17;"Lekce 17 · Design QA: porovnej implementaci s pravidly, ne s pixely";accessibility;design-qa-handoff-ii;5;5;5
+class_2a;18;"Lekce 18 · Capstone: produktová landing page + case study";accessibility;information-architecture-ii;5;5;5
+class_2a;19;"Lekce 19 · Research framing";information;information-architecture-ii;5;5;5
+class_2a;20;"Lekce 20 · Card sorting lab";information;card-sorting;5;5;5
+class_2a;21;"Lekce 21 · Responsive component stress test";responsive;auto-layout-ii;5;5;5
+class_2a;22;"Lekce 22 · Form recovery states";forms;error-recovery-ux;5;6;5
+class_2a;23;"Lekce 23 · Accessible interaction";accessibility;interaction-accessibility;5;5;5
+class_2a;24;"Lekce 24 · Design tokens to code";components;design-tokens-ii;5;5;5
+class_2a;25;"Lekce 25 · Usability round 2";usability;usability-test-ii;5;5;5
+class_2a;26;"Lekce 26 · Design QA clinic";handoff;design-handoff-qa;5;5;5
+class_2a;27;"Lekce 27 · Product sprint";accessibility;card-sorting;5;5;5
+class_2a;28;"Lekce 28 · Case study & mastery";handoff;design-handoff-qa;5;5;5
+class_3a;1;"Lekce 1 · Základní dvouhodinový blok";dns;ip-addressing;5;6;5
+class_3a;2;"Lekce 2 · Navrhni a ověř malou kancelářskou síť";routing;vlan-basics;5;6;5
+class_3a;3;"Lekce 3 · DNS + DHCP jako služby";dns;dns;5;6;5
+class_3a;4;"Lekce 4 · Monitoring + základní hardening";observability;service-matrix;5;5;5
+class_3a;5;"Lekce 5 · IPv6 + DNS záznamy";dns;ipv6-basics;5;6;5
+class_3a;6;"Lekce 6 · Monitoring + DHCP reservations";dhcp;monitoring-basics;5;6;5
+class_3a;7;"Lekce 7 · Packet journey + Wireshark mindset";dns;packet-analysis;5;6;5
+class_3a;8;"Lekce 8 · IPv4 II: VLSM + síťové zóny";routing;subnetting-vlsm;5;6;5
+class_3a;9;"Lekce 9 · DNS/DHCP II + service debugging";dns;dns-dhcp-operations;5;6;5
+class_3a;10;"Lekce 10 · Linux CLI + filesystem: orientace bez klikání";filesystem;linux-filesystem;5;5;5
+class_3a;11;"Lekce 11 · Uživatelé, skupiny a oprávnění";permissions;users-permissions;5;5;5
+class_3a;12;"Lekce 12 · Procesy + systemd: služba není magie";systemd;processes-systemd;5;6;5
+class_3a;13;"Lekce 13 · Logy a journalctl: časová osa důkazů";logs;journal-logs;5;6;5
+class_3a;14;"Lekce 14 · SSH/SFTP: bezpečný vzdálený přístup";ssh;ssh-keys-ops;5;6;5
+class_3a;15;"Lekce 15 · Firewall + služby: co poslouchá a kdo se tam dostane";observability;linux-firewall;5;5;5
+class_3a;16;"Lekce 16 · Linux webová služba: od procesu k HTTP";dns;web-service-linux;5;6;5
+class_3a;17;"Lekce 17 · Shell + cron: malá automatizace s logem a bezpečným selháním";automation;shell-cron;5;6;5
+class_3a;18;"Lekce 18 · Capstone: nefunguje služba – Linux + síť v jednom incidentu";filesystem;linux-filesystem;5;5;5
+class_3a;19;"Lekce 19 · Filesystem incident";filesystem;linux-file-troubleshooting;5;5;5
+class_3a;20;"Lekce 20 · systemd dependency lab";systemd;processes-systemd;5;6;5
+class_3a;21;"Lekce 21 · Journal forensic";logs;journal-logs;5;6;5
+class_3a;22;"Lekce 22 · SSH keys in practice";ssh;ssh-key-operations;5;6;5
+class_3a;23;"Lekce 23 · DNS evidence chain";dns;dns;5;6;5
+class_3a;24;"Lekce 24 · Stateful firewall lab";firewall;stateful-firewall;5;5;5
+class_3a;25;"Lekce 25 · Safe Bash automation";automation;bash-error-handling;5;6;5
+class_3a;26;"Lekce 26 · Service recovery drill";service;service-debug-chain;5;6;5
+class_3a;27;"Lekce 27 · Team incident lab";firewall;stateful-firewall;5;5;5
+class_3a;28;"Lekce 28 · Mastery review";ssh;linux-file-troubleshooting;5;6;5
+class_4a;1;"Lekce 1 · Základní dvouhodinový blok";dns;cidr;5;6;5
+class_4a;2;"Lekce 2 · Produkční change window: proxy, TLS, logy a rollback";observability;reverse-proxy;5;5;5
+class_4a;3;"Lekce 3 · Observability: logy, metriky, health";observability;logs-monitoring;5;5;5
+class_4a;4;"Lekce 4 · Release drill: bezpečný deploy a rollback";observability;change-management;5;5;5
+class_4a;5;"Lekce 5 · HTTP observability + load balancing";observability;http-observability;5;5;5
+class_4a;6;"Lekce 6 · Canary release + backup/restore drill";release;canary-release;5;7;5
+class_4a;7;"Lekce 7 · SLO, error budget a postmortem";observability;slo-postmortem;5;5;5
+class_4a;8;"Lekce 8 · Infrastructure as Code + drift";iac;infrastructure-as-code;5;6;5
+class_4a;9;"Lekce 9 · Performance + capacity engineering";performance;performance-engineering;5;6;5
+class_4a;10;"Lekce 10 · systemd do hloubky: dependencies, restart policy, failure";observability;systemd-advanced;5;5;5
+class_4a;11;"Lekce 11 · Storage: disk, filesystem, mount a „disk full“ incident";filesystem;storage-filesystems;5;5;5
+class_4a;12;"Lekce 12 · Backup strategie: RPO/RTO a restore drill";backup;backup-strategy;5;6;5
+class_4a;13;"Lekce 13 · Hardening Linux služby: SSH, firewall, aktualizace a minimální práva";ssh;ssh-hardening;5;6;5
+class_4a;14;"Lekce 14 · Containers: proces, image, volume a síť";service;containers-basics;5;6;5
+class_4a;15;"Lekce 15 · Automatizace + configuration consistency";automation;automation-shell;5;6;5
+class_4a;16;"Lekce 16 · Pokročilá síťová diagnostika: packet evidence + socket state";packet;packet-diagnostics-advanced;5;5;5
+class_4a;17;"Lekce 17 · Incident response: runbook, komunikace a blameless postmortem";observability;incident-runbook;5;5;5
+class_4a;18;"Lekce 18 · Capstone: produkční reliability drill";packet;systemd-advanced;5;5;5
+class_4a;19;"Lekce 19 · Golden signals lab";observability;golden-signals;5;5;5
+class_4a;20;"Lekce 20 · Reverse proxy evidence";observability;reverse-proxy;5;5;5
+class_4a;21;"Lekce 21 · Container networking";containers;container-networking;5;6;5
+class_4a;22;"Lekce 22 · Restore game day";backup;backup-restore;5;6;5
+class_4a;23;"Lekce 23 · Hardening audit";ssh;ssh-hardening;5;6;5
+class_4a;24;"Lekce 24 · Safe change & rollback";release;rollback-strategy;5;7;5
+class_4a;25;"Lekce 25 · Drift & automation";automation;config-drift;5;6;5
+class_4a;26;"Lekce 26 · Performance capacity";performance;performance-engineering;5;6;5
+class_4a;27;"Lekce 27 · Incident command";observability;incident-command;5;5;5
+class_4a;28;"Lekce 28 · Reliability mastery";observability;golden-signals;5;5;5

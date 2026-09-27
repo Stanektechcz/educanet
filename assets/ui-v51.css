@@ -1,0 +1,471 @@
+/* EDUCANET v51 · Light Clarity
+   Jedna světlá, minimalistická vrstva nad historickými styly (načítá se jako poslední).
+   Zásady: bílé plochy, jemné linky, jedna akcentní barva, žádné těžké stíny ani tmavé plochy. */
+
+:root,
+:root:not(.x) {
+  color-scheme: light;
+  --u-bg: #f6f7f9;
+  --u-surface: #ffffff;
+  --u-soft: #f1f3f6;
+  --u-line: #e3e6eb;
+  --u-line-strong: #cfd5dd;
+  --u-text: #111827;
+  --u-muted: #5f6b7a;
+  --u-faint: #8a94a3;
+  --u-accent: #3056d3;
+  --u-accent-soft: #edf1fd;
+  --u-ok: #0f7b4f;
+  --u-ok-soft: #e9f6ef;
+  --u-warn: #9a6a00;
+  --u-warn-soft: #fdf6e3;
+  --u-bad: #b42318;
+  --u-bad-soft: #fdeeec;
+  --u-radius: 14px;
+  --u-radius-sm: 10px;
+  --u-shadow: 0 1px 2px rgba(17, 24, 39, .04);
+  --u-shadow-pop: 0 12px 32px rgba(17, 24, 39, .10);
+  --u-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* mapování na historické tokeny */
+  --bg: var(--u-bg);
+  --surface: var(--u-surface);
+  --surface-2: var(--u-soft);
+  --text: var(--u-text);
+  --muted: var(--u-muted);
+  --line: var(--u-line);
+  --shadow: var(--u-shadow);
+  --radius: var(--u-radius);
+  --ok: var(--u-ok);
+  --ok-soft: var(--u-ok-soft);
+  --bad: var(--u-bad);
+  --bad-soft: var(--u-bad-soft);
+  --ot-bg: var(--u-bg);
+  --ot-surface: var(--u-surface);
+  --ot-text: var(--u-text);
+  --ot-muted: var(--u-muted);
+  --ot-line: var(--u-line);
+  --ot-soft: var(--u-soft);
+  --ot-primary: var(--u-accent);
+  --ot-primary-text: #fff;
+  --ot-shadow: var(--u-shadow);
+  --ot-radius: var(--u-radius);
+  /* tokeny, které historické moduly (Visual Lab v48, 3.A laby, karty) používaly bez definice */
+  --panel: var(--u-surface);
+  --panel-soft: var(--u-soft);
+  --border: var(--u-line);
+  --soft: var(--u-soft);
+  --card: var(--u-surface);
+  --danger: var(--u-bad);
+  --shadow-sm: var(--u-shadow);
+}
+body.accent-network { --accent: #3056d3; --accent-soft: #edf1fd; --u-accent: #3056d3; --u-accent-soft: #edf1fd; }
+body.accent-graphics { --accent: #6d4bd8; --accent-soft: #f2eefc; --u-accent: #6d4bd8; --u-accent-soft: #f2eefc; }
+body.accent-advanced { --accent: #0f766e; --accent-soft: #e7f4f2; --u-accent: #0f766e; --u-accent-soft: #e7f4f2; }
+
+/* Tmavý režim systému aplikaci nepřepíná – rozhraní zůstává světlé a čitelné. */
+@media (prefers-color-scheme: dark) {
+  :root, :root:not(.x) {
+    --bg: #f6f7f9; --surface: #ffffff; --surface-2: #f1f3f6; --text: #111827; --muted: #5f6b7a; --line: #e3e6eb;
+    --shadow: 0 1px 2px rgba(17, 24, 39, .04); --accent-soft: #edf1fd;
+    --ot-bg: #f6f7f9; --ot-surface: #ffffff; --ot-text: #111827; --ot-muted: #5f6b7a; --ot-line: #e3e6eb; --ot-soft: #f1f3f6; --ot-primary: #3056d3; --ot-primary-text: #fff;
+  }
+  .notice { background: var(--u-warn-soft) !important; border-color: #f1e2b3 !important; color: #5c4400 !important; }
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--u-bg) !important;
+  color: var(--u-text) !important;
+  font-family: var(--u-font) !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+h1, h2, h3, h4 { letter-spacing: -.015em; color: var(--u-text); }
+h1 { font-weight: 750; }
+h2, h3 { font-weight: 700; }
+::selection { background: var(--u-accent-soft); }
+:focus-visible { outline: 2px solid var(--u-accent) !important; outline-offset: 2px; }
+a { text-underline-offset: 3px; }
+
+/* ---------- Horní lišta ---------- */
+.topbar {
+  background: rgba(255, 255, 255, .92) !important;
+  border: 1px solid var(--u-line) !important;
+  box-shadow: none !important;
+  backdrop-filter: saturate(1.2) blur(12px);
+}
+.brand { color: var(--u-text) !important; text-decoration: none; }
+.brand-mark { background: var(--u-text) !important; color: #fff !important; box-shadow: none !important; }
+/* Oprava zdvojeného „EDUCANETEDUCANET“: text zůstává, pseudo-element se nepoužívá. */
+.brand > span:last-child { font-size: .86rem !important; font-weight: 750 !important; letter-spacing: .02em; }
+.brand > span:last-child::after { content: none !important; }
+
+.student-nav-continue { background: var(--u-accent) !important; }
+.student-nav-menu > summary, .v5077-menu > summary { border: 1px solid var(--u-line) !important; background: var(--u-surface) !important; box-shadow: none !important; }
+.student-nav-popover, .v5077-menu-popover { border: 1px solid var(--u-line) !important; box-shadow: var(--u-shadow-pop) !important; background: var(--u-surface) !important; }
+
+/* ---------- Plochy ---------- */
+.panel, .card, .dashboard-panel, .hero, .auth-card, .v507-page-shell, .student-do-now-card,
+.teacher-panel, .overview-class-card, .teacher-login-card, .ot-workspace {
+  background: var(--u-surface) !important;
+  border: 1px solid var(--u-line) !important;
+  border-radius: var(--u-radius) !important;
+  box-shadow: none !important;
+}
+.hero { background-image: none !important; color: var(--u-text) !important; }
+.hero h1, .hero h2, .hero p { color: inherit !important; }
+.hero p, .panel p, .card p { color: var(--u-muted); }
+.eyebrow { color: var(--u-accent) !important; opacity: 1 !important; font-weight: 700 !important; letter-spacing: .06em !important; }
+
+/* ---------- Tlačítka ---------- */
+.btn, button.btn, a.btn {
+  border-radius: var(--u-radius-sm) !important;
+  box-shadow: none !important;
+  font-weight: 650 !important;
+  letter-spacing: 0 !important;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.btn.primary, .btn-primary {
+  background: var(--u-accent) !important;
+  border: 1px solid var(--u-accent) !important;
+  color: #fff !important;
+  background-image: none !important;
+}
+.btn.primary:hover, .btn-primary:hover { filter: brightness(.94); }
+.btn.secondary, .btn-secondary {
+  background: var(--u-surface) !important;
+  border: 1px solid var(--u-line-strong) !important;
+  color: var(--u-text) !important;
+}
+.btn.secondary:hover, .btn-secondary:hover { background: var(--u-soft) !important; }
+.btn.wide { width: 100%; justify-content: center; }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+
+/* ---------- Formuláře ---------- */
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="search"], input[type="url"], input:not([type]),
+select, textarea {
+  background: var(--u-surface) !important;
+  border: 1px solid var(--u-line-strong) !important;
+  border-radius: var(--u-radius-sm) !important;
+  color: var(--u-text) !important;
+  box-shadow: none !important;
+}
+/* Viditelný fokus (WCAG 2.4.7 / 1.4.11): jemná záře měla kontrast jen ~1.1:1. */
+/* „:root body“ zvyšuje specificitu nad starší průhledný fokus ze student-ui-v50-7-7.css. */
+:root body input:focus, :root body select:focus, :root body textarea:focus { border-color: var(--u-accent) !important; box-shadow: none !important; outline: 2px solid var(--edu-teal-dark, #007a87) !important; outline-offset: 2px !important; }
+:root body a:focus-visible, :root body button:focus-visible, :root body .btn:focus-visible, :root body summary:focus-visible, :root body [tabindex]:focus-visible { outline: 2px solid var(--edu-teal-dark, #007a87) !important; outline-offset: 2px !important; }
+input::placeholder, textarea::placeholder { color: var(--u-faint) !important; }
+input[type="checkbox"], input[type="radio"], input[type="range"] { accent-color: var(--u-accent); }
+
+.notice, .teacher-flash {
+  background: var(--u-accent-soft) !important;
+  border: 1px solid color-mix(in srgb, var(--u-accent) 20%, transparent) !important;
+  color: var(--u-text) !important;
+  border-radius: var(--u-radius-sm) !important;
+  box-shadow: none !important;
+}
+.footer { color: var(--u-faint) !important; }
+
+/* ---------- Lekce jako krokový postup ---------- */
+.guided-lesson-focus { border: 1px solid var(--u-line) !important; background: var(--u-surface) !important; border-radius: var(--u-radius) !important; box-shadow: none !important; }
+.guided-focus-index { background: var(--u-accent-soft) !important; color: var(--u-accent) !important; border-radius: 12px !important; }
+.guided-lesson-map-track > div.done i { background: var(--u-ok) !important; color: #fff !important; }
+.guided-lesson-map-track > div.current i { background: var(--u-accent) !important; color: #fff !important; }
+.next-step-card { border: 1px solid var(--u-line) !important; border-radius: var(--u-radius) !important; background: var(--u-surface) !important; box-shadow: none !important; }
+.next-step-card.current { border-color: color-mix(in srgb, var(--u-accent) 45%, var(--u-line)) !important; }
+.next-step-card.done { background: var(--u-soft) !important; }
+.next-step-card.locked { opacity: .6; }
+.next-step-index { border-radius: 10px !important; }
+.assessment-answer { border: 1px solid var(--u-line) !important; background: var(--u-surface) !important; border-radius: 12px !important; box-shadow: none !important; }
+.assessment-answer:hover { border-color: var(--u-accent) !important; }
+.assessment-answer span { background: var(--u-soft) !important; border-radius: 8px !important; }
+
+/* Terminálové a kódové ukázky zůstávají tmavé jen uvnitř samotného terminálu. */
+pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+/* ---------- Učitelské rozhraní ---------- */
+body.teacher-app { background: var(--u-bg) !important; }
+.teacher-topbar, .teacher-topbar-v45-3 { background: rgba(255, 255, 255, .95) !important; border-bottom: 1px solid var(--u-line) !important; box-shadow: none !important; }
+.teacher-topbar-v45-3 .teacher-nav-groups { background: var(--u-soft) !important; }
+.teacher-nav-dropdown { border: 1px solid var(--u-line) !important; box-shadow: var(--u-shadow-pop) !important; }
+.teacher-contextbar { background: var(--u-surface) !important; border: 1px solid var(--u-line) !important; box-shadow: none !important; }
+.teacher-class-tabs a.active, .teacher-nav-direct.active { background: var(--u-text) !important; color: #fff !important; }
+
+/* =====================================================================
+   Komponenty v51 (dotazník, aktivace, přehledy)
+   ===================================================================== */
+.u51-kicker { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--u-accent); }
+.u51-lead { color: var(--u-muted); margin: .25rem 0 1rem; line-height: 1.55; }
+.u51-link { display: block; text-align: center; margin-top: 12px; color: var(--u-muted); font-size: .88rem; }
+.u51-narrow { max-width: 460px; margin: 28px auto 48px; }
+.u51-page { max-width: 880px; margin: 18px auto 48px; display: grid; gap: 14px; }
+.u51-card { background: var(--u-surface); border: 1px solid var(--u-line); border-radius: var(--u-radius); padding: clamp(20px, 4vw, 32px); display: grid; gap: 12px; }
+.u51-card h1 { margin: 0; font-size: 1.6rem; }
+.u51-notice { padding: 12px 14px; border-radius: var(--u-radius-sm); background: var(--u-accent-soft); border: 1px solid color-mix(in srgb, var(--u-accent) 18%, transparent); margin-bottom: 12px; font-size: .92rem; }
+.u51-notice.error { background: var(--u-bad-soft); border-color: #f5c9c4; color: #7a1a12; }
+.u51-notice.ok { background: var(--u-ok-soft); border-color: #bfe3cf; color: #0b5134; }
+.u51-code { font-size: 1.35rem !important; letter-spacing: .18em; text-transform: uppercase; text-align: center; font-weight: 700; padding: 12px !important; }
+.u51-identity { display: flex; flex-wrap: wrap; gap: 6px; }
+.u51-identity span { padding: 5px 10px; border-radius: 999px; background: var(--u-soft); font-size: .85rem; font-weight: 600; }
+
+.u51-progress-dots { list-style: none; display: flex; gap: 6px; padding: 0; margin: 0 0 14px; counter-reset: dot; }
+.u51-progress-dots li { flex: 1; font-size: .74rem; color: var(--u-faint); font-weight: 600; padding-top: 8px; border-top: 3px solid var(--u-line); }
+.u51-progress-dots li.current { color: var(--u-text); border-color: var(--u-accent); }
+.u51-progress-dots li.done { color: var(--u-ok); border-color: var(--u-ok); }
+
+.u51-field { display: grid; gap: 6px; margin: 0 0 14px; }
+.u51-field > span { font-size: .9rem; font-weight: 650; color: var(--u-text); }
+.u51-field small { color: var(--u-faint); font-size: .78rem; }
+.u51-field input, .u51-field select, .u51-field textarea { width: 100%; padding: 10px 12px; font: inherit; }
+.u51-field textarea { resize: vertical; min-height: 84px; }
+.u51-static { padding: 10px 12px; border-radius: var(--u-radius-sm); background: var(--u-soft); font-weight: 650; }
+.u51-req { color: var(--u-bad); }
+.u51-grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
+
+.u51-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.u51-chip { position: relative; cursor: pointer; }
+.u51-chip input { position: absolute; opacity: 0; pointer-events: none; }
+.u51-chip span { display: inline-flex; align-items: center; min-height: 36px; padding: 0 13px; border: 1px solid var(--u-line-strong); border-radius: 999px; background: var(--u-surface); font-size: .86rem; transition: background-color .12s, border-color .12s; user-select: none; }
+.u51-chip:hover span { border-color: var(--u-accent); }
+.u51-chip input:checked + span { background: var(--u-accent); border-color: var(--u-accent); color: #fff; }
+.u51-chip input:focus-visible + span { outline: 2px solid var(--u-accent); outline-offset: 2px; }
+
+.u51-range > div { display: flex; align-items: center; gap: 12px; }
+.u51-range input[type="range"] { flex: 1; height: 6px; border-radius: 99px; appearance: none; -webkit-appearance: none; background: linear-gradient(to right, var(--u-accent) var(--u51-fill, 45%), var(--u-line) var(--u51-fill, 45%)); padding: 0 !important; border: 0 !important; }
+.u51-range input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 2px solid var(--u-accent); cursor: pointer; }
+.u51-range input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 2px solid var(--u-accent); cursor: pointer; }
+.u51-range output { min-width: 34px; text-align: center; font-weight: 750; padding: 4px 0; border-radius: 8px; background: var(--u-soft); }
+
+/* Průvodce dotazníkem */
+.u51-wizard-wrap { max-width: 860px; margin: 16px auto 40px; scroll-margin-top: 12px; }
+.u51-wizard-top { display: grid; gap: 14px; margin-bottom: 14px; }
+.u51-wizard-top h1 { margin: 4px 0; font-size: clamp(1.5rem, 3vw, 2rem); }
+.u51-wizard-top p { margin: 0; color: var(--u-muted); max-width: 640px; }
+.u51-wizard-progress { display: flex; align-items: center; gap: 12px; }
+.u51-bar { flex: 1; height: 6px; background: var(--u-line); border-radius: 99px; overflow: hidden; }
+.u51-bar i { display: block; height: 100%; width: 0; background: var(--u-accent); border-radius: inherit; transition: width .25s ease; }
+.u51-wizard-progress strong { font-size: .82rem; color: var(--u-muted); white-space: nowrap; }
+.u51-wizard { display: grid; gap: 12px; }
+.u51-step { background: var(--u-surface); border: 1px solid var(--u-line); border-radius: var(--u-radius); padding: clamp(18px, 3.5vw, 30px); }
+.u51-step-head { margin-bottom: 18px; position: relative; }
+.u51-step-head h2 { margin: 0 0 4px; font-size: 1.3rem; }
+.u51-step-head p { margin: 0; color: var(--u-muted); }
+.u51-req-note { position: absolute; top: 2px; right: 0; font-size: .75rem; color: var(--u-faint); }
+.u51-step-error { margin: -6px 0 14px; padding: 10px 12px; border-radius: var(--u-radius-sm); background: var(--u-bad-soft); color: #7a1a12; font-size: .9rem; font-weight: 600; }
+.u51-wizard-nav { position: sticky; bottom: 10px; z-index: 5; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding: 10px; background: rgba(255, 255, 255, .95); border: 1px solid var(--u-line); border-radius: var(--u-radius); box-shadow: var(--u-shadow-pop); backdrop-filter: blur(10px); }
+[hidden] { display: none !important; }
+.u51-wizard-nav [data-u51-next], .u51-wizard-nav [data-u51-submit] { grid-column: 3; }
+.u51-step-title { text-align: center; font-size: .85rem; color: var(--u-muted); font-weight: 600; }
+
+/* Učebna */
+.u51-room { border: 1px solid var(--u-line); border-radius: var(--u-radius); padding: 14px; background: var(--u-soft); overflow-x: auto; }
+.u51-board { text-align: center; font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--u-muted); padding: 6px; margin: 0 auto 14px; max-width: 60%; border-bottom: 3px solid var(--u-line-strong); }
+.u51-desks { display: grid; grid-template-columns: repeat(var(--u51-cols, 6), minmax(64px, 1fr)); gap: 10px; min-width: calc(var(--u51-cols, 6) * 74px); }
+.u51-desk { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 10px; background: var(--u-surface); border: 1px solid var(--u-line); min-height: 44px; }
+.u51-desk.off { background: transparent; border-style: dashed; opacity: .5; }
+.u51-seat { display: grid; place-items: center; min-height: 34px; border: 1px solid var(--u-line-strong); border-radius: 7px; background: var(--u-surface); font-weight: 700; font-size: .8rem; color: var(--u-muted); cursor: pointer; padding: 0; }
+.u51-seat:hover:not(:disabled) { border-color: var(--u-accent); color: var(--u-accent); }
+.u51-seat.selected { background: var(--u-accent); border-color: var(--u-accent); color: #fff; }
+.u51-seat.taken, .u51-seat:disabled { background: var(--u-line); border-color: var(--u-line); color: var(--u-faint); cursor: not-allowed; }
+.u51-room-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 12px; font-size: .8rem; color: var(--u-muted); }
+.u51-room-foot strong { margin-left: auto; color: var(--u-text); }
+.u51-dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; border: 1px solid var(--u-line-strong); background: #fff; }
+.u51-dot.taken { background: var(--u-line); }
+.u51-desk-edit { cursor: pointer; font: inherit; }
+.u51-desk-edit.off small { grid-column: 1 / -1; align-self: center; color: var(--u-faint); }
+.u51-desk-edit .u51-seat { pointer-events: none; }
+
+/* Ověření a plakát */
+.u51-brief { border: 1px solid var(--u-line); border-radius: var(--u-radius); padding: 16px; margin-bottom: 14px; display: grid; gap: 8px; }
+.u51-brief p { margin: 0; color: var(--u-muted); }
+.u51-brief ul { margin: 4px 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.u51-brief li { font-size: .9rem; }
+.u51-brief li b { display: inline-block; min-width: 110px; color: var(--u-muted); font-weight: 600; }
+.u51-brief .btn { justify-self: start; }
+.u51-upload { display: grid; gap: 10px; margin-bottom: 14px; cursor: pointer; }
+.u51-upload input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.u51-upload-box { display: grid; gap: 4px; place-items: center; text-align: center; padding: 26px 16px; border: 1.5px dashed var(--u-line-strong); border-radius: var(--u-radius); background: var(--u-soft); }
+.u51-upload:hover .u51-upload-box, .u51-upload.drag .u51-upload-box { border-color: var(--u-accent); background: var(--u-accent-soft); }
+.u51-upload-box small { color: var(--u-faint); }
+.u51-upload img { max-height: 280px; width: auto; justify-self: center; border-radius: 10px; border: 1px solid var(--u-line); }
+.u51-quiz { display: grid; gap: 12px; margin-bottom: 14px; }
+.u51-quiz-status { display: flex; justify-content: space-between; font-size: .82rem; color: var(--u-muted); padding: 8px 12px; border-radius: var(--u-radius-sm); background: var(--u-soft); }
+.u51-question { border: 1px solid var(--u-line); border-radius: var(--u-radius); padding: 14px; margin: 0; display: grid; gap: 8px; }
+.u51-question legend { display: flex; gap: 10px; align-items: baseline; font-weight: 650; padding: 0 4px; width: 100%; }
+.u51-question legend > span { flex: 0 0 auto; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 7px; background: var(--u-soft); font-size: .78rem; }
+.u51-question legend em { margin-left: auto; font-style: normal; font-size: .74rem; color: var(--u-faint); font-weight: 600; white-space: nowrap; }
+.u51-option { display: block; cursor: pointer; }
+.u51-option input { position: absolute; opacity: 0; }
+.u51-option span { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--u-line); border-radius: var(--u-radius-sm); font-size: .92rem; }
+.u51-option span b { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; background: var(--u-soft); font-size: .75rem; }
+.u51-option:hover span { border-color: var(--u-accent); }
+.u51-option input:checked + span { border-color: var(--u-accent); background: var(--u-accent-soft); }
+.u51-option input:checked + span b { background: var(--u-accent); color: #fff; }
+.u51-option input:focus-visible + span { outline: 2px solid var(--u-accent); }
+.u51-consent { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border-radius: var(--u-radius-sm); background: var(--u-soft); font-size: .88rem; color: var(--u-muted); cursor: pointer; }
+.u51-consent input { margin-top: 3px; width: 18px; height: 18px; }
+.u51-consent strong { color: var(--u-text); }
+
+/* Moje odpovědi / profil */
+.u51-page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.u51-page-head h1 { margin: 4px 0; font-size: clamp(1.5rem, 3vw, 2rem); }
+.u51-page-head p { margin: 0; color: var(--u-muted); }
+.u51-answer-section { background: var(--u-surface); border: 1px solid var(--u-line); border-radius: var(--u-radius); padding: 18px 20px; }
+.u51-answer-section h3 { margin: 0 0 12px; font-size: 1rem; }
+.u51-answer-list { margin: 0; display: grid; gap: 0; }
+.u51-answer-list > div { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 16px; padding: 10px 0; border-top: 1px solid var(--u-line); }
+.u51-answer-list > div:first-child { border-top: 0; padding-top: 0; }
+.u51-answer-list dt { color: var(--u-muted); font-size: .86rem; }
+.u51-answer-list dd { margin: 0; font-size: .92rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.u51-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.u51-tags span { padding: 3px 9px; border-radius: 999px; background: var(--u-soft); font-size: .8rem; }
+.u51-meter { width: 140px; height: 6px; border-radius: 99px; background: var(--u-line); overflow: hidden; }
+.u51-meter i { display: block; height: 100%; background: var(--u-accent); }
+.u51-answer-list dd b small { color: var(--u-faint); font-weight: 500; }
+.u51-score { display: flex; align-items: baseline; gap: 14px; margin-bottom: 12px; }
+.u51-score strong { font-size: 2.2rem; line-height: 1; }
+.u51-score strong small { font-size: 1rem; color: var(--u-muted); font-weight: 600; }
+.u51-score span { color: var(--u-muted); font-size: .88rem; }
+.u51-quiz-review { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.u51-quiz-review li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 10px; padding: 9px 10px; border-radius: var(--u-radius-sm); border: 1px solid var(--u-line); }
+.u51-quiz-review li strong { display: block; font-size: .9rem; font-weight: 600; }
+.u51-quiz-review small { display: block; color: var(--u-muted); font-size: .8rem; }
+.u51-quiz-review .u51-correct { color: var(--u-ok); }
+.u51-pts { align-self: start; text-align: center; font-size: .78rem; font-weight: 750; padding: 3px 0; border-radius: 7px; }
+.u51-quiz-review li.ok .u51-pts { background: var(--u-ok-soft); color: var(--u-ok); }
+.u51-quiz-review li.bad .u51-pts { background: var(--u-bad-soft); color: var(--u-bad); }
+.u51-poster { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.u51-poster img { width: 100%; border-radius: 10px; border: 1px solid var(--u-line); }
+.u51-poster > div { display: grid; gap: 6px; justify-items: start; }
+.u51-poster p { margin: 0; color: var(--u-muted); }
+.u51-poster small { color: var(--u-faint); }
+
+.u51-first-step, .u51-done-strip { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--u-surface); border: 1px solid var(--u-line); border-radius: var(--u-radius); padding: 16px 18px; }
+.u51-done-strip { text-decoration: none; color: var(--u-text); font-size: .9rem; padding: 10px 14px; }
+.u51-check { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; background: var(--u-ok-soft); color: var(--u-ok); font-weight: 800; }
+.u51-activate-card { display: grid !important; gap: 4px; text-decoration: none; color: var(--u-text) !important; align-content: center; }
+.u51-activate-card strong { font-size: 1.1rem; }
+.u51-activate-card small { color: var(--u-muted); }
+.u51-activate-card:hover { border-color: var(--u-accent) !important; }
+.u51-link-code { margin-top: 12px; }
+
+/* Učitel · dotazník */
+.u51-t-wrap { display: grid; gap: 14px; }
+.u51-t-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.u51-t-head h1 { margin: 2px 0; font-size: 1.6rem; }
+.u51-t-head p { margin: 0; color: var(--u-muted); }
+.u51-box .u51-t-head h2 { margin: 0 0 4px; font-size: 1.05rem; }
+.u51-box .u51-t-head { margin-bottom: 12px; }
+.u51-empty { color: var(--u-faint); font-size: .86rem; }
+.u51-t-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.u51-t-actions form { margin: 0; }
+.u51-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.u51-tabs a { text-decoration: none; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--u-line); background: var(--u-surface); font-size: .85rem; font-weight: 600; color: var(--u-text); display: inline-flex; gap: 6px; }
+.u51-tabs a b { color: var(--u-muted); font-weight: 600; }
+.u51-tabs a.active { background: var(--u-text); color: #fff; border-color: var(--u-text); }
+.u51-tabs a.active b { color: #cbd5e1; }
+.u51-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.u51-kpi { background: var(--u-surface); border: 1px solid var(--u-line); border-radius: var(--u-radius); padding: 14px 16px; }
+.u51-kpi b { display: block; font-size: 1.6rem; line-height: 1.1; }
+.u51-kpi span { color: var(--u-muted); font-size: .82rem; }
+.u51-box { background: var(--u-surface); border: 1px solid var(--u-line); border-radius: var(--u-radius); padding: 16px 18px; }
+.u51-box > h2 { margin: 0 0 4px; font-size: 1.05rem; }
+.u51-box > p { margin: 0 0 12px; color: var(--u-muted); font-size: .86rem; }
+.u51-charts { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 10px; }
+.u51-bars { display: grid; gap: 8px; }
+.u51-bars div { display: grid; grid-template-columns: minmax(0, 1fr) 36px; gap: 4px 10px; font-size: .82rem; }
+.u51-bars div i { grid-column: 1 / -1; height: 6px; border-radius: 99px; background: var(--u-line); overflow: hidden; }
+.u51-bars div i em { display: block; height: 100%; background: var(--u-accent); }
+.u51-bars div b { text-align: right; }
+.u51-table-wrap { overflow-x: auto; }
+.u51-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+.u51-table th { text-align: left; font-size: .74rem; text-transform: uppercase; letter-spacing: .05em; color: var(--u-faint); font-weight: 650; padding: 8px 10px; border-bottom: 1px solid var(--u-line); white-space: nowrap; }
+.u51-table td { padding: 10px; border-bottom: 1px solid var(--u-line); vertical-align: middle; }
+.u51-table tr:last-child td { border-bottom: 0; }
+.u51-table tr:hover td { background: #fafbfc; }
+.u51-pill { display: inline-flex; padding: 3px 9px; border-radius: 999px; font-size: .76rem; font-weight: 650; background: var(--u-soft); color: var(--u-muted); white-space: nowrap; }
+.u51-pill.ok { background: var(--u-ok-soft); color: var(--u-ok); }
+.u51-pill.warn { background: var(--u-warn-soft); color: var(--u-warn); }
+.u51-pill.accent { background: var(--u-accent-soft); color: var(--u-accent); }
+.u51-code-cell { font-family: ui-monospace, Consolas, monospace; font-weight: 700; letter-spacing: .08em; }
+.u51-search { max-width: 280px; padding: 8px 12px; }
+.u51-dialog { width: min(900px, calc(100vw - 24px)); max-height: calc(100vh - 40px); border: 1px solid var(--u-line); border-radius: 16px; padding: 0; background: var(--u-bg); box-shadow: var(--u-shadow-pop); }
+.u51-dialog::backdrop { background: rgba(17, 24, 39, .35); }
+.u51-dialog > header { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 18px; background: var(--u-surface); border-bottom: 1px solid var(--u-line); }
+.u51-dialog > header h2 { margin: 0; font-size: 1.15rem; }
+.u51-dialog > header p { margin: 0; color: var(--u-muted); font-size: .84rem; }
+.u51-dialog > div { padding: 14px 18px 18px; display: grid; gap: 10px; }
+.u51-x { border: 1px solid var(--u-line); background: var(--u-surface); width: 34px; height: 34px; border-radius: 9px; font-size: 1.1rem; cursor: pointer; }
+.u51-room-teacher .u51-desk { grid-template-columns: 1fr; }
+.u51-room-teacher .u51-seat { cursor: default; font-weight: 600; font-size: .7rem; min-height: 26px; padding: 2px 4px; text-align: center; line-height: 1.15; }
+.u51-room-teacher .u51-seat.filled { background: var(--u-accent-soft); border-color: color-mix(in srgb, var(--u-accent) 30%, transparent); color: var(--u-text); }
+.u51-editor-tools { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+
+@media (max-width: 760px) {
+  .u51-grid-2, .u51-charts, .u51-poster { grid-template-columns: 1fr; }
+  .u51-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .u51-answer-list > div { grid-template-columns: 1fr; gap: 4px; }
+  .u51-wizard-nav { grid-template-columns: auto auto; }
+  .u51-step-title { display: none; }
+  .u51-req-note { position: static; display: block; margin-top: 6px; }
+}
+@media print {
+  .topbar, .teacher-topbar, .teacher-topbar-v45-3, .teacher-contextbar, .u51-noprint, .v506-compass, .v507-page-shell { display: none !important; }
+  body { background: #fff !important; }
+  .u51-box { border: 0; padding: 0; }
+  .u51-table tr { break-inside: avoid; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+
+/* Body v testech a praktických checkpointech */
+.u51-score-chip { display: inline-flex; align-items: baseline; gap: 3px; padding: 5px 10px; border-radius: 999px; background: var(--u-accent-soft); color: var(--u-accent); font-size: .78rem; font-weight: 650; white-space: nowrap; }
+.u51-score-chip b { font-size: .95rem; }
+.practice-progress-box .u51-score-chip { justify-self: start; margin-top: 6px; }
+.u51-points { margin-left: auto; padding: 2px 8px; border-radius: 999px; font-style: normal; font-size: .74rem; font-weight: 700; white-space: nowrap; }
+.u51-points.ok { background: var(--u-ok-soft); color: var(--u-ok); }
+.u51-points.bad { background: var(--u-bad-soft); color: var(--u-bad); }
+.review-item summary { display: flex; align-items: center; gap: 10px; }
+
+/* Krokový režim výukových stránek */
+.u51-lesson-steps { margin: 14px 0; display: grid; gap: 10px; scroll-margin-top: 12px; }
+.u51-lesson-steps ol { list-style: none; margin: 0; padding: 0; display: flex; gap: 6px; overflow-x: auto; }
+.u51-lesson-steps li button { display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 12px 0 6px; border: 1px solid var(--u-line); border-radius: 999px; background: var(--u-surface); font: inherit; font-size: .8rem; color: var(--u-muted); cursor: pointer; white-space: nowrap; }
+.u51-lesson-steps li button b { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; background: var(--u-soft); font-size: .75rem; }
+.u51-lesson-steps li.current button { border-color: var(--u-accent); color: var(--u-text); font-weight: 650; }
+.u51-lesson-steps li.current button b { background: var(--u-accent); color: #fff; }
+.u51-lesson-steps li.done button b { background: var(--u-ok-soft); color: var(--u-ok); }
+.u51-lesson-nav { margin: 14px 0; }
+
+/* Úvodní přihlášení */
+.view-home .hero { text-align: center; }
+.view-home .hero h1 { font-size: clamp(1.8rem, 4vw, 2.6rem) !important; }
+.auth-shell { align-items: start; }
+.auth-shell .u51-activate-card { grid-column: 1 / -1; order: -1; display: flex !important; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 16px; padding: 16px 20px !important; }
+.auth-shell .u51-activate-card .eyebrow { flex-basis: 100%; margin: 0; }
+.auth-shell .u51-activate-card strong::after { content: '→'; margin-left: 10px; color: var(--u-accent); }
+.auth-note span { background: var(--u-soft) !important; border: 0 !important; color: var(--u-muted) !important; }
+.auth-shell { row-gap: 14px !important; }
+.auth-shell > * { margin-top: 0 !important; }
+
+/* Mobil: široký plánek učebny se posouvá uvnitř rámečku, stránka nepřetéká */
+.u51-wizard-wrap, .u51-wizard, .u51-wizard > *, .u51-step, .u51-page, .u51-t-wrap, .u51-t-wrap > * { min-width: 0; max-width: 100%; }
+.u51-room { max-width: 100%; }
+@media (max-width: 760px) {
+  .u51-wizard-wrap { margin-top: 10px; }
+  .u51-step { padding: 16px; }
+  .u51-desks { gap: 6px; }
+  .u51-wizard-nav { bottom: 6px; padding: 8px; }
+}
+
+/* Mobil: kompaktní navigace „Pokračovat + Menu“ zůstává viditelná (dřívější hamburger už v hlavičce není) */
+@media (max-width: 1080px) {
+  .topbar { display: flex !important; align-items: center !important; justify-content: space-between !important; min-height: 54px !important; padding: 6px 8px 6px 12px !important; }
+  .topbar .brand, .topbar .brand > span:last-child { display: flex !important; align-items: center; }
+  .student-main-menu.v5077-calm-nav { position: static !important; display: flex !important; align-items: center; gap: 6px; margin: 0 0 0 auto !important; padding: 0 !important; background: transparent !important; border: 0 !important; box-shadow: none !important; }
+  .student-main-menu.v5077-calm-nav > a, .student-main-menu.v5077-calm-nav summary { min-height: 38px !important; }
+  .student-main-menu.v5077-calm-nav > a span, .student-main-menu.v5077-calm-nav summary span { display: inline !important; }
+  .topbar-right:empty { display: none !important; }
+}

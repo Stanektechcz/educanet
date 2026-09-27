@@ -1,0 +1,116 @@
+/* EDUCANET v58 · Identita a nový školní rok (identity_v58_views.php) */
+
+.idt58-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr);
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.idt58-card { min-width: 0; }
+
+.idt58-card .teacher-panel-head h2 { font-size: 1.35rem; margin: 0; }
+
+.idt58-stats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.idt58-stats li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border, #d0d5dc);
+}
+
+.idt58-stats li:last-child { border-bottom: none; }
+
+.idt58-chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.idt58-chips li {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--surface-2, #eef1f5);
+  color: var(--text, #1b2330);
+}
+
+.idt58-note { color: var(--muted, #4a5563); margin: 12px 0 0; line-height: 1.5; }
+
+.idt58-warn {
+  margin: 12px 0 0;
+  padding: 8px 12px;
+  border-left: 4px solid #a4260b;
+  background: #fff4ef;
+  color: #5c1604;
+}
+
+.idt58-code { display: inline-block; margin-right: 8px; white-space: nowrap; }
+
+.idt58-table-wrap { overflow-x: auto; max-width: 100%; }
+
+.idt58-table-wrap:focus-visible,
+.idt58-form input:focus-visible,
+.idt58-form button:focus-visible {
+  outline: 3px solid #1a56db;
+  outline-offset: 2px;
+}
+
+.idt58-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+
+.idt58-table th,
+.idt58-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 8px;
+  border-bottom: 1px solid var(--border, #d0d5dc);
+}
+
+.idt58-table tr.idt58-high td:first-child { border-left: 4px solid #a4260b; }
+.idt58-table tr.idt58-info td:first-child { border-left: 4px solid #6b7280; }
+
+.idt58-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.idt58-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 16px;
+}
+
+.idt58-form input[type="number"] {
+  width: 7.5rem;
+  min-height: 44px;
+  padding: 0 10px;
+  font-size: 1rem;
+}
+
+.idt58-form button { min-height: 44px; min-width: 44px; padding: 0 16px; }
+
+.idt58-plan h3 { margin: 8px 0 12px; }
+
+.idt58-list { margin: 8px 0 0; padding-left: 20px; }
+
+@media (max-width: 900px) {
+  .idt58-grid { grid-template-columns: 1fr; }
+}

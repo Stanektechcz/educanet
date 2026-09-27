@@ -1,0 +1,101 @@
+# EDUCANET v59 · vzorový Apache 2.4 vhost (mod_php nebo PHP-FPM přes mod_proxy_fcgi)
+#
+# Kořenový .htaccess (viz .htaccess v kořeni vydání) už řeší whitelist vstupních
+# PHP skriptů a zákaz rizikových přípon i na sdíleném hostingu (ISPConfig/aaPanel),
+# kde nemáš přístup k hlavní konfiguraci Apache. Tenhle vhost je pro případ, kdy
+# admin server spravuje sám a chce stejná pravidla i mimo .htaccess (rychlejší,
+# AllowOverride může zůstat None).
+
+<VirtualHost *:80>
+    ServerName skola.example
+    Redirect permanent / https://skola.example/
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName skola.example
+    DocumentRoot /var/www/clients/client1/web1/web
+
+    SSLEngine on
+    SSLCertificateFile      /etc/letsencrypt/live/skola.example/fullchain.pem
+    SSLCertificateKeyFile   /etc/letsencrypt/live/skola.example/privkey.pem
+    SSLProtocol             -all +TLSv1.2 +TLSv1.3
+
+    LimitRequestBody 20971520  # 20 MiB, >= MAX_UPLOAD_BYTES (12 MiB) + rezerva
+
+    # SEC59-13: HSTS s includeSubDomains je nevratné v prohlížečích, dokud jeho platnost
+    # nevyprší (max-age) – zapni AŽ PO ověření, že úplně celá doména VČETNĚ všech
+    # subdomén běží trvale jen přes HTTPS (jinak subdoména bez TLS přestane fungovat
+    # v prohlížečích, které si HSTS zapamatovaly). Do té doby nech zakomentované.
+    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+    <Directory /var/www/clients/client1/web1/web>
+        Options -Indexes -MultiViews
+        AllowOverride None
+        Require all granted
+
+        # Skryté soubory a rizikové přípony.
+        <FilesMatch "^\.">
+            Require all denied
+        </FilesMatch>
+        <FilesMatch "\.(md|sql|py|sh|lock|csv|ini|log|example|dist|bak|tmp)$">
+            Require all denied
+        </FilesMatch>
+        <FilesMatch "\.json\.php$">
+            Require all denied
+        </FilesMatch>
+        <Files "educanet.secrets.example.php">
+            Require all denied
+        </Files>
+        <Files "CLAUDE.md">
+            Require all denied
+        </Files>
+        <!-- SEC59-11: RELEASE_MANIFEST.json (tools/build_release.php) obsahuje sha256
+             každého souboru vydání a nepatří na web. -->
+        <Files "RELEASE_MANIFEST.json">
+            Require all denied
+        </Files>
+
+        # Whitelist vstupních PHP skriptů (viz kořenový .htaccess pro odůvodnění).
+        <FilesMatch "\.php$">
+            Require all denied
+        </FilesMatch>
+        <FilesMatch "^(index|teacher|lab_v57_api|arena_v58_events_api|robots_v58_api|teamgames_v58_api|progress|calendar\.ics|export_extra_csv)\.php$">
+            Require all granted
+        </FilesMatch>
+    </Directory>
+
+    # Interní adresáře – i kdyby chybělo jejich vlastní .htaccess.
+    <LocationMatch "^/(storage|private|tools|tests|app|docs|lang|migrations|database|lab-runtime|\.claude|cache|V1|materials)(/|$)">
+        Require all denied
+    </LocationMatch>
+    # Výjimka: roční plán (viz materials/school_year/.htaccess) – Location sekce se
+    # slučují v pořadí výskytu v konfiguraci, tato je specifičtější a je uvedená AŽ
+    # PO obecném zákazu výše, takže vyhrává. WEEKLY_SCHEDULE.md (rozvrh) zůstává
+    # zakázaný (SEC59-22) – učitelský kalendář odkazuje jen na SCHOOL_YEAR_*.md.
+    <LocationMatch "^/materials/school_year/SCHOOL_YEAR_[0-9_]+\.md$">
+        Require all granted
+    </LocationMatch>
+
+    <Directory /var/www/clients/client1/web1/web/uploads>
+        <FilesMatch "\.(php|phtml|phar|php[0-9]*)$">
+            Require all denied
+        </FilesMatch>
+    </Directory>
+
+    # PHP-FPM (pokud se nepoužívá mod_php):
+    # SEC59-12: vzor musí být ukotvený na jméno souboru (^...$), stejně jako allowlist
+    # výše – "\.(index|teacher|...)\.php$" s úvodní zpětně lomenou tečkou navíc by
+    # matchoval jen soubory jako ".index.php" (a NEmatchoval by "index.php"), takže by
+    # v praxi předával FPM prázdnou množinu skriptů a jindy mohl neúmyslně matchovat
+    # i jiné soubory obsahující ".index.php" v názvu – proto beze zpětně lomené tečky.
+    # <FilesMatch "^(index|teacher|lab_v57_api|arena_v58_events_api|robots_v58_api|teamgames_v58_api|progress|calendar\.ics|export_extra_csv)\.php$">
+    #     SetHandler "proxy:unix:/run/php/php8.1-fpm-educanet.sock|fcgi://localhost"
+    # </FilesMatch>
+
+    ErrorLog  ${APACHE_LOG_DIR}/educanet-error.log
+    CustomLog ${APACHE_LOG_DIR}/educanet-access.log combined
+</VirtualHost>

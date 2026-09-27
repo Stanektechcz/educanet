@@ -1,0 +1,88 @@
+/* EDUCANET v58 · Linux Lab – přístupnost terminálu (A11Y-01..03) a „Vysvětli výstup“ (EDU-05).
+   Doplňuje assets/linux-v57.css; terminálové barvy tam jsou od v58 v proměnných --lab57-*,
+   tady je jen přepisujeme pro vysoký kontrast. Respektuje prefers-reduced-motion (viz konec souboru). */
+
+.lab57-sr-only { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
+
+/* ---------- Kontextová lišta (týmové role) a adaptivní nápověda ---------- */
+.lab57-term-context { margin-left: auto; font-size: .72rem; color: var(--lab57-muted, #8a94a3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 55%; }
+.lab57-adaptive-hint { margin: 0 0 12px; padding: 10px 13px; border-radius: 12px; background: var(--edu-yellow-soft, #fef5e0); border: 1px solid #f0dfa8; }
+.lab57-adaptive-hint strong { display: block; font-size: .76rem; text-transform: uppercase; letter-spacing: .05em; color: #7a5500; margin-bottom: 3px; }
+.lab57-adaptive-hint p { margin: 0; font-size: .9rem; line-height: 1.5; color: #4a3a00; }
+
+/* ---------- Panel nastavení a přístupnosti ---------- */
+.lab57-term-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; margin-top: 10px; }
+.lab57-a11y-panel { flex: 1 1 240px; background: var(--u-surface, #fff); border: 1px solid var(--u-line, #e3e6eb); border-radius: 12px; padding: 4px 12px; }
+.lab57-a11y-panel summary { cursor: pointer; padding: 8px 2px; font-size: .86rem; font-weight: 650; list-style: none; min-height: 44px; display: flex; align-items: center; }
+.lab57-a11y-panel summary::-webkit-details-marker { display: none; }
+.lab57-a11y-panel summary::before { content: '⚙ '; }
+.lab57-a11y-body { display: grid; gap: 14px; padding: 4px 2px 14px; }
+.lab57-a11y-body fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; }
+.lab57-a11y-body legend { font-size: .74rem; text-transform: uppercase; letter-spacing: .05em; color: var(--u-muted, #5f6b7a); padding: 0 0 4px; }
+.lab57-a11y-body label { display: flex; align-items: center; gap: 8px; font-size: .86rem; min-height: 32px; }
+.lab57-a11y-body select { min-height: 40px; padding: 4px 8px; border: 1px solid var(--u-line-strong, #cfd5dd); border-radius: 8px; font: inherit; }
+.lab57-a11y-body kbd { font-family: ui-monospace, monospace; font-size: .78em; background: var(--u-soft, #f1f3f6); border: 1px solid var(--u-line, #e3e6eb); border-radius: 5px; padding: 1px 5px; margin-left: 6px; }
+.lab57-a11y-body input[type="checkbox"] { width: 20px; height: 20px; }
+.lab57-a11y-read-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+/* ---------- A11Y-03: velikost písma terminálu (4 stupně) ---------- */
+[data-lab57].lab57-fontsize-1 .lab57-term-out { font-size: 1rem; }
+[data-lab57].lab57-fontsize-1 .lab57-input, [data-lab57].lab57-fontsize-1 .lab57-prompt { font-size: 1.05rem; }
+[data-lab57].lab57-fontsize-2 .lab57-term-out { font-size: 1.15rem; }
+[data-lab57].lab57-fontsize-2 .lab57-input, [data-lab57].lab57-fontsize-2 .lab57-prompt { font-size: 1.2rem; }
+[data-lab57].lab57-fontsize-3 .lab57-term-out { font-size: 1.35rem; }
+[data-lab57].lab57-fontsize-3 .lab57-input, [data-lab57].lab57-fontsize-3 .lab57-prompt { font-size: 1.4rem; }
+
+/* ---------- A11Y-03: písmo vhodné pro dyslexii (jen systémová písma) ---------- */
+[data-lab57].lab57-dyslexia .lab57-term-out,
+[data-lab57].lab57-dyslexia .lab57-input,
+[data-lab57].lab57-dyslexia .lab57-prompt,
+[data-lab57].lab57-dyslexia .lab57-cmdline { font-family: Verdana, Tahoma, sans-serif; letter-spacing: .02em; }
+[data-lab57].lab57-dyslexia .lab57-term-out { line-height: 1.9; }
+
+/* ---------- A11Y-03: vysoký kontrast (přepis proměnných z linux-v57.css) ---------- */
+[data-lab57].lab57-contrast .lab57-term {
+  --lab57-bg: #000000; --lab57-bar-bg: #000000; --lab57-fg: #ffffff; --lab57-cmd: #9be8ff;
+  --lab57-accent: #4ceb9a; --lab57-err: #ff6b6b; --lab57-tip: #ffe066; --lab57-muted: #e6e6e6; --lab57-focus: #ffd60a;
+}
+[data-lab57].lab57-contrast .lab57-term-dot { background: #666; }
+[data-lab57].lab57-contrast .lab57-editor { background: #000; color: #fff; }
+[data-lab57].lab57-contrast .lab57-editor-head, [data-lab57].lab57-contrast .lab57-editor-foot { background: #000; border-color: #444; }
+[data-lab57].lab57-contrast .lab57-editor-text { background: #000; color: #fff; }
+
+/* ---------- A11Y-01: režim „jen text“ (bez barev a animací) ---------- */
+[data-lab57].lab57-plain .lab57-term-out [class*="a-fg-"],
+[data-lab57].lab57-plain .lab57-term-out [class*="a-bg-"] { color: inherit !important; background: transparent !important; font-weight: inherit !important; }
+[data-lab57].lab57-plain .lab57-net-node, [data-lab57].lab57-plain .lab57-net-link,
+[data-lab57].lab57-plain .lab57-race-pulse { transition: none !important; animation: none !important; }
+
+/* ---------- A11Y-02: textová alternativa topologie (tabulka poslední cesty) ---------- */
+.lab57-net-textalt { margin-top: 12px; }
+.lab57-net-textalt h4 { margin: 0 0 6px; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--u-muted, #5f6b7a); }
+.lab57-net-textalt table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+.lab57-net-textalt th, .lab57-net-textalt td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--u-line, #e3e6eb); }
+.lab57-net-ok { color: var(--u-ok, #0f7b4f); font-weight: 650; }
+.lab57-net-fail { color: var(--u-bad, #b42318); font-weight: 650; }
+.lab57-net-note { margin: 6px 0 0; font-size: .76rem; color: var(--u-faint, #8a94a3); }
+
+/* ---------- EDU-05: „Vysvětli výstup“ – roving tabindex a panel ---------- */
+[data-lab57].lab57-explain-active .lab57-term-out { cursor: pointer; }
+[data-lab57].lab57-explain-active .lab57-term-out > * { border-radius: 4px; }
+[data-lab57].lab57-explain-active .lab57-term-out > *:focus-visible,
+[data-lab57].lab57-explain-active .lab57-term-out > .lab57-explain-current { outline: 2px solid var(--lab57-focus, #5fd4e0); outline-offset: 2px; background: rgba(95, 212, 224, .14); }
+.lab57-explain-panel { margin-top: 10px; padding: 14px 16px; border-radius: 12px; background: var(--u-surface, #fff); border: 1px solid var(--u-line, #e3e6eb); position: relative; }
+.lab57-explain-panel[hidden] { display: none; }
+.lab57-explain-panel h4 { margin: 0 30px 6px 0; font-size: .98rem; }
+.lab57-explain-panel p { margin: 0 0 8px; font-size: .88rem; line-height: 1.5; color: var(--u-text, #111827); }
+.lab57-explain-close { position: absolute; top: 6px; right: 6px; min-width: 44px; min-height: 44px; background: none; border: 0; font-size: 1.2rem; line-height: 1; cursor: pointer; border-radius: 8px; color: var(--u-muted, #5f6b7a); }
+.lab57-explain-close:hover, .lab57-explain-close:focus-visible { background: var(--u-soft, #f1f3f6); }
+
+/* ---------- Responzivita ---------- */
+@media (max-width: 620px) {
+  .lab57-term-tools { flex-direction: column; }
+  .lab57-term-context { max-width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-lab57] .lab57-net-node, [data-lab57] .lab57-net-link { transition: none !important; animation: none !important; }
+}

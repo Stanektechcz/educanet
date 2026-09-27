@@ -1,0 +1,41 @@
+{
+  "class_1a": {
+    "web-layout-basics-i": "figma-short",
+    "responsive-layout-i": "figma-short",
+    "components-i": "figma-deep",
+    "web-typography-i": "figma-short",
+    "image-web-i": "composition",
+    "forms-a11y-i": "figma-short",
+    "design-system-i": "figma-deep"
+  },
+  "class_2a": {
+    "information-architecture-ii": "figma-deep",
+    "form-states-ii": "figma-deep",
+    "auto-layout-ii": "figma-deep",
+    "accessibility-audit-ii": "figma-short",
+    "html-css-handoff-ii": "figma-deep",
+    "css-responsive-ii": "figma-short",
+    "usability-test-ii": "figma-deep",
+    "design-qa-handoff-ii": "figma-deep"
+  },
+  "class_3a": {
+    "linux-filesystem": "ssh",
+    "users-permissions": "ssh",
+    "processes-systemd": "monitoring",
+    "journal-logs": "logs",
+    "ssh-keys-ops": "ssh",
+    "linux-firewall": "firewall",
+    "web-service-linux": "nginx",
+    "shell-cron": "monitoring"
+  },
+  "class_4a": {
+    "systemd-advanced": "monitoring",
+    "storage-filesystems": "backup",
+    "backup-strategy": "backup",
+    "ssh-hardening": "firewall",
+    "containers-basics": "nginx",
+    "automation-shell": "observability",
+    "packet-diagnostics-advanced": "wireshark",
+    "incident-runbook": "observability"
+  }
+}

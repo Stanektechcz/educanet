@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+# EDUCANET v59 · nasazení / aktualizace / rollback na aaPanelu – is.stanektech.cz
+#
+# Na serveru:  /www/server/educanet/deploy_aapanel.sh   (root:root, 0750), spouští root přes SSH.
+#
+#   deploy_aapanel.sh deploy   <vydání.zip>          # suchý běh: jen ukáže, co by se změnilo
+#   deploy_aapanel.sh deploy   <vydání.zip> --apply  # záloha dat + kódu, nahrání, migrace, preflight
+#   deploy_aapanel.sh rollback <adresář-zálohy-kódu> --apply
+#   deploy_aapanel.sh pull [--apply]                 # git pull do /www/educanet/repo a nasazení z něj
+#
+# <vydání.zip> vznikne na vývojovém stroji:  php tools/build_release.php --out=<adr> --lint --zip
+# storage/ (data žáků) a uploads/ se NIKDY nepřepisují ani nemažou – synchronizuje se z nich
+# jen .htaccess. Obnova DAT je samostatný krok přes tools/restore_storage.php (viz návod).
+set -euo pipefail
+umask 027
+
+SITE=/www/wwwroot/is.stanektech.cz
+CONF=/www/server/educanet
+ENV_FILE="$CONF/educanet.env"
+WORK=/www/educanet                     # rozbalená vydání a zálohy kódu (mimo web)
+PHP=${EDUCANET_PHP:-/www/server/php/83/bin/php}
+WEB_USER=www
+
+die() { echo "CHYBA: $*" >&2; exit 1; }
+[ "$(id -u)" -eq 0 ] || die "spusť jako root"
+for bin in rsync unzip runuser; do command -v "$bin" >/dev/null || die "chybí příkaz $bin"; done
+[ -x "$PHP" ] || die "PHP nenalezeno: $PHP (nastav EDUCANET_PHP)"
+[ -r "$ENV_FILE" ] || die "chybí $ENV_FILE (viz docs/deploy/aapanel/educanet.env.example)"
+
+# Filtry rsync: z storage/ a uploads/ jen .htaccess; nic dalšího z nich se nepřepíše ani nesmaže.
+RSYNC_FILTERS=(
+  --include=/storage/.htaccess --exclude='/storage/*'
+  --include=/uploads/.htaccess --exclude='/uploads/*'
+  --exclude=/.user.ini --exclude=/.well-known/ --exclude=/.git/ --exclude=/.gitignore
+)
+
+as_web() {  # spustí PHP nástroj jako uživatel webu s prostředím aplikace
+  runuser -u "$WEB_USER" -- env -i PATH=/usr/bin:/bin HOME=/tmp bash -c \
+    'set -a; . "$1"; set +a; cd "$2"; shift 2; exec "$@"' _ "$ENV_FILE" "$SITE" "$PHP" "$@"
+}
+
+fix_perms() {
+  chown -R "$WEB_USER:$WEB_USER" "$SITE"
+  find "$SITE" -type d -exec chmod 0755 {} +
+  find "$SITE" -type f -exec chmod 0644 {} +
+  chmod 0770 "$SITE/storage" "$SITE/uploads"
+  find "$SITE/storage" -type f -exec chmod 0660 {} +
+  if [ -d "$SITE/cache" ]; then chmod -R u+rwX,g+rwX "$SITE/cache"; fi
+}
+
+sync_code() {  # $1 = zdrojový adresář kódu, $2 = --apply | ''
+  local src="$1" mode="${2:-}" ts=""
+  if [ "$mode" != "--apply" ]; then
+    rsync -a --delete --dry-run --itemize-changes "${RSYNC_FILTERS[@]}" "$src/" "$SITE/" | head -200
+    echo "SUCHÝ BĚH – nic se nezměnilo. Pro provedení přidej --apply."
+    return 0
+  fi
+  mkdir -p "$SITE/storage" "$SITE/uploads"
+  if [ -f "$SITE/index.php" ]; then
+    ts=$(date +%Y%m%d-%H%M%S)
+    echo "== Záloha dat (storage/) =="
+    as_web tools/backup_storage.php --keep=14
+    echo "== Záloha stávajícího kódu -> $WORK/code-backup/$ts =="
+    mkdir -p "$WORK/code-backup/$ts"
+    rsync -a "${RSYNC_FILTERS[@]}" "$SITE/" "$WORK/code-backup/$ts/"
+  fi
+  echo "== Nahrání kódu =="
+  rsync -a --delete "${RSYNC_FILTERS[@]}" "$src/" "$SITE/"
+  fix_perms
+  echo "== Migrace úložiště =="
+  as_web tools/migrate.php --apply --backup-now
+  echo "== Preflight =="
+  if ! as_web tools/preflight.php --env-file="$ENV_FILE"; then
+    echo "!! Preflight hlásí FAIL – oprav ho před zpřístupněním žákům."
+  fi
+  if [ -n "$ts" ]; then echo "Rollback kódu: $0 rollback $WORK/code-backup/$ts --apply"; fi
+}
+
+cmd="${1:-}"; arg="${2:-}"; mode="${3:-}"
+case "$cmd" in
+  deploy)
+    [ -f "$arg" ] || die "zadej cestu k vydání .zip"
+    if [ "$mode" = "--apply" ]; then
+      rel="$WORK/releases/$(basename "$arg" .zip)"
+      [ -e "$rel" ] && die "$rel už existuje – každé vydání má mít vlastní název"
+      mkdir -p "$rel"
+    else
+      rel=$(mktemp -d)
+      trap 'rm -rf -- "$rel"' EXIT
+    fi
+    unzip -q "$arg" -d "$rel"
+    { [ -f "$rel/index.php" ] && [ -f "$rel/RELEASE_MANIFEST.json" ]; } || die "$arg nevypadá jako vydání z build_release.php"
+    [ -d "$rel/V1" ] && die "vydání obsahuje V1/ – není sestavené přes build_release.php"
+    sync_code "$rel" "$mode"
+    ;;
+  pull)
+    repo="$WORK/repo"
+    [ -d "$repo/.git" ] || die "chybí klon $repo (git clone … $repo)"
+    git -C "$repo" pull --ff-only
+    { [ -f "$repo/index.php" ] && [ -f "$repo/RELEASE_MANIFEST.json" ]; } || die "$repo nevypadá jako vydání z build_release.php"
+    [ -d "$repo/V1" ] && die "repozitář obsahuje V1/ – není sestavený přes build_release.php"
+    sync_code "$repo" "$arg"
+    ;;
+  rollback)
+    [ -f "$arg/index.php" ] || die "zadej adresář zálohy kódu z $WORK/code-backup/"
+    sync_code "$arg" "$mode"
+    ;;
+  *) sed -n '2,13p' "$0"; exit 2 ;;
+esac

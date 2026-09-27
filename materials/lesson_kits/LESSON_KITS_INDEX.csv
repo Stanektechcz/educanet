@@ -1,0 +1,113 @@
+class,lesson,title,videos,slides,prompts,oral_questions
+class_1a,1,"Lekce 1 · Základní dvouhodinový blok",3,10,8,5
+class_1a,2,"Lekce 2 · Typografie + obraz: plakát bez šablony",3,10,8,5
+class_1a,3,"Lekce 3 · Barva + typografický systém",3,10,8,5
+class_1a,4,"Lekce 4 · Mini vizuální identita",3,10,8,5
+class_1a,5,"Lekce 5 · Paleta, ikony a konzistence",3,10,8,5
+class_1a,6,"Lekce 6 · Redesign: z chaosu na systém",3,10,8,5
+class_1a,7,"Lekce 7 · Jeden design, tři formáty",2,9,8,5
+class_1a,8,"Lekce 8 · Typografie I + Layout I",2,9,8,5
+class_1a,9,"Lekce 9 · Vizuální příběh + produkční workflow",2,9,8,5
+class_1a,10,"Lekce 10 · Anatomie webu: hierarchie od plakátu k obrazovce",2,9,8,5
+class_1a,11,"Lekce 11 · Responsive základ: jedna stránka, tři šířky",1,9,8,5
+class_1a,12,"Lekce 12 · Komponenty: tlačítka, karty a opakovatelná pravidla",1,9,8,5
+class_1a,13,"Lekce 13 · Webová typografie: čitelnost, délka řádku a rytmus",1,9,8,5
+class_1a,14,"Lekce 14 · Obraz pro web: crop, rozlišení a export",2,9,8,5
+class_1a,15,"Lekce 15 · Formuláře a přístupnost: stav musí být pochopitelný",2,9,8,5
+class_1a,16,"Lekce 16 · Landing page: wireframe od briefu k flow",1,9,8,5
+class_1a,17,"Lekce 17 · Mini UI kit: pravidla místo náhodných hodnot",1,9,8,5
+class_1a,18,"Lekce 18 · Capstone: responzivní landing page",2,10,8,5
+class_1a,19,"Lekce 19 · Visual audit clinic",2,9,8,5
+class_1a,20,"Lekce 20 · Content-first landing",1,8,8,5
+class_1a,21,"Lekce 21 · Responsive hero",1,9,8,5
+class_1a,22,"Lekce 22 · Microcopy & CTA",1,8,8,5
+class_1a,23,"Lekce 23 · Accessible color & type",1,9,8,5
+class_1a,24,"Lekce 24 · Image art direction",2,9,8,5
+class_1a,25,"Lekce 25 · Component starter",2,9,8,5
+class_1a,26,"Lekce 26 · Critique workshop",1,8,8,5
+class_1a,27,"Lekce 27 · Landing sprint",2,10,8,5
+class_1a,28,"Lekce 28 · Portfolio & mastery",1,8,8,5
+class_2a,1,"Lekce 1 · Základní dvouhodinový blok",3,10,8,5
+class_2a,2,"Lekce 2 · Z jednoho plakátu udělej malou kampaň",3,10,8,5
+class_2a,3,"Lekce 3 · UI hero sekce: grafika potkává web",3,10,8,5
+class_2a,4,"Lekce 4 · Motion storyboard pro sociální sítě",2,10,8,5
+class_2a,5,"Lekce 5 · Design systém: spacing, komponenty, stavy",2,10,8,5
+class_2a,6,"Lekce 6 · Portfolio case study + mikrointerakce",2,10,8,5
+class_2a,7,"Lekce 7 · Accessibility & responsive UI",2,10,8,5
+class_2a,8,"Lekce 8 · Typografie II + Design systém II",1,9,8,5
+class_2a,9,"Lekce 9 · Interakce II + profesionální handoff",1,9,8,5
+class_2a,10,"Lekce 10 · Informační architektura + user flow",1,9,8,5
+class_2a,11,"Lekce 11 · Form UX: validace, chyby a stavy",1,9,8,5
+class_2a,12,"Lekce 12 · Auto Layout, varianty a responsive komponenty",1,9,8,5
+class_2a,13,"Lekce 13 · Accessibility audit webového návrhu",1,9,8,5
+class_2a,14,"Lekce 14 · Design → HTML/CSS: handoff, který jde implementovat",1,9,8,5
+class_2a,15,"Lekce 15 · CSS layout mindset: Flex, Grid a responsive pravidla",2,9,8,5
+class_2a,16,"Lekce 16 · Usability test: pozorování místo dojmologie",1,9,8,5
+class_2a,17,"Lekce 17 · Design QA: porovnej implementaci s pravidly, ne s pixely",2,9,8,5
+class_2a,18,"Lekce 18 · Capstone: produktová landing page + case study",2,10,8,5
+class_2a,19,"Lekce 19 · Research framing",1,9,8,5
+class_2a,20,"Lekce 20 · Card sorting lab",1,9,8,5
+class_2a,21,"Lekce 21 · Responsive component stress test",2,9,8,5
+class_2a,22,"Lekce 22 · Form recovery states",1,9,8,5
+class_2a,23,"Lekce 23 · Accessible interaction",1,9,8,5
+class_2a,24,"Lekce 24 · Design tokens to code",1,9,8,5
+class_2a,25,"Lekce 25 · Usability round 2",1,8,8,5
+class_2a,26,"Lekce 26 · Design QA clinic",1,8,8,5
+class_2a,27,"Lekce 27 · Product sprint",2,10,8,5
+class_2a,28,"Lekce 28 · Case study & mastery",1,9,8,5
+class_3a,1,"Lekce 1 · Základní dvouhodinový blok",3,10,8,5
+class_3a,2,"Lekce 2 · Navrhni a ověř malou kancelářskou síť",3,10,8,5
+class_3a,3,"Lekce 3 · DNS + DHCP jako služby",2,10,8,5
+class_3a,4,"Lekce 4 · Monitoring + základní hardening",3,10,8,5
+class_3a,5,"Lekce 5 · IPv6 + DNS záznamy",2,9,8,5
+class_3a,6,"Lekce 6 · Monitoring + DHCP reservations",2,9,8,5
+class_3a,7,"Lekce 7 · Packet journey + Wireshark mindset",3,10,8,5
+class_3a,8,"Lekce 8 · IPv4 II: VLSM + síťové zóny",2,9,8,5
+class_3a,9,"Lekce 9 · DNS/DHCP II + service debugging",1,9,8,5
+class_3a,10,"Lekce 10 · Linux CLI + filesystem: orientace bez klikání",1,8,8,5
+class_3a,11,"Lekce 11 · Uživatelé, skupiny a oprávnění",1,8,8,5
+class_3a,12,"Lekce 12 · Procesy + systemd: služba není magie",2,9,8,5
+class_3a,13,"Lekce 13 · Logy a journalctl: časová osa důkazů",1,8,8,5
+class_3a,14,"Lekce 14 · SSH/SFTP: bezpečný vzdálený přístup",1,9,8,5
+class_3a,15,"Lekce 15 · Firewall + služby: co poslouchá a kdo se tam dostane",2,9,8,5
+class_3a,16,"Lekce 16 · Linux webová služba: od procesu k HTTP",2,9,8,5
+class_3a,17,"Lekce 17 · Shell + cron: malá automatizace s logem a bezpečným selháním",1,8,8,5
+class_3a,18,"Lekce 18 · Capstone: nefunguje služba – Linux + síť v jednom incidentu",3,10,8,5
+class_3a,19,"Lekce 19 · Filesystem incident",2,9,8,5
+class_3a,20,"Lekce 20 · systemd dependency lab",1,8,8,5
+class_3a,21,"Lekce 21 · Journal forensic",1,8,8,5
+class_3a,22,"Lekce 22 · SSH keys in practice",1,9,8,5
+class_3a,23,"Lekce 23 · DNS evidence chain",1,9,8,5
+class_3a,24,"Lekce 24 · Stateful firewall lab",1,9,8,5
+class_3a,25,"Lekce 25 · Safe Bash automation",2,9,8,5
+class_3a,26,"Lekce 26 · Service recovery drill",2,9,8,5
+class_3a,27,"Lekce 27 · Team incident lab",2,9,8,5
+class_3a,28,"Lekce 28 · Mastery review",2,9,8,5
+class_4a,1,"Lekce 1 · Základní dvouhodinový blok",3,10,8,5
+class_4a,2,"Lekce 2 · Produkční change window: proxy, TLS, logy a rollback",3,10,8,5
+class_4a,3,"Lekce 3 · Observability: logy, metriky, health",3,10,8,5
+class_4a,4,"Lekce 4 · Release drill: bezpečný deploy a rollback",3,10,8,5
+class_4a,5,"Lekce 5 · HTTP observability + load balancing",2,9,8,5
+class_4a,6,"Lekce 6 · Canary release + backup/restore drill",2,9,8,5
+class_4a,7,"Lekce 7 · SLO, error budget a postmortem",1,10,8,5
+class_4a,8,"Lekce 8 · Infrastructure as Code + drift",2,9,8,5
+class_4a,9,"Lekce 9 · Performance + capacity engineering",1,9,8,5
+class_4a,10,"Lekce 10 · systemd do hloubky: dependencies, restart policy, failure",2,9,8,5
+class_4a,11,"Lekce 11 · Storage: disk, filesystem, mount a „disk full“ incident",1,8,8,5
+class_4a,12,"Lekce 12 · Backup strategie: RPO/RTO a restore drill",1,9,8,5
+class_4a,13,"Lekce 13 · Hardening Linux služby: SSH, firewall, aktualizace a minimální práva",2,9,8,5
+class_4a,14,"Lekce 14 · Containers: proces, image, volume a síť",1,9,8,5
+class_4a,15,"Lekce 15 · Automatizace + configuration consistency",2,9,8,5
+class_4a,16,"Lekce 16 · Pokročilá síťová diagnostika: packet evidence + socket state",1,9,8,5
+class_4a,17,"Lekce 17 · Incident response: runbook, komunikace a blameless postmortem",1,9,8,5
+class_4a,18,"Lekce 18 · Capstone: produkční reliability drill",3,10,8,5
+class_4a,19,"Lekce 19 · Golden signals lab",2,9,8,5
+class_4a,20,"Lekce 20 · Reverse proxy evidence",2,9,8,5
+class_4a,21,"Lekce 21 · Container networking",1,8,8,5
+class_4a,22,"Lekce 22 · Restore game day",1,8,8,5
+class_4a,23,"Lekce 23 · Hardening audit",1,8,8,5
+class_4a,24,"Lekce 24 · Safe change & rollback",1,9,8,5
+class_4a,25,"Lekce 25 · Drift & automation",2,9,8,5
+class_4a,26,"Lekce 26 · Performance capacity",1,9,8,5
+class_4a,27,"Lekce 27 · Incident command",2,9,8,5
+class_4a,28,"Lekce 28 · Reliability mastery",3,10,8,5

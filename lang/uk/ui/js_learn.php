@@ -1,0 +1,72 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * v59 · OPS-02 – каталог msgid домену «js_learn» (українська).
+ * Джерело msgid: JS файли з lang/domains_v59.php (js.js_learn). Ключ = точний чеський текст із коду.
+ * Власник: i18n builder B2.
+ */
+if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
+
+return [
+    '{n} minut' => ['one' => '{n} хвилина', 'few' => '{n} хвилини', 'many' => '{n} хвилин', 'other' => '{n} хвилин'],
+    'do konce' => 'залишилось',
+    'Čas vypršel.' => 'Час вийшов.',
+    'Zbývá {minutes} {label}.' => 'Залишилось {minutes} {label}.',
+    'Uloženo v prohlížeči · {time}' => 'Збережено в браузері · {time}',
+    'Prohlížeč neukládá lokálně, spoléhej na tlačítko Uložit.' => 'Браузер не зберігає локально, покладайся на кнопку «Зберегти».',
+    'Teď pracuješ na hodině' => 'Зараз ти працюєш на занятті',
+    'Rozpracovanou práci máš uloženou, ale odchod na jinou stránku tě z rozdělané práce vyhodí. Dokonči krok a odevzdej.' => 'Твою чернетку збережено, але перехід на іншу сторінку перерве незавершену роботу. Заверши крок і здай.',
+    'Zůstat u práce' => 'Залишитись у роботі',
+    'Přesto odejít' => 'Все одно вийти',
+    'Hotovo' => 'Готово',
+    'Dej si krátkou pauzu nebo uzavři dnešní plán.' => 'Зроби коротку перерву або заверши сьогоднішній план.',
+    'Krátká pauza?' => 'Коротка перерва?',
+    '20 minut fokusu je za tebou. Protáhni se, podívej se mimo obrazovku a vrať se, až budeš chtít.' => 'Позаду 20 хвилин зосередженої роботи. Розімнись, подивись подалі від екрана і повертайся, коли будеш готовий(-а).',
+    'Nejdřív zvol odpověď.' => 'Спочатку обери відповідь.',
+    '✓ Přenos funguje.' => '✓ Перенесення працює.',
+    '↻ Ještě jednou porovnej rozhodující podmínku.' => '↻ Порівняй вирішальну умову ще раз.',
+    'Stejný princip jsi poznal/a i v nové situaci.' => 'Ти впізнав(-ла) той самий принцип і в новій ситуації.',
+    'Vrať se k principu a kontrastu výše.' => 'Повернись до принципу та контрасту вище.',
+    'Posunout výš' => 'Пересунути вище',
+    'Posunout níž' => 'Пересунути нижче',
+    'Pořadí je správně.' => 'Порядок правильний.',
+    'Správně je {good} z {total}. Oprav červené řádky.' => 'Правильно {good} з {total}. Виправ червоні рядки.',
+    'Vyber pojem vlevo a potom odpověď vpravo.' => 'Обери поняття зліва, а потім відповідь справа.',
+    'Přiřaď všechny dvojice.' => 'З’єднай усі пари.',
+    'Všechny dvojice sedí.' => 'Усі пари збігаються.',
+    'Správně {good} z {total}. Oprav červené.' => 'Правильно {good} з {total}. Виправ червоні.',
+    'Příkaz' => 'Команда',
+    'Nápověda' => 'Підказка',
+    'Úkol {n}/{total}:' => 'Завдання {n}/{total}:',
+    'Všechny příkazy jsou správně.' => 'Усі команди правильні.',
+    'chyby: {errors} · nápovědy: {hints}' => 'помилки: {errors} · підказки: {hints}',
+    'Hotovo – příkazy jsou správně.' => 'Готово — команди правильні.',
+    'Tento příkaz úkol nesplní. Zkus to jinak nebo použij nápovědu.' => 'Ця команда не виконає завдання. Спробуй інакше або скористайся підказкою.',
+    'Hotovo.' => 'Готово.',
+    'Napiš příkaz do terminálu a potvrď Enterem.' => 'Введи команду в термінал і підтверди Enter.',
+    'Správně – {value}.' => 'Правильно — {value}.',
+    'Máš {value}, cíl je {target}.' => 'У тебе {value}, ціль — {target}.',
+    'Pořadí čtení je jasné.' => 'Порядок читання зрозумілий.',
+    'Nadpis musí být největší.' => 'Заголовок має бути найбільшим.',
+    'Datum má být alespoň tak velké jako text CTA.' => 'Дата має бути принаймні такою ж великою, як текст CTA.',
+    'Nadpis má být aspoň 2× větší než CTA text.' => 'Заголовок має бути принаймні у 2 рази більшим за текст CTA.',
+    'Splňuje WCAG AA.' => 'Відповідає WCAG AA.',
+    'Kontrast je pod 4,5 : 1.' => 'Контраст нижчий за 4,5 : 1.',
+    '{message} (pokus {n})' => '{message} (спроба {n})',
+    'Odemykám…' => 'Розблоковую…',
+    'Nemáš dost bodů' => 'У тебе недостатньо балів',
+    'Zkus nejdřív vyřešit jiný úkol.' => 'Спробуй спочатку розв’язати інше завдання.',
+    'zdarma' => 'безкоштовно',
+    'Ukládám…' => 'Зберігаю…',
+    'Krok se nepodařilo uložit.' => 'Не вдалося зберегти крок.',
+    'To ještě není ono. Zkus jinou odpověď.' => 'Ще не те. Спробуй іншу відповідь.',
+    'Dokončit krok' => 'Завершити крок',
+    'Hotovo · +{xp} XP. Pokračujeme dalším krokem.' => 'Готово · +{xp} XP. Переходимо до наступного кроку.',
+    'Hotovo. Pokračujeme dalším krokem.' => 'Готово. Переходимо до наступного кроку.',
+    'Krok je hotový' => 'Крок виконано',
+    'Zkopírováno' => 'Скопійовано',
+    'správně' => 'правильно',
+    'Znovu' => 'Ще раз',
+];

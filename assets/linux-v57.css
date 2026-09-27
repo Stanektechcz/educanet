@@ -1,0 +1,274 @@
+/* EDUCANET v57 · Linux Lab – studentské UI.
+   Navazuje na brand-v54.css / ui-v51.css (--u-*, --edu-*). Terminál je záměrně
+   tmavý panel uvnitř jinak světlé aplikace, ne přepínač globálního tématu. */
+
+.lab57 { max-width: 1180px; margin: 0 auto; }
+.lab57 code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--u-soft, #f1f3f6); border-radius: 5px; padding: 1px 6px; font-size: .88em; }
+.lab57 a { color: var(--edu-teal-dark, #007a87); }
+
+/* ---------- Hero / domov ---------- */
+.lab57-hero { position: relative; overflow: hidden; padding: clamp(20px, 4vw, 34px); border-radius: 20px; color: #fff; background: linear-gradient(140deg, #0d3a40 0%, #0b2b30 60%, #081f23 100%); margin-bottom: 20px; }
+.lab57-hero-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; background: rgba(255, 255, 255, .14); font-size: .74rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #a9f0ea; }
+.lab57-hero h1 { margin: 14px 0 8px; font-size: clamp(1.5rem, 3.4vw, 2.2rem); color: #fff; max-width: 22ch; }
+.lab57-hero p { margin: 0; max-width: 56ch; color: rgba(255, 255, 255, .85); line-height: 1.55; }
+/* v59: obecné body:not(.assessment-mode) h1/p (student-ui-v50-7-7.css) má vyšší specificitu a barvilo
+   text hero tmavě na tmavém pozadí (kontrast 1,4:1) – světlá barva musí vyhrát. */
+body:not(.assessment-mode) .lab57-hero h1 { color: #fff; }
+body:not(.assessment-mode) .lab57-hero p { color: rgba(255, 255, 255, .85); }
+.lab57-hero-stats { display: flex; flex-wrap: wrap; gap: clamp(14px, 3vw, 28px); margin-top: 20px; }
+.lab57-hero-stats div { display: flex; flex-direction: column; }
+.lab57-hero-stats b { font-size: 1.4rem; font-weight: 800; color: #f3b21f; }
+.lab57-hero-stats span { font-size: .78rem; color: rgba(255, 255, 255, .75); }
+
+.lab57-race-card { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 16px; background: var(--edu-orange-soft, #fdeee3); border: 1px solid #f7d7be; text-decoration: none; color: var(--edu-ink, #12212b); margin-bottom: 20px; }
+.lab57-race-card:hover { border-color: var(--edu-orange, #ec6b10); }
+.lab57-race-pulse { color: var(--edu-orange, #ec6b10); font-size: 1.1rem; animation: lab57-pulse 1.6s ease-in-out infinite; }
+.lab57-race-card strong { display: block; }
+.lab57-race-card span:not(.btn) { font-size: .84rem; color: var(--u-muted, #5f6b7a); }
+.lab57-race-card .btn { margin-left: auto; flex: none; }
+@keyframes lab57-pulse { 0%, 100% { opacity: .5; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .lab57-race-pulse { animation: none; } }
+
+.lab57-packs { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.lab57-pack { background: var(--u-surface, #fff); border: 1px solid var(--u-line, #e3e6eb); border-radius: 18px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 8px 22px rgba(18, 33, 43, .05); }
+.lab57-pack-head { display: flex; gap: 12px; align-items: flex-start; }
+.lab57-pack-icon { flex: 0 0 42px; height: 42px; display: grid; place-items: center; border-radius: 12px; font-size: 1.15rem; font-weight: 700; background: var(--u-soft, #f1f3f6); color: var(--edu-teal-dark, #007a87); }
+.lab57-pack-head h2 { margin: 0 0 3px; font-size: 1.05rem; }
+.lab57-pack-head p { margin: 0 0 4px; font-size: .86rem; color: var(--u-muted, #5f6b7a); line-height: 1.45; }
+.lab57-pack-inspired { font-size: .72rem; color: var(--u-faint, #8a94a3); font-style: italic; }
+.lab57-tone-teal .lab57-pack-icon { background: var(--edu-teal-soft, #e2f6f8); color: var(--edu-teal-dark, #007a87); }
+.lab57-tone-blue .lab57-pack-icon { background: #e7edfd; color: #2d4bc7; }
+.lab57-tone-violet .lab57-pack-icon { background: #f2eefc; color: #6d4bd8; }
+.lab57-tone-green .lab57-pack-icon { background: #e6f6ec; color: #157a45; }
+.lab57-tone-amber .lab57-pack-icon { background: var(--edu-yellow-soft, #fef5e0); color: #8a5a00; }
+.lab57-tone-rose .lab57-pack-icon { background: #fdeaf0; color: #b23163; }
+
+.lab57-progress { height: 8px; border-radius: 999px; background: var(--u-soft, #f1f3f6); overflow: hidden; }
+/* v58 A11Y-A14: --edu-teal (#00a8b9) je na tomto podkladu jen ~2.6:1 (potřeba 3:1 u grafického prvku) –
+   lokální přepis proměnné jen pro tento pruh, sdílený token --edu-teal jinde v aplikaci zůstává beze změny. */
+.lab57-progress-bar { --edu-teal: #007c89; height: 100%; background: var(--edu-teal); border-radius: inherit; transition: width .3s ease; }
+.lab57-pack-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: .84rem; color: var(--u-muted, #5f6b7a); }
+.lab57-done-chip { color: var(--u-ok, #0f7b4f); font-weight: 700; }
+.btn.small { min-height: 34px !important; padding: 6px 14px !important; font-size: .84rem !important; }
+
+.lab57-pack-levels { border-top: 1px dashed var(--u-line, #e3e6eb); padding-top: 8px; }
+.lab57-pack-levels summary { cursor: pointer; font-size: .82rem; font-weight: 650; color: var(--u-muted, #5f6b7a); list-style: none; }
+.lab57-pack-levels summary::-webkit-details-marker { display: none; }
+.lab57-pack-levels summary::before { content: '▸ '; }
+.lab57-pack-levels[open] summary::before { content: '▾ '; }
+.lab57-pack-levels ol { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 4px; }
+.lab57-pack-levels li a, .lab57-pack-levels li .lab57-level-locked { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 9px; text-decoration: none; color: var(--edu-ink, #12212b); font-size: .86rem; }
+.lab57-pack-levels li a:hover { background: var(--u-soft, #f1f3f6); }
+.lab57-pack-levels li.is-locked .lab57-level-locked { color: var(--u-faint, #8a94a3); }
+.lab57-level-mark { flex: 0 0 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: var(--u-soft, #f1f3f6); font-size: .72rem; font-weight: 700; }
+.lab57-pack-levels li.is-solved .lab57-level-mark { background: var(--u-ok-soft, #e9f6ef); color: var(--u-ok, #0f7b4f); }
+
+/* ---------- Pracovní plocha (mise + terminál) ---------- */
+.lab57-crumbs { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: .82rem; color: var(--u-muted, #5f6b7a); margin-bottom: 14px; }
+.lab57-crumbs a { text-decoration: none; }
+.lab57-work { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 18px; align-items: start; }
+.lab57-mission { background: var(--u-surface, #fff); border: 1px solid var(--u-line, #e3e6eb); border-radius: 16px; padding: 18px 20px; }
+.lab57-mission-toggle { display: none; width: 100%; text-align: left; background: none; border: 0; font: inherit; font-weight: 700; padding: 0; cursor: pointer; }
+.lab57-mission-head h2 { margin: 0 0 8px; font-size: 1.15rem; }
+.lab57-mission-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.lab57-chip { font-size: .74rem; font-weight: 650; padding: 3px 10px; border-radius: 999px; background: var(--u-soft, #f1f3f6); color: var(--u-muted, #5f6b7a); }
+.lab57-story { margin: 0 0 10px; line-height: 1.55; color: var(--u-text, #111827); }
+.lab57-task { padding: 11px 13px; border-radius: 12px; background: var(--edu-teal-soft, #e2f6f8); margin-bottom: 12px; }
+.lab57-task strong { display: block; font-size: .76rem; text-transform: uppercase; letter-spacing: .05em; color: var(--edu-teal-dark, #007a87); margin-bottom: 3px; }
+.lab57-task p { margin: 0; font-size: .92rem; line-height: 1.5; }
+.lab57-suggest { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 14px; font-size: .82rem; }
+.lab57-suggest span { color: var(--u-faint, #8a94a3); margin-right: 2px; }
+.lab57-suggest a { text-decoration: none; }
+
+.lab57-turnin { margin: 14px 0; padding: 12px 14px; border-radius: 12px; background: var(--u-soft, #f1f3f6); }
+.lab57-turnin label { display: block; font-size: .78rem; font-weight: 650; margin-bottom: 6px; color: var(--u-muted, #5f6b7a); }
+.lab57-turnin-row { display: flex; gap: 8px; }
+.lab57-turnin-row input { flex: 1; min-width: 0; min-height: 40px; padding: 8px 12px; border: 1px solid var(--u-line-strong, #cfd5dd); border-radius: 10px; font: inherit; font-size: .95rem; }
+.lab57-turnin-row input:focus-visible { outline: 2px solid var(--edu-teal, #00a8b9); outline-offset: 1px; }
+.lab57-golf-note { margin: 0 0 10px; font-size: .86rem; color: var(--u-muted, #5f6b7a); line-height: 1.5; }
+
+.lab57-checklist { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 6px; }
+.lab57-checklist li { display: flex; gap: 8px; align-items: flex-start; font-size: .88rem; padding: 6px 8px; border-radius: 9px; background: #fff; }
+.lab57-checklist li.ok { color: var(--u-ok, #0f7b4f); }
+.lab57-checklist li.fail { color: var(--u-muted, #5f6b7a); }
+
+.lab57-mission-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.lab57-danger { color: #b42318 !important; }
+
+.lab57-solved { margin-top: 16px; padding: 14px 16px; border-radius: 14px; background: var(--u-ok-soft, #e9f6ef); border: 1px solid #bfe3cf; }
+.lab57-solved strong { display: block; margin-bottom: 4px; color: #0b5134; font-size: 1.02rem; }
+.lab57-solved p { margin: 0 0 10px; font-size: .9rem; line-height: 1.5; color: #0b5134; }
+.lab57-solved-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; font-size: .82rem; font-weight: 650; color: #0b5134; }
+.lab57-first-blood { padding: 2px 8px; border-radius: 999px; background: var(--edu-orange, #ec6b10); color: #fff; }
+
+/* ---------- Terminál ---------- */
+.lab57-term-col { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+/* v58: barvy terminálu jako proměnné (--lab57-*), aby je assets/lab-a11y-v58.css mohl přepsat pro vysoký kontrast. */
+.lab57-term {
+  --lab57-bg: #0e1418; --lab57-bar-bg: #1a2229; --lab57-fg: #e7ecef; --lab57-cmd: #9adfe6; --lab57-accent: #6fcf97;
+  --lab57-err: #ff9b93; --lab57-tip: #d8c98a; --lab57-muted: #8a94a3; --lab57-focus: #5fd4e0;
+  background: var(--lab57-bg); border-radius: 16px; overflow: hidden; box-shadow: 0 14px 34px rgba(0, 0, 0, .28); display: flex; flex-direction: column;
+}
+.lab57-term-bar { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: var(--lab57-bar-bg); }
+.lab57-term-dot { width: 10px; height: 10px; border-radius: 50%; background: #3a444d; }
+.lab57-term-title { margin-left: 8px; font-size: .74rem; color: var(--lab57-muted); font-family: ui-monospace, monospace; }
+.lab57-term-out { flex: 1; min-height: 300px; max-height: 52vh; overflow-y: auto; padding: 14px 16px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .88rem; line-height: 1.55; color: var(--lab57-fg); white-space: pre-wrap; overflow-wrap: anywhere; }
+.lab57-term-out:focus-visible { outline: 2px solid var(--lab57-focus); outline-offset: -2px; }
+.lab57-cmdline { color: var(--lab57-cmd); }
+.lab57-cmdline .lab57-prompt-echo { color: var(--lab57-accent); margin-right: 6px; }
+.lab57-out-chunk.is-err { color: var(--lab57-err); }
+.lab57-tipline { color: var(--lab57-tip); font-style: italic; margin-top: 2px; }
+.lab57-sysline { color: var(--lab57-muted); }
+.lab57-cols { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 2px 14px; margin: 2px 0 4px; }
+
+/* ANSI barvy – kontrast AA na tmavém pozadí */
+.a-bold { font-weight: 700; }
+/* v58 A11Y-A8: #6b7480 na --lab57-bg (#0e1418) byl jen ~3.9:1, zesvětleno na ~5.8:1. */
+.a-fg-30 { color: #8890a0; } .a-fg-31 { color: #ff8a80; } .a-fg-32 { color: #8bd17c; } .a-fg-33 { color: #e8c257; }
+.a-fg-34 { color: #7db2ff; } .a-fg-35 { color: #d9a4ff; } .a-fg-36 { color: #6fd8d0; } .a-fg-37 { color: #e7ecef; }
+.a-fg-90 { color: #8a94a3; } .a-fg-91 { color: #ffa39c; } .a-fg-92 { color: #a8e29b; } .a-fg-93 { color: #f0d179; }
+.a-fg-94 { color: #9cc4ff; } .a-fg-95 { color: #e4bdff; } .a-fg-96 { color: #92e6df; } .a-fg-97 { color: #ffffff; }
+.a-bg-40 { background: #1c232a; } .a-bg-41 { background: #5a1f1a; } .a-bg-42 { background: #204f2d; } .a-bg-43 { background: #5a4a12; }
+.a-bg-44 { background: #12305a; } .a-bg-45 { background: #47205a; } .a-bg-46 { background: #124f4a; } .a-bg-47 { background: #3a434b; }
+
+.lab57-term-line { display: flex; align-items: center; gap: 8px; padding: 8px 14px 10px; border-top: 1px solid #1f2830; }
+.lab57-prompt { font-family: ui-monospace, monospace; font-size: .88rem; color: var(--lab57-accent, #6fcf97); white-space: nowrap; }
+.lab57-input { flex: 1; min-width: 0; background: transparent; border: 0; color: var(--lab57-fg, #e7ecef); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 16px; padding: 4px 2px; }
+.lab57-input:focus { outline: none; }
+/* Globální vzhled formulářů (ui-v51.css, !important) nesmí z příkazové řádky udělat bílé pole. */
+input.lab57-input[type="text"] { background: transparent !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; color: var(--lab57-fg, #e7ecef) !important; caret-color: var(--lab57-focus, #5fd4e0); }
+input.lab57-input[type="text"]:focus { outline: 2px solid var(--lab57-focus, #5fd4e0) !important; outline-offset: 2px; border-radius: 2px !important; }
+.lab57-term:focus-within { box-shadow: 0 0 0 3px var(--edu-teal-soft, #e2f6f8), 0 14px 34px rgba(0, 0, 0, .28); }
+
+/* v58 A11Y-A2: viditelná nápověda ke klávesnicové úniková cestě z terminálu (Esc a pak Tab). */
+.lab57-term-hint { margin: 0; padding: 0 14px 8px; font-size: .74rem; line-height: 1.4; color: var(--lab57-muted, #8a94a3); }
+
+.lab57-touchbar { display: flex; gap: 6px; padding: 8px 10px 12px; overflow-x: auto; background: #12181d; }
+.lab57-touchbar button { flex: none; min-height: 36px; padding: 6px 12px; border-radius: 9px; border: 1px solid #2a333b; background: #1a2229; color: #cfd6dc; font: inherit; font-size: .82rem; }
+.lab57-touchbar button:active { background: #232d35; }
+
+.lab57-busy .lab57-input { opacity: .6; }
+
+/* ---------- Editor (nano) ---------- */
+.lab57-editor { position: fixed; inset: 0; z-index: 400; background: #0e1418; color: #e7ecef; display: flex; flex-direction: column; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.lab57-editor[hidden] { display: none; }
+.lab57-editor-head { padding: 8px 14px; background: #1a2229; font-size: .84rem; display: flex; gap: 10px; align-items: center; }
+.lab57-editor-head b { color: #6fd8d0; }
+.lab57-editor-warn { padding: 8px 14px; background: #5a1f1a; color: #ffb3ab; font-size: .82rem; }
+.lab57-editor-text { flex: 1; resize: none; border: 0; background: #0e1418; color: #e7ecef; font: inherit; font-size: .95rem; line-height: 1.5; padding: 14px; white-space: pre; overflow-wrap: normal; }
+.lab57-editor-text:focus { outline: none; }
+.lab57-editor-msg { padding: 6px 14px; font-size: .82rem; color: #8bd17c; min-height: 1.4em; }
+.lab57-editor-foot { display: flex; gap: 10px; padding: 10px 14px; background: #1a2229; }
+.lab57-editor-foot button { background: #232d35; color: #e7ecef; border: 1px solid #2f3944; border-radius: 8px; padding: 8px 14px; font: inherit; font-size: .84rem; }
+
+/* ---------- Topologie ---------- */
+.lab57-net { background: var(--u-surface, #fff); border: 1px solid var(--u-line, #e3e6eb); border-radius: 16px; padding: 14px 16px; }
+.lab57-net h3 { margin: 0 0 8px; font-size: .9rem; }
+.lab57-net svg { width: 100%; height: auto; display: block; }
+.lab57-net-node circle, .lab57-net-node rect { fill: var(--u-soft, #f1f3f6); stroke: var(--u-line-strong, #cfd5dd); stroke-width: 1.5; }
+.lab57-net-node text { font-size: 10px; fill: var(--u-text, #111827); font-family: ui-sans-serif, system-ui, sans-serif; }
+.lab57-net-node.is-active circle, .lab57-net-node.is-active rect { stroke: var(--edu-teal, #00a8b9); stroke-width: 2.5; }
+.lab57-net-node.is-ok circle, .lab57-net-node.is-ok rect { fill: var(--u-ok-soft, #e9f6ef); stroke: var(--u-ok, #0f7b4f); }
+.lab57-net-node.is-fail circle, .lab57-net-node.is-fail rect { fill: var(--u-bad-soft, #fdeeec); stroke: var(--u-bad, #b42318); }
+.lab57-net-link { stroke: var(--u-line-strong, #cfd5dd); stroke-width: 2; }
+.lab57-net-link.is-active { stroke: var(--edu-teal, #00a8b9); }
+
+/* ---------- Příručka ---------- */
+.lab57-manual-head { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.lab57-manual-head h1 { margin: 0 0 4px; font-size: clamp(1.3rem, 3vw, 1.8rem); }
+.lab57-manual-head p { margin: 0; color: var(--u-muted, #5f6b7a); max-width: 60ch; }
+.lab57-manual-search input { width: 100%; max-width: 420px; min-height: 44px; padding: 10px 14px; border: 1px solid var(--u-line-strong, #cfd5dd); border-radius: 12px; font: inherit; font-size: .95rem; margin-bottom: 20px; }
+.lab57-manual-cat { margin-bottom: 24px; }
+.lab57-manual-cat h2 { margin: 0 0 3px; font-size: 1.05rem; }
+.lab57-manual-cat > p { margin: 0 0 12px; color: var(--u-muted, #5f6b7a); font-size: .86rem; }
+.lab57-manual-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.lab57-manual-card { display: block; padding: 13px 15px; border-radius: 13px; background: var(--u-surface, #fff); border: 1px solid var(--u-line, #e3e6eb); text-decoration: none; color: var(--edu-ink, #12212b); position: relative; }
+.lab57-manual-card:hover { border-color: var(--edu-teal, #00a8b9); }
+.lab57-manual-card code { display: inline-block; margin-bottom: 6px; background: transparent; padding: 0; font-size: 1rem; font-weight: 700; color: var(--edu-teal-dark, #007a87); }
+.lab57-manual-card p { margin: 4px 0 0; font-size: .82rem; color: var(--u-muted, #5f6b7a); line-height: 1.4; }
+.lab57-manual-level { position: absolute; top: 13px; right: 14px; font-size: .68rem; color: var(--u-faint, #8a94a3); }
+.lab57-manual-badge { display: inline-block; font-size: .68rem; font-weight: 650; padding: 2px 8px; border-radius: 999px; background: var(--edu-yellow-soft, #fef5e0); color: #7a5500; margin-left: 6px; }
+.lab57-manual-badge-block { display: block; margin: 8px 0 0; }
+.lab57-manual-empty { text-align: center; color: var(--u-muted, #5f6b7a); padding: 30px 0; }
+
+.lab57-manual-concepts { margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--u-line, #e3e6eb); }
+.lab57-concept { padding: 14px 16px; border-radius: 13px; background: var(--u-surface, #fff); border: 1px solid var(--u-line, #e3e6eb); }
+.lab57-concept h3 { margin: 0 0 6px; font-size: .98rem; }
+.lab57-concept p { margin: 0 0 8px; font-size: .86rem; color: var(--u-muted, #5f6b7a); line-height: 1.5; }
+
+.lab57-manual-page header { margin-bottom: 18px; }
+.lab57-manual-cat-label { font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; color: var(--edu-teal-dark, #007a87); font-weight: 700; }
+.lab57-manual-page h1 { margin: 6px 0; font-size: 1.6rem; }
+.lab57-manual-page h1 code { font-size: 1em; background: none; padding: 0; }
+.lab57-manual-synopsis { font-family: ui-monospace, monospace; background: var(--u-soft, #f1f3f6); display: inline-block; padding: 4px 10px; border-radius: 8px; margin: 0 0 8px; }
+.lab57-manual-page section { margin: 20px 0; }
+.lab57-manual-page h2 { font-size: 1rem; margin: 0 0 10px; }
+.lab57-manual-options table { width: 100%; border-collapse: collapse; }
+.lab57-manual-options td { padding: 7px 10px; border-bottom: 1px solid var(--u-line, #e3e6eb); font-size: .88rem; vertical-align: top; }
+.lab57-manual-options td:first-child { white-space: nowrap; }
+.lab57-manual-examples .lab57-example { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 13px; border-radius: 11px; background: var(--u-soft, #f1f3f6); margin-bottom: 8px; }
+.lab57-manual-examples .lab57-example code { background: #fff; }
+.lab57-manual-examples .lab57-example span { font-size: .84rem; color: var(--u-muted, #5f6b7a); flex: 1; min-width: 160px; }
+.lab57-try { text-decoration: none; font-size: .82rem; font-weight: 650; white-space: nowrap; }
+.lab57-callout { padding: 11px 14px; border-radius: 12px; margin-bottom: 12px; }
+.lab57-callout strong { display: block; font-size: .76rem; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 3px; }
+.lab57-tip-callout { background: var(--edu-teal-soft, #e2f6f8); color: #065a66; }
+.lab57-warn-callout { background: var(--u-bad-soft, #fdeeec); color: #7a1a12; }
+.lab57-manual-related { display: flex; flex-wrap: wrap; gap: 8px; }
+.lab57-manual-related a { text-decoration: none; }
+.lab57-manual-notfound { text-align: center; padding: 30px 0; }
+.lab57-manual-suggest-list { list-style: none; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; padding: 0; margin: 16px 0; }
+
+/* ---------- v58: odznaky a dnešní opakování (domovská stránka) ---------- */
+.lab57-review-card { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 18px; border-radius: 16px; background: var(--edu-teal-soft, #e2f6f8); margin-bottom: 20px; }
+.lab57-review-card strong { display: block; font-size: 1.02rem; }
+.lab57-review-card span { font-size: .84rem; color: var(--u-muted, #5f6b7a); }
+.lab57-badges { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 20px; }
+.lab57-badge { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--u-soft, #f1f3f6); font-size: .82rem; color: var(--u-muted, #5f6b7a); min-height: 36px; }
+.lab57-badge.is-earned { background: var(--u-ok-soft, #e9f6ef); color: #0b5134; font-weight: 650; }
+.lab57-badge-icon { font-size: 1.1rem; }
+
+/* ---------- v58: rozcestník dalších her ---------- */
+.lab57-hub { margin-top: 26px; }
+.lab57-hub h2 { margin: 0 0 12px; font-size: 1.05rem; }
+.lab57-hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.lab57-hub-card { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: 14px; background: var(--u-surface, #fff); border: 1px solid var(--u-line, #e3e6eb); text-decoration: none; color: var(--edu-ink, #12212b); min-height: 44px; }
+.lab57-hub-card:hover { border-color: var(--edu-teal, #00a8b9); }
+.lab57-hub-icon { font-size: 1.3rem; }
+.lab57-hub-card span:last-child { font-size: .82rem; color: var(--u-muted, #5f6b7a); }
+
+/* ---------- v58: mapa dovedností a opakování (?view=lab&sekce=…) ---------- */
+.lab57-skills-summary { font-size: .92rem; color: var(--u-muted, #5f6b7a); margin: 0 0 14px; }
+.lab57-skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin: 10px 0 22px; }
+.lab57-skill-chip { padding: 10px 12px; border-radius: 12px; background: var(--u-surface, #fff); border: 1px solid var(--u-line, #e3e6eb); display: flex; flex-direction: column; gap: 4px; }
+.lab57-skill-chip code { align-self: flex-start; }
+.lab57-skill-new { opacity: .75; }
+.lab57-skill-mastered { border-color: var(--u-ok, #0f7b4f); }
+.lab57-skill-chip small { color: var(--u-muted, #5f6b7a); }
+.lab57-concept-chip { padding: 10px 12px; border-radius: 12px; background: var(--u-surface, #fff); border: 1px solid var(--u-line, #e3e6eb); }
+.lab57-concept-chip strong { display: block; margin-bottom: 6px; font-size: .92rem; }
+/* v58 A11Y-A14: procento vedle pruhu nesmí nést informaci jen barvou/délkou. */
+.lab57-concept-chip small { display: block; margin-top: 4px; font-size: .78rem; color: var(--u-muted, #5f6b7a); }
+.lab57-empty-note { color: var(--u-muted, #5f6b7a); padding: 20px 0; }
+.lab57-review-list { list-style: none; margin: 10px 0 22px; padding: 0; display: grid; gap: 8px; }
+.lab57-review-list li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-radius: 12px; background: var(--u-surface, #fff); border: 1px solid var(--u-line, #e3e6eb); font-size: .9rem; }
+.lab57-review-list li.is-done { color: var(--u-muted, #5f6b7a); }
+.lab57-review-box { font-size: .74rem; padding: 2px 8px; border-radius: 999px; background: var(--u-soft, #f1f3f6); color: var(--u-muted, #5f6b7a); }
+
+/* ---------- Responzivita ---------- */
+@media (max-width: 999px) {
+  .lab57-work { grid-template-columns: 1fr; }
+  .lab57-mission-toggle { display: flex; align-items: center; justify-content: space-between; }
+  .lab57-mission-body { display: grid; gap: 10px; }
+  .lab57-work.is-collapsed .lab57-mission-body { display: none; }
+  .lab57-term-out { min-height: 46vh; }
+}
+@media (max-width: 620px) {
+  .lab57-hero-stats { gap: 16px; }
+  .lab57-turnin-row { flex-direction: column; align-items: stretch; }
+  .lab57-editor-foot { flex-wrap: wrap; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lab57-progress-bar, .lab57-net-node, .lab57-net-link { transition: none !important; }
+}

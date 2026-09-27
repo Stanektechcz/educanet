@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light">
+<title id="lab58off-title">Offline trénink – Linux Lab · EDUCANET</title>
+<meta name="description" id="lab58off-meta-description" content="Offline pískoviště Linux Labu: terminál a příručka příkazů fungující bez připojení k internetu.">
+<link rel="stylesheet" href="assets/lab-offline-v58.css?v=58.0">
+</head>
+<body>
+<a class="lab58off-skip" id="lab58off-skip-link" href="#lab58off-input">Přeskočit na příkazovou řádku</a>
+<header class="lab58off-header">
+  <p class="lab58off-badge">EDUCANET · Linux Lab</p>
+  <h1 id="lab58off-h1">Offline trénink terminálu</h1>
+  <p class="lab58off-disclaimer">
+    <strong id="lab58off-disclaimer-strong">Offline trénink</strong>
+    <span id="lab58off-disclaimer-rest">– postup se do školy neukládá; kódy úloh ověřuje jen online Linux Lab.
+    Pískoviště běží jen v tomto prohlížeči a nic neposílá na server.</span>
+  </p>
+  <nav class="lab58off-nav" id="lab58off-nav" aria-label="Návrat do aplikace">
+    <a href="index.php?view=lab">← <span id="lab58off-back-text">Zpět do online Linux Labu</span></a>
+  </nav>
+</header>
+
+<main class="lab58off-main">
+  <section class="lab58off-panel lab58off-terminal" aria-labelledby="lab58off-terminal-h">
+    <h2 id="lab58off-terminal-h">Terminál (pískoviště)</h2>
+    <p class="lab58off-hint" id="lab58off-hint">Šipky ↑ ↓: historie příkazů. Tab: doplnění názvu. Ctrl+L: vymaže obrazovku.</p>
+    <div class="lab58off-output" id="lab58off-output" role="log" aria-label="Výstup terminálu" aria-live="polite" aria-relevant="additions text" tabindex="0"></div>
+    <form class="lab58off-form" id="lab58off-form">
+      <label for="lab58off-input" class="lab58off-prompt-label">
+        <span class="lab58off-prompt" id="lab58off-prompt" aria-hidden="true">student@lab-pc:~$</span>
+        <span class="lab58off-visually-hidden" id="lab58off-input-label">Příkaz pro terminál</span>
+      </label>
+      <input type="text" id="lab58off-input" name="command" class="lab58off-input" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
+      <button type="submit" class="lab58off-btn" id="lab58off-run-btn">Spustit</button>
+    </form>
+    <div class="lab58off-toolbar">
+      <button type="button" id="lab58off-clear" class="lab58off-btn lab58off-btn-secondary">Vymazat obrazovku</button>
+      <button type="button" id="lab58off-reset" class="lab58off-btn lab58off-btn-secondary">Začít znovu</button>
+    </div>
+  </section>
+
+  <section class="lab58off-panel lab58off-manual" aria-labelledby="lab58off-manual-h">
+    <h2 id="lab58off-manual-h">Příručka příkazů (offline)</h2>
+    <div class="lab58off-manual-search">
+      <label for="lab58off-search" id="lab58off-search-label">Hledat příkaz</label>
+      <input type="search" id="lab58off-search" autocomplete="off">
+    </div>
+    <p id="lab58off-manual-status" class="lab58off-visually-hidden" aria-live="polite"></p>
+    <div id="lab58off-manual-list" class="lab58off-manual-list">
+      <p class="lab58off-manual-loading" id="lab58off-manual-loading">Příručka se načítá…</p>
+    </div>
+  </section>
+</main>
+
+<footer class="lab58off-footer">
+  <p id="lab58off-footer-text">Postup se ukládá jen na tomto zařízení (localStorage tohoto prohlížeče) – žádná data se neposílají na server ani do školy. Verze pískoviště 58.0.</p>
+</footer>
+
+<script src="assets/linux-core-v58.js?v=58.0"></script>
+<script src="assets/linux-core-cmds-v58.js?v=58.0"></script>
+<script src="assets/lab-offline-v58.js?v=58.0"></script>
+</body>
+</html>

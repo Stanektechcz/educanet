@@ -1,0 +1,4452 @@
+{
+  "version": "48.1",
+  "class_id": "class_3a",
+  "labs": {
+    "1": {
+      "title": "Network Incident Control Room",
+      "archetype": "incident_chain",
+      "mission": "Uživatel hlásí „nejde internet“. Tvým úkolem není začít měnit nastavení, ale během několika minut zúžit vrstvu problému a doložit, co už víš.",
+      "scene": {
+        "layout": "flow",
+        "caption": "Klient → lokální síť → brána → DNS → internetová služba",
+        "nodes": [
+          {
+            "id": "client",
+            "label": "Notebook",
+            "meta": "192.168.10.25/24"
+          },
+          {
+            "id": "switch",
+            "label": "Access switch",
+            "meta": "VLAN 10"
+          },
+          {
+            "id": "gw",
+            "label": "Gateway",
+            "meta": "192.168.10.1"
+          },
+          {
+            "id": "dns",
+            "label": "DNS resolver",
+            "meta": "192.168.10.53"
+          },
+          {
+            "id": "web",
+            "label": "Web",
+            "meta": "203.0.113.20:443"
+          }
+        ],
+        "edges": [
+          {
+            "from": "client",
+            "to": "switch",
+            "label": "Ethernet"
+          },
+          {
+            "from": "switch",
+            "to": "gw",
+            "label": "L2/L3 hranice"
+          },
+          {
+            "from": "client",
+            "to": "dns",
+            "label": "UDP/TCP 53"
+          },
+          {
+            "from": "gw",
+            "to": "web",
+            "label": "routing/NAT"
+          }
+        ],
+        "artifact": "SYMPTOM: portal.example.cz se neotevře\nIP konfigurace klienta: 192.168.10.25/24, GW 192.168.10.1, DNS 192.168.10.53"
+      },
+      "tasks": [
+        {
+          "id": "first_test",
+          "type": "choice",
+          "prompt": "Který první test nejlépe oddělí lokální konfiguraci od vyšších vrstev?",
+          "options": [
+            "Restartovat notebook",
+            "Ověřit IP/masku/bránu a ping na gateway",
+            "Změnit DNS na 8.8.8.8",
+            "Přeinstalovat prohlížeč"
+          ],
+          "expected": "Ověřit IP/masku/bránu a ping na gateway",
+          "why": "Nejdřív potvrď nejnižší relevantní vrstvu; vyšší testy dávají smysl až potom."
+        },
+        {
+          "id": "triage_order",
+          "type": "sequence",
+          "prompt": "Seřaď evidence-first diagnostiku.",
+          "items": [
+            "Ověřit lokální IP/masku",
+            "Ověřit gateway",
+            "Ověřit konektivitu na IP",
+            "Ověřit DNS překlad",
+            "Ověřit konkrétní službu"
+          ],
+          "expected": [
+            "Ověřit lokální IP/masku",
+            "Ověřit gateway",
+            "Ověřit konektivitu na IP",
+            "Ověřit DNS překlad",
+            "Ověřit konkrétní službu"
+          ],
+          "why": "Postup od lokální konfigurace k aplikaci minimalizuje náhodné zásahy."
+        },
+        {
+          "id": "evidence_pack",
+          "type": "multi",
+          "prompt": "Které čtyři evidence dohromady nejlépe popíšou cestu problému?",
+          "options": [
+            "ip addr / ipconfig",
+            "ping gateway",
+            "nslookup/dig jména",
+            "curl/HTTPS test",
+            "změna wallpaperu",
+            "restart bez měření"
+          ],
+          "expected": [
+            "ip addr / ipconfig",
+            "ping gateway",
+            "nslookup/dig jména",
+            "curl/HTTPS test"
+          ],
+          "why": "Každý test odpovídá jiné vrstvě: konfigurace, cesta, jméno a aplikace."
+        }
+      ],
+      "faults": [
+        {
+          "title": "APIPA místo DHCP",
+          "symptom": "Klient má 169.254.21.8 a nedosáhne na gateway.",
+          "hint": "Začni u toho, jak klient IP získal.",
+          "root_cause": "Klient nedostal DHCP lease.",
+          "evidence": "IP je link-local 169.254/16 a v DHCP logu není ACK.",
+          "minimal_fix": "Obnovit DHCP dostupnost/lease; neřešit DNS jako první."
+        },
+        {
+          "title": "DNS výpadek",
+          "symptom": "Ping na 1.1.1.1 funguje, portal.example.cz ne.",
+          "hint": "Odděl jméno od IP konektivity.",
+          "root_cause": "Nedostupný nebo chybně nastavený DNS resolver.",
+          "evidence": "Dotaz na resolver timeoutuje, přímý test na IP cíle funguje.",
+          "minimal_fix": "Opravit resolver/konfiguraci DNS a znovu ověřit překlad."
+        },
+        {
+          "title": "HTTPS služba",
+          "symptom": "DNS i ping cíle fungují, port 443 timeoutuje.",
+          "hint": "Síťová dosažitelnost není totéž co služba.",
+          "root_cause": "Služba neposlouchá nebo cestu blokuje firewall.",
+          "evidence": "DNS vrací správnou IP, TCP/443 se nenaváže.",
+          "minimal_fix": "Ověřit listener a firewall; změnit pouze potvrzenou příčinu."
+        }
+      ],
+      "transfer": "Nový počítač otevře web na IP, ale ne přes doménu. Napiš tři evidence, které tě dovedou k DNS bez hádání.",
+      "success_criteria": [
+        "Oddělíš konfiguraci, konektivitu, DNS a aplikaci.",
+        "Každý zásah má předchozí evidenci.",
+        "Dokážeš popsat, co pozitivní test dokazuje a co nedokazuje."
+      ],
+      "mode_notes": {
+        "guided": "Vidíš popisky všech vrstev a můžeš otevřít hint u každého checkpointu.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Popisky vrstev zůstanou stručné a fault bank zobrazí jen symptom. Musíš sám navrhnout nejmenší rozlišovací test."
+      },
+      "teacher": {
+        "cold_call": "Co přesně dokazuje funkční ping na gateway – a co stále nevíme?",
+        "discussion": "Nech dvě skupiny navrhnout rozdílné první testy a porovnej informační hodnotu.",
+        "extension": "Přidej stav, kdy ICMP blokuje firewall, ale HTTPS funguje. Jak se změní interpretace ping testu?"
+      }
+    },
+    "2": {
+      "title": "Small Office Network Builder",
+      "archetype": "topology_builder",
+      "mission": "Navrhni malou kancelářskou síť se třemi zónami tak, aby hosté neviděli administraci, zaměstnanci používali interní web a všichni měli přístup ven přes NAT.",
+      "scene": {
+        "layout": "zones",
+        "caption": "VLAN 10 Staff · VLAN 20 Admin · VLAN 30 Guest · L3 gateway · NAT",
+        "nodes": [
+          {
+            "id": "staff",
+            "label": "Staff VLAN 10",
+            "meta": "192.168.10.0/24",
+            "group": "users"
+          },
+          {
+            "id": "admin",
+            "label": "Admin VLAN 20",
+            "meta": "192.168.20.0/24",
+            "group": "admin"
+          },
+          {
+            "id": "guest",
+            "label": "Guest VLAN 30",
+            "meta": "192.168.30.0/24",
+            "group": "guest"
+          },
+          {
+            "id": "l3",
+            "label": "L3 switch/router",
+            "meta": "SVI 10/20/30",
+            "group": "core"
+          },
+          {
+            "id": "web",
+            "label": "Intranet",
+            "meta": "192.168.20.50:443",
+            "group": "admin"
+          },
+          {
+            "id": "wan",
+            "label": "Internet",
+            "meta": "WAN/NAT",
+            "group": "outside"
+          }
+        ],
+        "edges": [
+          {
+            "from": "staff",
+            "to": "l3",
+            "label": "default GW"
+          },
+          {
+            "from": "admin",
+            "to": "l3",
+            "label": "default GW"
+          },
+          {
+            "from": "guest",
+            "to": "l3",
+            "label": "default GW"
+          },
+          {
+            "from": "l3",
+            "to": "web",
+            "label": "inter-VLAN"
+          },
+          {
+            "from": "l3",
+            "to": "wan",
+            "label": "NAT"
+          }
+        ],
+        "artifact": "Požadavky:\n- Staff → intranet 443\n- Admin → intranet 22,443\n- Guest → internet pouze\n- Guest ↛ Admin/Staff"
+      },
+      "tasks": [
+        {
+          "id": "packet_path",
+          "type": "sequence",
+          "prompt": "Seřaď cestu paketu Staff klienta na intranet v jiné VLAN.",
+          "items": [
+            "Staff klient",
+            "Access VLAN 10",
+            "L3 gateway",
+            "VLAN 20",
+            "Intranet server"
+          ],
+          "expected": [
+            "Staff klient",
+            "Access VLAN 10",
+            "L3 gateway",
+            "VLAN 20",
+            "Intranet server"
+          ],
+          "why": "Mezi VLAN musí provoz projít L3 zařízením."
+        },
+        {
+          "id": "service_matrix",
+          "type": "matrix",
+          "prompt": "Zaškrtni pouze komunikace, které odpovídají zadání.",
+          "rows": [
+            "Staff",
+            "Admin",
+            "Guest"
+          ],
+          "columns": [
+            "Intranet:443",
+            "Intranet:22",
+            "Internet"
+          ],
+          "expected": [
+            "Staff|Intranet:443",
+            "Staff|Internet",
+            "Admin|Intranet:443",
+            "Admin|Intranet:22",
+            "Admin|Internet",
+            "Guest|Internet"
+          ],
+          "why": "Service matrix je přehled minimálně potřebných toků, ze kterého lze odvodit firewall."
+        },
+        {
+          "id": "nat_evidence",
+          "type": "choice",
+          "prompt": "Která evidence nejlépe potvrzuje, že NAT je funkční?",
+          "options": [
+            "Guest zná MAC adresu switch portu",
+            "Interní klient odešle spojení ven a na WAN je vidět přeložená zdrojová adresa",
+            "DNS server odpoví na AAAA",
+            "SSH na intranet funguje"
+          ],
+          "expected": "Interní klient odešle spojení ven a na WAN je vidět přeložená zdrojová adresa",
+          "why": "NAT potvrzuje změna adres na hranici, ne pouhá lokální konektivita."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Chybí inter-VLAN route",
+          "symptom": "Staff pingne gateway, ale intranet ve VLAN 20 ne.",
+          "hint": "Sleduj první L3 hop.",
+          "root_cause": "Gateway nemá funkční route/SVI do cílové VLAN.",
+          "evidence": "ARP na gateway funguje, ale route k VLAN 20 chybí/neaktivní.",
+          "minimal_fix": "Opravit L3 konfiguraci mezi zónami."
+        },
+        {
+          "title": "Příliš široké guest ACL",
+          "symptom": "Guest se dostane na admin SSH.",
+          "hint": "Kontroluj service matrix, ne jen internet.",
+          "root_cause": "Firewall dovoluje Guest → Admin.",
+          "evidence": "Negative test na TCP/22 z Guest uspěje, i když nemá.",
+          "minimal_fix": "Zúžit pravidlo na Guest → WAN a explicitně blokovat interní zóny."
+        },
+        {
+          "title": "NAT jen pro část subnetů",
+          "symptom": "Staff jde ven, Guest ne.",
+          "hint": "Porovnej zdrojové subnety v NAT policy.",
+          "root_cause": "Guest subnet není zahrnutý v NAT pravidle.",
+          "evidence": "Route k WAN existuje, ale na výstupu chybí překlad pro 192.168.30.0/24.",
+          "minimal_fix": "Doplnit Guest subnet do NAT policy."
+        }
+      ],
+      "transfer": "Do sítě přibude IoT VLAN. Navrhni minimální tři povolené toky a jeden explicitní zákaz.",
+      "success_criteria": [
+        "Umíš vysvětlit hranici L2/L3.",
+        "Service matrix odpovídá business požadavku.",
+        "Pozitivní i negativní test ověřují segmentaci."
+      ],
+      "mode_notes": {
+        "guided": "Zóny jsou popsané a service matrix má nápovědu, jak číst řádky/sloupce.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Uvidíš jen názvy zón a požadavky; musíš sám odvodit L3 cestu i minimální policy."
+      },
+      "teacher": {
+        "cold_call": "Proč nestačí říct „VLAN izoluje síť“, pokud existuje inter-VLAN routing?",
+        "discussion": "Nech studenty obhájit jeden povolený a jeden zakázaný tok.",
+        "extension": "Přidej tiskárnu dostupnou Staff i Guest, ale spravovat ji smí jen Admin."
+      }
+    },
+    "3": {
+      "title": "DNS + DHCP Service Console",
+      "archetype": "service_board",
+      "mission": "Propoj klienta, DHCP a DNS jako skutečné služby: porty, stav, logy a validace. Diagnostikuj situaci, kdy IP konfigurace funguje, ale jméno ne.",
+      "scene": {
+        "layout": "flow",
+        "caption": "DHCP lease → síťová konfigurace → DNS query → aplikační test",
+        "nodes": [
+          {
+            "id": "client",
+            "label": "Klient",
+            "meta": "MAC AA:BB:CC:01"
+          },
+          {
+            "id": "dhcp",
+            "label": "DHCP server",
+            "meta": "UDP 67/68"
+          },
+          {
+            "id": "dns",
+            "label": "DNS server",
+            "meta": "UDP/TCP 53"
+          },
+          {
+            "id": "app",
+            "label": "app.office.test",
+            "meta": "10.20.0.50:443"
+          }
+        ],
+        "edges": [
+          {
+            "from": "client",
+            "to": "dhcp",
+            "label": "DORA"
+          },
+          {
+            "from": "client",
+            "to": "dns",
+            "label": "A/AAAA dotaz"
+          },
+          {
+            "from": "client",
+            "to": "app",
+            "label": "TCP/TLS po překladu"
+          }
+        ],
+        "artifact": "DHCP pool: 10.20.0.100–199/24\nGW: 10.20.0.1\nDNS: 10.20.0.53\nA app.office.test → 10.20.0.50"
+      },
+      "tasks": [
+        {
+          "id": "dora",
+          "type": "sequence",
+          "prompt": "Seřaď základní DHCP DORA výměnu.",
+          "items": [
+            "Discover",
+            "Offer",
+            "Request",
+            "Ack"
+          ],
+          "expected": [
+            "Discover",
+            "Offer",
+            "Request",
+            "Ack"
+          ],
+          "why": "Klient hledá nabídku, vybere ji a server lease potvrzuje."
+        },
+        {
+          "id": "ports",
+          "type": "pair",
+          "prompt": "Přiřaď službu k typickému portu/transportu.",
+          "left": [
+            "DHCP server",
+            "DHCP klient",
+            "DNS"
+          ],
+          "right": [
+            "UDP 67",
+            "UDP 68",
+            "UDP/TCP 53"
+          ],
+          "expected": {
+            "DHCP server": "UDP 67",
+            "DHCP klient": "UDP 68",
+            "DNS": "UDP/TCP 53"
+          },
+          "why": "Porty pomáhají odlišit, která služba skutečně neodpovídá."
+        },
+        {
+          "id": "lease_yes_name_no",
+          "type": "choice",
+          "prompt": "Klient má správný lease, ping na 10.20.0.50 funguje, jméno app.office.test ne. Co ověřit nejdřív?",
+          "options": [
+            "DHCP Discover",
+            "DNS dotaz na 10.20.0.53",
+            "Výměnu monitoru",
+            "NAT na WAN"
+          ],
+          "expected": "DNS dotaz na 10.20.0.53",
+          "why": "IP konfigurace i konektivita na cílovou IP jsou důkazem, že problém je výš – u jména."
+        }
+      ],
+      "faults": [
+        {
+          "title": "DHCP služba neběží",
+          "symptom": "Nový klient nedostane lease, staré klienty ještě fungují.",
+          "hint": "Starý lease může maskovat výpadek.",
+          "root_cause": "DHCP daemon je zastavený.",
+          "evidence": "Nový Discover bez Offer; server status inactive.",
+          "minimal_fix": "Spustit službu a ověřit nový DORA cyklus."
+        },
+        {
+          "title": "Chybný A záznam",
+          "symptom": "Jméno se přeloží na starou IP.",
+          "hint": "Porovnej DNS odpověď s reálnou adresou služby.",
+          "root_cause": "A záznam ukazuje na 10.20.0.40 místo .50.",
+          "evidence": "dig vrací .40, lokální listener je na .50.",
+          "minimal_fix": "Opravit záznam a respektovat TTL/cache."
+        },
+        {
+          "title": "Port 53 blokovaný",
+          "symptom": "Lease je správný, resolver je správně nastaven, DNS timeout.",
+          "hint": "Ověř dostupnost samotné DNS služby.",
+          "root_cause": "Firewall blokuje klient → DNS/53.",
+          "evidence": "Server naslouchá, ale klientský dotaz nedorazí/timeoutuje.",
+          "minimal_fix": "Povolit minimální DNS tok mezi klienty a resolverem."
+        }
+      ],
+      "transfer": "DNS server přestěhuješ na jinou IP. Popiš, které DHCP option a které testy musíš změnit, aby klienti nezačali selhávat.",
+      "success_criteria": [
+        "Rozlišíš DHCP a DNS podle portů a evidence.",
+        "Umíš přečíst lease i DNS odpověď.",
+        "Validace probíhá z pohledu klienta."
+      ],
+      "mode_notes": {
+        "guided": "U každé služby vidíš port a typickou evidenci.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Porty nejsou zvýrazněné; musíš je odvodit a potvrdit pomocí checkpointu."
+      },
+      "teacher": {
+        "cold_call": "Jak může DHCP fungovat, i když DNS nefunguje?",
+        "discussion": "Porovnej symptom „nemám IP“ a „mám IP, ale ne jméno“.",
+        "extension": "Přidej sekundární DNS resolver a diskutuj, co klient udělá při pomalé primární odpovědi."
+      }
+    },
+    "4": {
+      "title": "Monitoring & Hardening Operations Board",
+      "archetype": "monitoring_board",
+      "mission": "Rozliš dostupnost hostu, zdraví služby a bezpečnostní minimum. Cílem je navrhnout malé množství signálů, které vedou k akci, ne dashboard plný šumu.",
+      "scene": {
+        "layout": "board",
+        "caption": "Host alive · service listening · HTTP health · logs · firewall · account",
+        "nodes": [
+          {
+            "id": "icmp",
+            "label": "Host reachability",
+            "meta": "ICMP"
+          },
+          {
+            "id": "tcp",
+            "label": "Listener",
+            "meta": "TCP 443"
+          },
+          {
+            "id": "health",
+            "label": "Health endpoint",
+            "meta": "HTTP 200 + dependency"
+          },
+          {
+            "id": "logs",
+            "label": "Service logs",
+            "meta": "error rate"
+          },
+          {
+            "id": "fw",
+            "label": "Firewall",
+            "meta": "least privilege"
+          },
+          {
+            "id": "ssh",
+            "label": "Admin access",
+            "meta": "key-only"
+          }
+        ],
+        "edges": [
+          {
+            "from": "icmp",
+            "to": "tcp",
+            "label": "host ≠ service"
+          },
+          {
+            "from": "tcp",
+            "to": "health",
+            "label": "listener ≠ health"
+          },
+          {
+            "from": "health",
+            "to": "logs",
+            "label": "symptom → cause"
+          },
+          {
+            "from": "fw",
+            "to": "tcp",
+            "label": "allowed path"
+          },
+          {
+            "from": "ssh",
+            "to": "logs",
+            "label": "admin evidence"
+          }
+        ],
+        "artifact": "Cíl: alarmovat jen tehdy, když je problém pro uživatele nebo je porušen bezpečnostní baseline."
+      },
+      "tasks": [
+        {
+          "id": "signals",
+          "type": "multi",
+          "prompt": "Vyber signály, které dohromady dávají smysluplný pohled na webovou službu.",
+          "options": [
+            "TCP/443 dostupnost",
+            "HTTP health endpoint",
+            "error rate v logu",
+            "barva serveru",
+            "počet souborů v /tmp",
+            "volné místo na disku"
+          ],
+          "expected": [
+            "TCP/443 dostupnost",
+            "HTTP health endpoint",
+            "error rate v logu",
+            "volné místo na disku"
+          ],
+          "why": "Kombinuj dostupnost, funkční health a zdrojové signály; dekorativní metriky nepomáhají."
+        },
+        {
+          "id": "hardening_matrix",
+          "type": "matrix",
+          "prompt": "Povol jen minimální přístupy.",
+          "rows": [
+            "Internet",
+            "Admin VLAN",
+            "Monitoring"
+          ],
+          "columns": [
+            "HTTPS 443",
+            "SSH 22",
+            "Health 8443"
+          ],
+          "expected": [
+            "Internet|HTTPS 443",
+            "Admin VLAN|HTTPS 443",
+            "Admin VLAN|SSH 22",
+            "Monitoring|Health 8443"
+          ],
+          "why": "Least privilege znamená povolit jen zdroje a služby, které mají důvod komunikovat."
+        },
+        {
+          "id": "ping_not_health",
+          "type": "choice",
+          "prompt": "Ping funguje, ale health endpoint vrací 500. Jaký závěr je správný?",
+          "options": [
+            "Služba je zdravá, protože ping funguje",
+            "Host je dosažitelný, ale aplikace nebo její dependency má problém",
+            "DNS určitě nefunguje",
+            "Firewall určitě blokuje ICMP"
+          ],
+          "expected": "Host je dosažitelný, ale aplikace nebo její dependency má problém",
+          "why": "Reachability hostu je jiná vrstva než zdraví aplikace."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Proces běží, dependency ne",
+          "symptom": "TCP/443 odpovídá, health vrací 500.",
+          "hint": "Health má odhalit víc než otevřený socket.",
+          "root_cause": "Aplikace běží, ale databáze/dependency selhává.",
+          "evidence": "Listener je UP, log ukazuje DB connection failed.",
+          "minimal_fix": "Opravit potvrzenou dependency a znovu health test."
+        },
+        {
+          "title": "Alarm storm",
+          "symptom": "Monitoring posílá stovky alertů při jednom výpadku.",
+          "hint": "Hledej duplikované symptomy stejné příčiny.",
+          "root_cause": "Chybí deduplikace/dependency mezi checks.",
+          "evidence": "ICMP, TCP, HTTP a dependency checks alarmují stejnou událost bez korelace.",
+          "minimal_fix": "Nastavit dependency/suppression a jasné severity."
+        },
+        {
+          "title": "SSH z internetu",
+          "symptom": "Port 22 je dostupný všem, i když admini chodí přes VPN.",
+          "hint": "Porovnej skutečnou potřebu se současným povolením.",
+          "root_cause": "Příliš široké firewall pravidlo.",
+          "evidence": "External test na TCP/22 uspěje mimo admin/VPN segment.",
+          "minimal_fix": "Omezit SSH zdroj na admin/VPN a zachovat klíčovou autentizaci."
+        }
+      ],
+      "transfer": "Navrhni monitoring interní API služby, která nemá být dostupná z internetu. Jak změříš zdraví, aniž bys otevřel veřejný port?",
+      "success_criteria": [
+        "Rozlišíš reachability, listener a health.",
+        "Monitoring signal má vazbu na akci.",
+        "Hardening odpovídá service matrix."
+      ],
+      "mode_notes": {
+        "guided": "Vidíš vysvětlení, proč každý signál existuje.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Musíš navrhnout minimální signály a policy bez nápovědy z popisků."
+      },
+      "teacher": {
+        "cold_call": "Kdy je otevřený port 443 nedostatečný důkaz zdraví?",
+        "discussion": "Kolik monitorů je ještě užitečných a kdy už vzniká šum?",
+        "extension": "Navrhni warning vs critical threshold pro latenci bez falešných alertů."
+      }
+    },
+    "5": {
+      "title": "IPv6 & DNS Record Lab",
+      "archetype": "address_record_lab",
+      "mission": "Pracuj současně s adresací a jmennou službou. Cílem je rozlišit prefix/host část a správně zvolit A, AAAA a CNAME v dual-stack scénáři.",
+      "scene": {
+        "layout": "flow",
+        "caption": "DNS jméno → A/AAAA/CNAME → IPv4/IPv6 endpoint",
+        "nodes": [
+          {
+            "id": "name",
+            "label": "portal.example.cz",
+            "meta": "DNS name"
+          },
+          {
+            "id": "a",
+            "label": "A",
+            "meta": "203.0.113.20"
+          },
+          {
+            "id": "aaaa",
+            "label": "AAAA",
+            "meta": "2001:db8:20::20"
+          },
+          {
+            "id": "alias",
+            "label": "CNAME",
+            "meta": "www → portal"
+          },
+          {
+            "id": "lan6",
+            "label": "LAN /64",
+            "meta": "2001:db8:10:20::/64"
+          }
+        ],
+        "edges": [
+          {
+            "from": "name",
+            "to": "a",
+            "label": "IPv4"
+          },
+          {
+            "from": "name",
+            "to": "aaaa",
+            "label": "IPv6"
+          },
+          {
+            "from": "alias",
+            "to": "name",
+            "label": "alias"
+          },
+          {
+            "from": "lan6",
+            "to": "aaaa",
+            "label": "routing beyond local /64"
+          }
+        ],
+        "artifact": "LAN prefix: 2001:db8:10:20::/64\nServer: 2001:db8:10:20::50\nDNS: portal.example.cz has A + AAAA"
+      },
+      "tasks": [
+        {
+          "id": "same64",
+          "type": "choice",
+          "prompt": "Která adresa je ve stejném /64 jako 2001:db8:10:20::50?",
+          "options": [
+            "2001:db8:10:20::abcd",
+            "2001:db8:10:21::1",
+            "2001:db8:11:20::50",
+            "2001:db8:10::20:50"
+          ],
+          "expected": "2001:db8:10:20::abcd",
+          "why": "U /64 rozhoduje prvních 64 bitů; první čtyři hextety jsou síťový prefix."
+        },
+        {
+          "id": "records",
+          "type": "pair",
+          "prompt": "Přiřaď typ DNS záznamu k významu.",
+          "left": [
+            "A",
+            "AAAA",
+            "CNAME"
+          ],
+          "right": [
+            "IPv4 adresa",
+            "IPv6 adresa",
+            "Alias na jiné jméno"
+          ],
+          "expected": {
+            "A": "IPv4 adresa",
+            "AAAA": "IPv6 adresa",
+            "CNAME": "Alias na jiné jméno"
+          },
+          "why": "Typ záznamu říká, jaký druh dat resolver vrátí."
+        },
+        {
+          "id": "dualstack_evidence",
+          "type": "multi",
+          "prompt": "Co ověřit při incidentu „IPv4 funguje, IPv6 ne“?",
+          "options": [
+            "AAAA odpověď",
+            "IPv6 route/default gateway",
+            "firewall pro IPv6",
+            "A záznam",
+            "název počítače"
+          ],
+          "expected": [
+            "AAAA odpověď",
+            "IPv6 route/default gateway",
+            "firewall pro IPv6"
+          ],
+          "why": "Dual-stack vyžaduje samostatně ověřit jméno, cestu i policy pro IPv6."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Chybný AAAA",
+          "symptom": "IPv4 klient funguje, IPv6-capable klient čeká a selže.",
+          "hint": "Porovnej A a AAAA s reálným endpointem.",
+          "root_cause": "AAAA ukazuje na starou IPv6 adresu.",
+          "evidence": "dig AAAA vrací jinou adresu než server poslouchá.",
+          "minimal_fix": "Opravit AAAA a počítat s TTL."
+        },
+        {
+          "title": "Chybí IPv6 firewall rule",
+          "symptom": "Server poslouchá na ::443, lokálně funguje, vzdáleně ne.",
+          "hint": "Otevřený IPv4 port neříká nic o IPv6 policy.",
+          "root_cause": "IPv6 firewall blokuje příchozí 443.",
+          "evidence": "ss ukazuje listener, packet counter na IPv6 rule roste v drop.",
+          "minimal_fix": "Povolit 443 v odpovídajícím IPv6 rulesetu."
+        },
+        {
+          "title": "CNAME smyčka",
+          "symptom": "www alias se nepřeloží.",
+          "hint": "Sleduj řetězec jmen, ne IP.",
+          "root_cause": "CNAME odkazuje do smyčky.",
+          "evidence": "dig ukáže opakující se alias chain bez finální A/AAAA.",
+          "minimal_fix": "Opravit alias na kanonické jméno s adresním záznamem."
+        }
+      ],
+      "transfer": "Do firmy přibude služba api.example.cz pouze na IPv6. Jaké DNS a síťové evidence musí být zelené před nasazením?",
+      "success_criteria": [
+        "Rozumíš významu /64.",
+        "Rozlišíš A/AAAA/CNAME.",
+        "Dual-stack incident diagnostikuješ odděleně pro obě rodiny."
+      ],
+      "mode_notes": {
+        "guided": "Prefixy a DNS typy mají popisky.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Zůstane jen surová adresa a DNS odpovědi bez interpretace."
+      },
+      "teacher": {
+        "cold_call": "Proč funkční A záznam není důkazem, že dual-stack funguje?",
+        "discussion": "Kdy je CNAME užitečný a kdy komplikuje troubleshooting?",
+        "extension": "Přidej Happy Eyeballs scénář a diskutuj, proč uživatel může incident vnímat jen jako zpomalení."
+      }
+    },
+    "6": {
+      "title": "Monitoring + DHCP Reservations",
+      "archetype": "reservation_monitor_lab",
+      "mission": "Stabilizuj adresy známých zařízení a současně navrhni monitoring, který kontroluje službu, ne jen existenci hostu.",
+      "scene": {
+        "layout": "board",
+        "caption": "MAC identity → reservation → lease → service monitor",
+        "nodes": [
+          {
+            "id": "printer",
+            "label": "Tiskárna",
+            "meta": "MAC …:11"
+          },
+          {
+            "id": "camera",
+            "label": "Kamera",
+            "meta": "MAC …:22"
+          },
+          {
+            "id": "nas",
+            "label": "NAS",
+            "meta": "MAC …:33"
+          },
+          {
+            "id": "dhcp",
+            "label": "DHCP",
+            "meta": "reservations"
+          },
+          {
+            "id": "monitor",
+            "label": "Monitoring",
+            "meta": "service checks"
+          }
+        ],
+        "edges": [
+          {
+            "from": "printer",
+            "to": "dhcp",
+            "label": "reservation"
+          },
+          {
+            "from": "camera",
+            "to": "dhcp",
+            "label": "reservation"
+          },
+          {
+            "from": "nas",
+            "to": "dhcp",
+            "label": "reservation"
+          },
+          {
+            "from": "monitor",
+            "to": "nas",
+            "label": "HTTPS/SMB health"
+          }
+        ],
+        "artifact": "Rezervace mají odstranit náhodné změny IP, nikoli nahradit monitoring služby."
+      },
+      "tasks": [
+        {
+          "id": "reservations",
+          "type": "pair",
+          "prompt": "Přiřaď zařízení ke schválené rezervaci.",
+          "left": [
+            "Tiskárna",
+            "Kamera",
+            "NAS"
+          ],
+          "right": [
+            "192.168.50.21",
+            "192.168.50.22",
+            "192.168.50.30"
+          ],
+          "expected": {
+            "Tiskárna": "192.168.50.21",
+            "Kamera": "192.168.50.22",
+            "NAS": "192.168.50.30"
+          },
+          "why": "Rezervace váže identitu zařízení na stabilní adresu."
+        },
+        {
+          "id": "service_monitor",
+          "type": "choice",
+          "prompt": "Co je lepší check pro NAS web admin než samotný ping?",
+          "options": [
+            "HTTP(S) request na health/admin endpoint s očekávaným status kódem",
+            "Počet ikon na ploše",
+            "Restart služby každých 5 minut",
+            "Náhodný DNS dotaz na jinou doménu"
+          ],
+          "expected": "HTTP(S) request na health/admin endpoint s očekávaným status kódem",
+          "why": "Ping měří jen část cesty; service check ověřuje skutečný endpoint."
+        },
+        {
+          "id": "reservation_change",
+          "type": "sequence",
+          "prompt": "Seřaď bezpečnou změnu rezervace známého zařízení.",
+          "items": [
+            "Zkontrolovat MAC a stávající lease",
+            "Přidat/změnit reservation",
+            "Obnovit lease kontrolovaně",
+            "Ověřit novou IP",
+            "Ověřit službu na nové IP"
+          ],
+          "expected": [
+            "Zkontrolovat MAC a stávající lease",
+            "Přidat/změnit reservation",
+            "Obnovit lease kontrolovaně",
+            "Ověřit novou IP",
+            "Ověřit službu na nové IP"
+          ],
+          "why": "Nejdřív identita, potom změna a nakonec end-to-end validace."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Duplicitní rezervace",
+          "symptom": "Dvě zařízení občas ztratí síť.",
+          "hint": "Hledej kolizi v address planu.",
+          "root_cause": "Stejná IP je rezervovaná pro dvě MAC.",
+          "evidence": "DHCP config obsahuje dvě reservations na .30; ARP se střídá.",
+          "minimal_fix": "Přidělit unikátní adresy a obnovit lease."
+        },
+        {
+          "title": "Monitor míří na starou IP",
+          "symptom": "NAS funguje, monitoring hlásí down po změně reservation.",
+          "hint": "Porovnej monitor target s DHCP lease.",
+          "root_cause": "Monitoring má hardcoded starou IP.",
+          "evidence": "Lease je .30, monitor stále testuje .29.",
+          "minimal_fix": "Aktualizovat target nebo monitorovat stabilní DNS jméno."
+        },
+        {
+          "title": "Ping UP, SMB DOWN",
+          "symptom": "NAS odpovídá na ICMP, sdílení nefunguje.",
+          "hint": "Testuj službu, ne host.",
+          "root_cause": "SMB služba je zastavená nebo port blokovaný.",
+          "evidence": "ICMP odpověď OK, TCP/445 fail.",
+          "minimal_fix": "Ověřit listener/firewall a opravit potvrzenou vrstvu."
+        }
+      ],
+      "transfer": "Navrhni rezervaci a monitoring pro nový access point. Co bude identita, stabilní endpoint a service check?",
+      "success_criteria": [
+        "Rezervace nevytváří zdraví služby.",
+        "Address plan je bez kolizí.",
+        "Monitoring používá endpoint relevantní uživateli."
+      ],
+      "mode_notes": {
+        "guided": "Vidíš MAC, rezervace a doporučený typ monitoru.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Musíš odvodit, které informace jsou identita, adresa a skutečný health signál."
+      },
+      "teacher": {
+        "cold_call": "Proč statická IP ručně na zařízení není vždy totéž jako DHCP reservation?",
+        "discussion": "Je lepší monitorovat zařízení podle IP nebo DNS jména? Kdy?",
+        "extension": "Navrhni reservation pool tak, aby se nekřížil s dynamickým poolem."
+      }
+    },
+    "7": {
+      "title": "Packet Journey & Wireshark Mindset",
+      "archetype": "packet_forensics",
+      "mission": "Čti packet-level evidence jako příběh. Nehledej „divný paket“, ale otázku: kde přesně se očekávaná výměna přerušila?",
+      "scene": {
+        "layout": "timeline",
+        "caption": "DNS → TCP → TLS/HTTP",
+        "nodes": [
+          {
+            "id": "dnsq",
+            "label": "DNS query",
+            "meta": "A portal.example.cz"
+          },
+          {
+            "id": "dnsr",
+            "label": "DNS response",
+            "meta": "203.0.113.20"
+          },
+          {
+            "id": "syn",
+            "label": "SYN",
+            "meta": "client → server:443"
+          },
+          {
+            "id": "synack",
+            "label": "SYN-ACK",
+            "meta": "server → client"
+          },
+          {
+            "id": "tls",
+            "label": "TLS",
+            "meta": "ClientHello/ServerHello"
+          },
+          {
+            "id": "http",
+            "label": "HTTP",
+            "meta": "GET /"
+          }
+        ],
+        "edges": [
+          {
+            "from": "dnsq",
+            "to": "dnsr"
+          },
+          {
+            "from": "dnsr",
+            "to": "syn"
+          },
+          {
+            "from": "syn",
+            "to": "synack"
+          },
+          {
+            "from": "synack",
+            "to": "tls"
+          },
+          {
+            "from": "tls",
+            "to": "http"
+          }
+        ],
+        "artifact": "Capture A: DNS query + response, SYN, SYN-ACK, ACK, TLS\nCapture B: DNS query bez odpovědi\nCapture C: SYN → RST"
+      },
+      "tasks": [
+        {
+          "id": "normal_flow",
+          "type": "sequence",
+          "prompt": "Seřaď očekávanou cestu pro první HTTPS požadavek.",
+          "items": [
+            "DNS query",
+            "DNS response",
+            "TCP SYN",
+            "TCP SYN-ACK",
+            "TLS handshake",
+            "HTTP request"
+          ],
+          "expected": [
+            "DNS query",
+            "DNS response",
+            "TCP SYN",
+            "TCP SYN-ACK",
+            "TLS handshake",
+            "HTTP request"
+          ],
+          "why": "Packet trace je časová posloupnost vrstev; chybějící krok pomáhá zúžit závadu."
+        },
+        {
+          "id": "rst",
+          "type": "choice",
+          "prompt": "Co nejlépe znamená SYN následovaný okamžitým RST z cíle?",
+          "options": [
+            "Cíl je dosažitelný, ale na portu typicky nic neposlouchá nebo spojení aktivně odmítá",
+            "DNS určitě nefunguje",
+            "Kabel je odpojený",
+            "DHCP lease vypršel"
+          ],
+          "expected": "Cíl je dosažitelný, ale na portu typicky nic neposlouchá nebo spojení aktivně odmítá",
+          "why": "RST je silná evidence transportní vrstvy – dostal ses až k cíli."
+        },
+        {
+          "id": "display_filter",
+          "type": "command",
+          "prompt": "Napiš jeden rozumný Wireshark display filter pro DNS nebo TCP port 443.",
+          "accepted": [
+            "dns",
+            "tcp.port == 443",
+            "tcp.port==443",
+            "udp.port == 53",
+            "udp.port==53"
+          ],
+          "why": "Filtr má zmenšit šum podle otázky, kterou právě řešíš.",
+          "placeholder": "např. tcp.port == 443"
+        }
+      ],
+      "faults": [
+        {
+          "title": "DNS query bez response",
+          "symptom": "Capture končí DNS query.",
+          "hint": "Ptej se, která odpověď chybí.",
+          "root_cause": "Resolver neodpovídá nebo odpověď nedorazí.",
+          "evidence": "Je vidět query na 53, žádný response.",
+          "minimal_fix": "Ověřit resolver, cestu a firewall pro DNS."
+        },
+        {
+          "title": "SYN retransmissions",
+          "symptom": "DNS je OK, SYN se opakuje bez odpovědi.",
+          "hint": "Rozliš timeout od RST.",
+          "root_cause": "Paket je cestou filtrován nebo server nedostupný.",
+          "evidence": "Opakované SYN, žádný SYN-ACK/RST.",
+          "minimal_fix": "Ověřit route/firewall/listener z obou stran."
+        },
+        {
+          "title": "TLS alert",
+          "symptom": "TCP handshake je hotový, potom TLS alert.",
+          "hint": "Síťová cesta funguje; incident je výš.",
+          "root_cause": "TLS konfigurace/certifikát/protokol se neshodne.",
+          "evidence": "SYN/SYN-ACK/ACK OK, TLS Alert po ClientHello.",
+          "minimal_fix": "Diagnostikovat TLS parametry/certifikát místo routingu."
+        }
+      ],
+      "transfer": "Uživatel hlásí pomalý web. Capture ukazuje rychlý DNS i TCP, ale 4 s mezi HTTP request a response. Kde hledáš dál a proč?",
+      "success_criteria": [
+        "Umíš číst chybějící odpověď.",
+        "Rozlišuješ RST, timeout a aplikační latenci.",
+        "Filtr používáš podle hypotézy."
+      ],
+      "mode_notes": {
+        "guided": "Timeline vysvětluje význam každé vrstvy.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Uvidíš jen packet labels a časy; musíš sám určit hranici problému."
+      },
+      "teacher": {
+        "cold_call": "Co je silnější evidence: „ping funguje“ nebo „vidím SYN-ACK na 443“ pro webový incident?",
+        "discussion": "Porovnej capture s RST a capture s timeoutem.",
+        "extension": "Přidej retransmission způsobené ztrátovostí a diskutuj, co by se změnilo v trace."
+      }
+    },
+    "8": {
+      "title": "VLSM & Trust Zones Planner",
+      "archetype": "vlsm_planner",
+      "mission": "Rozděl adresní prostor podle reálných potřeb a současně definuj minimální komunikaci mezi zónami. Adresace a bezpečnostní policy musí sedět dohromady.",
+      "scene": {
+        "layout": "zones",
+        "caption": "192.168.100.0/24 → Staff, Lab, IoT, Servers",
+        "nodes": [
+          {
+            "id": "staff",
+            "label": "Staff",
+            "meta": "50 hostů"
+          },
+          {
+            "id": "lab",
+            "label": "Lab",
+            "meta": "25 hostů"
+          },
+          {
+            "id": "iot",
+            "label": "IoT",
+            "meta": "12 hostů"
+          },
+          {
+            "id": "srv",
+            "label": "Servers",
+            "meta": "10 hostů"
+          },
+          {
+            "id": "gw",
+            "label": "Firewall/L3",
+            "meta": "zone policy"
+          }
+        ],
+        "edges": [
+          {
+            "from": "staff",
+            "to": "gw"
+          },
+          {
+            "from": "lab",
+            "to": "gw"
+          },
+          {
+            "from": "iot",
+            "to": "gw"
+          },
+          {
+            "from": "srv",
+            "to": "gw"
+          }
+        ],
+        "artifact": "Požadavky hostů: Staff 50 · Lab 25 · IoT 12 · Servers 10\nZákladní blok: 192.168.100.0/24"
+      },
+      "tasks": [
+        {
+          "id": "prefixes",
+          "type": "pair",
+          "prompt": "Přiřaď nejmenší rozumný prefix každé zóně.",
+          "left": [
+            "Staff 50",
+            "Lab 25",
+            "IoT 12",
+            "Servers 10"
+          ],
+          "right": [
+            "/26",
+            "/27",
+            "/28",
+            "/29"
+          ],
+          "expected": {
+            "Staff 50": "/26",
+            "Lab 25": "/27",
+            "IoT 12": "/28",
+            "Servers 10": "/28"
+          },
+          "why": "Potřebuješ dvě rezervované adresy a dostatek použitelných hostů; /28 dává 14 hostů."
+        },
+        {
+          "id": "allocation",
+          "type": "sequence",
+          "prompt": "Seřaď přidělení od největší zóny k nejmenší.",
+          "items": [
+            "Staff /26",
+            "Lab /27",
+            "IoT /28",
+            "Servers /28"
+          ],
+          "expected": [
+            "Staff /26",
+            "Lab /27",
+            "IoT /28",
+            "Servers /28"
+          ],
+          "why": "VLSM je přehlednější a méně fragmentovaný, když nejdřív umístíš největší bloky."
+        },
+        {
+          "id": "zone_policy",
+          "type": "matrix",
+          "prompt": "Povol minimální toky.",
+          "rows": [
+            "Staff",
+            "Lab",
+            "IoT"
+          ],
+          "columns": [
+            "Servers HTTPS",
+            "Servers SSH",
+            "Internet"
+          ],
+          "expected": [
+            "Staff|Servers HTTPS",
+            "Staff|Internet",
+            "Lab|Servers HTTPS",
+            "Lab|Internet",
+            "IoT|Internet"
+          ],
+          "why": "SSH do serverové zóny nemusí být dostupné z běžných uživatelských zón."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Overlap subnetů",
+          "symptom": "IoT a Servers občas komunikují nepředvídatelně.",
+          "hint": "Zkontroluj hranice bloků.",
+          "root_cause": "Dva VLSM subnety se překrývají.",
+          "evidence": "Výpočty network/broadcast mají společné adresy.",
+          "minimal_fix": "Přepočítat bloky na správných hranicích."
+        },
+        {
+          "title": "Příliš velký Staff subnet",
+          "symptom": "Adresní plán funguje, ale nezbývá místo pro další zónu.",
+          "hint": "Porovnej počet hostů s prefixem.",
+          "root_cause": "Staff dostal /25 bez potřeby.",
+          "evidence": "50 hostů potřebuje /26; /25 plýtvá polovinou /24.",
+          "minimal_fix": "Zmenšit Staff na /26 a přerozdělit zbývající prostor."
+        },
+        {
+          "title": "IoT může na SSH",
+          "symptom": "IoT zařízení dosáhne na servers:22.",
+          "hint": "Service policy musí odpovídat trust modelu.",
+          "root_cause": "Příliš široké allow pravidlo z IoT.",
+          "evidence": "Negative test na SSH z IoT uspěje.",
+          "minimal_fix": "Omezit IoT na nezbytné cíle/porty a internet."
+        }
+      ],
+      "transfer": "Do adresního plánu přibude Management zóna pro 6 zařízení. Najdi vhodný prefix a řekni, kam ji můžeš bezpečně vložit.",
+      "success_criteria": [
+        "VLSM prefix odpovídá kapacitě.",
+        "Subnety se nepřekrývají.",
+        "Zone policy odpovídá minimální potřebě."
+      ],
+      "mode_notes": {
+        "guided": "Vidíš připomínku použitelného počtu hostů pro běžné prefixy.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Žádná tabulka kapacit; musíš prefixy odvodit a obhájit."
+      },
+      "teacher": {
+        "cold_call": "Proč je /29 nedostatečné pro 10 zařízení?",
+        "discussion": "Má adresní plán ovlivňovat security zones, nebo naopak?",
+        "extension": "Navrhni sumarizaci, pokud dostaneš větší /22 blok a více podobných poboček."
+      }
+    },
+    "9": {
+      "title": "DNS/DHCP Timeline + Service Debug Chain",
+      "archetype": "cache_lease_chain",
+      "mission": "Pracuj s časem: cache a lease mohou způsobit, že dva klienti ve stejnou chvíli vidí jiný svět. Potom spoj DNS, TCP, TLS a HTTP do jedné diagnostické chain.",
+      "scene": {
+        "layout": "timeline",
+        "caption": "TTL/cache · DHCP T1/T2 · DNS → TCP → TLS → HTTP",
+        "nodes": [
+          {
+            "id": "ttl",
+            "label": "DNS cache",
+            "meta": "TTL 300 s"
+          },
+          {
+            "id": "lease",
+            "label": "DHCP lease",
+            "meta": "T1/T2"
+          },
+          {
+            "id": "dns",
+            "label": "DNS",
+            "meta": "name→IP"
+          },
+          {
+            "id": "tcp",
+            "label": "TCP",
+            "meta": "443"
+          },
+          {
+            "id": "tls",
+            "label": "TLS",
+            "meta": "cert/SNI"
+          },
+          {
+            "id": "http",
+            "label": "HTTP",
+            "meta": "status/content"
+          }
+        ],
+        "edges": [
+          {
+            "from": "ttl",
+            "to": "dns"
+          },
+          {
+            "from": "lease",
+            "to": "dns"
+          },
+          {
+            "from": "dns",
+            "to": "tcp"
+          },
+          {
+            "from": "tcp",
+            "to": "tls"
+          },
+          {
+            "from": "tls",
+            "to": "http"
+          }
+        ],
+        "artifact": "DNS změna v 10:00, TTL 300 s. Klient A dotaz v 09:59, klient B první dotaz v 10:01."
+      },
+      "tasks": [
+        {
+          "id": "cache_expiry",
+          "type": "number",
+          "prompt": "Kolik sekund maximálně může klient A ještě používat starý DNS záznam, pokud ho načetl jednu sekundu před změnou?",
+          "min": 0,
+          "max": 300,
+          "expected": 299,
+          "why": "Cache se neobnoví změnou autoritativního záznamu; klient může držet starou hodnotu do konce původního TTL.",
+          "suffix": "s"
+        },
+        {
+          "id": "service_chain",
+          "type": "sequence",
+          "prompt": "Seřaď evidence při „web nejde“, pokud IP konfigurace klienta je známá.",
+          "items": [
+            "DNS odpověď",
+            "TCP handshake 443",
+            "TLS handshake/certifikát",
+            "HTTP status/body"
+          ],
+          "expected": [
+            "DNS odpověď",
+            "TCP handshake 443",
+            "TLS handshake/certifikát",
+            "HTTP status/body"
+          ],
+          "why": "Každá další vrstva předpokládá, že předchozí funguje."
+        },
+        {
+          "id": "stale_cache",
+          "type": "choice",
+          "prompt": "Klient A stále vidí starý server, klient B nový. Co je první hypotéza?",
+          "options": [
+            "DNS cache/TTL",
+            "Rozbitý kabel jen u klienta A",
+            "DHCP vždy změnil gateway",
+            "SSH port"
+          ],
+          "expected": "DNS cache/TTL",
+          "why": "Rozdílný čas posledního DNS dotazu je typický signál cache."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Stale DNS",
+          "symptom": "Část klientů vidí starý server po změně A záznamu.",
+          "hint": "Ptej se, kdy každý klient záznam cacheoval.",
+          "root_cause": "TTL ještě nevypršel.",
+          "evidence": "dig + cache/history ukáže rozdílný zbývající TTL.",
+          "minimal_fix": "Vyčkat/řízeně flushnout v testu; příště plánovat TTL před migrací."
+        },
+        {
+          "title": "Lease renewal fail",
+          "symptom": "Klient funguje do poloviny dne a pak ztrácí síť.",
+          "hint": "Sleduj lease lifecycle, ne jen původní ACK.",
+          "root_cause": "DHCP renewal není dostupný.",
+          "evidence": "Starý lease existuje, T1 Request nedostane ACK.",
+          "minimal_fix": "Obnovit DHCP službu/cestu před expirací."
+        },
+        {
+          "title": "TLS mismatch po DNS změně",
+          "symptom": "DNS i TCP ukazují nový server, prohlížeč hlásí certifikát.",
+          "hint": "Síť je OK; ověř identitu služby.",
+          "root_cause": "Nový server nemá certifikát pro jméno/SNI.",
+          "evidence": "TLS handshake vrací certifikát jiného hostu.",
+          "minimal_fix": "Nasadit správný certifikát/config virtual hostu."
+        }
+      ],
+      "transfer": "Naplánuj migraci služby s TTL 3600 s tak, aby byl rollback předvídatelný. Co uděláš s TTL před změnou?",
+      "success_criteria": [
+        "Rozumíš časovému chování cache.",
+        "Lease lifecycle není jednorázový event.",
+        "Debug chain odliší DNS/TCP/TLS/HTTP."
+      ],
+      "mode_notes": {
+        "guided": "Timeline ukazuje, kdy cache/lease vzniká a kdy se obnovuje.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Dostaneš pouze timestamps a musíš odvodit, který klient má stale stav."
+      },
+      "teacher": {
+        "cold_call": "Proč dva klienti mohou mít současně správnou, ale rozdílnou DNS odpověď?",
+        "discussion": "Kdy je flush cache užitečný diagnostický test a kdy špatné produkční řešení?",
+        "extension": "Přidej CDN/recursive resolver cache a ukaž více cache vrstev."
+      }
+    },
+    "10": {
+      "title": "Linux Filesystem Explorer",
+      "archetype": "filesystem_explorer",
+      "mission": "Projdi filesystem bez klikání a bez změn naslepo. Cílem je rozumět absolutní/relativní cestě a před destruktivním krokem vždy nejdřív inspect.",
+      "scene": {
+        "layout": "tree",
+        "caption": "/ → etc · home · var · srv",
+        "nodes": [
+          {
+            "id": "root",
+            "label": "/",
+            "meta": "root"
+          },
+          {
+            "id": "etc",
+            "label": "/etc",
+            "meta": "config"
+          },
+          {
+            "id": "home",
+            "label": "/home",
+            "meta": "users"
+          },
+          {
+            "id": "var",
+            "label": "/var",
+            "meta": "logs/data"
+          },
+          {
+            "id": "srv",
+            "label": "/srv",
+            "meta": "service data"
+          },
+          {
+            "id": "alice",
+            "label": "/home/alice",
+            "meta": "cwd"
+          },
+          {
+            "id": "logs",
+            "label": "/var/log",
+            "meta": "logs"
+          }
+        ],
+        "edges": [
+          {
+            "from": "root",
+            "to": "etc"
+          },
+          {
+            "from": "root",
+            "to": "home"
+          },
+          {
+            "from": "root",
+            "to": "var"
+          },
+          {
+            "from": "root",
+            "to": "srv"
+          },
+          {
+            "from": "home",
+            "to": "alice"
+          },
+          {
+            "from": "var",
+            "to": "logs"
+          }
+        ],
+        "artifact": "Startovní cwd: /home/alice/projects\nCíl: bezpečně zkopírovat config.example do /srv/app/config.ini a ověřit výsledek."
+      },
+      "tasks": [
+        {
+          "id": "pwd_parent",
+          "type": "command",
+          "prompt": "Jakým příkazem zobrazíš aktuální adresář?",
+          "accepted": [
+            "pwd"
+          ],
+          "why": "Nejdřív si potvrď kontext, ze kterého relativní cesta vychází.",
+          "placeholder": "pwd"
+        },
+        {
+          "id": "copy",
+          "type": "command",
+          "prompt": "Napiš příkaz pro kopii config.example do /srv/app/config.ini.",
+          "accepted": [
+            "cp config.example /srv/app/config.ini",
+            "cp ./config.example /srv/app/config.ini"
+          ],
+          "why": "Zdroj může být relativní k cwd, cíl je zde jednoznačně absolutní.",
+          "placeholder": "cp config.example /srv/app/config.ini"
+        },
+        {
+          "id": "safe_remove",
+          "type": "sequence",
+          "prompt": "Seřaď bezpečný postup před mazáním neznámého adresáře.",
+          "items": [
+            "Ověřit pwd",
+            "Vypsat obsah cíle",
+            "Zkontrolovat přesnou cestu",
+            "Provést cílenou změnu",
+            "Znovu ověřit stav"
+          ],
+          "expected": [
+            "Ověřit pwd",
+            "Vypsat obsah cíle",
+            "Zkontrolovat přesnou cestu",
+            "Provést cílenou změnu",
+            "Znovu ověřit stav"
+          ],
+          "why": "Destruktivní příkaz má přijít až po potvrzení kontextu a cíle."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Relativní cesta v jiném cwd",
+          "symptom": "Skript maže ./cache, ale spustil se z jiného adresáře.",
+          "hint": "Zjisti cwd procesu.",
+          "root_cause": "Relativní cesta se vyhodnocuje vůči jinému pracovnímu adresáři.",
+          "evidence": "pwd/log cwd ukáže /root místo /srv/app.",
+          "minimal_fix": "Použít explicitní cestu nebo nejdřív nastavit/ověřit cwd."
+        },
+        {
+          "title": "Disk full ve /var",
+          "symptom": "Zápis logu selhává, ale souborová oprávnění vypadají dobře.",
+          "hint": "Ne všechny I/O chyby jsou permissions.",
+          "root_cause": "Filesystem nemá volné místo/inody.",
+          "evidence": "df/df -i ukáže 100 %.",
+          "minimal_fix": "Uvolnit/rozšířit prostor a řešit rotaci logů."
+        },
+        {
+          "title": "Mount chybí",
+          "symptom": "/srv/data existuje, ale obsah je prázdný po rebootu.",
+          "hint": "Rozliš adresář od mountpointu.",
+          "root_cause": "Datový filesystem není připojený.",
+          "evidence": "mount/findmnt neukáže očekávaný mount.",
+          "minimal_fix": "Opravit mount/fstab a ověřit data před zápisem."
+        }
+      ],
+      "transfer": "Jsi v /var/tmp a potřebuješ bezpečně přečíst /etc/ssh/sshd_config. Vysvětli, proč je absolutní cesta výhodnější pro runbook.",
+      "success_criteria": [
+        "Rozlišíš absolutní a relativní cestu.",
+        "Před změnou umíš ověřit cwd a cíl.",
+        "Filesystem incident nezužuješ automaticky na permissions."
+      ],
+      "mode_notes": {
+        "guided": "Strom ukazuje běžné významy adresářů a hinty k bezpečným příkazům.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Popisky významu adresářů jsou skryté; pracuješ jen s cestami a cílem."
+      },
+      "teacher": {
+        "cold_call": "Co se může pokazit u příkazu s relativní cestou v cronu?",
+        "discussion": "Kdy je `rm -rf` technicky správný příkaz, ale špatný postup?",
+        "extension": "Přidej symlink a diskutuj, jak ověřit, kam skutečně míří před změnou."
+      }
+    },
+    "11": {
+      "title": "Permissions Matrix Lab",
+      "archetype": "permission_matrix",
+      "mission": "Nastav minimální oprávnění pro sdílený soubor a službu. Neuč se oktal nazpaměť – odvoď ho z owner/group/other a konkrétní potřeby.",
+      "scene": {
+        "layout": "matrix",
+        "caption": "owner / group / other × r w x",
+        "nodes": [
+          {
+            "id": "owner",
+            "label": "Owner",
+            "meta": "deploy"
+          },
+          {
+            "id": "group",
+            "label": "Group",
+            "meta": "webteam"
+          },
+          {
+            "id": "other",
+            "label": "Other",
+            "meta": "everyone"
+          },
+          {
+            "id": "file",
+            "label": "config.ini",
+            "meta": "root:webteam"
+          }
+        ],
+        "edges": [
+          {
+            "from": "owner",
+            "to": "file",
+            "label": "rw"
+          },
+          {
+            "from": "group",
+            "to": "file",
+            "label": "r"
+          },
+          {
+            "from": "other",
+            "to": "file",
+            "label": "-"
+          }
+        ],
+        "artifact": "Požadavek: owner může číst a měnit; webteam pouze číst; ostatní nemají přístup."
+      },
+      "tasks": [
+        {
+          "id": "octal",
+          "type": "choice",
+          "prompt": "Které oprávnění odpovídá zadání?",
+          "options": [
+            "640",
+            "644",
+            "660",
+            "604"
+          ],
+          "expected": "640",
+          "why": "owner rw=6, group r=4, other -=0."
+        },
+        {
+          "id": "bits",
+          "type": "multi",
+          "prompt": "Které bity má skupina u režimu 650?",
+          "options": [
+            "read",
+            "write",
+            "execute"
+          ],
+          "expected": [
+            "read",
+            "execute"
+          ],
+          "why": "5 = 4 + 1 = r-x."
+        },
+        {
+          "id": "roles",
+          "type": "pair",
+          "prompt": "Přiřaď vrstvu oprávnění k subjektu.",
+          "left": [
+            "owner",
+            "group",
+            "other"
+          ],
+          "right": [
+            "vlastník souboru",
+            "členové skupiny souboru",
+            "všichni ostatní"
+          ],
+          "expected": {
+            "owner": "vlastník souboru",
+            "group": "členové skupiny souboru",
+            "other": "všichni ostatní"
+          },
+          "why": "Unix mode se vyhodnocuje podle vztahu procesu k vlastníkovi/skupině."
+        }
+      ],
+      "faults": [
+        {
+          "title": "World-writable config",
+          "symptom": "Služba funguje, ale config má 666.",
+          "hint": "Funkčnost není totéž co bezpečnost.",
+          "root_cause": "Other může měnit konfiguraci.",
+          "evidence": "stat/ls -l ukáže rw-rw-rw-.",
+          "minimal_fix": "Zúžit permissions podle skutečné potřeby."
+        },
+        {
+          "title": "Správný mode, špatný owner",
+          "symptom": "640 vypadá správně, ale služba config nepřečte.",
+          "hint": "Mode se vyhodnocuje spolu s owner/group.",
+          "root_cause": "Soubor má root:root, služba běží ve webteam.",
+          "evidence": "namei/stat a procesní user ukážou mismatch.",
+          "minimal_fix": "Opravit vlastnictví/skupinu nebo ACL, ne bezhlavě 777."
+        },
+        {
+          "title": "Directory execute chybí",
+          "symptom": "Soubor je readable, ale aplikace ho neotevře přes cestu.",
+          "hint": "Adresář potřebuje traversal bit.",
+          "root_cause": "Na rodičovském adresáři chybí x pro potřebnou skupinu.",
+          "evidence": "namei -l ukáže blok na adresáři.",
+          "minimal_fix": "Přidat minimální execute/traverse na potřebné directory vrstvě."
+        }
+      ],
+      "transfer": "Navrhni permissions pro adresář, kde webteam smí vytvářet soubory, ale běžní uživatelé jen číst publikované výstupy.",
+      "success_criteria": [
+        "Umíš odvodit rwx i oktal.",
+        "Kontroluješ owner/group i parent directories.",
+        "Nepoužíváš 777 jako univerzální opravu."
+      ],
+      "mode_notes": {
+        "guided": "Tabulka připomíná hodnoty r=4,w=2,x=1.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Číselné hodnoty nejsou zobrazené; musíš je vybavit a obhájit."
+      },
+      "teacher": {
+        "cold_call": "Proč `chmod 777` může problém „vyřešit“ a přesto je to špatná diagnostika?",
+        "discussion": "Rozdíl mezi permission problémem na souboru a na rodičovském adresáři.",
+        "extension": "Přidej setgid bit na sdílený adresář a diskutuj dědění skupiny."
+      }
+    },
+    "12": {
+      "title": "Process & systemd Service Graph",
+      "archetype": "systemd_graph",
+      "mission": "Rozliš proces, unit a boot policy. Diagnostikuj failed service tak, aby restart nebyl první ani jediná reakce.",
+      "scene": {
+        "layout": "tree",
+        "caption": "systemd unit → process → listener → logs",
+        "nodes": [
+          {
+            "id": "unit",
+            "label": "app.service",
+            "meta": "unit config"
+          },
+          {
+            "id": "process",
+            "label": "PID 4210",
+            "meta": "process"
+          },
+          {
+            "id": "socket",
+            "label": "0.0.0.0:8080",
+            "meta": "listener"
+          },
+          {
+            "id": "journal",
+            "label": "journal",
+            "meta": "evidence"
+          },
+          {
+            "id": "boot",
+            "label": "enable",
+            "meta": "boot policy"
+          }
+        ],
+        "edges": [
+          {
+            "from": "unit",
+            "to": "process",
+            "label": "ExecStart"
+          },
+          {
+            "from": "process",
+            "to": "socket",
+            "label": "bind"
+          },
+          {
+            "from": "unit",
+            "to": "journal",
+            "label": "logs"
+          },
+          {
+            "from": "boot",
+            "to": "unit",
+            "label": "start at boot"
+          }
+        ],
+        "artifact": "app.service: failed\nExecStart=/usr/local/bin/app --config /etc/app.yml\njournal: cannot open /etc/app.yml: permission denied"
+      },
+      "tasks": [
+        {
+          "id": "first_step",
+          "type": "choice",
+          "prompt": "Co je nejlepší první krok u failed unit?",
+          "options": [
+            "systemctl status app.service a relevantní journal",
+            "systemctl enable app.service",
+            "restartovat server",
+            "chmod -R 777 /etc"
+          ],
+          "expected": "systemctl status app.service a relevantní journal",
+          "why": "Status + journal dají důvod selhání před změnou."
+        },
+        {
+          "id": "actions",
+          "type": "pair",
+          "prompt": "Přiřaď akci k významu.",
+          "left": [
+            "start",
+            "restart",
+            "reload",
+            "enable"
+          ],
+          "right": [
+            "spustí nyní",
+            "zastaví a znovu spustí",
+            "načte konfiguraci bez plného restartu, pokud služba podporuje",
+            "nastaví start při bootu"
+          ],
+          "expected": {
+            "start": "spustí nyní",
+            "restart": "zastaví a znovu spustí",
+            "reload": "načte konfiguraci bez plného restartu, pokud služba podporuje",
+            "enable": "nastaví start při bootu"
+          },
+          "why": "Enable není totéž jako start a reload není univerzální."
+        },
+        {
+          "id": "failed_flow",
+          "type": "sequence",
+          "prompt": "Seřaď recovery flow.",
+          "items": [
+            "Status unit",
+            "Journal k incidentu",
+            "Ověřit config/dependency",
+            "Provést nejmenší opravu",
+            "Start/restart podle potřeby",
+            "Ověřit listener a klienta"
+          ],
+          "expected": [
+            "Status unit",
+            "Journal k incidentu",
+            "Ověřit config/dependency",
+            "Provést nejmenší opravu",
+            "Start/restart podle potřeby",
+            "Ověřit listener a klienta"
+          ],
+          "why": "Restart bez znalosti příčiny může pouze opakovat stejný fail."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Permission denied config",
+          "symptom": "Unit failed okamžitě po startu.",
+          "hint": "Journal už říká konkrétní file path.",
+          "root_cause": "Procesní user nemůže číst config.",
+          "evidence": "journal + stat ukáže permission mismatch.",
+          "minimal_fix": "Opravit minimální owner/group/mode."
+        },
+        {
+          "title": "Port already in use",
+          "symptom": "Service se nespustí, journal hlásí bind failed.",
+          "hint": "Hledej vlastníka socketu.",
+          "root_cause": "Jiný proces drží stejný port.",
+          "evidence": "ss/lsof ukáže PID na portu.",
+          "minimal_fix": "Rozhodnout, která služba má port vlastnit; ne zabíjet náhodný PID."
+        },
+        {
+          "title": "Disabled after reboot",
+          "symptom": "Služba funguje po ručním startu, po restartu systému ne.",
+          "hint": "Rozliš current state od boot policy.",
+          "root_cause": "Unit není enabled nebo dependency není dosažitelná při bootu.",
+          "evidence": "is-enabled ukáže disabled, boot journal chybí start.",
+          "minimal_fix": "Nastavit správnou boot policy/dependency a otestovat."
+        }
+      ],
+      "transfer": "Nová konfigurace podporuje `reload`. Kdy je reload lepší než restart a jak ověříš, že nový config skutečně platí?",
+      "success_criteria": [
+        "Rozlišíš unit, proces, listener a boot policy.",
+        "Nezaměňuješ enable/start.",
+        "Recovery končí end-to-end validací."
+      ],
+      "mode_notes": {
+        "guided": "Graph ukazuje vztah unit→process→socket a vysvětlení akcí.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Akce nejsou popsány; musíš jejich význam odvodit a zvolit podle incidentu."
+      },
+      "teacher": {
+        "cold_call": "Může být unit `active`, ale aplikace přesto nefunkční?",
+        "discussion": "Kdy restart pomáhá a kdy jen maže evidence?",
+        "extension": "Přidej `After=network-online.target` a diskutuj rozdíl order vs hard dependency."
+      }
+    },
+    "13": {
+      "title": "Journal Forensic Timeline",
+      "archetype": "log_forensics",
+      "mission": "Najdi relevantní incidentní okno v logu a spoj změnu, chybu a uživatelský symptom. Nečti tisíce řádků od začátku.",
+      "scene": {
+        "layout": "timeline",
+        "caption": "09:58 deploy → 10:01 first error → 10:03 user symptom → 10:08 rollback",
+        "nodes": [
+          {
+            "id": "deploy",
+            "label": "09:58",
+            "meta": "deploy v2.4"
+          },
+          {
+            "id": "warn",
+            "label": "10:00",
+            "meta": "config warning"
+          },
+          {
+            "id": "error",
+            "label": "10:01",
+            "meta": "DB timeout"
+          },
+          {
+            "id": "user",
+            "label": "10:03",
+            "meta": "HTTP 500 report"
+          },
+          {
+            "id": "rollback",
+            "label": "10:08",
+            "meta": "rollback"
+          }
+        ],
+        "edges": [
+          {
+            "from": "deploy",
+            "to": "warn"
+          },
+          {
+            "from": "warn",
+            "to": "error"
+          },
+          {
+            "from": "error",
+            "to": "user"
+          },
+          {
+            "from": "user",
+            "to": "rollback"
+          }
+        ],
+        "artifact": "journal has 45 000 lines/day. Incident window is known roughly 09:55–10:10."
+      },
+      "tasks": [
+        {
+          "id": "journal_cmd",
+          "type": "command",
+          "prompt": "Napiš příkaz, který cílí na unit `portal.service` a incident od 09:55.",
+          "accepted": [
+            "journalctl -u portal.service --since 09:55",
+            "journalctl --unit portal.service --since 09:55",
+            "journalctl -u portal.service --since \"09:55\""
+          ],
+          "why": "Filtruj podle unit a času; to drasticky snižuje šum.",
+          "placeholder": "journalctl -u portal.service --since 09:55"
+        },
+        {
+          "id": "forensic_order",
+          "type": "sequence",
+          "prompt": "Seřaď práci s incidentním oknem.",
+          "items": [
+            "Určit čas symptomu",
+            "Omezit log na unit a okno",
+            "Najít první relevantní error",
+            "Porovnat s nedávnou změnou",
+            "Ověřit hypotézu dalším důkazem"
+          ],
+          "expected": [
+            "Určit čas symptomu",
+            "Omezit log na unit a okno",
+            "Najít první relevantní error",
+            "Porovnat s nedávnou změnou",
+            "Ověřit hypotézu dalším důkazem"
+          ],
+          "why": "Čas a scope jsou nejrychlejší cesta z noise k evidenci."
+        },
+        {
+          "id": "useful_lines",
+          "type": "multi",
+          "prompt": "Které záznamy mají největší hodnotu pro tento incident?",
+          "options": [
+            "09:58 deploy v2.4",
+            "10:01 DB timeout",
+            "10:03 request /login returned 500",
+            "03:00 routine logrotate",
+            "08:00 successful health check"
+          ],
+          "expected": [
+            "09:58 deploy v2.4",
+            "10:01 DB timeout",
+            "10:03 request /login returned 500"
+          ],
+          "why": "Relevantní je časová a kauzální blízkost, ne jen severity slovo."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Noise flood",
+          "symptom": "Error je pohřbený mezi health info řádky.",
+          "hint": "Omez scope dřív, než začneš scrollovat.",
+          "root_cause": "Chybí time/unit filter.",
+          "evidence": "Celodenní log má desetitisíce řádků, incident 15 minut.",
+          "minimal_fix": "Použít časové a unit filtry."
+        },
+        {
+          "title": "Clock mismatch",
+          "symptom": "Aplikační log říká 10:01, monitoring 09:01.",
+          "hint": "Porovnej timezone/clock.",
+          "root_cause": "Logy používají rozdílné timezone.",
+          "evidence": "Timestamps se liší přesně o hodinu.",
+          "minimal_fix": "Normalizovat timezone/NTP před korelací."
+        },
+        {
+          "title": "Symptom po deployi není důkaz",
+          "symptom": "Deploy byl 09:58 a chyba 10:01, ale DB timeout pochází z externí DB.",
+          "hint": "Korelace není automaticky kauzalita.",
+          "root_cause": "Skutečná příčina je upstream DB, deploy jen časově blízko.",
+          "evidence": "Stejný DB timeout je i na staré verzi/test z jiného klienta.",
+          "minimal_fix": "Ověřit hypotézu nezávislým důkazem před rollbackem."
+        }
+      ],
+      "transfer": "Monitoring hlásí chybu v 14:32, ale uživatel říká, že problém začal dřív. Jak si vytvoříš spolehlivé incidentní okno?",
+      "success_criteria": [
+        "Umíš filtrovat unit + čas.",
+        "Rozlišuješ korelaci a příčinu.",
+        "Incident timeline spojuje změnu, chybu a symptom."
+      ],
+      "mode_notes": {
+        "guided": "Timeline zvýrazní typy událostí a nabídne příklady filtrů.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Bez barevného zvýraznění a bez hintu na příkaz; musíš si vybrat scope sám."
+      },
+      "teacher": {
+        "cold_call": "Proč je „první ERROR v logu“ někdy lepší než poslední ERROR?",
+        "discussion": "Kdy rollback potvrzuje hypotézu a kdy jen obnovuje službu bez root cause?",
+        "extension": "Přidej log z reverse proxy a aplikace a nechej třídu sloučit dvě časové osy."
+      }
+    },
+    "14": {
+      "title": "SSH/SFTP Trust Chain",
+      "archetype": "ssh_chain",
+      "mission": "Odděl síťovou dostupnost, výběr identity, lokální private key, serverovou autorizaci a SFTP. `Permission denied` není automaticky firewall.",
+      "scene": {
+        "layout": "flow",
+        "caption": "Client → TCP/22 → host key → client identity → authorized_keys → session/SFTP",
+        "nodes": [
+          {
+            "id": "client",
+            "label": "SSH client",
+            "meta": "alice"
+          },
+          {
+            "id": "tcp",
+            "label": "TCP/22",
+            "meta": "network"
+          },
+          {
+            "id": "hostkey",
+            "label": "Host key",
+            "meta": "server identity"
+          },
+          {
+            "id": "key",
+            "label": "Private key",
+            "meta": "~/.ssh/id_ed25519"
+          },
+          {
+            "id": "auth",
+            "label": "authorized_keys",
+            "meta": "alice@server"
+          },
+          {
+            "id": "session",
+            "label": "Shell/SFTP",
+            "meta": "subsystem"
+          }
+        ],
+        "edges": [
+          {
+            "from": "client",
+            "to": "tcp"
+          },
+          {
+            "from": "tcp",
+            "to": "hostkey"
+          },
+          {
+            "from": "hostkey",
+            "to": "key"
+          },
+          {
+            "from": "key",
+            "to": "auth"
+          },
+          {
+            "from": "auth",
+            "to": "session"
+          }
+        ],
+        "artifact": "ssh -i ~/.ssh/id_ed25519 alice@server.example.cz\nSymptom: Permission denied (publickey)."
+      },
+      "tasks": [
+        {
+          "id": "permission_denied",
+          "type": "choice",
+          "prompt": "TCP spojení na 22 se naváže, ale dostaneš `Permission denied (publickey)`. Kde hledat jako první?",
+          "options": [
+            "Identity/authorized_keys/permissions, ne routu",
+            "DHCP Discover",
+            "DNS A záznam, i když už se TCP spojilo",
+            "Monitor"
+          ],
+          "expected": "Identity/authorized_keys/permissions, ne routu",
+          "why": "Navázaný TCP/SSH handshake dokazuje, že síťová cesta a port jsou dostupné."
+        },
+        {
+          "id": "private_mode",
+          "type": "choice",
+          "prompt": "Jaké typické oprávnění má mít soukromý klíč?",
+          "options": [
+            "600",
+            "777",
+            "644",
+            "666"
+          ],
+          "expected": "600",
+          "why": "Soukromý klíč nemá být čitelný ostatními uživateli."
+        },
+        {
+          "id": "ssh_chain",
+          "type": "sequence",
+          "prompt": "Seřaď diagnostický trust chain.",
+          "items": [
+            "DNS/IP cíle",
+            "TCP/22",
+            "Server host key",
+            "Výběr client identity",
+            "authorized_keys + permissions",
+            "Shell/SFTP subsystem"
+          ],
+          "expected": [
+            "DNS/IP cíle",
+            "TCP/22",
+            "Server host key",
+            "Výběr client identity",
+            "authorized_keys + permissions",
+            "Shell/SFTP subsystem"
+          ],
+          "why": "Každý krok má jiný symptom a jiný důkaz."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Wrong identity selected",
+          "symptom": "Server odmítá publickey, přitom správný klíč existuje.",
+          "hint": "Podívej se, který klíč client skutečně nabízí.",
+          "root_cause": "SSH agent/client nabízí jinou identity.",
+          "evidence": "ssh -v ukáže Offering public key jiného souboru.",
+          "minimal_fix": "Zvolit správný `-i`/config identity."
+        },
+        {
+          "title": "authorized_keys mode",
+          "symptom": "Klíč je na serveru, ale auth selhává.",
+          "hint": "SSH kontroluje bezpečné permissions.",
+          "root_cause": "~/.ssh nebo authorized_keys má příliš otevřený mode/owner.",
+          "evidence": "server log hlásí bad ownership or modes.",
+          "minimal_fix": "Opravit owner/mode adresáře a souboru."
+        },
+        {
+          "title": "SFTP subsystem",
+          "symptom": "SSH shell funguje, SFTP se hned zavře.",
+          "hint": "Síť i auth jsou už potvrzené.",
+          "root_cause": "Chybně nakonfigurovaný SFTP subsystem/chroot.",
+          "evidence": "SSH login OK, SFTP server log hlásí subsystem request failed.",
+          "minimal_fix": "Opravit subsystem/chroot config a validovat pouze SFTP."
+        }
+      ],
+      "transfer": "Admin se připojí z nového notebooku. DNS a TCP fungují, ale server odmítá klíč. Navrhni tři nejkratší kroky, které odliší client identity od server authorization.",
+      "success_criteria": [
+        "Rozlišíš network vs authentication.",
+        "Rozumíš roli private/public key a authorized_keys.",
+        "SFTP diagnostikuješ až po potvrzení SSH vrstvy."
+      ],
+      "mode_notes": {
+        "guided": "Trust chain popisuje, co každá fáze ověřuje.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Fáze uvidíš jen jako názvy; musíš sám určit, kde konkrétní symptom vzniká."
+      },
+      "teacher": {
+        "cold_call": "Co už víme, když server odpoví `Permission denied (publickey)`?",
+        "discussion": "Proč není kopírování private key na server správný model?",
+        "extension": "Přidej bastion host a navrhni, kde se změní trust chain."
+      }
+    },
+    "15": {
+      "title": "Listener → Bind → Firewall Lab",
+      "archetype": "listener_firewall",
+      "mission": "Propoj proces, socket, bind adresu, host firewall a klientský test. `Port je otevřený` musí být vždy doložený z konkrétního směru.",
+      "scene": {
+        "layout": "flow",
+        "caption": "Process → listener → bind address → firewall → client",
+        "nodes": [
+          {
+            "id": "proc",
+            "label": "web.service",
+            "meta": "PID 5120"
+          },
+          {
+            "id": "listen",
+            "label": "TCP 8080",
+            "meta": "listener"
+          },
+          {
+            "id": "bind",
+            "label": "127.0.0.1",
+            "meta": "bind"
+          },
+          {
+            "id": "fw",
+            "label": "Firewall",
+            "meta": "allow 8080"
+          },
+          {
+            "id": "client",
+            "label": "Remote client",
+            "meta": "10.0.20.15"
+          }
+        ],
+        "edges": [
+          {
+            "from": "proc",
+            "to": "listen"
+          },
+          {
+            "from": "listen",
+            "to": "bind"
+          },
+          {
+            "from": "bind",
+            "to": "fw"
+          },
+          {
+            "from": "fw",
+            "to": "client"
+          }
+        ],
+        "artifact": "ss -ltnp: LISTEN 0 128 127.0.0.1:8080\nfirewall: allow tcp/8080 from 10.0.20.0/24"
+      },
+      "tasks": [
+        {
+          "id": "remote_fail",
+          "type": "choice",
+          "prompt": "Proč vzdálený klient selže, i když firewall 8080 povoluje?",
+          "options": [
+            "Služba poslouchá jen na loopback 127.0.0.1",
+            "DNS vždy blokuje 8080",
+            "Firewall musí povolit ICMP",
+            "Port 8080 neexistuje"
+          ],
+          "expected": "Služba poslouchá jen na loopback 127.0.0.1",
+          "why": "Firewall nemůže zpřístupnit socket, který není navázaný na dosažitelném rozhraní."
+        },
+        {
+          "id": "listener_cmd",
+          "type": "command",
+          "prompt": "Napiš běžný příkaz pro zjištění TCP listenerů a procesů.",
+          "accepted": [
+            "ss -ltnp",
+            "sudo ss -ltnp",
+            "lsof -iTCP -sTCP:LISTEN",
+            "sudo lsof -iTCP -sTCP:LISTEN"
+          ],
+          "why": "Nejdřív ověř, zda a kde proces skutečně naslouchá.",
+          "placeholder": "ss -ltnp"
+        },
+        {
+          "id": "availability_chain",
+          "type": "sequence",
+          "prompt": "Seřaď dostupnost služby.",
+          "items": [
+            "Proces běží",
+            "Socket/listener existuje",
+            "Bind je na správné adrese",
+            "Firewall dovolí tok",
+            "Klientský TCP test uspěje"
+          ],
+          "expected": [
+            "Proces běží",
+            "Socket/listener existuje",
+            "Bind je na správné adrese",
+            "Firewall dovolí tok",
+            "Klientský TCP test uspěje"
+          ],
+          "why": "Každá vrstva může selhat nezávisle."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Loopback bind",
+          "symptom": "Lokálně curl funguje, vzdáleně timeout.",
+          "hint": "Porovnej bind address.",
+          "root_cause": "Služba naslouchá jen 127.0.0.1.",
+          "evidence": "ss ukáže 127.0.0.1:8080.",
+          "minimal_fix": "Nastavit bezpečně vhodný bind a znovu ověřit firewall."
+        },
+        {
+          "title": "Firewall drop",
+          "symptom": "Listener je 0.0.0.0:8080, lokálně funguje, vzdáleně timeout.",
+          "hint": "Listener už je potvrzený.",
+          "root_cause": "Firewall blokuje vstup.",
+          "evidence": "Packet counter/drop nebo pravidla neobsahují povolený source.",
+          "minimal_fix": "Povolit minimální source/port."
+        },
+        {
+          "title": "No listener",
+          "symptom": "Firewall dovoluje 8080, ale client dostává connection refused.",
+          "hint": "RST/refused je jiný symptom než timeout.",
+          "root_cause": "Na portu nic neposlouchá.",
+          "evidence": "ss nemá 8080, TCP vrací RST/refused.",
+          "minimal_fix": "Opravit/spustit službu, ne přidávat další firewall allow."
+        }
+      ],
+      "transfer": "Na serveru jsou dvě služby: jedna má být jen lokální, druhá dostupná z admin VLAN. Navrhni bind + firewall pro obě.",
+      "success_criteria": [
+        "Kontroluješ listener i bind.",
+        "Rozlišuješ timeout vs refused.",
+        "Firewall pravidlo má zdroj a port podle potřeby."
+      ],
+      "mode_notes": {
+        "guided": "Flow ukazuje jednotlivé vrstvy dostupnosti.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Bez popisků musíš z evidence `ss` + client symptom určit chybnou vrstvu."
+      },
+      "teacher": {
+        "cold_call": "Co dokazuje `ss -ltnp`, co naopak nedokazuje?",
+        "discussion": "Porovnej `connection refused` a timeout.",
+        "extension": "Přidej reverse proxy na 443 → backend 127.0.0.1:8080 a diskutuj správný bind backendu."
+      }
+    },
+    "16": {
+      "title": "Linux Web Service End-to-End",
+      "archetype": "web_service_chain",
+      "mission": "Nasaď nebo oprav webovou službu od procesu až po DNS jméno. Každá kontrola musí mít jasnou otázku a klientský důkaz.",
+      "scene": {
+        "layout": "flow",
+        "caption": "systemd → process → socket → firewall → DNS → HTTP",
+        "nodes": [
+          {
+            "id": "systemd",
+            "label": "portal.service",
+            "meta": "unit"
+          },
+          {
+            "id": "proc",
+            "label": "portal",
+            "meta": "process"
+          },
+          {
+            "id": "socket",
+            "label": "0.0.0.0:8080",
+            "meta": "listener"
+          },
+          {
+            "id": "proxy",
+            "label": "nginx :443",
+            "meta": "reverse proxy"
+          },
+          {
+            "id": "dns",
+            "label": "portal.example.cz",
+            "meta": "A/AAAA"
+          },
+          {
+            "id": "client",
+            "label": "Browser/curl",
+            "meta": "HTTP"
+          }
+        ],
+        "edges": [
+          {
+            "from": "systemd",
+            "to": "proc"
+          },
+          {
+            "from": "proc",
+            "to": "socket"
+          },
+          {
+            "from": "socket",
+            "to": "proxy"
+          },
+          {
+            "from": "proxy",
+            "to": "dns"
+          },
+          {
+            "from": "dns",
+            "to": "client"
+          }
+        ],
+        "artifact": "Local backend: curl http://127.0.0.1:8080/health → 200\nPublic URL: https://portal.example.cz → 502"
+      },
+      "tasks": [
+        {
+          "id": "502_layer",
+          "type": "choice",
+          "prompt": "Backend health je 200, veřejný endpoint vrací 502. Kde je největší informační hodnota?",
+          "options": [
+            "Reverse proxy upstream konfigurace/log",
+            "DHCP server",
+            "Klientská Wi‑Fi hesla",
+            "Filesystem /home"
+          ],
+          "expected": "Reverse proxy upstream konfigurace/log",
+          "why": "502 z reverse proxy znamená, že request došel na proxy, ale upstream komunikace selhala."
+        },
+        {
+          "id": "end_to_end",
+          "type": "sequence",
+          "prompt": "Seřaď runbook od lokálního procesu k uživateli.",
+          "items": [
+            "systemctl status",
+            "Local backend health",
+            "Listener/bind",
+            "Reverse proxy config",
+            "Firewall/path",
+            "DNS",
+            "Public HTTP test"
+          ],
+          "expected": [
+            "systemctl status",
+            "Local backend health",
+            "Listener/bind",
+            "Reverse proxy config",
+            "Firewall/path",
+            "DNS",
+            "Public HTTP test"
+          ],
+          "why": "Lokální validace izoluje aplikaci dřív, než řešíš veřejnou cestu."
+        },
+        {
+          "id": "positive_negative",
+          "type": "multi",
+          "prompt": "Které testy tvoří dobrou dvojici pozitivní + negativní validace?",
+          "options": [
+            "Z admin sítě HTTPS funguje",
+            "Z Guest sítě admin port 22 nefunguje",
+            "Lokální health je 200",
+            "Restart serveru",
+            "Změna DNS bez testu"
+          ],
+          "expected": [
+            "Z admin sítě HTTPS funguje",
+            "Z Guest sítě admin port 22 nefunguje",
+            "Lokální health je 200"
+          ],
+          "why": "Pozitivní test potvrzuje zamýšlenou cestu, negativní že nezamýšlená zůstala zavřená."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Bad upstream port",
+          "symptom": "Nginx vrací 502, backend lokálně na 8080 funguje.",
+          "hint": "Porovnej upstream endpoint s listenerem.",
+          "root_cause": "Proxy míří na 127.0.0.1:8000.",
+          "evidence": "nginx config 8000, ss backend 8080.",
+          "minimal_fix": "Opravit upstream port a reload + test."
+        },
+        {
+          "title": "DNS old IP",
+          "symptom": "Lokálně i z interní IP funguje, veřejné jméno míří jinam.",
+          "hint": "Odděl name resolution od HTTP služby.",
+          "root_cause": "A/AAAA záznam je stale/chybný.",
+          "evidence": "dig vrací starý endpoint.",
+          "minimal_fix": "Opravit DNS a validovat z klienta po TTL."
+        },
+        {
+          "title": "Firewall proxy path",
+          "symptom": "Backend i proxy lokálně fungují, vzdáleně 443 timeout.",
+          "hint": "Server app stack už je potvrzený lokálně.",
+          "root_cause": "Host/network firewall blokuje 443.",
+          "evidence": "ss ukazuje 443, remote TCP timeout, firewall drop counter.",
+          "minimal_fix": "Povolit minimální 443 tok."
+        }
+      ],
+      "transfer": "Stejnou aplikaci přesuneš za load balancer. Které lokální testy zůstávají stejné a které nové vrstvy přibudou?",
+      "success_criteria": [
+        "Runbook jde od lokálního k end-to-end.",
+        "502 interpretuješ podle vrstvy.",
+        "Ověříš zamýšlené i zakázané cesty."
+      ],
+      "mode_notes": {
+        "guided": "Vidíš vysvětlení jednotlivých vrstev a typické status codes.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Zůstane jen topologie a symptomy; musíš sám sestavit runbook."
+      },
+      "teacher": {
+        "cold_call": "Co už víme, když klient dostane 502 od nginx?",
+        "discussion": "Proč je `curl localhost` silný test, ale ne end-to-end validace?",
+        "extension": "Přidej TLS termination na proxy a upstream HTTPS; jak se rozšíří chain?"
+      }
+    },
+    "17": {
+      "title": "Safe Shell + Scheduler Pipeline",
+      "archetype": "automation_pipeline",
+      "mission": "Napiš malou automatizaci jako opakovatelný, pozorovatelný a bezpečně selhávající postup. Cron není jen „příkaz v kalendáři“.",
+      "scene": {
+        "layout": "flow",
+        "caption": "input → guard → action → log → exit code → scheduler",
+        "nodes": [
+          {
+            "id": "input",
+            "label": "Input/config",
+            "meta": "path/date"
+          },
+          {
+            "id": "guard",
+            "label": "Validation",
+            "meta": "exists/writable"
+          },
+          {
+            "id": "action",
+            "label": "Action",
+            "meta": "backup"
+          },
+          {
+            "id": "log",
+            "label": "Log",
+            "meta": "timestamp/result"
+          },
+          {
+            "id": "exit",
+            "label": "Exit code",
+            "meta": "0/!=0"
+          },
+          {
+            "id": "cron",
+            "label": "Scheduler",
+            "meta": "cron/timer"
+          }
+        ],
+        "edges": [
+          {
+            "from": "input",
+            "to": "guard"
+          },
+          {
+            "from": "guard",
+            "to": "action"
+          },
+          {
+            "from": "action",
+            "to": "log"
+          },
+          {
+            "from": "log",
+            "to": "exit"
+          },
+          {
+            "from": "exit",
+            "to": "cron"
+          }
+        ],
+        "artifact": "Úloha: každou noc zálohovat /srv/app/data do /backup/app a zapsat výsledek do logu."
+      },
+      "tasks": [
+        {
+          "id": "script_flow",
+          "type": "sequence",
+          "prompt": "Seřaď bezpečnou strukturu skriptu.",
+          "items": [
+            "Načíst/definovat vstupy",
+            "Ověřit preconditions",
+            "Provést jednu hlavní akci",
+            "Zapsat výsledek",
+            "Vrátit smysluplný exit code"
+          ],
+          "expected": [
+            "Načíst/definovat vstupy",
+            "Ověřit preconditions",
+            "Provést jednu hlavní akci",
+            "Zapsat výsledek",
+            "Vrátit smysluplný exit code"
+          ],
+          "why": "Guard clauses mají zabránit nebezpečné akci při chybějících vstupních podmínkách."
+        },
+        {
+          "id": "cron_risks",
+          "type": "multi",
+          "prompt": "Co typicky způsobí, že skript ručně funguje, ale v cronu ne?",
+          "options": [
+            "Jiný PATH",
+            "Jiný working directory",
+            "Chybějící environment variables",
+            "Barva terminálu",
+            "Rozlišení monitoru"
+          ],
+          "expected": [
+            "Jiný PATH",
+            "Jiný working directory",
+            "Chybějící environment variables"
+          ],
+          "why": "Cron má omezenější execution context než interaktivní shell."
+        },
+        {
+          "id": "log_line",
+          "type": "command",
+          "prompt": "Napiš jednoduchý shell fragment, který přidá timestamp do logu.",
+          "accepted": [
+            "date >> /var/log/app-backup.log",
+            "echo \"$(date)\" >> /var/log/app-backup.log",
+            "printf '%s\\n' \"$(date)\" >> /var/log/app-backup.log"
+          ],
+          "why": "Log má umožnit zjistit, kdy job běžel; v praxi bys přidal i výsledek/exit code.",
+          "placeholder": "date >> /var/log/app-backup.log"
+        }
+      ],
+      "faults": [
+        {
+          "title": "Relative path under cron",
+          "symptom": "Skript ručně najde ./data, v cronu ne.",
+          "hint": "Zjisti working directory jobu.",
+          "root_cause": "Skript spoléhá na relativní cwd.",
+          "evidence": "cron log ukáže `No such file or directory`, cwd je jiný.",
+          "minimal_fix": "Použít absolutní cesty nebo explicitně `cd` s kontrolou."
+        },
+        {
+          "title": "No disk space",
+          "symptom": "Backup selže uprostřed, ale job vždy vypíše „OK“.",
+          "hint": "Kontroluj exit code akce.",
+          "root_cause": "Skript ignoruje selhání a loguje success bez podmínky.",
+          "evidence": "copy/tar vrací !=0, log stále píše OK.",
+          "minimal_fix": "Propagovat exit code a logovat fail větev."
+        },
+        {
+          "title": "Concurrent jobs",
+          "symptom": "Dva běhy se překryjí a přepisují stejný soubor.",
+          "hint": "Přemýšlej o idempotenci/locku.",
+          "root_cause": "Job nemá ochranu proti souběhu.",
+          "evidence": "Dva PID ve stejný čas, corrupt output.",
+          "minimal_fix": "Použít lock/flock nebo unikátní output + atomický finalize."
+        }
+      ],
+      "transfer": "Přepiš koncept pro skript, který čistí staré soubory. Jaké guardy musí být přísnější, protože akce je destruktivní?",
+      "success_criteria": [
+        "Skript má validaci vstupů.",
+        "Úspěch/fail je pozorovatelný v logu a exit code.",
+        "Scheduler context je explicitní."
+      ],
+      "mode_notes": {
+        "guided": "Pipeline popisuje každý krok a připomíná cron environment.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Musíš odvodit preconditions a observability bez předvyplněných hintů."
+      },
+      "teacher": {
+        "cold_call": "Proč skript, který `echo OK` na konci, není automaticky spolehlivý?",
+        "discussion": "Kdy je cron dostatečný a kdy je systemd timer praktičtější?",
+        "extension": "Přidej retry policy a diskutuj, které chyby je bezpečné retryovat automaticky."
+      }
+    },
+    "18": {
+      "title": "Capstone Incident Command Console",
+      "archetype": "capstone_incident",
+      "mission": "Vyřeš kombinovaný incident bez tunelového vidění. Musíš propojit klienta, DNS, síť, firewall, systemd, listener a logy do jedné evidence timeline.",
+      "scene": {
+        "layout": "flow",
+        "caption": "Client → DNS → network → firewall → reverse proxy → app.service → filesystem/log",
+        "nodes": [
+          {
+            "id": "client",
+            "label": "Client",
+            "meta": "portal unavailable"
+          },
+          {
+            "id": "dns",
+            "label": "DNS",
+            "meta": "portal→10.0.50.20"
+          },
+          {
+            "id": "fw",
+            "label": "Firewall",
+            "meta": "443 allow"
+          },
+          {
+            "id": "proxy",
+            "label": "nginx",
+            "meta": "443"
+          },
+          {
+            "id": "app",
+            "label": "app.service",
+            "meta": "8080"
+          },
+          {
+            "id": "fs",
+            "label": "/srv/app",
+            "meta": "config/data"
+          },
+          {
+            "id": "journal",
+            "label": "journal",
+            "meta": "timeline"
+          }
+        ],
+        "edges": [
+          {
+            "from": "client",
+            "to": "dns"
+          },
+          {
+            "from": "dns",
+            "to": "fw"
+          },
+          {
+            "from": "fw",
+            "to": "proxy"
+          },
+          {
+            "from": "proxy",
+            "to": "app"
+          },
+          {
+            "from": "app",
+            "to": "fs"
+          },
+          {
+            "from": "app",
+            "to": "journal"
+          }
+        ],
+        "artifact": "Symptom: HTTPS 502 after overnight maintenance.\nKnown: DNS resolves, TCP/443 connects, nginx responds."
+      },
+      "tasks": [
+        {
+          "id": "capstone_first",
+          "type": "choice",
+          "prompt": "Kde pokračovat, když DNS i TCP/443 fungují a nginx vrací 502?",
+          "options": [
+            "nginx upstream + app.service/local health",
+            "DHCP klienta",
+            "Výměna switch portu",
+            "Změna veřejného DNS"
+          ],
+          "expected": "nginx upstream + app.service/local health",
+          "why": "502 posouvá hranici problému za klientskou síť až k proxy/upstream."
+        },
+        {
+          "id": "incident_flow",
+          "type": "sequence",
+          "prompt": "Seřaď minimální incident workflow.",
+          "items": [
+            "Vymezit symptom a scope",
+            "Zapsat potvrzené evidence",
+            "Najít první vadnou vrstvu",
+            "Opravit jednu potvrzenou příčinu",
+            "Pozitivní + negativní validace",
+            "Incident note/root cause"
+          ],
+          "expected": [
+            "Vymezit symptom a scope",
+            "Zapsat potvrzené evidence",
+            "Najít první vadnou vrstvu",
+            "Opravit jednu potvrzenou příčinu",
+            "Pozitivní + negativní validace",
+            "Incident note/root cause"
+          ],
+          "why": "Capstone hodnotí disciplínu diagnostiky, ne rychlost náhodných změn."
+        },
+        {
+          "id": "evidence_sources",
+          "type": "multi",
+          "prompt": "Které zdroje evidence jsou relevantní pro 502 po maintenance?",
+          "options": [
+            "nginx error log",
+            "systemctl status app.service",
+            "journal app.service",
+            "local curl backend",
+            "barva patch kabelu",
+            "DHCP DORA klienta, když TCP/443 už funguje"
+          ],
+          "expected": [
+            "nginx error log",
+            "systemctl status app.service",
+            "journal app.service",
+            "local curl backend"
+          ],
+          "why": "Zvol evidence co nejblíže první vadné vrstvě."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Config permission after deploy",
+          "symptom": "App service failed po výměně configu.",
+          "hint": "Journal + stat.",
+          "root_cause": "Nový config má owner/mode, který service user nepřečte.",
+          "evidence": "journal permission denied, stat root:root 600.",
+          "minimal_fix": "Opravit minimální group/mode a znovu start + health."
+        },
+        {
+          "title": "Backend port changed",
+          "symptom": "Aplikace po update poslouchá 8081, nginx míří 8080.",
+          "hint": "Porovnej listener s upstream.",
+          "root_cause": "Konfigurační drift portu.",
+          "evidence": "ss ukáže 8081, nginx upstream 8080.",
+          "minimal_fix": "Sjednotit očekávaný port a reload proxy."
+        },
+        {
+          "title": "Disk full logs",
+          "symptom": "Service crashuje při zápisu a restartuje.",
+          "hint": "Neomezuj filesystem jen na permissions.",
+          "root_cause": "/var nebo app data filesystem je plný.",
+          "evidence": "df 100 %, journal I/O/no space.",
+          "minimal_fix": "Uvolnit/rozšířit, opravit log rotation a validovat."
+        }
+      ],
+      "transfer": "V incidentu se současně objeví stale DNS u části klientů a selhaný backend. Jak zabráníš tomu, aby první nalezená chyba zakryla druhou?",
+      "success_criteria": [
+        "Držíš evidence timeline.",
+        "Umíš pracovat s více současnými příčinami.",
+        "Fix je minimální a validace end-to-end."
+      ],
+      "mode_notes": {
+        "guided": "Vidíš jednotlivé vrstvy a připomínku incident workflow.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Jen symptom + raw evidence; musíš sám určit scope a první vadnou vrstvu."
+      },
+      "teacher": {
+        "cold_call": "Která evidence už vylučuje L2/L3 problém klienta, když vidíme 502?",
+        "discussion": "Jak poznat, že máme jednu root cause vs dvě souběžné?",
+        "extension": "Nech týmy řešit tentýž incident s různou první hypotézou a porovnej počet zbytečných kroků."
+      }
+    },
+    "19": {
+      "title": "Filesystem Incident Triage",
+      "archetype": "filesystem_incident",
+      "mission": "Rozliš permission, disk, inode, mount a path problém podle evidence. Stejný symptom „nejde zapisovat“ může mít několik kořenových příčin.",
+      "scene": {
+        "layout": "board",
+        "caption": "path · owner/mode · filesystem capacity · mount state",
+        "nodes": [
+          {
+            "id": "path",
+            "label": "/srv/uploads",
+            "meta": "target"
+          },
+          {
+            "id": "perm",
+            "label": "Permissions",
+            "meta": "www-data:web"
+          },
+          {
+            "id": "space",
+            "label": "Disk",
+            "meta": "72 %"
+          },
+          {
+            "id": "inode",
+            "label": "Inodes",
+            "meta": "100 %"
+          },
+          {
+            "id": "mount",
+            "label": "Mount",
+            "meta": "rw"
+          },
+          {
+            "id": "app",
+            "label": "App",
+            "meta": "write failed"
+          }
+        ],
+        "edges": [
+          {
+            "from": "app",
+            "to": "path"
+          },
+          {
+            "from": "path",
+            "to": "perm"
+          },
+          {
+            "from": "path",
+            "to": "space"
+          },
+          {
+            "from": "path",
+            "to": "inode"
+          },
+          {
+            "from": "path",
+            "to": "mount"
+          }
+        ],
+        "artifact": "Error: cannot create file /srv/uploads/abc.tmp: No space left on device\n`df -h`: 72 % used"
+      },
+      "tasks": [
+        {
+          "id": "inode_case",
+          "type": "choice",
+          "prompt": "`df -h` ukazuje dost místa, ale chyba je `No space left on device`. Co ověřit dál?",
+          "options": [
+            "df -i /srv/uploads",
+            "chmod 777",
+            "DNS resolver",
+            "systemctl enable ssh"
+          ],
+          "expected": "df -i /srv/uploads",
+          "why": "Filesystem může vyčerpat inody dřív než datové bloky."
+        },
+        {
+          "id": "symptoms",
+          "type": "pair",
+          "prompt": "Přiřaď evidence k pravděpodobné třídě problému.",
+          "left": [
+            "Permission denied",
+            "Read-only file system",
+            "No space left + df -h OK"
+          ],
+          "right": [
+            "owner/mode/ACL",
+            "mount/filesystem state",
+            "inodes"
+          ],
+          "expected": {
+            "Permission denied": "owner/mode/ACL",
+            "Read-only file system": "mount/filesystem state",
+            "No space left + df -h OK": "inodes"
+          },
+          "why": "Chybová zpráva je začátek hypotézy, ne univerzální fix."
+        },
+        {
+          "id": "fs_triage",
+          "type": "sequence",
+          "prompt": "Seřaď triage zápisového incidentu.",
+          "items": [
+            "Potvrdit přesnou cestu",
+            "Zkontrolovat mount/findmnt",
+            "Zkontrolovat space + inodes",
+            "Zkontrolovat owner/mode/ACL",
+            "Provést malý write test jako správný user"
+          ],
+          "expected": [
+            "Potvrdit přesnou cestu",
+            "Zkontrolovat mount/findmnt",
+            "Zkontrolovat space + inodes",
+            "Zkontrolovat owner/mode/ACL",
+            "Provést malý write test jako správný user"
+          ],
+          "why": "Rychle pokryješ hlavní třídy filesystem failure bez destruktivních změn."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Inode exhaustion",
+          "symptom": "Disk má 28 % volno, zápis hlásí no space.",
+          "hint": "Zkontroluj `df -i`.",
+          "root_cause": "Miliony malých souborů vyčerpaly inody.",
+          "evidence": "df -i 100 %.",
+          "minimal_fix": "Odstranit/archivovat potvrzený odpad a opravit lifecycle."
+        },
+        {
+          "title": "Read-only remount",
+          "symptom": "Najednou nelze zapisovat nikam na mountu.",
+          "hint": "Ověř mount options a kernel log.",
+          "root_cause": "Filesystem se přepnul read-only po I/O chybě.",
+          "evidence": "findmnt ro, dmesg filesystem error.",
+          "minimal_fix": "Řešit storage/filesystem příčinu; nereagovat chmodem."
+        },
+        {
+          "title": "Wrong owner after restore",
+          "symptom": "Po obnově ze zálohy aplikace hlásí permission denied.",
+          "hint": "Porovnej ownership před/po restore.",
+          "root_cause": "Backup obnovil soubory pod root.",
+          "evidence": "stat ukáže root:root místo service group.",
+          "minimal_fix": "Opravit ownership cíleně podle service user."
+        }
+      ],
+      "transfer": "Upload directory začne selhávat jen při vysokém počtu malých souborů. Jak odlišíš kapacitu v GB od kapacity inode?",
+      "success_criteria": [
+        "Rozlišíš disk blocks a inodes.",
+        "Chybu interpretuješ podle přesného errno/message.",
+        "Testuješ jako stejný user jako služba."
+      ],
+      "mode_notes": {
+        "guided": "Board ukazuje všechny hlavní filesystem dimenze.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Zobrazí se jen raw command outputs; kategorie musíš určit sám."
+      },
+      "teacher": {
+        "cold_call": "Proč `df -h` není kompletní kontrola kapacity filesystemu?",
+        "discussion": "Kdy je `chmod` relevantní a kdy odvádí pozornost?",
+        "extension": "Přidej NFS mount a diskutuj rozdíl lokálních permissions a server-side export policy."
+      }
+    },
+    "20": {
+      "title": "systemd Dependency Lab",
+      "archetype": "systemd_dependencies",
+      "mission": "Rozliš ordering, hard dependency a soft dependency. Navrhni unit vztahy tak, aby služba startovala předvídatelně a failure nebyl maskovaný restart loopem.",
+      "scene": {
+        "layout": "tree",
+        "caption": "network-online.target → database.service → app.service",
+        "nodes": [
+          {
+            "id": "net",
+            "label": "network-online.target",
+            "meta": "target"
+          },
+          {
+            "id": "db",
+            "label": "database.service",
+            "meta": "dependency"
+          },
+          {
+            "id": "app",
+            "label": "app.service",
+            "meta": "main"
+          },
+          {
+            "id": "restart",
+            "label": "Restart=on-failure",
+            "meta": "policy"
+          },
+          {
+            "id": "journal",
+            "label": "journal",
+            "meta": "evidence"
+          }
+        ],
+        "edges": [
+          {
+            "from": "net",
+            "to": "db",
+            "label": "After/Wants"
+          },
+          {
+            "from": "db",
+            "to": "app",
+            "label": "Requires + After"
+          },
+          {
+            "from": "app",
+            "to": "restart",
+            "label": "failure policy"
+          },
+          {
+            "from": "app",
+            "to": "journal",
+            "label": "logs"
+          }
+        ],
+        "artifact": "app.service needs database reachable before start.\nCurrent unit only has `After=database.service`."
+      },
+      "tasks": [
+        {
+          "id": "requires",
+          "type": "choice",
+          "prompt": "Co chybí, pokud app nemá běžet bez database a samotné pořadí nestačí?",
+          "options": [
+            "Requires=database.service (plus vhodné ordering)",
+            "Restart=always jako náhrada dependency",
+            "WantedBy bez další vazby",
+            "chmod 777"
+          ],
+          "expected": "Requires=database.service (plus vhodné ordering)",
+          "why": "`After=` řeší pořadí, ne hard requirement existence/úspěchu."
+        },
+        {
+          "id": "directives",
+          "type": "pair",
+          "prompt": "Přiřaď systemd koncept.",
+          "left": [
+            "After=",
+            "Requires=",
+            "Wants=",
+            "Restart=on-failure"
+          ],
+          "right": [
+            "ordering",
+            "silná dependency",
+            "slabší dependency",
+            "restart policy po selhání"
+          ],
+          "expected": {
+            "After=": "ordering",
+            "Requires=": "silná dependency",
+            "Wants=": "slabší dependency",
+            "Restart=on-failure": "restart policy po selhání"
+          },
+          "why": "Ordering a dependency jsou různé osy návrhu unit."
+        },
+        {
+          "id": "dependency_debug",
+          "type": "sequence",
+          "prompt": "Seřaď diagnostiku start failure s dependency.",
+          "items": [
+            "systemctl status app",
+            "systemctl list-dependencies / unit config",
+            "status dependency",
+            "journal aktuálního bootu",
+            "opravit konkrétní vztah/službu",
+            "ověřit čistý start"
+          ],
+          "expected": [
+            "systemctl status app",
+            "systemctl list-dependencies / unit config",
+            "status dependency",
+            "journal aktuálního bootu",
+            "opravit konkrétní vztah/službu",
+            "ověřit čistý start"
+          ],
+          "why": "Neřeš restart policy dřív, než víš, proč dependency není připravená."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Ordering only",
+          "symptom": "App startuje před DB readiness a několikrát crashne.",
+          "hint": "After unit active nemusí znamenat service ready.",
+          "root_cause": "Chybí readiness/health mechanismus nebo správná dependency.",
+          "evidence": "DB unit je active, socket ještě není ready; app connection refused.",
+          "minimal_fix": "Přidat správný readiness design/health nebo čekací mechanismus."
+        },
+        {
+          "title": "Restart storm",
+          "symptom": "App s Restart=always padá 20× za minutu.",
+          "hint": "Restart policy maskuje trvalou config chybu.",
+          "root_cause": "Permanent fail + agresivní restart.",
+          "evidence": "journal opakuje stejnou chybu a Start request repeated too quickly.",
+          "minimal_fix": "Opravit root cause a nastavit rozumnou restart policy/backoff."
+        },
+        {
+          "title": "Soft dependency used as hard",
+          "symptom": "App běží bez potřebného mountu a zapisuje lokálně do prázdného adresáře.",
+          "hint": "Wants/ordering nepřinutilo mount být dostupný.",
+          "root_cause": "Dependency je příliš slabá.",
+          "evidence": "Mount unit failed, app unit přesto active.",
+          "minimal_fix": "Použít správnou dependency/RequiresMountsFor a validovat mount."
+        }
+      ],
+      "transfer": "Navrhni vztah pro worker, který může běžet bez monitoringu, ale nesmí běžet bez databáze.",
+      "success_criteria": [
+        "Rozlišíš ordering a dependency.",
+        "Restart policy není náhrada readiness.",
+        "Umíš číst dependency graph jako příčinu startu."
+      ],
+      "mode_notes": {
+        "guided": "Graph zobrazuje význam hran a direktiv.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Zobrazí se jen unit názvy a direktivy; význam musíš vybavit."
+      },
+      "teacher": {
+        "cold_call": "Co přesně garantuje `After=` a co negarantuje?",
+        "discussion": "Kdy použít Wants místo Requires?",
+        "extension": "Přidej mount dependency a `RequiresMountsFor=` scénář."
+      }
+    },
+    "21": {
+      "title": "Journal Incident Reconstruction",
+      "archetype": "incident_timeline",
+      "mission": "Zrekonstruuj incident z několika zdrojů a najdi první událost, která mění hypotézu. Cílem je forensic timeline, ne hledání nejděsivějšího řádku.",
+      "scene": {
+        "layout": "timeline",
+        "caption": "change → warning → failure → mitigation → recovery",
+        "nodes": [
+          {
+            "id": "cfg",
+            "label": "14:12",
+            "meta": "config deploy"
+          },
+          {
+            "id": "reload",
+            "label": "14:13",
+            "meta": "reload"
+          },
+          {
+            "id": "warn",
+            "label": "14:14",
+            "meta": "unknown directive"
+          },
+          {
+            "id": "fail",
+            "label": "14:15",
+            "meta": "service exit 1"
+          },
+          {
+            "id": "mit",
+            "label": "14:17",
+            "meta": "rollback"
+          },
+          {
+            "id": "ok",
+            "label": "14:18",
+            "meta": "health OK"
+          }
+        ],
+        "edges": [
+          {
+            "from": "cfg",
+            "to": "reload"
+          },
+          {
+            "from": "reload",
+            "to": "warn"
+          },
+          {
+            "from": "warn",
+            "to": "fail"
+          },
+          {
+            "from": "fail",
+            "to": "mit"
+          },
+          {
+            "from": "mit",
+            "to": "ok"
+          }
+        ],
+        "artifact": "Sources: deploy log, journal app.service, reverse-proxy access/error log, monitoring events"
+      },
+      "tasks": [
+        {
+          "id": "timeline",
+          "type": "sequence",
+          "prompt": "Seřaď události do incident timeline.",
+          "items": [
+            "Config deploy",
+            "Service reload",
+            "Unknown directive warning",
+            "Service exit 1",
+            "Rollback",
+            "Health OK"
+          ],
+          "expected": [
+            "Config deploy",
+            "Service reload",
+            "Unknown directive warning",
+            "Service exit 1",
+            "Rollback",
+            "Health OK"
+          ],
+          "why": "Pořadí ukazuje možnou kauzalitu a body, kde lze hypotézu ověřit."
+        },
+        {
+          "id": "first_cause_evidence",
+          "type": "choice",
+          "prompt": "Která událost je nejsilnější první evidence pro chybu konfigurace?",
+          "options": [
+            "Unknown directive warning po reloadu",
+            "Uživatelův report o dvě minuty později",
+            "Ranní health OK",
+            "Počet requestů včera"
+          ],
+          "expected": "Unknown directive warning po reloadu",
+          "why": "Konkrétní parser/config chyba těsně po změně je silnější než obecný symptom."
+        },
+        {
+          "id": "corroborate",
+          "type": "multi",
+          "prompt": "Které další evidence zvýší jistotu root cause?",
+          "options": [
+            "Config diff",
+            "Reprodukce config testu",
+            "Health po rollbacku",
+            "Nesouvisející DHCP lease",
+            "Wallpaper serveru"
+          ],
+          "expected": [
+            "Config diff",
+            "Reprodukce config testu",
+            "Health po rollbacku"
+          ],
+          "why": "Root cause posiluje kombinace change evidence, reprodukce a recovery po návratu."
+        }
+      ],
+      "faults": [
+        {
+          "title": "False correlation",
+          "symptom": "Deploy proběhl, ale chyba vznikla kvůli expirovanému certifikátu.",
+          "hint": "Hledej konkrétní parser/TLS evidence.",
+          "root_cause": "Časová blízkost deploye mate.",
+          "evidence": "TLS log ukazuje expiration nezávislé na config diff.",
+          "minimal_fix": "Opravit certifikát a incident note uvést, že deploy nebyl příčina."
+        },
+        {
+          "title": "Missing timezone normalization",
+          "symptom": "Proxy a app logy vypadají o hodinu posunuté.",
+          "hint": "Sjednoť čas před korelací.",
+          "root_cause": "Timezone mismatch.",
+          "evidence": "Stejný request ID má timestamps +1h.",
+          "minimal_fix": "Normalizovat timestamps/timezone."
+        },
+        {
+          "title": "Log gap",
+          "symptom": "Service se restartovala, ale journal má mezeru.",
+          "hint": "Zjisti, zda log source přežil crash/rotation.",
+          "root_cause": "Chybí persistent journald/log forwarding.",
+          "evidence": "Boot/restart gap bez záznamů.",
+          "minimal_fix": "Zlepšit log persistence/remote forwarding; root cause označit s nejistotou."
+        }
+      ],
+      "transfer": "Incident má jen část logů. Jak v incident note odlišíš potvrzený fakt, silnou hypotézu a neznámou?",
+      "success_criteria": [
+        "Timeline je chronologická.",
+        "Root cause má více než časovou korelaci.",
+        "Umíš explicitně pracovat s nejistotou evidence."
+      ],
+      "mode_notes": {
+        "guided": "Události jsou předznačené typem změna/chyba/recovery.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Události nemají kategorie; sám určuješ, co je změna, symptom a důkaz."
+      },
+      "teacher": {
+        "cold_call": "Je rollback, po kterém služba ožije, důkaz root cause?",
+        "discussion": "Jak zapisovat nejistotu bez toho, aby incident note byl vágní?",
+        "extension": "Přidej request ID a spoj proxy/app logy přes jednu transakci."
+      }
+    },
+    "22": {
+      "title": "SSH Key Operations Bench",
+      "archetype": "ssh_identity_ops",
+      "mission": "Diagnostikuj SSH key login jako řetězec: TCP dostupnost → nabízená identity → authorized_keys → ownership/modes → server policy.",
+      "scene": {
+        "layout": "flow",
+        "caption": "client config/agent → key offer → sshd → authorized_keys → session",
+        "nodes": [
+          {
+            "id": "cfg",
+            "label": "~/.ssh/config",
+            "meta": "IdentityFile"
+          },
+          {
+            "id": "agent",
+            "label": "ssh-agent",
+            "meta": "loaded keys"
+          },
+          {
+            "id": "sshd",
+            "label": "sshd :22",
+            "meta": "server"
+          },
+          {
+            "id": "ak",
+            "label": "authorized_keys",
+            "meta": "alice"
+          },
+          {
+            "id": "perm",
+            "label": "ownership/modes",
+            "meta": "~/.ssh"
+          },
+          {
+            "id": "sess",
+            "label": "session",
+            "meta": "shell"
+          }
+        ],
+        "edges": [
+          {
+            "from": "cfg",
+            "to": "agent"
+          },
+          {
+            "from": "agent",
+            "to": "sshd",
+            "label": "public key offer"
+          },
+          {
+            "from": "sshd",
+            "to": "ak"
+          },
+          {
+            "from": "ak",
+            "to": "perm"
+          },
+          {
+            "from": "perm",
+            "to": "sess"
+          }
+        ],
+        "artifact": "Client has 4 keys loaded in agent. Server should accept only project_ed25519 for alice."
+      },
+      "tasks": [
+        {
+          "id": "verbose",
+          "type": "command",
+          "prompt": "Jak spustíš SSH s verbose diagnostikou a konkrétní identity?",
+          "accepted": [
+            "ssh -v -i ~/.ssh/project_ed25519 alice@server",
+            "ssh -vv -i ~/.ssh/project_ed25519 alice@server",
+            "ssh -vvv -i ~/.ssh/project_ed25519 alice@server"
+          ],
+          "why": "Verbose výstup ukáže, kterou identity klient skutečně nabízí.",
+          "placeholder": "ssh -vv -i ~/.ssh/project_ed25519 alice@server"
+        },
+        {
+          "id": "offered_wrong",
+          "type": "choice",
+          "prompt": "Verbose log ukazuje `Offering public key: id_rsa`, ale očekáváš project_ed25519. Co řešíš nejdřív?",
+          "options": [
+            "Client identity selection/config",
+            "Server firewall",
+            "DHCP",
+            "DNS TTL"
+          ],
+          "expected": "Client identity selection/config",
+          "why": "Ještě před server authorization vidíš, že klient nabízí jiný klíč."
+        },
+        {
+          "id": "server_checks",
+          "type": "multi",
+          "prompt": "Co ověřit na serveru, když je nabízen správný klíč, ale auth stále selhává?",
+          "options": [
+            "authorized_keys obsah",
+            "owner/mode ~/.ssh a authorized_keys",
+            "sshd policy/log",
+            "barva promptu",
+            "HTTP status"
+          ],
+          "expected": [
+            "authorized_keys obsah",
+            "owner/mode ~/.ssh a authorized_keys",
+            "sshd policy/log"
+          ],
+          "why": "Server rozhoduje podle authorization dat, bezpečných permissions a sshd policy."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Agent offers too many keys",
+          "symptom": "Server ukončí auth dřív, než dojde na správný klíč.",
+          "hint": "Omez identity, ne firewall.",
+          "root_cause": "Too many authentication failures kvůli agentu.",
+          "evidence": "ssh -v ukazuje mnoho offered keys.",
+          "minimal_fix": "Použít IdentitiesOnly yes / konkrétní IdentityFile."
+        },
+        {
+          "title": "Key on wrong account",
+          "symptom": "Public key je v root authorized_keys, login je alice.",
+          "hint": "Authorization je per-account.",
+          "root_cause": "Klíč není v authorized_keys cílového uživatele.",
+          "evidence": "Server log key not accepted for alice, soubor u root.",
+          "minimal_fix": "Umístit public key do správného accountu s permissions."
+        },
+        {
+          "title": "sshd policy denies user",
+          "symptom": "Klíč je správný a permissions OK, přesto deny.",
+          "hint": "Podívej se na AllowUsers/Match.",
+          "root_cause": "Server policy uživatele nepovoluje.",
+          "evidence": "sshd -T / log ukazuje policy deny.",
+          "minimal_fix": "Opravit cílenou sshd policy a reload/test."
+        }
+      ],
+      "transfer": "Navrhni bezpečný způsob, jak v týmu spravovat více SSH identit pro produkci a lab bez náhodného nabídnutí špatného klíče.",
+      "success_criteria": [
+        "Umíš číst verbose client evidence.",
+        "Oddělíš client identity a server authorization.",
+        "Neřešíš síť, když TCP/SSH handshake už proběhl."
+      ],
+      "mode_notes": {
+        "guided": "Identity chain má popis každého bodu.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Uvidíš jen verbose log fragmenty a musíš určit, která strana je problém."
+      },
+      "teacher": {
+        "cold_call": "Kdy má smysl řešit firewall u `Permission denied (publickey)`?",
+        "discussion": "Agent convenience vs explicit IdentityFile – tradeoff.",
+        "extension": "Přidej host aliasy v ~/.ssh/config pro prod/lab a navrhni IdentitiesOnly."
+      }
+    },
+    "23": {
+      "title": "DNS Evidence Chain",
+      "archetype": "dns_evidence_chain",
+      "mission": "Postav DNS troubleshooting od konfigurace resolveru přes recursive/authoritative chain až po aplikační test. Nestačí říct „DNS nejde“.",
+      "scene": {
+        "layout": "flow",
+        "caption": "client resolver config → recursive resolver → authoritative chain → record → app",
+        "nodes": [
+          {
+            "id": "client",
+            "label": "Client resolver",
+            "meta": "10.0.0.53"
+          },
+          {
+            "id": "rec",
+            "label": "Recursive",
+            "meta": "cache"
+          },
+          {
+            "id": "root",
+            "label": "Root/TLD",
+            "meta": "delegation"
+          },
+          {
+            "id": "auth",
+            "label": "Authoritative",
+            "meta": "example.cz"
+          },
+          {
+            "id": "record",
+            "label": "A/AAAA/CNAME",
+            "meta": "portal"
+          },
+          {
+            "id": "app",
+            "label": "Application",
+            "meta": "HTTPS"
+          }
+        ],
+        "edges": [
+          {
+            "from": "client",
+            "to": "rec"
+          },
+          {
+            "from": "rec",
+            "to": "root"
+          },
+          {
+            "from": "root",
+            "to": "auth"
+          },
+          {
+            "from": "auth",
+            "to": "record"
+          },
+          {
+            "from": "record",
+            "to": "app"
+          }
+        ],
+        "artifact": "Symptom: portal.example.cz SERVFAIL from company resolver, but 1.1.1.1 returns an address."
+      },
+      "tasks": [
+        {
+          "id": "servfail_scope",
+          "type": "choice",
+          "prompt": "Co tato evidence nejvíc naznačuje?",
+          "options": [
+            "Problém lokálního/company resolveru nebo jeho validace/cesty, ne nutně autoritativního záznamu",
+            "Server webu je určitě vypnutý",
+            "DHCP nikdy nefunguje",
+            "Port 22 je blokovaný"
+          ],
+          "expected": "Problém lokálního/company resolveru nebo jeho validace/cesty, ne nutně autoritativního záznamu",
+          "why": "Jiný resolver dokáže získat odpověď, takže authoritative data mohou být dostupná."
+        },
+        {
+          "id": "dns_chain",
+          "type": "sequence",
+          "prompt": "Seřaď DNS evidence chain.",
+          "items": [
+            "Zkontrolovat klientský resolver",
+            "Dotaz přímo na configured resolver",
+            "Porovnat s jiným resolverem",
+            "Ověřit authoritative odpověď/delegaci",
+            "Ověřit finální A/AAAA/CNAME",
+            "Až potom aplikační test"
+          ],
+          "expected": [
+            "Zkontrolovat klientský resolver",
+            "Dotaz přímo na configured resolver",
+            "Porovnat s jiným resolverem",
+            "Ověřit authoritative odpověď/delegaci",
+            "Ověřit finální A/AAAA/CNAME",
+            "Až potom aplikační test"
+          ],
+          "why": "Každý krok zmenšuje prostor možných příčin."
+        },
+        {
+          "id": "trace",
+          "type": "command",
+          "prompt": "Napiš běžný `dig` příkaz pro sledování delegation chain.",
+          "accepted": [
+            "dig +trace portal.example.cz",
+            "dig +trace portal.example.cz A"
+          ],
+          "why": "`+trace` obejde běžnou recursive cache a ukáže postup delegací.",
+          "placeholder": "dig +trace portal.example.cz"
+        }
+      ],
+      "faults": [
+        {
+          "title": "Broken delegation",
+          "symptom": "Recursive resolvery vrací SERVFAIL pro doménu.",
+          "hint": "Sleduj +trace, kde chain končí.",
+          "root_cause": "Parent delegation/NS je chybná.",
+          "evidence": "dig +trace nedojde k autoritativnímu serveru.",
+          "minimal_fix": "Opravit NS/delegation/glue podle konkrétní chyby."
+        },
+        {
+          "title": "DNSSEC validation issue",
+          "symptom": "Validující resolver SERVFAIL, nevalidující odpoví.",
+          "hint": "Porovnej resolver s/bez validace.",
+          "root_cause": "Chybný DNSSEC chain/signature.",
+          "evidence": "delv/dig +dnssec ukáže validation failure.",
+          "minimal_fix": "Opravit DNSSEC záznamy/DS/signatures."
+        },
+        {
+          "title": "Stale recursive cache",
+          "symptom": "Autoritativní odpověď je nová, company resolver vrací starou.",
+          "hint": "Ptej se na TTL a cache.",
+          "root_cause": "Resolver drží cached record.",
+          "evidence": "dig @auth a @resolver vrací různé hodnoty se zbytkovým TTL.",
+          "minimal_fix": "Počkat na TTL / cíleně vyčistit cache v rámci incidentu."
+        }
+      ],
+      "transfer": "Jméno funguje z mobilních dat, ale ne ze školy. Navrhni čtyři dotazy, které oddělí klienta, školní resolver, authoritative DNS a aplikaci.",
+      "success_criteria": [
+        "DNS problém pojmenuješ konkrétní vrstvou.",
+        "Umíš porovnat resolvery a authoritative odpověď.",
+        "Aplikační test děláš až po potvrzení jména."
+      ],
+      "mode_notes": {
+        "guided": "Chain ukazuje role recursive vs authoritative resolveru.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Role nejsou popsané; musíš je odvodit z dotazů a odpovědí."
+      },
+      "teacher": {
+        "cold_call": "Co dokazuje fakt, že 1.1.1.1 odpoví, ale firemní resolver SERVFAIL?",
+        "discussion": "Kdy je změna DNS na veřejný resolver diagnostický test a kdy nebezpečný workaround?",
+        "extension": "Přidej split-horizon DNS a vysvětli, proč různé odpovědi nemusí být chyba."
+      }
+    },
+    "24": {
+      "title": "Stateful Firewall State Machine",
+      "archetype": "stateful_firewall",
+      "mission": "Navrhni least-privilege policy s connection state. Sleduj, jak se mění NEW → ESTABLISHED a proč návratová komunikace nepotřebuje zrcadlové široké allow.",
+      "scene": {
+        "layout": "flow",
+        "caption": "Client NEW → firewall state table → server → ESTABLISHED return",
+        "nodes": [
+          {
+            "id": "client",
+            "label": "Admin client",
+            "meta": "10.0.20.10"
+          },
+          {
+            "id": "fw",
+            "label": "Stateful firewall",
+            "meta": "conntrack"
+          },
+          {
+            "id": "server",
+            "label": "Web server",
+            "meta": "10.0.50.20:443"
+          },
+          {
+            "id": "guest",
+            "label": "Guest",
+            "meta": "10.0.30.10"
+          }
+        ],
+        "edges": [
+          {
+            "from": "client",
+            "to": "fw",
+            "label": "NEW tcp/443"
+          },
+          {
+            "from": "fw",
+            "to": "server",
+            "label": "allow"
+          },
+          {
+            "from": "server",
+            "to": "fw",
+            "label": "ESTABLISHED"
+          },
+          {
+            "from": "fw",
+            "to": "client",
+            "label": "return"
+          },
+          {
+            "from": "guest",
+            "to": "fw",
+            "label": "NEW ssh/22 deny"
+          }
+        ],
+        "artifact": "Policy goal: Admin → Server 22,443; Staff → Server 443; Guest → Server none; established return allowed."
+      },
+      "tasks": [
+        {
+          "id": "policy",
+          "type": "matrix",
+          "prompt": "Zaškrtni povolené NEW toky.",
+          "rows": [
+            "Admin",
+            "Staff",
+            "Guest"
+          ],
+          "columns": [
+            "Server:22",
+            "Server:443"
+          ],
+          "expected": [
+            "Admin|Server:22",
+            "Admin|Server:443",
+            "Staff|Server:443"
+          ],
+          "why": "Stateful return traffic se neřeší jako nové široké inbound povolení."
+        },
+        {
+          "id": "state_transition",
+          "type": "sequence",
+          "prompt": "Seřaď stav běžného TCP spojení z pohledu firewallu.",
+          "items": [
+            "NEW request",
+            "Rule allows NEW",
+            "Connection tracked",
+            "Return packet ESTABLISHED",
+            "Subsequent packets ESTABLISHED"
+          ],
+          "expected": [
+            "NEW request",
+            "Rule allows NEW",
+            "Connection tracked",
+            "Return packet ESTABLISHED",
+            "Subsequent packets ESTABLISHED"
+          ],
+          "why": "State table umožňuje přesnější návratovou policy."
+        },
+        {
+          "id": "negative_test",
+          "type": "choice",
+          "prompt": "Který negative test nejlépe ověří least privilege?",
+          "options": [
+            "Z Guest zkusit TCP/22 na server a očekávat blokaci",
+            "Z Admin otevřít HTTPS a očekávat úspěch",
+            "Pingnout vlastní localhost",
+            "Restartovat firewall"
+          ],
+          "expected": "Z Guest zkusit TCP/22 na server a očekávat blokaci",
+          "why": "Negative test potvrzuje, že nezamýšlená cesta skutečně zůstala zavřená."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Broad ESTABLISHED misunderstanding",
+          "symptom": "Admin přístup funguje, ale rule umožňuje NEW z Any na 443.",
+          "hint": "Zkontroluj NEW policy, ne jen state.",
+          "root_cause": "Příliš široké pravidlo bylo přidáno jako workaround.",
+          "evidence": "Policy table má Any→Server:443 allow NEW.",
+          "minimal_fix": "Zúžit NEW source; ESTABLISHED návrat zachovat."
+        },
+        {
+          "title": "Rule order shadowing",
+          "symptom": "Explicit deny Guest je pod širokým allow LAN.",
+          "hint": "První match může rozhodnout.",
+          "root_cause": "Široké allow předchází restrikci.",
+          "evidence": "Counter roste na širokém allow, deny se nikdy nepoužije.",
+          "minimal_fix": "Přeskládat/zužovat pravidla podle firewall semantics."
+        },
+        {
+          "title": "State table stale after change",
+          "symptom": "Po změně policy existující spojení stále funguje.",
+          "hint": "Rozliš existující conntrack od nového spojení.",
+          "root_cause": "Starý ESTABLISHED state přežívá policy change.",
+          "evidence": "Nové spojení je blocked, staré pokračuje.",
+          "minimal_fix": "Při testu explicitně vytvořit nové spojení / řízeně řešit state."
+        }
+      ],
+      "transfer": "Potřebuješ dočasně povolit Admin SSH na 30 minut. Jak zajistíš, že po skončení maintenance nezůstane široká výjimka?",
+      "success_criteria": [
+        "Policy definuje NEW toky, return přes state.",
+        "Rule order a scope jsou explicitní.",
+        "Pozitivní i negativní test jsou součástí validace."
+      ],
+      "mode_notes": {
+        "guided": "State transitions jsou popsané a policy grid má zóny.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Uvidíš jen packet direction a counters; musíš odvodit state a rule match."
+      },
+      "teacher": {
+        "cold_call": "Proč stateful firewall nepotřebuje povolit `Server → Admin high ports` jako široké NEW pravidlo?",
+        "discussion": "Jak rule order mění bezpečnost i při stejném seznamu pravidel?",
+        "extension": "Přidej UDP/DNS a diskutuj, jak state tracking vypadá bez TCP handshake."
+      }
+    },
+    "25": {
+      "title": "Safe Bash Automation Workshop",
+      "archetype": "bash_safety",
+      "mission": "Navrhni skript, který je opakovatelný, validuje vstupy, selže čitelně a nenechá systém v napůl změněném stavu.",
+      "scene": {
+        "layout": "flow",
+        "caption": "parse input → validate → prepare → mutate → verify → log/cleanup",
+        "nodes": [
+          {
+            "id": "args",
+            "label": "Arguments",
+            "meta": "--source --dest"
+          },
+          {
+            "id": "validate",
+            "label": "Validation",
+            "meta": "exists/type"
+          },
+          {
+            "id": "temp",
+            "label": "Temp/staging",
+            "meta": "safe workspace"
+          },
+          {
+            "id": "mutate",
+            "label": "Action",
+            "meta": "copy/transform"
+          },
+          {
+            "id": "verify",
+            "label": "Verification",
+            "meta": "checksum/result"
+          },
+          {
+            "id": "cleanup",
+            "label": "Trap/cleanup",
+            "meta": "exit"
+          }
+        ],
+        "edges": [
+          {
+            "from": "args",
+            "to": "validate"
+          },
+          {
+            "from": "validate",
+            "to": "temp"
+          },
+          {
+            "from": "temp",
+            "to": "mutate"
+          },
+          {
+            "from": "mutate",
+            "to": "verify"
+          },
+          {
+            "from": "verify",
+            "to": "cleanup"
+          }
+        ],
+        "artifact": "Úloha: bezpečně publikovat vygenerovaný config z input souboru. Pokud validace selže, produkční config se nesmí změnit."
+      },
+      "tasks": [
+        {
+          "id": "safe_publish",
+          "type": "sequence",
+          "prompt": "Seřaď safe publish pattern.",
+          "items": [
+            "Validovat argumenty",
+            "Vytvořit temp výstup",
+            "Validovat temp obsah",
+            "Atomicky nahradit cílový soubor",
+            "Ověřit službu/config",
+            "Cleanup/log"
+          ],
+          "expected": [
+            "Validovat argumenty",
+            "Vytvořit temp výstup",
+            "Validovat temp obsah",
+            "Atomicky nahradit cílový soubor",
+            "Ověřit službu/config",
+            "Cleanup/log"
+          ],
+          "why": "Nejdřív připrav a ověř mimo produkční cíl, potom teprve atomická změna."
+        },
+        {
+          "id": "guards",
+          "type": "multi",
+          "prompt": "Které guardy jsou relevantní před přepsáním configu?",
+          "options": [
+            "source existuje a je file",
+            "dest directory je writable",
+            "validation command prošel",
+            "random sleep 5 s",
+            "terminal je barevný"
+          ],
+          "expected": [
+            "source existuje a je file",
+            "dest directory je writable",
+            "validation command prošel"
+          ],
+          "why": "Guard má testovat předpoklad, který by jinak mohl způsobit škodu."
+        },
+        {
+          "id": "idempotent",
+          "type": "choice",
+          "prompt": "Co nejlépe popisuje idempotentní administrátorský skript?",
+          "options": [
+            "Opakované spuštění ve stejném stavu nezpůsobí další nechtěné změny",
+            "Skript vždy běží přesně 1 sekundu",
+            "Používá jen echo",
+            "Nemá žádný log"
+          ],
+          "expected": "Opakované spuštění ve stejném stavu nezpůsobí další nechtěné změny",
+          "why": "Idempotence snižuje riziko při retry a automatizaci."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Partial write",
+          "symptom": "Skript přepíše polovinu configu a proces zemře.",
+          "hint": "Změnu připrav mimo finální soubor.",
+          "root_cause": "Přímý zápis do produkčního configu není atomický.",
+          "evidence": "Cílový soubor je truncated/partial.",
+          "minimal_fix": "Generovat temp, validovat a atomicky rename."
+        },
+        {
+          "title": "Unchecked input",
+          "symptom": "Prázdná proměnná změní cíl na nebezpečnou cestu.",
+          "hint": "Guarduj vstupy před mutací.",
+          "root_cause": "Script pokračuje s unset/empty path.",
+          "evidence": "Trace ukazuje dest prázdný.",
+          "minimal_fix": "Strict validation / safe defaults / quoting."
+        },
+        {
+          "title": "Cleanup missing",
+          "symptom": "Po failu zůstávají lock/temp files a blokují další běh.",
+          "hint": "Přemýšlej o exit paths.",
+          "root_cause": "Chybí trap/cleanup.",
+          "evidence": "Temp/lock zůstane po non-zero exit.",
+          "minimal_fix": "Přidat řízený cleanup/trap a test fail path."
+        }
+      ],
+      "transfer": "Stejný pattern použij na rotaci TLS certifikátu. Který krok bude validovat nový certifikát před reloadem služby?",
+      "success_criteria": [
+        "Mutace nastává až po validaci.",
+        "Opakované spuštění je bezpečné.",
+        "Fail path zanechá čitelný log a uklizený stav."
+      ],
+      "mode_notes": {
+        "guided": "Pipeline ukazuje safe publish pattern a hinty k idempotenci.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Bez popisků musíš sám navrhnout guard, staging a rollback/recovery."
+      },
+      "teacher": {
+        "cold_call": "Proč je `set -e` samo o sobě nedostatečný safety design?",
+        "discussion": "Co znamená atomická změna configu z pohledu čtenáře souboru?",
+        "extension": "Přidej dry-run mode a diskutuj, co musí umět simulovat bez zápisu."
+      }
+    },
+    "26": {
+      "title": "Service Recovery Drill",
+      "archetype": "service_recovery",
+      "mission": "Obnov službu metodou process → socket → firewall → DNS → HTTP. Neskákej na poslední vrstvu, pokud nemáš potvrzené předchozí evidence.",
+      "scene": {
+        "layout": "flow",
+        "caption": "process → socket → host path → DNS → HTTP",
+        "nodes": [
+          {
+            "id": "proc",
+            "label": "portal.service",
+            "meta": "active?"
+          },
+          {
+            "id": "socket",
+            "label": "0.0.0.0:8080",
+            "meta": "listener"
+          },
+          {
+            "id": "proxy",
+            "label": "nginx :443",
+            "meta": "proxy"
+          },
+          {
+            "id": "fw",
+            "label": "firewall",
+            "meta": "443"
+          },
+          {
+            "id": "dns",
+            "label": "DNS",
+            "meta": "portal→IP"
+          },
+          {
+            "id": "http",
+            "label": "client",
+            "meta": "HTTPS"
+          }
+        ],
+        "edges": [
+          {
+            "from": "proc",
+            "to": "socket"
+          },
+          {
+            "from": "socket",
+            "to": "proxy"
+          },
+          {
+            "from": "proxy",
+            "to": "fw"
+          },
+          {
+            "from": "fw",
+            "to": "dns"
+          },
+          {
+            "from": "dns",
+            "to": "http"
+          }
+        ],
+        "artifact": "Drill timer starts. Symptom: portal unavailable from client. You may perform only one change before re-validation."
+      },
+      "tasks": [
+        {
+          "id": "recovery_order",
+          "type": "sequence",
+          "prompt": "Seřaď recovery chain.",
+          "items": [
+            "Service status/local health",
+            "Listener/socket",
+            "Proxy/local path",
+            "Firewall/remote TCP",
+            "DNS resolution",
+            "Public HTTP"
+          ],
+          "expected": [
+            "Service status/local health",
+            "Listener/socket",
+            "Proxy/local path",
+            "Firewall/remote TCP",
+            "DNS resolution",
+            "Public HTTP"
+          ],
+          "why": "Od lokálního procesu k veřejnému endpointu rychle izoluješ první vadnou vrstvu."
+        },
+        {
+          "id": "one_change",
+          "type": "choice",
+          "prompt": "Proč v drillu smíš měnit jen jednu věc před novou validací?",
+          "options": [
+            "Aby šlo připsat změnu výsledku konkrétní hypotéze",
+            "Aby incident trval déle",
+            "Protože Linux dovolí jen jeden příkaz",
+            "Aby se vyhnul logům"
+          ],
+          "expected": "Aby šlo připsat změnu výsledku konkrétní hypotéze",
+          "why": "Více změn současně ničí kauzální informaci."
+        },
+        {
+          "id": "closure",
+          "type": "multi",
+          "prompt": "Co musí být součástí uzavření recovery incidentu?",
+          "options": [
+            "Root cause nebo jasně označená hypotéza",
+            "Evidence před/po",
+            "Pozitivní klientský test",
+            "Negative/security test, pokud relevantní",
+            "Pouze screenshot zeleného dashboardu"
+          ],
+          "expected": [
+            "Root cause nebo jasně označená hypotéza",
+            "Evidence před/po",
+            "Pozitivní klientský test",
+            "Negative/security test, pokud relevantní"
+          ],
+          "why": "Recovery není jen zelený status; potřebuješ důkaz a zachovat bezpečnostní očekávání."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Service down",
+          "symptom": "systemctl failed, žádný listener.",
+          "hint": "Začni úplně dole v chain.",
+          "root_cause": "Proces se nespustil kvůli config error.",
+          "evidence": "status/journal fail, ss bez portu.",
+          "minimal_fix": "Opravit config a spustit; potom postupovat dál."
+        },
+        {
+          "title": "Firewall regression",
+          "symptom": "Local/proxy testy OK, remote TCP timeout.",
+          "hint": "Vše před firewallem je potvrzené.",
+          "root_cause": "Nová firewall policy blokuje 443.",
+          "evidence": "Local 200, remote SYN timeout, drop counter.",
+          "minimal_fix": "Opravit minimální rule + positive/negative test."
+        },
+        {
+          "title": "DNS rollback drift",
+          "symptom": "Server je zdravý, přímá IP funguje, jméno míří staram.",
+          "hint": "Nesnaž se restartovat zdravou app.",
+          "root_cause": "DNS záznam po rollbacku zůstal na starém endpointu.",
+          "evidence": "dig != current service IP.",
+          "minimal_fix": "Opravit record a respektovat TTL."
+        }
+      ],
+      "transfer": "V drillu je služba obnovena, ale root cause zůstává neznámá. Co můžeš bezpečně uzavřít a co musí zůstat jako follow-up?",
+      "success_criteria": [
+        "Recovery postupuje první vadnou vrstvou.",
+        "Jedna změna má jednu hypotézu.",
+        "Uzavření obsahuje evidence i security regression check."
+      ],
+      "mode_notes": {
+        "guided": "Chain je detailně popsaný a fault bank poskytuje hint po pokusu.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Žádné hinty ani popisky; počítá se s krátkým incident timerem."
+      },
+      "teacher": {
+        "cold_call": "Je `service active` dostatečný důvod přejít rovnou na DNS?",
+        "discussion": "Co je difference recovery vs root-cause analysis?",
+        "extension": "Zaveď 8minutový timer a porovnej týmy podle počtu změn, ne jen času."
+      }
+    },
+    "27": {
+      "title": "Team Incident Command Board",
+      "archetype": "team_incident",
+      "mission": "Rozděl incident mezi role bez duplikování práce. Každá role musí produkovat evidence do společné timeline a coordinator drží jednu aktuální hypotézu.",
+      "scene": {
+        "layout": "board",
+        "caption": "Coordinator · Network · Server · Logs · Validator",
+        "nodes": [
+          {
+            "id": "coord",
+            "label": "Coordinator",
+            "meta": "scope/hypothesis"
+          },
+          {
+            "id": "net",
+            "label": "Network",
+            "meta": "DNS/TCP/path"
+          },
+          {
+            "id": "srv",
+            "label": "Server",
+            "meta": "process/socket"
+          },
+          {
+            "id": "logs",
+            "label": "Logs",
+            "meta": "timeline"
+          },
+          {
+            "id": "val",
+            "label": "Validator",
+            "meta": "positive/negative tests"
+          }
+        ],
+        "edges": [
+          {
+            "from": "net",
+            "to": "coord",
+            "label": "evidence"
+          },
+          {
+            "from": "srv",
+            "to": "coord",
+            "label": "evidence"
+          },
+          {
+            "from": "logs",
+            "to": "coord",
+            "label": "evidence"
+          },
+          {
+            "from": "coord",
+            "to": "val",
+            "label": "candidate fix"
+          },
+          {
+            "from": "val",
+            "to": "coord",
+            "label": "result"
+          }
+        ],
+        "artifact": "Incident: internal portal intermittently returns 503 after deployment. Team has 12 minutes."
+      },
+      "tasks": [
+        {
+          "id": "roles",
+          "type": "pair",
+          "prompt": "Přiřaď roli k primární odpovědnosti.",
+          "left": [
+            "Coordinator",
+            "Network",
+            "Server",
+            "Logs",
+            "Validator"
+          ],
+          "right": [
+            "scope + current hypothesis",
+            "DNS/TCP/path evidence",
+            "process/listener/local health",
+            "incident timeline/change evidence",
+            "positive + negative post-fix tests"
+          ],
+          "expected": {
+            "Coordinator": "scope + current hypothesis",
+            "Network": "DNS/TCP/path evidence",
+            "Server": "process/listener/local health",
+            "Logs": "incident timeline/change evidence",
+            "Validator": "positive + negative post-fix tests"
+          },
+          "why": "Role má jasný výstup, ne jen oblast zájmu."
+        },
+        {
+          "id": "team_loop",
+          "type": "sequence",
+          "prompt": "Seřaď týmový incident loop.",
+          "items": [
+            "Coordinator definuje symptom/scope",
+            "Role paralelně sbírají evidence",
+            "Evidence jde do společné timeline",
+            "Coordinator aktualizuje hypotézu",
+            "Jeden potvrzený fix",
+            "Validator provede testy",
+            "Krátká incident note"
+          ],
+          "expected": [
+            "Coordinator definuje symptom/scope",
+            "Role paralelně sbírají evidence",
+            "Evidence jde do společné timeline",
+            "Coordinator aktualizuje hypotézu",
+            "Jeden potvrzený fix",
+            "Validator provede testy",
+            "Krátká incident note"
+          ],
+          "why": "Paralelní práce je efektivní jen se sdílenou syntézou."
+        },
+        {
+          "id": "bad_team_behaviour",
+          "type": "multi",
+          "prompt": "Co typicky zhoršuje týmový incident?",
+          "options": [
+            "Každý mění konfiguraci bez koordinace",
+            "Dva lidé opakují stejný test bez důvodu",
+            "Evidence nemá timestamp/source",
+            "Jedna sdílená timeline",
+            "Jasná current hypothesis"
+          ],
+          "expected": [
+            "Každý mění konfiguraci bez koordinace",
+            "Dva lidé opakují stejný test bez důvodu",
+            "Evidence nemá timestamp/source"
+          ],
+          "why": "Tým zrychluje diagnostiku jen tehdy, když neduplikuje zásahy a sdílí evidence."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Parallel fixes collide",
+          "symptom": "Network i Server role současně mění firewall a app config.",
+          "hint": "Coordinator musí serializovat mutace.",
+          "root_cause": "Více současných změn zničilo kauzální stopu.",
+          "evidence": "Timeline má dvě změny ve stejný čas před testem.",
+          "minimal_fix": "Vrátit/izolovat změny, poté jedna hypotéza → jeden fix."
+        },
+        {
+          "title": "Evidence silo",
+          "symptom": "Logs role našla config error, coordinator o něm neví.",
+          "hint": "Evidence musí proudit do společné timeline.",
+          "root_cause": "Role pracují izolovaně.",
+          "evidence": "Lokální poznámka existuje, team board ne.",
+          "minimal_fix": "Pravidelný sync/structured evidence post."
+        },
+        {
+          "title": "No negative test",
+          "symptom": "Portal je zelený, ale fix otevřel admin port Guest síti.",
+          "hint": "Validator musí ověřit i security invariant.",
+          "root_cause": "Oprava byla příliš široká.",
+          "evidence": "HTTPS works, Guest→SSH unexpectedly works.",
+          "minimal_fix": "Zúžit fix a přidat negative test do closure checklistu."
+        }
+      ],
+      "transfer": "Rozděl pět rolí ve čtyřčlenném týmu. Které role může jeden člověk bezpečně spojit a které bys raději oddělil?",
+      "success_criteria": [
+        "Každá role má měřitelný výstup.",
+        "Mutace jsou koordinované.",
+        "Timeline obsahuje timestamp, source a evidence."
+      ],
+      "mode_notes": {
+        "guided": "Role mají checklist a doporučený komunikační rytmus.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Role dostanou jen cíl; tým si sám musí navrhnout evidence contract."
+      },
+      "teacher": {
+        "cold_call": "Proč je coordinator technická role, i když nemusí psát příkazy?",
+        "discussion": "Kdy paralelizace incident zrychlí a kdy ho zhorší?",
+        "extension": "Simuluj handoff po 6 minutách: nový coordinator musí z timeline pochopit incident bez ústního vysvětlení."
+      }
+    },
+    "28": {
+      "title": "3.A Mastery Review Arena",
+      "archetype": "mastery_arena",
+      "mission": "Projdi čtyři stanice – síť, DNS, Linux služba a bezpečnost – a ukaž, že umíš vybrat správný důkaz i v novém kontextu. Není to známkovaný test; je to mapování připravenosti.",
+      "scene": {
+        "layout": "board",
+        "caption": "Station A Network · B DNS · C Linux service · D Security/automation",
+        "nodes": [
+          {
+            "id": "a",
+            "label": "A · Network",
+            "meta": "route/VLSM/packet"
+          },
+          {
+            "id": "b",
+            "label": "B · DNS",
+            "meta": "resolver/evidence"
+          },
+          {
+            "id": "c",
+            "label": "C · Service",
+            "meta": "systemd/socket/log"
+          },
+          {
+            "id": "d",
+            "label": "D · Security",
+            "meta": "firewall/permissions/script"
+          },
+          {
+            "id": "x",
+            "label": "Transfer",
+            "meta": "mixed incident"
+          }
+        ],
+        "edges": [
+          {
+            "from": "a",
+            "to": "x"
+          },
+          {
+            "from": "b",
+            "to": "x"
+          },
+          {
+            "from": "c",
+            "to": "x"
+          },
+          {
+            "from": "d",
+            "to": "x"
+          }
+        ],
+        "artifact": "Cíl: u každé stanice zvolit nejmenší rozlišovací test a na konci vyřešit kombinovaný transfer."
+      },
+      "tasks": [
+        {
+          "id": "stations",
+          "type": "pair",
+          "prompt": "Přiřaď symptom k nejvhodnější první evidence.",
+          "left": [
+            "IP funguje, jméno ne",
+            "Unit failed",
+            "Ping OK, 443 timeout",
+            "No space left, df -h OK"
+          ],
+          "right": [
+            "DNS query",
+            "systemctl status + journal",
+            "listener/firewall path",
+            "df -i"
+          ],
+          "expected": {
+            "IP funguje, jméno ne": "DNS query",
+            "Unit failed": "systemctl status + journal",
+            "Ping OK, 443 timeout": "listener/firewall path",
+            "No space left, df -h OK": "df -i"
+          },
+          "why": "Mastery není znalost jednoho příkazu, ale volba správného důkazu."
+        },
+        {
+          "id": "mixed_chain",
+          "type": "sequence",
+          "prompt": "Seřaď kombinovaný transfer: uživatel nedostane web po změně DNS a deployi.",
+          "items": [
+            "Ověřit aktuální DNS odpověď",
+            "Ověřit TCP/TLS endpoint",
+            "Ověřit proxy response",
+            "Ověřit local app health",
+            "Porovnat journal s deployem",
+            "Provést jeden potvrzený fix",
+            "End-to-end + negative test"
+          ],
+          "expected": [
+            "Ověřit aktuální DNS odpověď",
+            "Ověřit TCP/TLS endpoint",
+            "Ověřit proxy response",
+            "Ověřit local app health",
+            "Porovnat journal s deployem",
+            "Provést jeden potvrzený fix",
+            "End-to-end + negative test"
+          ],
+          "why": "Transfer kombinuje síť a OS, ale stále drží evidence-first logiku."
+        },
+        {
+          "id": "mastery_habits",
+          "type": "multi",
+          "prompt": "Které návyky chceš zachovat napříč všemi incidenty?",
+          "options": [
+            "Před změnou formulovat hypotézu",
+            "Měnit jednu věc",
+            "Zapisovat evidence",
+            "Validovat z pohledu uživatele",
+            "Po první chybě restartovat vše",
+            "Používat 777 jako univerzální fix"
+          ],
+          "expected": [
+            "Před změnou formulovat hypotézu",
+            "Měnit jednu věc",
+            "Zapisovat evidence",
+            "Validovat z pohledu uživatele"
+          ],
+          "why": "Mastery je přenositelný způsob práce, ne seznam memorovaných oprav."
+        }
+      ],
+      "faults": [
+        {
+          "title": "Mixed DNS + app",
+          "symptom": "Část klientů starý endpoint, nový endpoint navíc 502.",
+          "hint": "Nezastav se u první nalezené chyby.",
+          "root_cause": "Současně stale DNS a backend config issue.",
+          "evidence": "Resolver answers differ + local new backend fail.",
+          "minimal_fix": "Řešit obě příčiny oddělenou evidencí a validací."
+        },
+        {
+          "title": "Security regression",
+          "symptom": "Service recovery otevře široký firewall allow.",
+          "hint": "Recovery musí zachovat security invariants.",
+          "root_cause": "Workaround porušil least privilege.",
+          "evidence": "Service works, negative test z Guest selže (tj. přístup je povolen).",
+          "minimal_fix": "Zúžit pravidlo a přidat negative validation."
+        },
+        {
+          "title": "Automation hides failure",
+          "symptom": "Cron vrací 0, ale výstup není aktualizovaný.",
+          "hint": "Exit code musí reprezentovat skutečný outcome.",
+          "root_cause": "Skript ignoruje chybu uvnitř pipeline.",
+          "evidence": "Log obsahuje command fail, wrapper exit 0.",
+          "minimal_fix": "Propagovat error a přidat output verification."
+        }
+      ],
+      "transfer": "Dostaneš nový incident, který jsme v kurzu neviděli. Napiš univerzální šestikrokový evidence-first postup, který použiješ bez ohledu na konkrétní technologii.",
+      "success_criteria": [
+        "Umíš volit důkaz podle symptomu.",
+        "Přenášíš troubleshooting návyky mezi sítěmi a OS.",
+        "Recovery nesnižuje bezpečnost a končí validací."
+      ],
+      "mode_notes": {
+        "guided": "Stanice mají hint k příslušné doméně a dovolí krátký recap.",
+        "practice": "Dostaneš scénář a checkpointy; hinty jsou schované a odemykáš je jen podle potřeby.",
+        "challenge": "Žádné doménové hinty; musíš sám určit, do které vrstvy symptom patří."
+      },
+      "teacher": {
+        "cold_call": "Který troubleshooting návyk z celého roku je nejvíc přenositelný?",
+        "discussion": "Nech studenty obhájit rozdíl mezi „znám příkaz“ a „umím diagnostikovat“.",
+        "extension": "Použij agregované výsledky v48.1 k výběru čtyř nejslabších stanic pro další hodinu."
+      }
+    }
+  }
+}

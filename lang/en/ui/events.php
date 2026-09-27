@@ -1,0 +1,125 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * v59 · OPS-02 – katalog msgid domény „events“ (angličtina).
+ * CTF týden a Incidenty – žákovské UI (viz lang/domains_v59.php, PLAN_I18N.md B6c).
+ * Klíč = přesně český text ze zdroje. Vlastník: i18n_events (B6c).
+ */
+if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
+
+return [
+    // arena_v58_events_views.php – CTF týden (žák)
+    'CTF týden' => 'CTF week',
+    'Zatím tu není žádná vyhlášená akce. Zeptej se učitele, kdy začne další CTF týden.' => 'There is no event announced yet. Ask your teacher when the next CTF week starts.',
+    'Zpět do Labu' => 'Back to the Lab',
+    'Běží' => 'Running',
+    'Skončil' => 'Finished',
+    'Připravuje se' => 'Getting ready',
+    'týmy' => 'teams',
+    'každý sám za sebe' => 'everyone for themselves',
+    ' · žebříček je teď na chvíli zmrazený, ať je konec napínavý' => ' · the leaderboard is briefly frozen to keep the finish exciting',
+    'CTF týden · {stav}' => 'CTF week · {stav}',
+    '5 kategorií · {mod} · body klesají s počtem řešitelů (1.–3. místo 100 %, dál míň, nikdy pod 40 %) · první řešitel v celé akci dostane bonus ×1,25{zmrazeno}' => "5 categories · {mod} · points drop as more people solve it (1st–3rd place 100%, less after that, never below 40%) · the very first solver across the whole event gets a ×1.25 bonus{zmrazeno}",
+    'Zbývá' => 'Remaining',
+    'místo' => 'place',
+    'bodů' => 'points',
+    'můj tým' => 'my team',
+    'CTF týden ještě nezačal. Sleduj termín spuštění – dá ti vědět učitel.' => "The CTF week hasn't started yet. Watch out for the start date – your teacher will let you know.",
+    'Úlohy podle kategorie' => 'Tasks by category',
+    'nejdřív: {uloha}' => 'first: {uloha}',
+    '✓ vyřešeno ({body} b)' => '✓ solved ({body} pts)',
+    '{body} b základ' => '{body} pts base',
+    'Terminál se právě připravuje, zkus stránku obnovit.' => 'The terminal is still getting ready, try refreshing the page.',
+    'Vyber si úlohu' => 'Pick a task',
+    'Vyber kategorii vlevo a pusť se do první úlohy. Nápovědy jsou {stav_np}, každá stojí {procent} % bodů dané úlohy.' => "Pick a category on the left and dive into your first task. Hints are {stav_np}, each one costs {procent}% of that task's points.",
+    'zapnuté' => 'on',
+    'vypnuté' => 'off',
+    'Žebříček CTF' => 'CTF leaderboard',
+    'Týmy' => 'Teams',
+    'Zatím nikdo nemá body.' => 'Nobody has points yet.',
+    '{n} b' => '{n} pts',
+    'Pořadí' => 'Ranking',
+    'Zatím nikdo nemá body. Buď první!' => 'Nobody has points yet. Be the first!',
+    'Terminál je simulace – nic se nespouští doopravdy. Vlajky jsou jen tvoje – kód spolužáka nikdy neprojde.' => "The terminal is a simulation – nothing actually runs. The flags are yours alone – a classmate's code will never work here.",
+
+    // arena_v58_events_views.php – Incidenty (žák)
+    'Incidenty' => 'Incidents',
+    'Zatím tu není žádná vyhlášená směna. Zeptej se učitele, kdy začne další.' => 'There is no shift announced yet. Ask your teacher when the next one starts.',
+    'Směna běží' => 'Shift running',
+    'Směna skončila' => 'Shift finished',
+    'Incidenty · {stav}' => 'Incidents · {stav}',
+    'Každý scénář má vlastní odpočet {min} minut od chvíle, kdy ho spustíš. Body dostaneš až za postmortem – i nedokončená oprava se počítá, pokud napíšeš, cos zkusil(a).' => 'Each scenario has its own {min}-minute countdown from the moment you start it. You only get points for the post-mortem – even an unfinished fix counts if you write up what you tried.',
+    'Směna ještě nezačala.' => "The shift hasn't started yet.",
+    'Postmortem odevzdán' => 'Post-mortem submitted',
+    '+{body} b' => '+{body} pts',
+    'bez bodů (nestihl se opravit v čase)' => "no points (the fix wasn't finished in time)",
+    'Technicky vyřešeno – napiš postmortem pro body' => 'Technically solved – write a post-mortem for points',
+    'Čas vypršel – napiš postmortem' => "Time's up – write a post-mortem",
+    'Rozjeto{pauza}, zbývá {cas}' => 'In progress{pauza}, {cas} left',
+    ' (pauza)' => ' (paused)',
+    'Ještě nezačato' => 'Not started yet',
+    'Pokračovat' => 'Continue',
+    'Otevřít scénář' => 'Open scenario',
+    'Terminál je simulace – nic se nespouští doopravdy.' => 'The terminal is a simulation – nothing actually runs.',
+
+    // arena_v58_events_views.php – Incidenty (detail scénáře, žák)
+    'Jakmile klikneš na Spustit, začne běžet tvůj vlastní odpočet {min} minut.' => 'As soon as you click Start, your own {min}-minute countdown begins.',
+    'Spustit scénář' => 'Start scenario',
+    'Pauza' => 'Pause',
+    'Technicky vyřešeno! Teď napiš krátký postmortem, ať dostaneš body.' => 'Technically solved! Now write a short post-mortem to get your points.',
+    'Čas vypršel. Postmortem pořád napiš – i z nedokončené opravy je co se učit.' => "Time's up. Still write the post-mortem – there's something to learn even from an unfinished fix.",
+    'Tvůj postmortem' => 'Your post-mortem',
+    'Příčina:' => 'Cause:',
+    'Oprava:' => 'Fix:',
+    'Prevence:' => 'Prevention:',
+    'Poznámka učitele:' => "Teacher's note:",
+    'Příčina (co se pokazilo?)' => 'Cause (what went wrong?)',
+    'Oprava (co jsi udělal(a)?)' => 'Fix (what did you do?)',
+    'Prevence (jak tomu příště předejít?)' => 'Prevention (how to avoid this next time?)',
+    'Odeslat postmortem' => 'Submit post-mortem',
+    'Zpět na seznam scénářů' => 'Back to the scenario list',
+
+    // arena_v58_ctf.php – přístup a stav (žák)
+    'Tahle CTF akce neexistuje.' => "This CTF event doesn't exist.",
+    'Tahle CTF akce není pro tvou třídu.' => 'This CTF event is not for your class.',
+    'Tahle úloha není součástí CTF týdne.' => 'This task is not part of the CTF week.',
+    'CTF týden ještě nezačal. Sleduj termín spuštění.' => "The CTF week hasn't started yet. Watch out for the start date.",
+    'Ještě nejsi zařazen(a) do týmu – ozvi se učiteli.' => "You're not on a team yet – ask your teacher.",
+    'Nejdřív vyřeš úlohu „{uloha}“.' => 'First solve the task "{uloha}".',
+    'Žák' => 'Student',
+    'CTF akce nebyla nalezena.' => 'This CTF event was not found.',
+
+    // arena_v58_incident.php – pokusy, postmortem, přístup (žák)
+    'Směna nebyla nalezena.' => 'Shift not found.',
+    'Směna právě neběží.' => 'The shift is not running right now.',
+    'Neznámý scénář.' => 'Unknown scenario.',
+    'Scénář ještě nezačal.' => "The scenario hasn't started yet.",
+    'Scénář je už vyřešený.' => 'The scenario is already solved.',
+    'Pole „{pole}“ je moc krátké – napiš aspoň pár vět.' => 'The "{pole}" field is too short – write at least a couple of sentences.',
+    'Text neprošel kontrolou obsahu.' => 'The text failed the content check.',
+    'Scénář jsi ještě nespustil(a).' => "You haven't started the scenario yet.",
+    'Postmortem už jsi odevzdal(a).' => "You've already submitted the post-mortem.",
+    'Příčina' => 'Cause',
+    'Oprava' => 'Fix',
+    'Prevence' => 'Prevention',
+    'Tahle incidentní směna neexistuje.' => "This incident shift doesn't exist.",
+    'Tahle směna není pro tvou třídu.' => 'This shift is not for your class.',
+    'Tenhle scénář není součástí směny.' => 'This scenario is not part of the shift.',
+    'Nejdřív klikni na „Spustit scénář“ na stránce incidentu.' => 'First click "Start scenario" on the incident page.',
+    'Scénář je pozastavený – nejdřív ho na stránce incidentu obnov.' => 'The scenario is paused – resume it on the incident page first.',
+    'Čas na tenhle incident vypršel (15 minut). Napiš postmortem – i bez dokončení opravy se z něj nejvíc naučíš.' => "Time's up for this incident (15 minutes). Write a post-mortem – you'll learn the most from it even without finishing the fix.",
+
+    // arena_v58_events_api.php – chyby JSON API (žák)
+    'Použij POST.' => 'Use POST.',
+    'Relace vypršela. Obnov stránku.' => 'Your session expired. Refresh the page.',
+    'Nejsi přihlášen(a) ke třídě.' => "You're not signed in to a class.",
+    'Nejdřív si nastav vlastní heslo.' => 'First set your own password.',
+    'Linux Lab je pro tvou třídu vypnutý.' => 'Linux Lab is switched off for your class.',
+    'Neplatná směna.' => 'Invalid shift.',
+    'Neplatný scénář.' => 'Invalid scenario.',
+    'Text je příliš dlouhý.' => 'The text is too long.',
+    'Neznámá operace.' => 'Unknown operation.',
+    'Nastala chyba, zkus to znovu.' => 'Something went wrong, try again.',
+];

@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# EDUCANET v59 · plánované úlohy pro aaPanel – is.stanektech.cz
+#
+# Na serveru:  /www/server/educanet/educanet-cron.sh   (root:root, 0750)
+# aaPanel → Cron → Add task, typ „Shell Script“, obsah jeden řádek, např.:
+#   bash /www/server/educanet/educanet-cron.sh backup      (denně 00:15)
+#   bash /www/server/educanet/educanet-cron.sh retention   (denně 00:45)
+#   bash /www/server/educanet/educanet-cron.sh automation  (pondělí 03:00)
+#   bash /www/server/educanet/educanet-cron.sh preflight   (pondělí 06:00)
+# Úlohy aaPanelu běží jako root – skript proto PHP spouští jako uživatel webu `www`
+# (soubory v storage/ musí dál patřit www). Výstup uvidíš v logu úlohy v panelu.
+# Přechod školního roku (tools/v58_rollover.php) se spouští RUČNĚ, ne cronem.
+set -euo pipefail
+
+SITE=/www/wwwroot/is.stanektech.cz
+ENV_FILE=/www/server/educanet/educanet.env
+PHP=${EDUCANET_PHP:-/www/server/php/83/bin/php}
+
+run() {
+  runuser -u www -- env -i PATH=/usr/bin:/bin HOME=/tmp bash -c \
+    'set -a; . "$1"; set +a; cd "$2"; shift 2; exec "$@"' _ "$ENV_FILE" "$SITE" "$PHP" "$@"
+}
+
+case "${1:-}" in
+  backup)     run tools/backup_storage.php --keep=14 --with-uploads ;;
+  retention)  run tools/v58_retention.php --apply ;;
+  automation) run tools/v46_automation_tick.php ;;
+  preflight)  run tools/preflight.php --env-file="$ENV_FILE" --strict ;;
+  *) echo "použití: $0 backup|retention|automation|preflight" >&2; exit 2 ;;
+esac

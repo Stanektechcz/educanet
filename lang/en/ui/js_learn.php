@@ -1,0 +1,72 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * v59 · OPS-02 – katalog msgid domény „js_learn“ (angličtina).
+ * Zdroj msgid: JS soubory z lang/domains_v59.php (js.js_learn). Klíč = přesně český text ze zdroje.
+ * Vlastník: i18n builder B2.
+ */
+if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
+
+return [
+    '{n} minut' => ['one' => '{n} minute', 'other' => '{n} minutes'],
+    'do konce' => 'left',
+    'Čas vypršel.' => 'Time is up.',
+    'Zbývá {minutes} {label}.' => '{minutes} {label} left.',
+    'Uloženo v prohlížeči · {time}' => 'Saved in the browser · {time}',
+    'Prohlížeč neukládá lokálně, spoléhej na tlačítko Uložit.' => 'The browser is not saving locally, rely on the Save button.',
+    'Teď pracuješ na hodině' => "You're working on the class right now",
+    'Rozpracovanou práci máš uloženou, ale odchod na jinou stránku tě z rozdělané práce vyhodí. Dokonči krok a odevzdej.' => "Your draft work is saved, but leaving this page will take you out of it. Finish the step and submit.",
+    'Zůstat u práce' => 'Stay on this work',
+    'Přesto odejít' => 'Leave anyway',
+    'Hotovo' => 'Done',
+    'Dej si krátkou pauzu nebo uzavři dnešní plán.' => "Take a short break or wrap up today's plan.",
+    'Krátká pauza?' => 'Short break?',
+    '20 minut fokusu je za tebou. Protáhni se, podívej se mimo obrazovku a vrať se, až budeš chtít.' => "You've done 20 minutes of focused work. Stretch, look away from the screen, and come back whenever you're ready.",
+    'Nejdřív zvol odpověď.' => 'Choose an answer first.',
+    '✓ Přenos funguje.' => '✓ The transfer works.',
+    '↻ Ještě jednou porovnej rozhodující podmínku.' => '↻ Compare the deciding condition once more.',
+    'Stejný princip jsi poznal/a i v nové situaci.' => 'You recognised the same principle in a new situation.',
+    'Vrať se k principu a kontrastu výše.' => 'Go back to the principle and contrast above.',
+    'Posunout výš' => 'Move up',
+    'Posunout níž' => 'Move down',
+    'Pořadí je správně.' => 'The order is correct.',
+    'Správně je {good} z {total}. Oprav červené řádky.' => '{good} of {total} are correct. Fix the red rows.',
+    'Vyber pojem vlevo a potom odpověď vpravo.' => 'Pick a term on the left, then its answer on the right.',
+    'Přiřaď všechny dvojice.' => 'Match all the pairs.',
+    'Všechny dvojice sedí.' => 'All pairs match.',
+    'Správně {good} z {total}. Oprav červené.' => '{good} of {total} correct. Fix the red ones.',
+    'Příkaz' => 'Command',
+    'Nápověda' => 'Hint',
+    'Úkol {n}/{total}:' => 'Task {n}/{total}:',
+    'Všechny příkazy jsou správně.' => 'All commands are correct.',
+    'chyby: {errors} · nápovědy: {hints}' => 'errors: {errors} · hints: {hints}',
+    'Hotovo – příkazy jsou správně.' => 'Done – the commands are correct.',
+    'Tento příkaz úkol nesplní. Zkus to jinak nebo použij nápovědu.' => "This command won't complete the task. Try something else or use a hint.",
+    'Hotovo.' => 'Done.',
+    'Napiš příkaz do terminálu a potvrď Enterem.' => 'Type a command into the terminal and confirm with Enter.',
+    'Správně – {value}.' => 'Correct – {value}.',
+    'Máš {value}, cíl je {target}.' => 'You have {value}, the target is {target}.',
+    'Pořadí čtení je jasné.' => 'The reading order is clear.',
+    'Nadpis musí být největší.' => 'The heading must be the largest.',
+    'Datum má být alespoň tak velké jako text CTA.' => 'The date should be at least as large as the CTA text.',
+    'Nadpis má být aspoň 2× větší než CTA text.' => 'The heading should be at least 2× larger than the CTA text.',
+    'Splňuje WCAG AA.' => 'Meets WCAG AA.',
+    'Kontrast je pod 4,5 : 1.' => 'The contrast is below 4.5 : 1.',
+    '{message} (pokus {n})' => '{message} (attempt {n})',
+    'Odemykám…' => 'Unlocking…',
+    'Nemáš dost bodů' => "You don't have enough points",
+    'Zkus nejdřív vyřešit jiný úkol.' => 'Try solving another task first.',
+    'zdarma' => 'free',
+    'Ukládám…' => 'Saving…',
+    'Krok se nepodařilo uložit.' => 'The step could not be saved.',
+    'To ještě není ono. Zkus jinou odpověď.' => "That's not quite it. Try a different answer.",
+    'Dokončit krok' => 'Finish the step',
+    'Hotovo · +{xp} XP. Pokračujeme dalším krokem.' => 'Done · +{xp} XP. Moving on to the next step.',
+    'Hotovo. Pokračujeme dalším krokem.' => 'Done. Moving on to the next step.',
+    'Krok je hotový' => 'Step done',
+    'Zkopírováno' => 'Copied',
+    'správně' => 'correct',
+    'Znovu' => 'Again',
+];
