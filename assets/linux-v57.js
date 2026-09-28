@@ -614,7 +614,137 @@
       }
     });
 
-    out.addEventListener('click', function () { input.focus(); });
+    // Klik do výstupu vrací fokus na vstup – ale ne, když žák právě označil text ke kopírování.
+    out.addEventListener('click', function () {
+      if (selectedOutText() !== '') return;
+      input.focus();
+    });
+
+    // ---------------- kontextová nabídka konzole (pravé tlačítko) ----------------
+    // Kopírovat označený text, Vložit do příkazového řádku, Odevzdat označené jako odpověď/kód.
+
+    function selectedOutText() {
+      var sel = window.getSelection ? window.getSelection() : null;
+      if (!sel || sel.isCollapsed || sel.rangeCount === 0) return '';
+      var node = sel.getRangeAt(0).commonAncestorContainer;
+      if (!out.contains(node.nodeType === 1 ? node : node.parentNode)) return '';
+      return String(sel.toString());
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return legacyCopy(text); });
+      }
+      return Promise.resolve(legacyCopy(text));
+    }
+    function legacyCopy(text) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed'; ta.style.top = '-1000px';
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+      document.body.removeChild(ta);
+      return ok;
+    }
+
+    function insertIntoInput(text) {
+      var clean = String(text).replace(/\r?\n/g, ' ');
+      var start = typeof input.selectionStart === 'number' ? input.selectionStart : input.value.length;
+      var end = typeof input.selectionEnd === 'number' ? input.selectionEnd : start;
+      input.value = input.value.slice(0, start) + clean + input.value.slice(end);
+      input.focus();
+      input.setSelectionRange(start + clean.length, start + clean.length);
+    }
+
+    // Kam se dá označený text odevzdat: úroveň s odpovědí, nebo úroveň s kódem (vlajkou).
+    function turnInTarget() {
+      if (answerInput && submitAnswerBtn) return { field: answerInput, run: function (v) { runLine('answer ' + v); } };
+      if (codeInput && submitCodeBtn) return { field: codeInput, run: function (v) { runLine('submit ' + v); } };
+      return null;
+    }
+
+    function pasteRefused() {
+      input.focus();
+      appendError(EduI18n.tr('Prohlížeč nepovolil vložení – použij Ctrl+V.'));
+      scrollBottom();
+    }
+
+    var ctxMenu = (function buildCtxMenu() {
+      var menu = document.createElement('div');
+      menu.className = 'lab57-ctxmenu';
+      menu.setAttribute('role', 'menu');
+      menu.setAttribute('aria-label', EduI18n.tr('Nabídka konzole'));
+      menu.hidden = true;
+      var saved = '';
+      function item(label, action) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('role', 'menuitem');
+        b.textContent = label;
+        b.addEventListener('click', function () { hide(); action(); });
+        menu.appendChild(b);
+        return b;
+      }
+      var copyItem = item(EduI18n.tr('Kopírovat'), function () {
+        copyText(saved).then(function (ok) {
+          if (!ok) { appendError(EduI18n.tr('Kopírování se nezdařilo – použij Ctrl+C.')); scrollBottom(); }
+        });
+      });
+      var pasteItem = item(EduI18n.tr('Vložit'), function () {
+        if (navigator.clipboard && navigator.clipboard.readText && window.isSecureContext) {
+          navigator.clipboard.readText().then(insertIntoInput, pasteRefused);
+        } else {
+          pasteRefused();
+        }
+      });
+      var turnInItem = item(EduI18n.tr('Odevzdat označené jako odpověď'), function () {
+        var target = turnInTarget();
+        var v = saved.replace(/\s+/g, ' ').trim();
+        if (!target || v === '') return;
+        target.field.value = v;
+        target.run(v);
+      });
+      document.body.appendChild(menu);
+
+      function hide() { menu.hidden = true; }
+      function show(x, y, text) {
+        saved = text;
+        var hasSel = text.trim() !== '';
+        var target = turnInTarget();
+        copyItem.disabled = !hasSel;
+        pasteItem.disabled = busy;
+        turnInItem.disabled = !hasSel || busy || !target;
+        turnInItem.title = target ? '' : EduI18n.tr('Tahle úroveň se neodevzdává odpovědí.');
+        menu.hidden = false;
+        var w = menu.offsetWidth, h = menu.offsetHeight;
+        menu.style.left = Math.max(4, Math.min(x, window.innerWidth - w - 4)) + 'px';
+        menu.style.top = Math.max(4, Math.min(y, window.innerHeight - h - 4)) + 'px';
+        var first = menu.querySelector('button:not([disabled])');
+        if (first) first.focus();
+      }
+      menu.addEventListener('keydown', function (e) {
+        var items = Array.prototype.slice.call(menu.querySelectorAll('button:not([disabled])'));
+        var idx = items.indexOf(document.activeElement);
+        if (e.key === 'Escape') { e.preventDefault(); hide(); input.focus(); }
+        else if (e.key === 'ArrowDown') { e.preventDefault(); if (items.length) items[(idx + 1) % items.length].focus(); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); if (items.length) items[(idx - 1 + items.length) % items.length].focus(); }
+        else if (e.key === 'Tab') { hide(); }
+      });
+      document.addEventListener('mousedown', function (e) { if (!menu.contains(e.target)) hide(); });
+      if (typeof window.addEventListener === 'function') window.addEventListener('resize', hide);
+      out.addEventListener('scroll', hide);
+      return { show: show };
+    })();
+
+    out.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+      var x = e.clientX, y = e.clientY;
+      if (!x && !y) { var r = out.getBoundingClientRect(); x = r.left + 16; y = r.top + 16; } // klávesa Menu / Shift+F10
+      ctxMenu.show(x, y, selectedOutText());
+    });
 
     // ---------------- prvotní stav ----------------
 

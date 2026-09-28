@@ -293,6 +293,15 @@ function teacher59_action_policies(): array
         $table[$action] = $admin;
     }
     $table['teacher_team_member_role'] = $none + ['legacy_only' => true];
+    // v60 · obchod bodů: nová položka vyžaduje classes[] (rozsah), úpravy existující jdou přes entity.
+    $table['mkt60_save'] = ['class' => 'optional', 'class_params' => ['classes'], 'entity' => ['id', 'mkt60_item'], 'entity_required' => false, 'mode' => 'all'];
+    foreach (['mkt60_activate', 'mkt60_deactivate'] as $action) $table[$action] = $ent('id', 'mkt60_item');
+    $table['mkt60_refund'] = ['class' => 'optional', 'entity' => ['student_key', 'student_key'], 'entity_required' => true, 'mode' => 'all'];
+    // v60 · projekty podle levelu: nový projekt vyžaduje classes[] (rozsah), úpravy jdou přes entity;
+    // rozhodnutí o přihlášce (proj60_decide) se ověřuje přes třídy projektu, ke kterému přihláška patří.
+    $table['proj60_save'] = ['class' => 'optional', 'class_params' => ['classes'], 'entity' => ['id', 'proj60_project'], 'entity_required' => false, 'mode' => 'all'];
+    $table['proj60_status'] = $ent('id', 'proj60_project');
+    $table['proj60_decide'] = $ent('application_id', 'proj60_app');
     return $table;
 }
 
@@ -398,6 +407,20 @@ function teacher59_entity_resolve(string $type, string $id): ?array
         case 'ctf_event': $row = $call('arena58_ctf_event', $id); break;
         case 'inc_session': $row = $call('arena58_inc_session', $id); break;
         case 'lab58e_level': $row = $call('lab58e_get', $id); break;
+        // v60 · obchod bodů: položka katalogu má vlastní classes[]; nákup patří třídě rozpadlé z klíče peněženky.
+        case 'mkt60_item':
+            $row = function_exists('mkt60_item') ? mkt60_item($id) : null;
+            break;
+        // v60 · projekty podle levelu: projekt má vlastní classes[]; přihláška patří třídám svého projektu.
+        case 'proj60_project':
+            $row = function_exists('proj60_item') ? proj60_item($id) : null;
+            break;
+        case 'proj60_app':
+            $app = function_exists('proj60_application') ? proj60_application($id) : null;
+            if (!is_array($app)) return null;
+            $project = function_exists('proj60_item') ? proj60_item((string)($app['project_id'] ?? '')) : null;
+            $row = is_array($project) ? ['classes' => $project['classes'] ?? []] : null;
+            break;
         default: return null;
     }
     return is_array($row) ? teacher59_row_classes($row) : null;

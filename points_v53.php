@@ -61,12 +61,16 @@ function pts53_wallet_totals(array $wallet): array
     return $wallet;
 }
 
-function pts53_save_wallet(string $classId, string $studentKey, array $wallet): void
+/**
+ * RMW jednoho klíče peněženky: $mutate(array $wallet): array dostane AKTUÁLNÍ (v zámku čerstvě
+ * načtenou) peněženku a vrací novou – žádné volání nesmí počítat s peněženkou načtenou mimo zámek,
+ * jinak by souběžný zápis druhého procesu mohl být přepsán (ztracený update).
+ */
+function pts53_save_wallet(string $classId, string $studentKey, callable $mutate): array
 {
-    $wallet = pts53_wallet_totals($wallet);
-    storage_update(pts53_path(), static function (array $all) use ($classId, $studentKey, $wallet): array {
-        $all[pts53_key($classId, $studentKey)] = $wallet;
-        return $all;
+    return (array)storage_map_update(pts53_path(), pts53_key($classId, $studentKey), static function (?array $current) use ($mutate): array {
+        $wallet = pts53_wallet_totals($mutate(is_array($current) ? array_replace(['earned' => 0, 'spent' => 0, 'awards' => [], 'purchases' => []], $current) : ['earned' => 0, 'spent' => 0, 'awards' => [], 'purchases' => []]));
+        return $wallet;
     });
 }
 

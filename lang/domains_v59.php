@@ -124,6 +124,28 @@ return [
             'skill_trees.php',
             'project_workspace_views.php',
             'project_workspace.php',
+            'profile_v60.php',
+            'profile_v60_views.php',
+        ],
+        // v60 · ARN-07 – výzvy spolužákům (1v1 souboje z profilu, opt-in).
+        'arena_challenge' => [
+            'arena_v60_challenge.php',
+            'arena_v60_challenge_views.php',
+            'app/actions/arena_challenge.php',
+        ],
+        // v60 · obchod bodů (žákovské UI); učitelský registr marketplace_v60_teacher_views.php je vždy česky.
+        'marketplace' => [
+            'app/views/marketplace.php',
+            'app/actions/marketplace.php',
+            'marketplace_v60.php',
+            'marketplace_v60_views.php',
+        ],
+        // v60 · projekty podle levelu (žákovské UI); učitelský registr projects_v60_teacher_views.php je vždy česky.
+        'projects' => [
+            'app/views/projects.php',
+            'app/actions/projects.php',
+            'projects_v60.php',
+            'projects_v60_views.php',
         ],
         // B5 – Linux Lab, Aréna, hádanka (offline stránka viz js_lab_offline + assets/lab-offline-i18n-v59.json).
         'lab' => [

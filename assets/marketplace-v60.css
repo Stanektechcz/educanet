@@ -1,0 +1,17 @@
+/* v60 · Obchod bodů (žák). Bez CDN, jen prostý CSS; respektuje prefers-reduced-motion. */
+.mkt60-hero{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;padding:20px;border-radius:16px;background:var(--panel-bg,#151a24);margin-bottom:16px;}
+.mkt60-balance{display:flex;flex-direction:column;align-items:flex-end;min-width:120px;}
+.mkt60-balance strong{font-size:2rem;line-height:1;}
+.mkt60-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:20px;}
+.mkt60-card{display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:14px;background:var(--card-bg,#1b2130);border:1px solid rgba(255,255,255,.08);}
+.mkt60-type{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;opacity:.7;}
+.mkt60-card-foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:auto;}
+.mkt60-soldout{padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.08);}
+.mkt60-buy-form button{min-height:44px;min-width:44px;padding:8px 16px;}
+.mkt60-note{opacity:.75;}
+.mkt60-purchase-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
+.mkt60-purchase-list li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.04);}
+.mkt60-refunded{padding:2px 8px;border-radius:8px;background:rgba(255,190,80,.2);}
+.mkt60-inline-form button,.mkt60-purchase-list a.btn{min-height:44px;}
+@media (max-width:600px){.mkt60-hero{flex-direction:column;align-items:stretch;}.mkt60-balance{align-items:flex-start;}}
+@media (prefers-reduced-motion: reduce){.mkt60-card{transition:none;}}

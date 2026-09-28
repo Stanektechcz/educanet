@@ -42,7 +42,7 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
     <link rel="stylesheet" href="<?= e(asset_url('assets/brand-v54.css?v=54.1')) ?>">
     <link rel="stylesheet" href="<?= e(asset_url('assets/student-v55.css?v=55.1')) ?>">
     <link rel="stylesheet" href="<?= e(asset_url('assets/learning-v56.css?v=56.1')) ?>">
-    <?php if (in_array((string)$view, ['lab', 'prikazy'], true)): ?><link rel="stylesheet" href="<?= e(asset_url('assets/linux-v57.css?v=57.0')) ?>"><link rel="stylesheet" href="<?= e(asset_url('assets/arena-v57.css?v=57.0')) ?>"><?php endif; ?>
+    <?php if (in_array((string)$view, ['lab', 'prikazy'], true)): ?><link rel="stylesheet" href="<?= e(asset_url('assets/linux-v57.css?v=59.1')) ?>"><link rel="stylesheet" href="<?= e(asset_url('assets/arena-v57.css?v=57.0')) ?>"><?php endif; ?>
     <?php if ($module === null && google_auth_configured()): ?><script src="https://accounts.google.com/gsi/client" async defer></script><?php endif; ?>
     <link rel="stylesheet" href="<?= e(asset_url('assets/i18n-v59.css?v=59.0')) ?>">
     <script src="<?= e(asset_url('assets/i18n-v58.js?v=58.0')) ?>" defer></script>
@@ -80,6 +80,8 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
                             <a href="?view=project_lobbies"><?= e(tr('Týmy a projekty')) ?></a>
                             <span class="v56-menu-label"><?= e(tr('Účet')) ?></span>
                             <a href="?view=profile"><?= e(tr('Můj profil')) ?></a>
+                            <a href="?view=obchod"><?= e(tr('Obchod')) ?></a>
+                            <a href="?view=projekty"><?= e(tr('Projekty')) ?></a>
                             <a href="?view=my_intake"><?= e(tr('Můj dotazník')) ?></a>
                             <a href="?view=study_loop"><?= e(tr('Potřebuju pomoct')) ?></a>
                             <div class="v56-menu-lang"><?= edu_lang_switcher_html(csrf_token(), '?view=' . (string)$view) ?></div>
@@ -116,7 +118,7 @@ function render_footer(): void
 <script src="<?= e(asset_url('assets/ui-v51.js?v=51.0')) ?>" defer></script>
 <script src="<?= e(asset_url('assets/student-v55.js?v=55.1')) ?>" defer></script>
 <script src="<?= e(asset_url('assets/learning-v56.js?v=56.1')) ?>" defer></script>
-<?php if (in_array((string)($GLOBALS['view'] ?? ''), ['lab', 'prikazy'], true)): ?><script src="<?= e(asset_url('assets/linux-v57.js?v=57.0')) ?>" defer></script><script src="<?= e(asset_url('assets/arena-v57.js?v=57.0')) ?>" defer></script><?php endif; ?>
+<?php if (in_array((string)($GLOBALS['view'] ?? ''), ['lab', 'prikazy'], true)): ?><script src="<?= e(asset_url('assets/linux-v57.js?v=59.1')) ?>" defer></script><script src="<?= e(asset_url('assets/arena-v57.js?v=57.0')) ?>" defer></script><?php endif; ?>
 <?php if(($GLOBALS['module']??null)!==null && (string)($GLOBALS['view']??'')==='goal_nav'): ?><script src="<?= e(asset_url('assets/goal-navigator-v50-4.js?v=50.4')) ?>"></script><?php endif; ?>
 <?php if(in_array((string)($GLOBALS['view']??''),['dashboard','study','mistakes','study_loop'],true)): ?><script src="<?= e(asset_url('assets/student-coach-v47.js?v=47.2')) ?>"></script><?php endif; ?>
 <?php if((string)($GLOBALS['view']??'')==='visual_lab'): ?><script src="<?= e(asset_url('assets/visual-practical-v48.js?v=48')) ?>"></script><script src="<?= e(asset_url('assets/visual-labs-3a-v48-1.js?v=48.1')) ?>"></script><?php endif; ?>

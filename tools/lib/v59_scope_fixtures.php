@@ -68,6 +68,12 @@ function v59sf_build_fixtures(array $modules): array
             'hints' => [], 'files' => [], 'generators' => [], 'checks' => [], 'answer' => '42', 'solution' => ['submit 42'], 'status' => 'draft', 'checklist' => [], 'last_check' => null, 'created_by' => 'audit',
         ])['id']);
         $ids['demo_account'][$k] = v59sf_try($errors, 'demo ' . $k, static fn() => (string)teacher_demo_account_create($modules, $c, $mk . ' Demo')['email']);
+        $ids['mkt60_item'][$k] = v59sf_try($errors, 'mkt60 ' . $k, static fn() => (string)mkt60_save_item('', ['type' => 'other', 'title' => $mk . ' obchod', 'price' => 5, 'classes' => [$c], 'active' => true], [$c], 'audit'));
+        $ids['proj60_project'][$k] = v59sf_try($errors, 'proj60 project ' . $k, static fn() => (string)proj60_save('', ['title' => $mk . ' projekt', 'reward_type' => 'other', 'min_level' => 1, 'capacity' => 5, 'classes' => [$c], 'status' => 'open'], [$c], 'audit'));
+        $ids['proj60_app'][$k] = v59sf_try($errors, 'proj60 app ' . $k, static function () use ($ids, $k, $c, $mk): string {
+            $result = proj60_apply($c, $c . ':student:' . $mk . ' Zajemce', (string)$ids['proj60_project'][$k], $mk . ' motivace', 9);
+            return (string)($result['application_id'] ?? '');
+        });
         $key = $student($c);
         $ids['student_key'][$k] = $key;
         $ids['grade_target'][$k] = $key;
@@ -161,7 +167,8 @@ function v59sf_build_fixtures(array $modules): array
 
     $missing = [];
     foreach (['race', 'match', 'tg58_game', 'ctf_event', 'inc_session', 'sess53', 'lab58e_level', 'demo_account', 'intervention', 'skill_evidence', 'skill_assignment',
-        'peer_feedback', 'ml_live', 'ml_scenario', 'ml_tip', 'group', 'intake_response', 'intake_activation'] as $type) {
+        'peer_feedback', 'ml_live', 'ml_scenario', 'ml_tip', 'group', 'intake_response', 'intake_activation', 'mkt60_item',
+        'proj60_project', 'proj60_app'] as $type) {
         if (($ids[$type]['3a'] ?? null) === null || teacher59_entity_classes($type, (string)$ids[$type]['3a']) !== ['class_3a']) $missing[] = $type;
     }
     return ['ids' => $ids, 'missing' => $missing, 'errors' => $errors, 'student_3a' => $student3a, 'student_2a' => $student2a, 'label_3a_only' => $label3a];

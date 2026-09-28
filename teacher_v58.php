@@ -93,6 +93,26 @@ function teacher58_modules(): array
             ],
             'render' => static function (array $m, string $c): void { teacher59_render_admin_tab(); },
         ],
+        // v60 · obchod bodů: admin vidí a spravuje vše, učitel jen položky ve svých třídách (deny-by-default
+        // v teacher59_action_policy()/teacher59_entity_resolve()); asistent má jen 'view' → post neprojde
+        // (teacher_require_permission('content.manage') ho zastaví dřív, než sem dorazí).
+        'obchod' => [
+            'label' => 'Obchod', 'hint' => 'Katalog obchodu bodů, nákupy a vrácení', 'group' => 'podpora',
+            'files' => ['marketplace_v60.php', 'marketplace_v60_teacher_views.php', 'points_v53.php', 'points_v60.php'],
+            'css' => ['assets/marketplace-v60.css'],
+            'post' => ['mkt60_' => 'mkt60_teacher_handle_post'],
+            'render' => static function (array $m, string $c) use ($csrf): void { mkt60_render_teacher_tab($c, $csrf()); },
+        ],
+        // v60 · projekty podle levelu: nabídky skutečné práce od klientů mimo systém. Admin vidí a
+        // spravuje vše, učitel jen projekty a přihlášky ve svých třídách (deny-by-default v
+        // teacher59_action_policy()/teacher59_entity_resolve()); asistent má jen 'view' → post neprojde.
+        'projekty' => [
+            'label' => 'Projekty', 'hint' => 'Nabídky projektů podle levelu a přihlášky žáků', 'group' => 'podpora',
+            'files' => ['projects_v60.php', 'projects_v60_teacher_views.php'],
+            'css' => ['assets/projects-v60.css'],
+            'post' => ['proj60_' => 'proj60_teacher_handle_post'],
+            'render' => static function (array $m, string $c) use ($csrf): void { proj60_render_teacher_tab($c, $csrf()); },
+        ],
     ];
 }
 

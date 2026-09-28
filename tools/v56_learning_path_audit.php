@@ -145,14 +145,18 @@ try {
 
     if ($directoryName !== null) {
         $profileLogin = audit_login_student($harness, 'class_2a', $directoryName);
+        // v60: profil má nové záložky (profile_v60_views.php) – XP graf/statistiky jsou na
+        // výchozí záložce Přehled, sbírka odznaků na záložce Odznaky (dřív vše na jedné stránce).
         $profile = $harness->request('GET', '/?view=profile');
         $profileBody = (string)$profile['body'];
         $check('profil se vykreslí bez chyb', audit_response_clean($profile));
-        $check('profil má XP graf', str_contains($profileBody, 'v56-chart'));
-        $check('profil má levely, body i achievementy', str_contains($profileBody, 'v56-stats') && str_contains($profileBody, 'v56-achievements'));
-        $check('profil má odznaky', str_contains($profileBody, 'id="odznaky"'));
-        $check('XP graf kreslí sloupce v pixelech, ne procenty', (bool)preg_match('/style="height:\s*\d+px"/', $profileBody));
-        $check('prázdný XP graf má vysvětlení (nový žák bez XP)', str_contains($profileBody, 'v56-chart-empty') && str_contains($profileBody, 'Zatím nemáš žádné XP'));
+        $check('profil má XP graf', str_contains($profileBody, 'p60-chart') && str_contains($profileBody, '<svg'));
+        $check('profil má levely, body i achievementy', str_contains($profileBody, 'p60-stat-grid') && str_contains($profileBody, 'achievement'));
+        $profileBadges = $harness->request('GET', '/?view=profile&tab=odznaky');
+        $profileBadgesBody = (string)$profileBadges['body'];
+        $check('profil má odznaky', str_contains($profileBadgesBody, 'id="odznaky"'));
+        $check('XP graf kreslí sloupce jako SVG obdélníky, ne procenty', (bool)preg_match('/<rect[^>]+height="\d+"/', $profileBody));
+        $check('prázdný XP graf má vysvětlení (nový žák bez XP)', str_contains($profileBody, 'p60-chart-empty') && str_contains($profileBody, 'Zatím nemáš žádné XP'));
         // Znovu přihlásíme syntetického žáka, aby zbylé kontroly (CSRF) neběžely nad rolí z adresáře.
         audit_login_student($harness, 'class_2a', 'Audit Student 56');
     } else {

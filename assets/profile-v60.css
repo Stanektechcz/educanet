@@ -1,0 +1,281 @@
+/* EDUCANET v60 – přehlednější profil žáka (záložky, sidebar, přehledy, grafy). Prefix .p60-. */
+
+.p60-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.p60-sidebar {
+  display: none;
+}
+
+.p60-tabbar {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-bottom: 1px solid var(--border-color, #d7dde5);
+  margin-bottom: 1rem;
+}
+
+.p60-tabbar ul {
+  display: flex;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: max-content;
+}
+
+.p60-tab-link,
+.p60-nav-link {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.5rem 0.9rem;
+  text-decoration: none;
+  color: #1f2937;
+  font-weight: 600;
+  border-radius: 8px 8px 0 0;
+  white-space: nowrap;
+}
+
+.p60-tab-link.is-current,
+.p60-nav-link.is-current {
+  background: #eef2ff;
+  color: #1e293b;
+  box-shadow: inset 0 -3px 0 #4f46e5;
+}
+
+.p60-tab-link:focus-visible,
+.p60-nav-link:focus-visible,
+.p60-chart a:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+
+.p60-mini-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color, #d7dde5);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  background: #f8fafc;
+}
+
+.p60-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 700;
+}
+
+.p60-avatar.xl {
+  width: 64px;
+  height: 64px;
+  font-size: 1.4rem;
+}
+
+.p60-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.p60-hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 0 1.25rem;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  margin-bottom: 1rem;
+}
+
+.p60-hero-intro h1 {
+  margin: 0 0 0.25rem;
+}
+
+.p60-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.p60-chips span {
+  background: #f1f5f9;
+  border-radius: 999px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.85rem;
+}
+
+.p60-hero-actions {
+  margin-left: auto;
+}
+
+.p60-panel {
+  margin-bottom: 1.25rem;
+}
+
+.p60-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.p60-stat {
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 10px;
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.p60-stat strong {
+  display: block;
+  font-size: 1.4rem;
+}
+
+.p60-xpbar {
+  --p60-percent: 0;
+  position: relative;
+  height: 28px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  overflow: hidden;
+}
+
+.p60-xpbar i {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+}
+
+.p60-xpbar i b {
+  display: block;
+  height: 100%;
+  width: calc(var(--p60-percent) * 1%);
+  background: #4f46e5;
+  opacity: 0.35;
+}
+
+.p60-xpbar span {
+  position: relative;
+  z-index: 1;
+}
+
+.p60-chart {
+  margin: 0.75rem 0;
+}
+
+.p60-chart svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.p60-chart rect.p60-track {
+  fill: #e2e8f0;
+}
+
+.p60-chart rect.p60-fill {
+  fill: #4f46e5;
+}
+
+.p60-chart svg rect {
+  fill: #4f46e5;
+}
+
+.p60-chart .p60-svg-val,
+.p60-chart .p60-svg-label {
+  fill: #1f2937;
+  font-size: 9px;
+}
+
+.p60-chart details {
+  margin-top: 0.4rem;
+}
+
+.p60-chart summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.p60-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.p60-data-table th,
+.p60-data-table td {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0.35rem 0.5rem;
+  text-align: left;
+}
+
+.p60-chart-empty {
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.p60-muted-note {
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+@media (min-width: 1000px) {
+  .p60-layout {
+    grid-template-columns: 260px minmax(0, 1fr);
+  }
+
+  .p60-sidebar {
+    display: block;
+    position: sticky;
+    top: 1rem;
+  }
+
+  .p60-tabbar {
+    display: none;
+  }
+
+  .p60-stat-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p60-xpbar i b {
+    transition: none;
+  }
+}
+
+/* mini karta: úroveň a XP pod sebou */
+.p60-mini-card strong, .p60-mini-card small { display: block; }
+.p60-layout > * { min-width: 0; }
+
+/* v60 · záložka body */
+.p60-points-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.p60-points-list li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 10px; border-radius: 8px; background: rgba(255,255,255,.04); }
+.p60-plus { color: #4ade80; }
+.p60-minus { color: #f87171; }

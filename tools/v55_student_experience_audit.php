@@ -165,7 +165,11 @@ try {
     $profile = $harness->request('GET', '/?view=profile');
     $profileBody = (string)$profile['body'];
     $check('profil se vykreslí bez chyb', audit_response_clean($profile));
-    $check('profil ukazuje získávání odznaků s postupem i podmínkami', str_contains($profileBody, 'v55-badge-bar') && str_contains($profileBody, 'v55-badge-score'));
+    // v60: „Získávání odznaků“ (v55_render_badge_board) je teď v samostatné záložce Odznaky,
+    // ne na výchozím přehledu profilu – viz profile_v60_views.php.
+    $profileBadges = $harness->request('GET', '/?view=profile&tab=odznaky');
+    $profileBadgesBody = (string)$profileBadges['body'];
+    $check('profil ukazuje získávání odznaků s postupem i podmínkami', str_contains($profileBadgesBody, 'v55-badge-bar') && str_contains($profileBadgesBody, 'v55-badge-score'));
 
     $calendar = $harness->request('GET', '/?view=calendar');
     $calBody = (string)$calendar['body'];

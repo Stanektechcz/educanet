@@ -26,40 +26,23 @@ function group_plan_human(array $sizes): string
 
 function render_student_profile_view(string $classId, array $module, string $flash=''): void
 {
-    $students=project_students_for_class($classId); $me=social_current_student_key($classId);
-    $target=is_string($_GET['student']??null)?$_GET['student']:$me;
-    if($target===''||!isset($students[$target])){$target=$me;}
-    if($target===''||!isset($students[$target])){$_SESSION['flash']=tr('Profil nebyl nalezen.');redirect_to('?view=dashboard');}
-    $isMe=hash_equals($me,$target); $student=$students[$target]; $profile=social_profile_get($classId,$target);
-    $snapshot=learning_profile_snapshot_for_student($classId,(string)$student['label']);
-    if($isMe){$own=learning_profile($classId);$snapshot=['xp'=>(int)($own['xp']??0),'level'=>learning_level((int)($own['xp']??0)),'badge_ids'=>array_keys((array)($own['badges']??[])),'achievement_count'=>count((array)($own['achievements']??[]))];}
-    $badgeDefs=learning_badge_definitions(); $featured=array_values(array_filter((array)$profile['featured_badges'],static fn($id):bool=>is_string($id)));
-    $relation=$isMe?null:friendship_between($classId,$me,$target); $friends=student_friend_count($classId,$target); $teams=student_formed_team_count($classId,$target);
-    render_header($isMe?tr('Můj profil'):tr('Profil studenta'),$module);
+    render_profile60_view($classId, $module, $flash);
+}
+
+/**
+ * v60: formulář „Upravit profil“ (chování beze změny, jen přesunuto z render_student_profile_view()
+ * do vlastní funkce, aby ho šlo zobrazit jen v záložce Nastavení – viz profile_v60_views.php).
+ */
+function social_render_profile_editor(string $classId, string $target): void
+{
+    $profile = social_profile_get($classId, $target);
+    $badgeDefs = learning_badge_definitions();
+    $featured = array_values(array_filter((array)$profile['featured_badges'], static fn($id): bool => is_string($id)));
+    $students = project_students_for_class($classId);
+    $student = $students[$target] ?? ['label' => ''];
+    $skillKey = skill_student_key_for_label($classId, (string)$student['label']);
+    $earned = (array)(learning_profile($classId)['badges'] ?? []);
     ?>
-    <?php if($flash!==''):?><div class="notice"><?=e($flash)?></div><?php endif;?>
-    <section class="social-profile-hero">
-      <div class="social-avatar xl"><?=e(u_substr((string)$student['label'],0,1))?></div>
-      <div class="social-profile-intro"><div class="eyebrow"><?=e($isMe?tr('Můj studentský profil · pouze v rámci třídy'):tr('Profil spolužáka · pouze v rámci třídy'))?></div><h1><?=e((string)$student['label'])?></h1><p><?=e((string)($profile['headline']!==''?$profile['headline']:tr('Zatím bez profilového motta.')))?></p><div class="social-chips"><span><?=e(tr('Level {level}',['level'=>(int)$snapshot['level']['level']]))?></span><span><?=e(tr('{count} badge',['count'=>count((array)$snapshot['badge_ids'])]))?></span><span><?=e(tr('{count} achievementů',['count'=>(int)$snapshot['achievement_count']]))?></span><span><?=e(tr('{count} přátel',['count'=>$friends]))?></span><span><?=e(tr('{count} týmů',['count'=>$teams]))?></span></div></div>
-      <div class="social-status-card"><span><?=e(tr('Týmový status'))?></span><strong><?=e(social_team_status_label((string)$profile['team_status']))?></strong><small><?=e(social_role_label((string)$profile['preferred_role']))?></small></div>
-    </section>
-    <div class="social-profile-grid">
-      <section class="dashboard-panel social-about"><div class="dashboard-panel-head"><div><div class="eyebrow"><?=e(tr('O mně'))?></div><h2><?=e(tr('Profil pro spolupráci'))?></h2><p><?=e(tr('Bez známek, e-mailu a citlivých údajů. Vidí ho pouze spolužáci v přihlášené třídě.'))?></p></div></div>
-        <p class="social-bio"><?= e((string)($profile['bio']!==''?$profile['bio']:tr('Student zatím nepřidal krátké představení.'))) ?></p>
-        <div class="social-tag-section"><strong><?=e(tr('Dovednosti'))?></strong><div class="social-tags"><?php if(!$profile['skills']):?><span class="muted-tag"><?=e(tr('neuvedeno'))?></span><?php else:foreach((array)$profile['skills'] as $tag):?><span><?=e((string)$tag)?></span><?php endforeach;endif;?></div></div>
-        <div class="social-tag-section"><strong><?=e(tr('Zájmy'))?></strong><div class="social-tags"><?php if(!$profile['interests']):?><span class="muted-tag"><?=e(tr('neuvedeno'))?></span><?php else:foreach((array)$profile['interests'] as $tag):?><span><?=e((string)$tag)?></span><?php endforeach;endif;?></div></div>
-        <?php if(!$isMe):?><div class="social-profile-actions"><?php if(!$relation):?><form method="post"><input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="action" value="friend_request"><input type="hidden" name="student_key" value="<?=e($target)?>"><button class="btn primary" type="submit"><?=e(tr('Přidat do přátel'))?></button></form><?php elseif(($relation['status']??'')==='accepted'):?><form method="post"><input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="action" value="friend_remove"><input type="hidden" name="student_key" value="<?=e($target)?>"><button class="btn secondary" type="submit"><?=e(tr('Odebrat propojení'))?></button></form><?php else:?><span class="social-pending"><?=e(tr('Žádost čeká na potvrzení'))?></span><?php endif;?></div><?php endif;?>
-      </section>
-      <section class="dashboard-panel social-showcase"><div class="dashboard-panel-head"><div><div class="eyebrow"><?=e(tr('Showcase'))?></div><h2><?=e(tr('Vybrané vzácné badge'))?></h2><p><?=e(tr('Na profilu lze vystavit maximálně tři skutečně získané trofeje.'))?></p></div></div><div class="social-badge-showcase">
-        <?php if(!$featured):?><div class="social-empty-mini"><?=e(tr('Zatím není vybraná žádná trofej.'))?></div><?php else:foreach($featured as $bid):if(!isset($badgeDefs[$bid]))continue;$b=$badgeDefs[$bid];?><article class="prestige-badge earned rarity-<?=e((string)($b['rarity']??'epic'))?>"><i><?=e((string)$b['mark'])?></i><div><small><?=e(strtoupper((string)($b['rarity']??'epic')))?></small><strong><?=e((string)$b['title'])?></strong><span><?=e((string)$b['text'])?></span></div></article><?php endforeach;endif;?>
-      </div></section>
-    </div>
-    <?php $skillKey=skill_student_key_for_label($classId,(string)$student['label']); $skillBranches=skill_branch_progress_map($classId,$skillKey); $skillDefs=skill_branches(); $skillProgress=skill_progress_map($classId,$skillKey); $topSkills=[]; $featuredSkillSlugs=array_values(array_filter((array)($profile['featured_skills']??[]),static fn($v):bool=>is_string($v))); if($featuredSkillSlugs){foreach($featuredSkillSlugs as $fslug){$fs=skill_find($fslug);$sp=$skillProgress[$fslug]??[];if($fs&&(float)($sp['mastery_percent']??0)>0)$topSkills[]=['skill'=>$fs,'progress'=>$sp];}} if(!$topSkills){foreach(skill_relevant_skills($classId) as $ss){$sp=$skillProgress[(string)$ss['slug']]??[]; if((float)($sp['mastery_percent']??0)>0)$topSkills[]=['skill'=>$ss,'progress'=>$sp];} usort($topSkills,static fn($a,$b)=>(float)$b['progress']['mastery_percent']<=>(float)$a['progress']['mastery_percent']); $topSkills=array_slice($topSkills,0,5);} $spec=skill_specialization_for($classId,$skillKey); ?>
-    <section class="dashboard-panel profile-mastery"><div class="dashboard-panel-head"><div><div class="eyebrow"><?=e(tr('Mastery profil'))?></div><h2><?=e((string)($spec['name']??tr('Skill Explorer')))?></h2><p><?=e(tr('Veřejný profil ukazuje pouze agregovanou mastery a nejlepší dovednosti, ne jednotlivé testy nebo pokusy.'))?></p></div><?php if($isMe):?><a class="text-link" href="?view=skills"><?=e(tr('Můj Skill Tree →'))?></a><?php endif;?></div><div class="profile-mastery-branches"><?php foreach($skillBranches as $branch=>$bp):$bd=$skillDefs[$branch]??[];?><article><span><?=e((string)($bd['icon']??'◇'))?> <?=e((string)($bd['name']??$branch))?></span><strong><?=edu_number((float)($bp['mastery_percent']??0),0)?> %</strong><small><?=e(skill_mastery_level_label((string)($bp['mastery_level']??'unexplored')))?></small></article><?php endforeach;?></div><?php if($topSkills):?><div class="profile-top-skills"><strong><?=e(tr('Nejsilnější skills'))?></strong><?php foreach($topSkills as $row):?><span><?=e((string)$row['skill']['name'])?> <b><?=edu_number((float)$row['progress']['mastery_percent'],0)?>%</b></span><?php endforeach;?></div><?php endif;?></section>
-    <?php if($isMe && function_exists('v56_render_profile_stats')): v56_render_profile_stats($classId,$module,(array)($GLOBALS['simulations'][$classId]??[])); endif; ?>
-    <?php if($isMe && function_exists('v55_render_badge_board')): v55_render_badge_board($classId,$module,(array)($GLOBALS['simulations'][$classId]??[])); endif; ?>
-    <?php if(function_exists('render_profile_role_experience')) render_profile_role_experience($classId,$target,$isMe); ?>
-    <?php if($isMe): $earned=(array)(learning_profile($classId)['badges']??[]);?>
     <section class="dashboard-panel profile-editor"><div class="dashboard-panel-head"><div><div class="eyebrow"><?=e(tr('Upravit profil'))?></div><h2><?=e(tr('Jak tě mají spolužáci najít do projektu?'))?></h2><p><?=e(tr('Profil je školní a třídní. Nepřidávej telefon, adresu ani jiné citlivé údaje.'))?></p></div></div>
       <form method="post" class="social-profile-form"><input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="action" value="save_student_profile">
         <label><span><?=e(tr('Krátké motto / co teď dělám'))?></span><input name="headline" maxlength="80" value="<?=e((string)$profile['headline'])?>" placeholder="<?=e(tr('Např. baví mě motion design a prototypování'))?>"></label>
@@ -73,8 +56,7 @@ function render_student_profile_view(string $classId, array $module, string $fla
         <div class="wide"><button class="btn primary" type="submit"><?=e(tr('Uložit profil'))?></button></div>
       </form>
     </section>
-    <?php endif; ?>
-    <?php render_footer();
+    <?php
 }
 
 function render_community_view(string $classId,array $module,string $flash=''): void

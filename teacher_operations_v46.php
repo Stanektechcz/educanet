@@ -85,6 +85,10 @@ function teacher_action_permission_prefixes(): array
         'lab58e_'=>'content.manage','lab58t_'=>'analytics.view','ops58_'=>'audit.view','identity58_'=>'students.manage',
         // v59 · AUTHZ58-07: správa účtů jen admin (accounts.manage má jen „*“), vlastní účet každý přihlášený.
         'teacher59_admin_'=>'accounts.manage','teacher59_self_'=>'view',
+        // v60 · obchod bodů: správa katalogu a vrácení nákupu (teacher má content.manage, assistant ne = jen čte).
+        'mkt60_'=>'content.manage',
+        // v60 · projekty podle levelu: správa katalogu a rozhodování o přihláškách (assistant jen čte).
+        'proj60_'=>'content.manage',
     ];
 }
 function teacher_action_permission(string $action): ?string

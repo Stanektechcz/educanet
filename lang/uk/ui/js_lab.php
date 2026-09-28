@@ -26,6 +26,14 @@ return [
     'Reset se nezdařil.' => 'Скидання не вдалося.',
     'Úroveň se nepodařilo načíst.' => 'Не вдалося завантажити рівень.',
     'Nepodařilo se spojit s Labem. Zkus obnovit stránku.' => 'Не вдалося з\'єднатися з Лабом. Спробуй оновити сторінку.',
+    // контекстне меню консолі
+    'Nabídka konzole' => 'Меню консолі',
+    'Kopírovat' => 'Копіювати',
+    'Vložit' => 'Вставити',
+    'Odevzdat označené jako odpověď' => 'Надіслати виділене як відповідь',
+    'Tahle úroveň se neodevzdává odpovědí.' => 'Цей рівень не здається відповіддю.',
+    'Kopírování se nezdařilo – použij Ctrl+C.' => 'Не вдалося скопіювати – скористайся Ctrl+C.',
+    'Prohlížeč nepovolil vložení – použij Ctrl+V.' => 'Браузер не дозволив вставлення – скористайся Ctrl+V.',
 
     // assets/arena-v57.js – відлік, рейтинги учня, панель вчителя, проектор
     '(+{n} b{first})' => '(+{n} б{first})',

@@ -663,4 +663,8 @@ return [
     'Menu' => 'Menu',
     // v59 SECFIX (SEC59-16): obecná hláška místo textu neočekávané chyby (intake_v51.php, app/actions/session_join.php)
     'Akci se nepodařilo dokončit.' => 'The action could not be completed.',
+    // v60 · odkaz na obchod bodů v hlavní navigaci
+    'Obchod' => 'Shop',
+    // v60 · odkaz na projekty podle levelu v hlavní navigaci
+    'Projekty' => 'Projects',
 ];

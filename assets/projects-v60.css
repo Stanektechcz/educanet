@@ -1,0 +1,22 @@
+/* v60 · Projekty podle levelu (žák). Bez CDN, jen prostý CSS; respektuje prefers-reduced-motion. */
+.proj60-hero{padding:20px;border-radius:16px;background:var(--panel-bg,#151a24);margin-bottom:16px;}
+.proj60-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:20px;}
+.proj60-card{display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:14px;background:var(--card-bg,#1b2130);border:1px solid rgba(255,255,255,.08);}
+.proj60-client{opacity:.75;font-style:italic;}
+.proj60-skills{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px;}
+.proj60-skills li{padding:3px 8px;border-radius:8px;background:rgba(255,255,255,.08);font-size:.85rem;}
+.proj60-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:.85rem;}
+.proj60-meta span{padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.06);}
+.proj60-level-ok{background:rgba(120,220,140,.2);}
+.proj60-consent{background:rgba(255,190,80,.25);}
+.proj60-locked{opacity:.8;}
+.proj60-detail{border-top:1px dashed rgba(255,255,255,.15);padding-top:8px;}
+.proj60-status{font-weight:600;}
+.proj60-apply-form,.proj60-inline-form{display:flex;flex-direction:column;gap:8px;}
+.proj60-apply-form textarea{min-height:70px;}
+.proj60-apply-form button,.proj60-inline-form button{min-height:44px;min-width:44px;padding:8px 16px;}
+.proj60-note{opacity:.75;}
+.proj60-app-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
+.proj60-app-list li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.04);}
+@media (max-width:600px){.proj60-grid{grid-template-columns:1fr;}}
+@media (prefers-reduced-motion: reduce){.proj60-card{transition:none;}}

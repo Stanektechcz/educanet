@@ -72,7 +72,11 @@ return [
         'kb' => ['assessment_visuals.php', 'app/views/_kb.php'],
         'lesson_page' => ['reality_demos.php', 'assessment_visuals.php', 'mastery_learning_views_v41.php', 'app/views/_lesson.php'],
         'structured_lesson' => ['reality_demos.php', 'assessment_visuals.php', 'adaptive_lesson_views_v42.php', 'cognitive_visualization_views_v43.php', 'learning_studio_views_v44.php', 'visual_simulation_views_v45.php', 'app/views/_lesson.php'],
-        'student_hubs' => ['teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'student_learning_accelerator_v47_1.php', 'student_learning_accelerator_views_v47_1.php', 'student_corrective_cycle_v47_2.php', 'student_corrective_cycle_views_v47_2.php', 'student_social_views.php', 'skill_views.php', 'project_workspace_views.php', 'points_v53.php', 'learning_v56_views.php'],
+        'student_hubs' => ['teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'student_learning_accelerator_v47_1.php', 'student_learning_accelerator_views_v47_1.php', 'student_corrective_cycle_v47_2.php', 'student_corrective_cycle_views_v47_2.php', 'student_social_views.php', 'skill_views.php', 'project_workspace_views.php', 'points_v53.php', 'points_v60.php', 'learning_v56_views.php', 'profile_v60.php', 'profile_v60_views.php', 'marketplace_v60.php', 'arena_v60_challenge.php', 'arena_v60_challenge_views.php'],
+        // v60 · obchod bodů (?view=obchod).
+        'marketplace' => ['points_v53.php', 'points_v60.php', 'marketplace_v60.php', 'marketplace_v60_views.php'],
+        // v60 · projekty podle levelu (?view=projekty).
+        'projects' => ['projects_v60.php', 'projects_v60_views.php'],
         'dashboard' => ['teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'mastery_learning_views_v41.php', 'learning_studio_views_v44.php', 'skill_views.php', 'project_workspace_views.php'],
         'diagrams' => ['app/views/_diagrams.php'],
         // POST
@@ -115,6 +119,8 @@ return [
         ['match' => ['ctf', 'incident'], 'file' => 'views/arena_events_v58.php', 'libs' => ['layout', 'linux_lab', 'arena_events']],
         ['match' => ['hry'], 'file' => 'views/hry.php', 'libs' => ['layout', 'linux_lab', 'teamgames']],
         ['match' => ['hadanka'], 'file' => 'views/hadanka.php', 'libs' => ['layout', 'linux_lab', 'weekly']],
+        ['match' => ['obchod'], 'file' => 'views/marketplace.php', 'libs' => ['layout', 'marketplace']],
+        ['match' => ['projekty'], 'file' => 'views/projects.php', 'libs' => ['layout', 'projects']],
         ['match' => ['hodina'], 'file' => 'views/hodina.php', 'libs' => ['layout', 'tutorial_views', 'lesson_path_views']],
         ['match' => ['course_lesson', 'next_lesson'], 'file' => 'views/tutorial_redirect.php', 'libs' => []],
         ['match' => ['course', 'calendar', 'tutorial', 'topics', 'tools', 'knowledgebase'], 'file' => 'views/tutorial.php', 'libs' => ['layout', 'tutorial_views']],
@@ -163,5 +169,9 @@ return [
     'actions_class' => [
         ['match' => ['start_test', 'answer', 'continue_test', 'abort_test', 'start_practice', 'practice_hint', 'practice_answer', 'continue_practice', 'abort_practice'], 'file' => 'actions/assessment.php', 'libs' => []],
         ['match' => ['submit_extra', 'submit_graphics'], 'file' => 'actions/submissions.php', 'libs' => []],
+        ['match' => ['mkt60_buy', 'mkt60_cosmetic_set'], 'file' => 'actions/marketplace.php', 'libs' => ['marketplace']],
+        ['match' => ['proj60_apply', 'proj60_withdraw'], 'file' => 'actions/projects.php', 'libs' => ['projects']],
+        // v60 · ARN-07 – výzvy spolužákům (opt-in 1v1 souboje z profilu).
+        ['match' => ['arena60_challenge_create', 'arena60_challenge_respond', 'arena60_challenge_cancel', 'arena60_optin_set'], 'file' => 'actions/arena_challenge.php', 'libs' => ['layout', 'student_hubs']],
     ],
 ];

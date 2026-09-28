@@ -272,3 +272,11 @@ input.lab57-input[type="text"]:focus { outline: 2px solid var(--lab57-focus, #5f
 @media (prefers-reduced-motion: reduce) {
   .lab57-progress-bar, .lab57-net-node, .lab57-net-link { transition: none !important; }
 }
+
+/* v59 · kontextová nabídka konzole (pravé tlačítko): Kopírovat / Vložit / Odevzdat označené */
+.lab57-ctxmenu { position: fixed; z-index: 1000; min-width: 15rem; padding: .3rem; border-radius: 10px; background: #1b2230; border: 1px solid #3a4658; box-shadow: 0 10px 28px rgba(0, 0, 0, .45); }
+.lab57-ctxmenu[hidden] { display: none; }
+.lab57-ctxmenu button { display: block; width: 100%; min-height: 44px; padding: .55rem .8rem; border: 0; border-radius: 7px; background: transparent; color: #e8edf5; font: inherit; text-align: left; cursor: pointer; }
+.lab57-ctxmenu button:hover:not([disabled]), .lab57-ctxmenu button:focus-visible { background: #2c3a52; outline: 2px solid #7fb4ff; outline-offset: -2px; }
+.lab57-ctxmenu button[disabled] { color: #8a96a8; cursor: not-allowed; }
+.lab57-term-out ::selection { background: #3d6fb6; color: #fff; }

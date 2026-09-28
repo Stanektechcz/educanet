@@ -26,6 +26,14 @@ return [
     'Reset se nezdařil.' => 'The reset failed.',
     'Úroveň se nepodařilo načíst.' => 'The level could not be loaded.',
     'Nepodařilo se spojit s Labem. Zkus obnovit stránku.' => 'Could not connect to the Lab. Try refreshing the page.',
+    // kontextová nabídka konzole
+    'Nabídka konzole' => 'Console menu',
+    'Kopírovat' => 'Copy',
+    'Vložit' => 'Paste',
+    'Odevzdat označené jako odpověď' => 'Submit selection as answer',
+    'Tahle úroveň se neodevzdává odpovědí.' => 'This level is not turned in with an answer.',
+    'Kopírování se nezdařilo – použij Ctrl+C.' => 'Copying failed – use Ctrl+C.',
+    'Prohlížeč nepovolil vložení – použij Ctrl+V.' => 'The browser blocked pasting – use Ctrl+V.',
 
     // assets/arena-v57.js – odpočet, žebříčky žáka, panel učitele, projektor
     '(+{n} b{first})' => '(+{n} pts{first})',
