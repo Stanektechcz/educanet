@@ -1,17 +1,26 @@
-/* v60 · Obchod bodů (žák). Bez CDN, jen prostý CSS; respektuje prefers-reduced-motion. */
-.mkt60-hero{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;padding:20px;border-radius:16px;background:var(--panel-bg,#151a24);margin-bottom:16px;}
-.mkt60-balance{display:flex;flex-direction:column;align-items:flex-end;min-width:120px;}
-.mkt60-balance strong{font-size:2rem;line-height:1;}
-.mkt60-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:20px;}
-.mkt60-card{display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:14px;background:var(--card-bg,#1b2130);border:1px solid rgba(255,255,255,.08);}
-.mkt60-type{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;opacity:.7;}
+/* v60 · Obchod bodů (žák). Světlé plochy (rozhraní je světlé; tmavé pozadí + globální tmavý text h1–h4/p
+   ze student-ui-v50-7-7.css dával kontrast ~1:1). Bez CDN; respektuje prefers-reduced-motion.
+   Barvy textu: #111827 / #4b5563 na #fff (17,7 : 1 / 7,6 : 1), #111827 na tlumených plochách ≥ 15 : 1. */
+.mkt60-hero{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;padding:20px;border-radius:16px;background:var(--surface,#fff);border:1px solid var(--line,#d9e0e6);margin-bottom:16px;min-width:0;}
+.mkt60-hero>*{min-width:0;}
+.mkt60-hero h1{overflow-wrap:anywhere;}
+.mkt60-balance{display:flex;flex-direction:column;align-items:flex-end;min-width:0;}
+.mkt60-balance strong{font-size:2rem;line-height:1;color:#111827;}
+.mkt60-balance span{color:#4b5563;}
+.mkt60-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:14px;margin-bottom:20px;}
+.mkt60-card{display:flex;flex-direction:column;gap:8px;min-width:0;padding:16px;border-radius:14px;background:var(--surface,#fff);border:1px solid var(--line,#d9e0e6);color:#111827;overflow-wrap:anywhere;}
+body:not(.assessment-mode) .mkt60-card p{color:#374151;margin:0;}
+.mkt60-type{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:#4b5563;}
 .mkt60-card-foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:auto;}
-.mkt60-soldout{padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.08);}
-.mkt60-buy-form button{min-height:44px;min-width:44px;padding:8px 16px;}
-.mkt60-note{opacity:.75;}
+.mkt60-soldout{padding:6px 10px;border-radius:8px;background:#eef2f5;color:#111827;}
+.mkt60-buy-form{min-width:0;}
+.mkt60-buy-form button,.mkt60-inline-form button{min-height:44px;min-width:44px;padding:8px 16px;}
+body:not(.assessment-mode) .mkt60-card .btn,body:not(.assessment-mode) .mkt60-purchase-list .btn{min-height:44px!important;min-width:44px;}
+.mkt60-buy-form button[disabled]{color:#4b5563;background:#e5e9ee;border-color:#c3ccd5;cursor:not-allowed;}
+body:not(.assessment-mode) .mkt60-note,.mkt60-note{color:#4b5563;}
 .mkt60-purchase-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
-.mkt60-purchase-list li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.04);}
-.mkt60-refunded{padding:2px 8px;border-radius:8px;background:rgba(255,190,80,.2);}
-.mkt60-inline-form button,.mkt60-purchase-list a.btn{min-height:44px;}
+.mkt60-purchase-list li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;min-width:0;padding:10px 12px;border-radius:10px;background:#eef2f5;color:#111827;overflow-wrap:anywhere;}
+.mkt60-refunded{padding:2px 8px;border-radius:8px;background:#fff3d6;color:#111827;}
+.mkt60-hero :focus-visible,.mkt60-card :focus-visible,.mkt60-purchase-list :focus-visible{outline:3px solid #2459ff!important;outline-offset:2px!important;}
 @media (max-width:600px){.mkt60-hero{flex-direction:column;align-items:stretch;}.mkt60-balance{align-items:flex-start;}}
 @media (prefers-reduced-motion: reduce){.mkt60-card{transition:none;}}

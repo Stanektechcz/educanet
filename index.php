@@ -105,6 +105,11 @@ if ($view === 'change_password' || (acc53_must_change_password() && !in_array($v
 // ---------------------------------------------------------------- veřejné pohledy (odkazy z e-mailu, soukromí, propojení účtu)
 foreach (app_segments('views_public', $view) as $appSegment) require app_segment_file($appSegment);
 
+// v60: přihlášený žák (vybraná třída) na úvodní stránce nevidí přihlašovací formulář – přesměrování na přehled.
+if ($view === 'home' && $module !== null && $method === 'GET') {
+    redirect_to('?view=dashboard');
+}
+
 // Globální ochrana: bez třídy (nepřihlášený žák) vždy přihlašovací stránka.
 if ($view === 'home' || $module === null) {
     require app_segment_file(app_page('home'));

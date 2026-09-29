@@ -48,6 +48,7 @@ try { intake_v51_sync_v1($modules); } catch (Throwable $intakeSyncError) { error
 $teacherAllowedTabs=['session','arena','pristupy','intake','attention','control','reports','communications','quality','overview','class_overview','class_results','analytics','student360','interventions','automations','filters','team_admin','demo_accounts','ops_audit','calendar','curriculum','teach','growth','grade','groups','workspace','skills','mastery','authoring','history','ucet'];
 $teacherAllowedTabs=array_merge($teacherAllowedTabs,teacher58_tabs());
 $teacherRequestTab=(string)($_GET['tab']??'overview');
+$teacherRawTab=$teacherRequestTab;
 if(!in_array($teacherRequestTab,$teacherAllowedTabs,true))$teacherRequestTab='overview';
 $teacherRequestAction=(string)($_POST['action']??'');
 teacher58_require_modules($teacherRequestTab,$teacherRequestAction);
@@ -62,6 +63,18 @@ function teacher_flash(string $message, string $type = 'ok'): void {
 function teacher_class_label(string $classId): string {
     return match($classId){'class_1a'=>'1.A Grafika','class_2a'=>'2.A Grafika','class_3a'=>'3.A SOSPS','class_4a'=>'4.A SOSPS',default=>$classId};
 }
+/** v60: krátký popis rozsahu do nadpisu přehledu – „1.A–4.A“ pro všechny čtyři třídy, jinak výčet („1.A“, „1.A, 3.A“). */
+function teacher_overview_scope_label(array $classIds): string
+{
+    $short = [];
+    foreach ($classIds as $id) {
+        if (is_string($id) && preg_match('/^class_(\d)([a-z])$/', $id, $m)) $short[$m[1] . $m[2]] = $m[1] . '.' . strtoupper($m[2]);
+    }
+    ksort($short);
+    if (count($short) >= 4) return '1.A–4.A';
+    return $short === [] ? '—' : implode(', ', $short);
+}
+
 function teacher_status_label(string $status): string {
     return match($status){'published'=>'Publikováno','returned'=>'Vráceno k dopracování','draft'=>'Koncept',default=>$status};
 }
@@ -510,7 +523,7 @@ $flash=is_array($rawFlash)?$rawFlash:($rawFlash?['message'=>(string)$rawFlash,'t
 $authenticated=teacher_export_authenticated();
 // v59 · AUTHZ58-07: nečitelné úložiště účtů → 503, vynucená změna hesla → jen její stránka, pak rozsah tříd a guard GET.
 teacher59_guard_forced_get($flash);
-if($authenticated){$modules=teacher59_scope_modules($modules);teacher59_guard_get($teacherRequestTab);if(teacher59_mode()!=='legacy'&&teacher59_allowed_class_ids()===[]&&!in_array($teacherRequestTab,['ucet','ucitele'],true))teacher59_render_no_classes();}
+if($authenticated){$modules=teacher59_scope_modules($modules);teacher59_guard_get($teacherRequestTab);if($teacherRawTab!==$teacherRequestTab&&teacher58_is_admin_denied($teacherRawTab))teacher59_deny('admin_only');if(teacher59_mode()!=='legacy'&&teacher59_allowed_class_ids()===[]&&!in_array($teacherRequestTab,['ucet','ucitele'],true))teacher59_render_no_classes();}
 if($authenticated)teacher_saved_filter_actor_token();
 if($authenticated)intake_v51_teacher_handle_get($modules);
 $teacherNeedsSimulationAssets=$authenticated && $teacherRequestTab==='teach';
@@ -561,7 +574,7 @@ if(in_array($tab,['grade','groups','workspace'],true)){
   <details class="teacher-nav-group" <?=in_array($tab,['groups','workspace'],true)?'data-active="1"':''?>><summary>Projekty <i>⌄</i></summary><div class="teacher-nav-dropdown"><span class="teacher-nav-label">Týmová práce</span><a class="<?=$tab==='groups'?'active':''?>" href="<?=e(teacher_class_tab_url('groups',$classId))?>">Týmy<small>Členství, lobby a role</small></a><a class="<?=$tab==='workspace'?'active':''?>" href="<?=e(teacher_class_tab_url('workspace',$classId))?>">Workspace<small>Průběh, role, retrospektiva a signály</small></a></div></details>
 </nav>
 <div class="teacher-account"><span><?=e(teacher_display_name())?></span><span class="ops-role-badge"><?=e(teacher_role_label())?></span><?php if(teacher59_mode()!=='legacy'): ?><a class="teacher-account-link" href="?tab=ucet">Můj účet</a><?php endif; ?><button type="button" class="teacher-command-button" data-command-open title="Příkazy Ctrl/⌘+K">⌘K</button><form method="post"><input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="action" value="teacher_logout"><button type="submit">Odhlásit</button></form></div></header>
-<?php if(!in_array($tab,array_merge(['intake','session','arena','pristupy','ucet'],teacher58_own_class_tabs()),true)): ?><section class="teacher-contextbar"><div class="teacher-context-main"><span class="teacher-context-label">Třída</span><div class="teacher-class-tabs"><?php if(in_array($tab,['overview','reports','quality','calendar','automations','team_admin','demo_accounts','ops_audit'],true)): ?><a class="active" href="?tab=<?=e($tab)?>">Všechny třídy</a><?php foreach(array_keys($catalog) as $cid): ?><a href="?tab=class_overview&class=<?=e($cid)?>"><?=e(teacher_class_label($cid))?></a><?php endforeach; ?><?php elseif(in_array($tab,['attention','control'],true)): ?><a class="<?=isset($_GET['class'])?'':'active'?>" href="?tab=<?=e($tab)?>">Všechny třídy</a><?php foreach(array_keys($catalog) as $cid): ?><a class="<?=isset($_GET['class'])&&$cid===$classId?'active':''?>" href="?tab=<?=e($tab)?>&class=<?=e($cid)?>"><?=e(teacher_class_label($cid))?></a><?php endforeach; ?><?php else: foreach(array_keys($catalog) as $cid): ?><a class="<?=$cid===$classId?'active':''?>" href="<?=e(teacher_class_tab_url($tab,$cid))?>"><?=e(teacher_class_label($cid))?></a><?php endforeach; endif; ?></div></div><div class="teacher-context-actions"><?php if(!in_array($tab,['overview','reports','quality','calendar','automations','team_admin','demo_accounts','ops_audit'],true) && !($tab==='control'&&!isset($_GET['class']))): ?><a href="?tab=class_overview&class=<?=e($classId)?>">Přehled třídy</a><a href="?tab=class_results&class=<?=e($classId)?>">Výsledky</a><a class="primary" href="?tab=teach&class=<?=e($classId)?>">Režim hodiny</a><?php else: ?><span><?=count($catalog)?> třídy</span><span>112 lekcí</span><?php endif; ?></div></section><?php endif; ?>
+<?php if(!in_array($tab,array_merge(['intake','session','arena','pristupy','ucet'],teacher58_own_class_tabs()),true)): ?><section class="teacher-contextbar"><div class="teacher-context-main"><span class="teacher-context-label">Třída</span><div class="teacher-class-tabs"><?php if(in_array($tab,['overview','reports','quality','calendar','automations','team_admin','demo_accounts','ops_audit'],true)): ?><a class="active" href="?tab=<?=e($tab)?>">Všechny třídy</a><?php foreach(array_keys($catalog) as $cid): ?><a href="?tab=class_overview&class=<?=e($cid)?>"><?=e(teacher_class_label($cid))?></a><?php endforeach; ?><?php elseif(in_array($tab,['attention','control'],true)): ?><a class="<?=isset($_GET['class'])?'':'active'?>" href="?tab=<?=e($tab)?>">Všechny třídy</a><?php foreach(array_keys($catalog) as $cid): ?><a class="<?=isset($_GET['class'])&&$cid===$classId?'active':''?>" href="?tab=<?=e($tab)?>&class=<?=e($cid)?>"><?=e(teacher_class_label($cid))?></a><?php endforeach; ?><?php else: foreach(array_keys($catalog) as $cid): ?><a class="<?=$cid===$classId?'active':''?>" href="<?=e(teacher_class_tab_url($tab,$cid))?>"><?=e(teacher_class_label($cid))?></a><?php endforeach; endif; ?></div></div><div class="teacher-context-actions"><?php if(!in_array($tab,['overview','reports','quality','calendar','automations','team_admin','demo_accounts','ops_audit'],true) && !($tab==='control'&&!isset($_GET['class']))): ?><a href="?tab=class_overview&class=<?=e($classId)?>">Přehled třídy</a><a href="?tab=class_results&class=<?=e($classId)?>">Výsledky</a><a class="primary" href="?tab=teach&class=<?=e($classId)?>">Režim hodiny</a><?php else: ?><span><?=e(teacher_overview_scope_label(array_keys($catalog)))?></span><span><?=count($catalog)*28?> lekcí</span><?php endif; ?></div></section><?php endif; ?>
 <?php if($flash): ?><div class="teacher-flash <?=e((string)$flash['type'])?>"><?=e((string)$flash['message'])?></div><?php endif; ?>
 
 <?php if($tab==='session'): ?>

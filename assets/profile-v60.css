@@ -102,6 +102,7 @@
   margin-bottom: 1rem;
 }
 
+.p60-hero-intro { min-width: 0; overflow-wrap: anywhere; }
 .p60-hero-intro h1 {
   margin: 0 0 0.25rem;
 }
@@ -114,6 +115,7 @@
 }
 
 .p60-chips span {
+  overflow-wrap: anywhere;
   background: #f1f5f9;
   border-radius: 999px;
   padding: 0.25rem 0.65rem;
@@ -130,12 +132,14 @@
 
 .p60-stat-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
   margin-bottom: 1rem;
 }
 
 .p60-stat {
+  min-width: 0;
+  overflow-wrap: anywhere;
   border: 1px solid var(--border-color, #e2e8f0);
   border-radius: 10px;
   padding: 0.75rem;
@@ -260,7 +264,7 @@
   }
 
   .p60-stat-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -276,6 +280,7 @@
 
 /* v60 · záložka body */
 .p60-points-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-.p60-points-list li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 10px; border-radius: 8px; background: rgba(255,255,255,.04); }
-.p60-plus { color: #4ade80; }
-.p60-minus { color: #f87171; }
+.p60-points-list li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 10px; min-width: 0; overflow-wrap: anywhere; padding: 8px 10px; border-radius: 8px; background: #eef2f5; color: #111827; }
+/* Dřív #4ade80 / #f87171 (určené pro tmavé pozadí): na světlém ~1,6 : 1 a ~2,8 : 1. Teď 5,8 : 1 a 6,0 : 1 na #eef2f5. */
+.p60-plus { color: #0b6b49; font-weight: 600; }
+.p60-minus { color: #a92f2f; font-weight: 600; }

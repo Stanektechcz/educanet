@@ -253,8 +253,9 @@ try {
 
     // --- 8. Admin-only záložky a akce, asistent, učitel bez tříd -----------------------------------
     foreach (['quality' => 'Data Quality Center', 'provoz' => 'ops58-card', 'identita' => 'identity58_', 'ucitele' => 'teacher59_admin_create'] as $tab => $needle) {
-        // Záložka v58 s 'admin' je pro neadmina skrytá (teacher.php pak ukáže přehled); záložka teacher.php vrací 403.
-        $hidden = static fn(array $r): bool => $status($r) === 403 || ($status($r) === 200 && !str_contains($body($r), $needle));
+        // v60: neadmin dostane výslovnou české 403 stránku s odkazem zpět (dřív tichý přehled u záložek v58).
+        $hidden = static fn(array $r): bool => $status($r) === 403 && !str_contains($body($r), $needle)
+            && str_contains($body($r), 'Tahle část je jen pro administrátora.') && str_contains($body($r), 'href="teacher.php"');
         $ra = $get('a', ['tab' => $tab]);
         $rs = $get('s', ['tab' => $tab]);
         $rd = $get('admin', ['tab' => $tab]);
@@ -272,6 +273,14 @@ try {
     $sGrade = $post('s', 'save_grade', ['class_id' => 'class_3a', 'target_id' => $fx['student_3a'], 'project_id' => 'x', 'grade' => '1']);
     $check('asistent (3.A): save_grade nic nezapíše (oprávnění v46), status ' . $status($sGrade), in_array($status($sGrade), [302, 303, 403], true) && v59sf_same($before, $snapshot()));
     $check('asistent: 3.A ano, 4.A → 403', $status($get('s', ['tab' => 'class_overview', 'class' => 'class_3a'])) === 200 && $status($get('s', ['tab' => 'class_overview', 'class' => 'class_4a'])) === 403);
+    // v60: nadpis a souhrnná čísla přehledu podle rozsahu účtu (admin/legacy beze změny).
+    $ovTitle = static function (array $r) use ($body): string { return preg_match('/Teacher Overview · ([^<]+)<\/div>/u', $body($r), $m) === 1 ? html_entity_decode($m[1]) : ''; };
+    $ovLessons = static function (array $r) use ($body): int { return preg_match('/Stav (\d+) strukturovaných/u', $body($r), $m) === 1 ? (int)$m[1] : -1; };
+    $ovA = $get('a', ['tab' => 'overview']); $ovB = $get('b', ['tab' => 'overview']); $ovS = $get('s', ['tab' => 'overview']); $ovAdmin = $get('admin', ['tab' => 'overview']);
+    $check('přehled: A vidí „1.A, 2.A“ a 56 lekcí, B „3.A, 4.A“, asistent „3.A“ a 28 lekcí', $ovTitle($ovA) === '1.A, 2.A' && $ovLessons($ovA) === 56 && $ovTitle($ovB) === '3.A, 4.A' && $ovLessons($ovB) === 56 && $ovTitle($ovS) === '3.A' && $ovLessons($ovS) === 28);
+    $check('přehled: admin beze změny – „1.A–4.A“ a 112 lekcí; rozsahový A přehled neukazuje „1.A–4.A“ ani 112', $ovTitle($ovAdmin) === '1.A–4.A' && $ovLessons($ovAdmin) === 112 && !str_contains($body($ovA), '1.A–4.A') && !str_contains($body($ovA), '112 lekcí'));
+    $ctxS = $get('s', ['tab' => 'reports']);
+    $check('kontextový pruh: asistent (3.A) nevidí „112 lekcí“ ani „4 třídy“, ale „28 lekcí“', !str_contains($body($ctxS), '112 lekcí') && str_contains($body($ctxS), '28 lekcí'));
     $eOverview = $get('e', ['tab' => 'overview']);
     $check('učitel bez tříd: stránka „Nemáte přiřazené třídy“, žádná data', str_contains($body($eOverview), 'přiřazen') && !$marker($body($eOverview)) && !str_contains($body($eOverview), 'MK1A') && !str_contains($body($eOverview), 'MK2A'));
     $check('učitel bez tříd: POST s třídou → 403', $status($post('e', 'teacher_bulk_mark', ['class_id' => 'class_2a'])) === 403);

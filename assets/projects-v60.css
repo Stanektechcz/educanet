@@ -1,22 +1,27 @@
-/* v60 · Projekty podle levelu (žák). Bez CDN, jen prostý CSS; respektuje prefers-reduced-motion. */
-.proj60-hero{padding:20px;border-radius:16px;background:var(--panel-bg,#151a24);margin-bottom:16px;}
-.proj60-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:20px;}
-.proj60-card{display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:14px;background:var(--card-bg,#1b2130);border:1px solid rgba(255,255,255,.08);}
-.proj60-client{opacity:.75;font-style:italic;}
+/* v60 · Projekty podle levelu (žák). Světlé plochy a explicitní barvy textu (viz marketplace-v60.css:
+   globální h1–h4/p ze student-ui-v50-7-7.css by na tmavém pozadí nebyly čitelné). Bez CDN; prefers-reduced-motion. */
+.proj60-hero{padding:20px;border-radius:16px;background:var(--surface,#fff);border:1px solid var(--line,#d9e0e6);margin-bottom:16px;min-width:0;overflow-wrap:anywhere;}
+.proj60-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:14px;margin-bottom:20px;}
+.proj60-card{display:flex;flex-direction:column;gap:8px;min-width:0;padding:16px;border-radius:14px;background:var(--surface,#fff);border:1px solid var(--line,#d9e0e6);color:#111827;overflow-wrap:anywhere;}
+body:not(.assessment-mode) .proj60-card p{color:#374151;margin:0;}
+body:not(.assessment-mode) .proj60-client,.proj60-client{color:#4b5563;font-style:italic;}
 .proj60-skills{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px;}
-.proj60-skills li{padding:3px 8px;border-radius:8px;background:rgba(255,255,255,.08);font-size:.85rem;}
+.proj60-skills li{padding:3px 8px;border-radius:8px;background:#eef2f5;color:#111827;font-size:.85rem;}
 .proj60-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:.85rem;}
-.proj60-meta span{padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.06);}
-.proj60-level-ok{background:rgba(120,220,140,.2);}
-.proj60-consent{background:rgba(255,190,80,.25);}
-.proj60-locked{opacity:.8;}
-.proj60-detail{border-top:1px dashed rgba(255,255,255,.15);padding-top:8px;}
-.proj60-status{font-weight:600;}
-.proj60-apply-form,.proj60-inline-form{display:flex;flex-direction:column;gap:8px;}
-.proj60-apply-form textarea{min-height:70px;}
+.proj60-meta span{padding:4px 8px;border-radius:8px;background:#eef2f5;color:#111827;}
+.proj60-meta .proj60-level-ok{background:#e6f6ef;}
+.proj60-meta .proj60-consent{background:#fff3d6;}
+.proj60-locked{color:#374151;}
+.proj60-detail{border-top:1px dashed #b5bfca;padding-top:8px;min-width:0;}
+.proj60-status{font-weight:600;color:#111827;}
+.proj60-apply-form,.proj60-inline-form{display:flex;flex-direction:column;gap:8px;min-width:0;}
+.proj60-apply-form textarea{min-height:70px;width:100%;}
+.proj60-apply-form input,.proj60-apply-form select{min-height:44px;}
 .proj60-apply-form button,.proj60-inline-form button{min-height:44px;min-width:44px;padding:8px 16px;}
-.proj60-note{opacity:.75;}
+body:not(.assessment-mode) .proj60-card .btn,body:not(.assessment-mode) .proj60-app-list .btn{min-height:44px!important;min-width:44px;}
+body:not(.assessment-mode) .proj60-note,.proj60-note{color:#4b5563;}
 .proj60-app-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
-.proj60-app-list li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.04);}
-@media (max-width:600px){.proj60-grid{grid-template-columns:1fr;}}
+.proj60-app-list li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;min-width:0;padding:10px 12px;border-radius:10px;background:#eef2f5;color:#111827;overflow-wrap:anywhere;}
+.proj60-hero :focus-visible,.proj60-card :focus-visible,.proj60-app-list :focus-visible{outline:3px solid #2459ff!important;outline-offset:2px!important;}
+@media (max-width:600px){.proj60-grid{grid-template-columns:minmax(0,1fr);}}
 @media (prefers-reduced-motion: reduce){.proj60-card{transition:none;}}

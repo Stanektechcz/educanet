@@ -15,7 +15,7 @@ otázky pro školu jsou v `docs/NASAZENI_PRODUKCE.md` – tady je jen to, co je 
 | `/www/server/educanet/educanet.env` | prostředí pro CLI a cron | `root:www`, 0640 |
 | `/www/server/educanet/educanet-rules.conf` | pravidla nginx (include v konfiguraci webu) | `root:root`, 0644 |
 | `/www/server/educanet/deploy_aapanel.sh`, `educanet-cron.sh` | nasazení a plánované úlohy | `root:root`, 0750 |
-| `/www/backup/educanet/` | zálohy `storage/` + `uploads/` | `www:www`, 0750 |
+| `/www/educanet-backup/` | zálohy `storage/` + `uploads/` | `www:www`, 0750 |
 | `/www/educanet/releases/`, `/www/educanet/code-backup/` | rozbalená vydání, zálohy kódu pro rollback | `root:root`, 0750 |
 
 `/www/server/educanet/educanet.secrets.php` je cesta, kterou aplikace na aaPanelu hledá sama
@@ -38,9 +38,9 @@ otázky pro školu jsou v `docs/NASAZENI_PRODUKCE.md` – tady je jen to, co je 
 5. **Site → URL rewrite**: nech prázdné (vlastní `location /` je v pravidlech).
 6. Přes SSH jako root:
    ```bash
-   mkdir -p /www/server/educanet /www/backup/educanet /www/educanet/releases /www/educanet/code-backup
+   mkdir -p /www/server/educanet /www/educanet-backup /www/educanet/releases /www/educanet/code-backup
    chown root:www /www/server/educanet && chmod 750 /www/server/educanet /www/educanet
-   chown www:www /www/backup/educanet && chmod 750 /www/backup/educanet
+   chown www:www /www/educanet-backup && chmod 750 /www/educanet-backup
    touch /www/wwwlogs/is.stanektech.cz.php-error.log && chown www:www /www/wwwlogs/is.stanektech.cz.php-error.log
    ```
    Nahraj do `/www/server/educanet/` (z projektu):
@@ -100,8 +100,9 @@ edu() { runuser -u www -- env -i PATH=/usr/bin:/bin HOME=/tmp bash -c 'set -a; .
    ```bash
    edu tools/v59_teacher_accounts.php create-admin --login=jmeno.prijmeni --name="Jméno Příjmení"
    ```
-   Pak odkomentuj `EDUCANET_TEACHER_ACCOUNTS_REQUIRED=1` v **obou** souborech
-   (`educanet.env` i `educanet-rules.conf`) a reloadni nginx (`nginx -t && nginx -s reload`,
+   Do tohoto kroku nech `EDUCANET_TEACHER_ACCOUNTS_REQUIRED=1` v **obou** souborech
+   (`educanet.env` i `educanet-rules.conf`) zakomentované; po vytvoření admina ho odkomentuj
+   (produkční stav – bez účtů web vrací 503) a reloadni nginx (`nginx -t && nginx -s reload`,
    nebo App Store → Nginx → Reload).
 2. Admin se přihlásí na `https://is.stanektech.cz/teacher.php`, nastaví si heslo a v záložce
    **Učitelé** založí ostatní vyučující s jejich třídami a předměty.
@@ -115,7 +116,7 @@ edu() { runuser -u www -- env -i PATH=/usr/bin:/bin HOME=/tmp bash -c 'set -a; .
    | Automatizace | pondělí 03:00 | `bash /www/server/educanet/educanet-cron.sh automation` |
    | Preflight (hlídání) | pondělí 06:00 | `bash /www/server/educanet/educanet-cron.sh preflight` |
 
-   Zálohy v `/www/backup/educanet` leží na stejném serveru. Kopii mimo server a šifrování musí
+   Zálohy v `/www/educanet-backup` (ne `/www/backup/educanet` – ten aaPanel drží jen pro roota a `www` do něj nezapíše) leží na stejném serveru. Kopii mimo server a šifrování musí
    zajistit škola.
 
 ## 4. Kontrola před zpřístupněním žákům
@@ -159,7 +160,7 @@ Při `FAIL` ve vlastnictví souborů: `chown -R www:www storage uploads cache`.
 /www/server/educanet/deploy_aapanel.sh deploy /root/educanet-v60-….zip --apply
 ```
 
-Každé `--apply` nejdřív zálohuje `storage/` do `/www/backup/educanet` a stávající kód do
+Každé `--apply` nejdřív zálohuje `storage/` do `/www/educanet-backup` a stávající kód do
 `/www/educanet/code-backup/<čas>`; na konci vypíše příkaz pro rollback:
 
 ```bash
@@ -170,8 +171,8 @@ Rollback vrací jen **kód**. Pokud nová verze už změnila formát dat, obnov 
 pořízené před nasazením (nejdřív bez `--apply` = jen porovnání):
 
 ```bash
-edu tools/restore_storage.php --from=/www/backup/educanet/<záloha>
-edu tools/restore_storage.php --from=/www/backup/educanet/<záloha> --apply
+edu tools/restore_storage.php --from=/www/educanet-backup/<záloha>
+edu tools/restore_storage.php --from=/www/educanet-backup/<záloha> --apply
 ```
 
 ## 6. Na co si dát v aaPanelu pozor

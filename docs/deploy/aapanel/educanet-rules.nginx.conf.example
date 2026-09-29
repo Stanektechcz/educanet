@@ -97,9 +97,10 @@ date.timezone=Europe/Prague";
     fastcgi_param EDUCANET_HSTS 0;
     fastcgi_param EDUCANET_TIMEZONE Europe/Prague;
     fastcgi_param EDUCANET_SECRETS_FILE /www/server/educanet/educanet.secrets.php;
-    fastcgi_param EDUCANET_BACKUP_DIR /www/backup/educanet;
-    # Odkomentuj po vytvoření prvního učitelského admina (docs/NASAZENI_AAPANEL.md §3 krok 1):
-    # fastcgi_param EDUCANET_TEACHER_ACCOUNTS_REQUIRED 1;
+    fastcgi_param EDUCANET_BACKUP_DIR /www/educanet-backup;
+    # Produkční stav (shodně s educanet.env). Jen před vytvořením prvního učitelského admina
+    # (docs/NASAZENI_AAPANEL.md §3 krok 1) řádek dočasně zakomentuj.
+    fastcgi_param EDUCANET_TEACHER_ACCOUNTS_REQUIRED 1;
 }
 
 # Jakékoli jiné PHP (knihovny, datové soubory, i s PATH_INFO /x.php/…) – nikdy přímo.

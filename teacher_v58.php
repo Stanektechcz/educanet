@@ -139,6 +139,15 @@ function teacher58_available(string $tab): bool
     return true;
 }
 
+/** v60: záložka jen pro administrátora, kterou aktuální (neadmin) učitel dostat nemá – teacher.php pro ni vrací výslovné 403 místo tichého přehledu. */
+function teacher58_is_admin_denied(string $tab): bool
+{
+    $mod = teacher58_modules()[$tab] ?? null;
+    if (!is_array($mod) || empty($mod['admin'])) return false;
+    if (!empty($mod['accounts_only']) && (!function_exists('teacher59_mode') || teacher59_mode() === 'legacy')) return false;
+    return function_exists('teacher59_is_admin') && !teacher59_is_admin();
+}
+
 /** @return list<string> dostupné záložky v58 */
 function teacher58_tabs(): array
 {

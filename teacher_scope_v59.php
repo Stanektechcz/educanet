@@ -700,7 +700,7 @@ function teacher59_deny(string $reason, ?bool $json = null, string $message = ''
         exit;
     }
     echo teacher59_page('Přístup odepřen', '<section class="t59-card" role="alert"><div class="eyebrow">Přístup odepřen</div><h1>Sem nemáte přístup</h1>'
-        . '<p>' . e($message) . ' Pokud jde o omyl, požádejte administrátora o přiřazení třídy.</p>'
+        . '<p>' . e($message) . ($reason === 'admin_only' ? ' Potřebujete-li k ní přístup, požádejte administrátora.' : ' Pokud jde o omyl, požádejte administrátora o přiřazení třídy.') . '</p>'
         . '<p><a class="btn primary t59-btn" href="teacher.php">Zpět na přehled</a></p></section>');
     exit;
 }

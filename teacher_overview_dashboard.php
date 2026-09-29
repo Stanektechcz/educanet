@@ -252,7 +252,7 @@ function teacher_render_global_overview(): void
         return ($rank[$a['severity']??'info']??9) <=> ($rank[$b['severity']??'info']??9);
     });
     ?>
-    <section class="teacher-hero overview-global-hero"><div><div class="eyebrow">Teacher Overview · 1.A–4.A</div><h1>Celá výuka na jedné stránce</h1><p>Stav 112 strukturovaných dvouhodinových lekcí, učitelských checklistů, 40 středečních bloků na třídu, týmových projektů a Skill Mastery. Detailní pohledy zůstávají dostupné jedním kliknutím.</p></div><div class="teacher-hero-actions"><a class="btn secondary" href="materials/TEACHER_OVERVIEW.md" target="_blank">Materiálový přehled ↗</a><button class="btn primary" type="button" onclick="window.print()">Tisk / PDF</button></div></section>
+    <section class="teacher-hero overview-global-hero"><div><div class="eyebrow">Teacher Overview · <?=e(teacher_overview_scope_label(array_keys($snapshots)))?></div><h1>Celá výuka na jedné stránce</h1><p>Stav <?=(int)$lessonsTotal?> strukturovaných dvouhodinových lekcí, učitelských checklistů, 40 středečních bloků na třídu, týmových projektů a Skill Mastery. Detailní pohledy zůstávají dostupné jedním kliknutím.</p></div><div class="teacher-hero-actions"><a class="btn secondary" href="materials/TEACHER_OVERVIEW.md" target="_blank">Materiálový přehled ↗</a><button class="btn primary" type="button" onclick="window.print()">Tisk / PDF</button></div></section>
 
     <section class="overview-global-kpis">
       <article><span>Obsah lekcí</span><strong><?=$contentReady?> / <?=$lessonsTotal?></strong><small><?=teacher_overview_percent($contentReady,$lessonsTotal)?> % strukturálně připraveno</small></article>
