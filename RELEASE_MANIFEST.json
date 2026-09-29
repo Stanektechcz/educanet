@@ -1,6 +1,6 @@
 {
     "version": "v59",
-    "built_at": "2026-09-29T21:27:42+00:00",
+    "built_at": "2026-09-29T21:35:43+00:00",
     "file_count": 1125,
     "files": {
         ".htaccess": "cae2198ab7c022ece924538fc01656194d4a06078db72e06cba16e3b69d10935",
@@ -203,7 +203,7 @@
         "docs/ROBOTI_V58.md": "81b2956ffb2c4ac7ce8c31ddd0eaa91a98e912dc284277381e50fa7e108c2fe4",
         "docs/TYMOVE_HRY_V58.md": "d929634911b28f24fcd471105ce33b8f6b5bb99c6d03bbffe9836c31cb62c9cd",
         "docs/V58_PLAN.md": "049e025b5a3b1a517e779d6094b9546f866c5bc69448af7721764817075a4d85",
-        "docs/deploy/aapanel/deploy_aapanel.sh.example": "48cbfdf4b324716fa8d5b11edcab641606e6b8958e4a89994fb50abedcc88b85",
+        "docs/deploy/aapanel/deploy_aapanel.sh.example": "85f6c45b45dd2e596d82372cbb2531f9a2db8ecf719d83f92dfd5134feddd025",
         "docs/deploy/aapanel/educanet-cron.sh.example": "92fae8b6bd1c1ba5436bd70f99d4ecbe9e56294ef683ad545ec730317389acf7",
         "docs/deploy/aapanel/educanet-rules.nginx.conf.example": "662fa747f28db3258747048051a8882f7aa96606949c35a50ee769bbde789d04",
         "docs/deploy/aapanel/educanet.env.example": "deaa064e728855076fb610d1b1a9f4f0152d94fe12e9d405de567a7abd605cf9",
@@ -1114,7 +1114,7 @@
         "tools/v60_points_audit.php": "1b457a7ada0fca9b90363d540c4bbfef35e2df727bfab1a80b2ea4398f16dd45",
         "tools/v60_profile_audit.php": "10efa8a57aff9cd8a9925c7eaf9e26055766a93ce3d522d13f6616d2ee20d4f8",
         "tools/v60_projects_audit.php": "4f073c969e26e27d776ca159307156b118d117c2f5642b67ea458dc1480f4896",
-        "tools/v60_storage_selftest_audit.php": "06a4531f081b7ecd346db668b41bbce209df6368e811bece69eea7021cd552d1",
+        "tools/v60_storage_selftest_audit.php": "81977aa281c2a5e288c326f6f4c148c51c9c5b93c2c34312a6144469ebceecd2",
         "tutorial_v52.php": "2df9ea72212220210531a6285b4163a988b8c2c89a20c7749b835041a14f7d56",
         "tutorial_v52_teacher.php": "86deb77ee7e31840e2a772a8b743da2e522968d5b1c05c5bcbdff290a4d9a929",
         "tutorial_v52_views.php": "67ea0a1c1fa8cb27a68a8dfd49bdc4cc9552a08ed8137609779f0b02773a8e84",

@@ -31,8 +31,9 @@ for bin in rsync unzip runuser; do command -v "$bin" >/dev/null || die "chybí p
 RSYNC_FILTERS=(
   --include=/storage/.htaccess --exclude='/storage/*'
   --include=/uploads/.htaccess --exclude='/uploads/*'
-  # Pojistka: --delete nikdy nesmí sáhnout do dat žáků (protect = ochrana před mazáním).
-  --filter='P /storage/***' --filter='P /uploads/***'
+  # Vyloučené soubory --delete nemaže (bez --delete-excluded), takže data žáků zůstanou.
+  # Filtr 'P /storage/***' tu být NESMÍ – koliduje s přenosem storage/.htaccess a rsync
+  # celý přenos odmítne („rejecting excluded file-list name: storage“).
   --exclude=/.user.ini --exclude=/.well-known/ --exclude=/.git/ --exclude=/.gitignore
 )
 

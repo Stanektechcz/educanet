@@ -111,7 +111,7 @@ unlink($envFile);
 $tool = (string)file_get_contents($root . '/tools/storage_selftest.php');
 $check('nástroj: jen CLI (PHP_SAPI guard), žádné exec/eval/curl/mail', str_contains(substr($tool, 0, 200), "PHP_SAPI !== 'cli'") && !preg_match('/\b(exec|shell_exec|system|passthru|proc_open|popen|eval|curl_\w+|mail)\s*\(/', $tool), false);
 $deploy = (string)file_get_contents($root . '/docs/deploy/aapanel/deploy_aapanel.sh.example');
-$check('deploy skript: po nasazení spouští storage_selftest jako www a chrání storage/ před rsync --delete', str_contains($deploy, 'storage_selftest') && str_contains($deploy, 'P /storage/***') && str_contains($deploy, 'as_web tools/storage_selftest.php') && !preg_match('#rm\s+-rf?\s+[^\n]*storage#', $deploy) && !str_contains($deploy, '--delete-excluded'), false);
+$check('deploy skript: po nasazení spouští storage_selftest jako www a chrání storage/ před rsync --delete', str_contains($deploy, 'storage_selftest') && str_contains($deploy, "--exclude='/storage/*'") && str_contains($deploy, 'as_web tools/storage_selftest.php') && !preg_match('#rm\s+-rf?\s+[^\n]*storage#', $deploy) && !preg_match('#^\s*[^\#\n]*--delete-excluded#m', $deploy) && !preg_match("#^\s*[^\#\n]*--filter='P /storage#m", $deploy), false);
 $check('deploy skript: chown www:www storage uploads cache', str_contains($deploy, 'chown -R "$WEB_USER:$WEB_USER" "$SITE/storage" "$SITE/uploads"') && str_contains($deploy, '"$SITE/cache"'), false);
 $doc = (string)file_get_contents($root . '/docs/NASAZENI_AAPANEL.md');
 $check('dokumentace: sekce „Kontrola ukládání“ s příkazem storage_selftest', str_contains($doc, 'Kontrola ukládání') && str_contains($doc, 'tools/storage_selftest.php'), false);
