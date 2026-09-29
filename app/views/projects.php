@@ -12,6 +12,7 @@ if ($view === 'projekty') {
     $studentKey = adaptive_student_key((string)$classId);
     $level = (int)learning_level((int)(learning_profile((string)$classId)['xp'] ?? 0))['level'];
     render_header(tr('Projekty'), $module);
+    if ($flash !== '') { echo '<div class="notice" role="status">' . e($flash) . '</div>'; }
     projects60_render((string)$classId, $studentKey, $level);
     render_footer();
     exit;

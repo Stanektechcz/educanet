@@ -36,7 +36,7 @@ foreach (['teacher_operations_v46.php', 'teacher_operations_plus_v46_1.php', 'te
     'arena_v58_ctf.php', 'arena_v58_incident.php', 'lab_v58_editor.php', 'teacher_demo_accounts.php', 'teacher_accounts_v59_admin.php',
     'teamgames_v58_projector_views.php', 'intake_v51_teacher.php',
     'points_v53.php', 'points_v60.php', 'marketplace_v60.php', 'marketplace_v60_teacher_views.php',
-    'projects_v60.php', 'projects_v60_teacher_views.php'] as $file) {
+    'projects_v60.php', 'projects_v60_teacher_views.php', 'feedback_v60.php', 'feedback_v60_teacher_views.php'] as $file) {
     require_once $root . '/' . $file;
 }
 require_once __DIR__ . '/lib/v59_scope_fixtures.php';

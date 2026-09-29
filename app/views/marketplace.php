@@ -11,6 +11,7 @@ if ($view === 'obchod') {
     guarded_study_redirect();
     $studentKey = adaptive_student_key((string)$classId);
     render_header(tr('Obchod'), $module);
+    if ($flash !== '') { echo '<div class="notice" role="status">' . e($flash) . '</div>'; }
     marketplace60_render_shop((string)$classId, $studentKey);
     render_footer();
     exit;

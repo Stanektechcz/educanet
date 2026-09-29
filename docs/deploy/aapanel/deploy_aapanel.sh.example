@@ -31,6 +31,8 @@ for bin in rsync unzip runuser; do command -v "$bin" >/dev/null || die "chybí p
 RSYNC_FILTERS=(
   --include=/storage/.htaccess --exclude='/storage/*'
   --include=/uploads/.htaccess --exclude='/uploads/*'
+  # Pojistka: --delete nikdy nesmí sáhnout do dat žáků (protect = ochrana před mazáním).
+  --filter='P /storage/***' --filter='P /uploads/***'
   --exclude=/.user.ini --exclude=/.well-known/ --exclude=/.git/ --exclude=/.gitignore
 )
 
@@ -43,9 +45,22 @@ fix_perms() {
   chown -R "$WEB_USER:$WEB_USER" "$SITE"
   find "$SITE" -type d -exec chmod 0755 {} +
   find "$SITE" -type f -exec chmod 0644 {} +
-  chmod 0770 "$SITE/storage" "$SITE/uploads"
+  # Data, nahrané soubory a cache musí patřit uživateli webu, jinak by zápis z PHP-FPM selhal.
+  chown -R "$WEB_USER:$WEB_USER" "$SITE/storage" "$SITE/uploads"
+  [ -d "$SITE/cache" ] && chown -R "$WEB_USER:$WEB_USER" "$SITE/cache"
+  find "$SITE/storage" "$SITE/uploads" -type d -exec chmod 0770 {} +
   find "$SITE/storage" -type f -exec chmod 0660 {} +
   if [ -d "$SITE/cache" ]; then chmod -R u+rwX,g+rwX "$SITE/cache"; fi
+}
+
+storage_count() {  # počet souborů v storage/ (pojistka proti ztrátě dat při nasazení)
+  find "$SITE/storage" -type f 2>/dev/null | wc -l
+}
+
+storage_selftest() {  # jen informativní: ověří ukládání jako uživatel webu; nikdy nepřeruší nasazení
+  echo "== Kontrola ukládání (storage_selftest) =="
+  as_web tools/storage_selftest.php --base="$(sed -n 's/^EDUCANET_APP_URL=//p' "$ENV_FILE" | head -n1)" \
+    --open-basedir="$SITE/:$CONF/:/tmp/" || echo "!! storage_selftest hlásí FAIL – viz výpis výše (nasazení tím nebylo zastaveno)."
 }
 
 sync_code() {  # $1 = zdrojový adresář kódu, $2 = --apply | ''
@@ -64,15 +79,20 @@ sync_code() {  # $1 = zdrojový adresář kódu, $2 = --apply | ''
     mkdir -p "$WORK/code-backup/$ts"
     rsync -a "${RSYNC_FILTERS[@]}" "$SITE/" "$WORK/code-backup/$ts/"
   fi
+  local before after
+  before=$(storage_count)
   echo "== Nahrání kódu =="
   rsync -a --delete "${RSYNC_FILTERS[@]}" "$src/" "$SITE/"
   fix_perms
+  after=$(storage_count)
+  [ "$after" -ge "$before" ] || echo "!! POZOR: ve storage/ ubylo souborů ($before -> $after). Obnov data přes tools/restore_storage.php." >&2
   echo "== Migrace úložiště =="
   as_web tools/migrate.php --apply --backup-now
   echo "== Preflight =="
   if ! as_web tools/preflight.php --env-file="$ENV_FILE"; then
     echo "!! Preflight hlásí FAIL – oprav ho před zpřístupněním žákům."
   fi
+  storage_selftest
   if [ -n "$ts" ]; then echo "Rollback kódu: $0 rollback $WORK/code-backup/$ts --apply"; fi
 }
 

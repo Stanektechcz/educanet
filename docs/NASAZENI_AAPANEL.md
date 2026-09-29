@@ -134,6 +134,24 @@ Obojí musí skončit bez `FAIL`. `http_smoke` na nginx ověří skutečné zák
 
 `tools/run_audits.php` se na produkci nespouští – běží na vývojovém stroji před sestavením vydání.
 
+## 4a. Kontrola ukládání
+
+Ověří, že web (uživatel `www`) opravdu zapisuje a čte data: práva a vlastníka `storage/`, `uploads/`,
+`cache/runtime`, zápis přes zámek (`storage_update`) i přidávání do proudů, `session.save_path`,
+`open_basedir`, volné místo, čerstvost zálohy a čitelnost všech datových souborů. Nic nemění v datech
+žáků (zkušební soubory `_selftest_*` se hned mažou) a nevypisuje jejich obsah. `deploy_aapanel.sh`
+ho po každém `--apply` spustí sám (jen informativně); ručně:
+
+```bash
+sudo -u www env -i PATH=/usr/bin:/bin HOME=/tmp bash -c 'set -a; . /www/server/educanet/educanet.env; set +a; \
+  cd /www/wwwroot/is.stanektech.cz && /www/server/php/83/bin/php tools/storage_selftest.php \
+  --base=https://is.stanektech.cz --open-basedir=/www/wwwroot/is.stanektech.cz/:/www/server/educanet/:/tmp/'
+```
+
+Konec `STORAGE_SELFTEST_OK` = vše v pořádku (`warn` jsou upozornění, ne chyby). `--base` navíc ověří
+platnost TLS certifikátu (`session.cookie_secure=1` bez platného certifikátu znemožní přihlášení).
+Při `FAIL` ve vlastnictví souborů: `chown -R www:www storage uploads cache`.
+
 ## 5. Aktualizace a rollback
 
 ```bash

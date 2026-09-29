@@ -28,6 +28,16 @@ function mkt60_cosmetics_path(): string
     return STORAGE_DIR . '/profile_cosmetics_v60.json.php';
 }
 
+/** Dohledový log nákupů. Selhání logu NIKDY neshodí už potvrzený nákup/vrácení (jen záznam do error_logu). */
+function mkt60_log(array $record): void
+{
+    try {
+        storage_append('marketplace_v60_log', $record);
+    } catch (Throwable $e) {
+        error_log('EDUCANET mkt60: log nelze zapsat (' . get_class($e) . ').');
+    }
+}
+
 function mkt60_wallet_key(string $classId, string $studentKey): string
 {
     return $classId . '|' . $studentKey;
@@ -199,7 +209,7 @@ function mkt60_buy(string $classId, string $studentKey, string $itemId, int $qty
         return $data;
     });
     if ($outcome['ok']) {
-        storage_append('marketplace_v60_log', ['type' => 'buy', 'class_id' => $classId, 'student_key' => $studentKey, 'item_id' => $itemId, 'qty' => $qty, 'purchase_key' => $purchaseKey, 'at' => date(DATE_ATOM)]);
+        mkt60_log(['type' => 'buy', 'class_id' => $classId, 'student_key' => $studentKey, 'item_id' => $itemId, 'qty' => $qty, 'purchase_key' => $purchaseKey, 'at' => date(DATE_ATOM)]);
     }
     return $outcome;
 }

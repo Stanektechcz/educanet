@@ -147,6 +147,13 @@ return [
             'projects_v60.php',
             'projects_v60_views.php',
         ],
+        // v60 · nahlášení chyby / návrh vylepšení (žákovské UI); učitelský registr feedback_v60_teacher_views.php je vždy česky.
+        'feedback' => [
+            'app/views/feedback.php',
+            'app/actions/feedback.php',
+            'feedback_v60.php',
+            'feedback_v60_views.php',
+        ],
         // B5 – Linux Lab, Aréna, hádanka (offline stránka viz js_lab_offline + assets/lab-offline-i18n-v59.json).
         'lab' => [
             'app/views/linux_lab.php',

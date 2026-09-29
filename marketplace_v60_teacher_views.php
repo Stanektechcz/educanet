@@ -36,7 +36,7 @@ function mkt60_teacher_handle_post(string $action): void
         $purchaseKey = is_string($_POST['purchase_key'] ?? null) ? (string)$_POST['purchase_key'] : '';
         $classId = function_exists('teacher59_student_key_class') ? teacher59_student_key_class($studentKey) : '';
         $ok = $classId !== '' && pts60_refund($classId, $studentKey, $purchaseKey, tr('Vráceno učitelem v obchodě.'));
-        if ($ok) storage_append('marketplace_v60_log', ['type' => 'refund', 'class_id' => $classId, 'student_key' => $studentKey, 'purchase_key' => $purchaseKey, 'at' => date(DATE_ATOM)]);
+        if ($ok) mkt60_log(['type' => 'refund', 'class_id' => $classId, 'student_key' => $studentKey, 'purchase_key' => $purchaseKey, 'at' => date(DATE_ATOM)]);
         $_SESSION['flash'] = $ok ? tr('Nákup byl vrácen.') : tr('Vrácení se nepodařilo.');
     } elseif ($action === 'mkt60_seed') {
         mkt60_seed_if_empty(teacher59_current_id() ?? 'teacher');

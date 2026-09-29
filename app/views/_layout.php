@@ -82,6 +82,7 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
                             <a href="?view=profile"><?= e(tr('Můj profil')) ?></a>
                             <a href="?view=obchod"><?= e(tr('Obchod')) ?></a>
                             <a href="?view=projekty"><?= e(tr('Projekty')) ?></a>
+                            <a href="?view=hlaseni"><?= e(tr('Nahlásit chybu')) ?></a>
                             <a href="?view=my_intake"><?= e(tr('Můj dotazník')) ?></a>
                             <a href="?view=study_loop"><?= e(tr('Potřebuju pomoct')) ?></a>
                             <div class="v56-menu-lang"><?= edu_lang_switcher_html(csrf_token(), '?view=' . (string)$view) ?></div>
@@ -111,7 +112,7 @@ function render_footer(): void
     ?>
     </main>
     <?php v55_footer_cta(); ?>
-    <footer class="footer"><a href="?view=privacy"><?= e(tr('Soukromí')) ?></a><?= edu_lang_switcher_html(csrf_token(), '?view=' . (string)($GLOBALS['view'] ?? 'dashboard')) ?></footer>
+    <footer class="footer"><a href="?view=privacy"><?= e(tr('Soukromí')) ?></a><?php $fbView = (string)($GLOBALS['view'] ?? ''); if (!empty($_SESSION['next_class_id']) && $fbView !== 'home'): ?><a class="fb60-footer-link" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;margin-left:8px" href="?view=hlaseni<?= preg_match('/^[a-z0-9_]{1,40}$/', $fbView) === 1 && $fbView !== 'hlaseni' ? '&amp;page=' . e($fbView) : '' ?>"><?= e(tr('Nahlásit chybu')) ?></a><?php endif; ?><?= edu_lang_switcher_html(csrf_token(), '?view=' . (string)($GLOBALS['view'] ?? 'dashboard')) ?></footer>
 </div>
 <script src="<?= e(asset_url('assets/app.js?v=46')) ?>"></script>
 <?php if(($GLOBALS['module']??null)!==null): ?><script src="<?= e(asset_url('assets/student-ui-v50-7-7.js?v=51.0')) ?>"></script><?php endif; ?>

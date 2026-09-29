@@ -89,6 +89,8 @@ function teacher_action_permission_prefixes(): array
         'mkt60_'=>'content.manage',
         // v60 · projekty podle levelu: správa katalogu a rozhodování o přihláškách (assistant jen čte).
         'proj60_'=>'content.manage',
+        // v60 · hlášení chyb a návrhů: rozhodování (odměna body + XP) jako správa obsahu (assistant jen čte).
+        'fb60_'=>'content.manage',
     ];
 }
 function teacher_action_permission(string $action): ?string

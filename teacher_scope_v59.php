@@ -302,6 +302,8 @@ function teacher59_action_policies(): array
     $table['proj60_save'] = ['class' => 'optional', 'class_params' => ['classes'], 'entity' => ['id', 'proj60_project'], 'entity_required' => false, 'mode' => 'all'];
     $table['proj60_status'] = $ent('id', 'proj60_project');
     $table['proj60_decide'] = $ent('application_id', 'proj60_app');
+    // v60 · hlášení chyb: rozhodnutí smí jen učitel s rozsahem třídy hlášení (entita fb60_report).
+    $table['fb60_decide'] = $ent('id', 'fb60_report');
     return $table;
 }
 
@@ -414,6 +416,10 @@ function teacher59_entity_resolve(string $type, string $id): ?array
         // v60 · projekty podle levelu: projekt má vlastní classes[]; přihláška patří třídám svého projektu.
         case 'proj60_project':
             $row = function_exists('proj60_item') ? proj60_item($id) : null;
+            break;
+        // v60 · hlášení chyb a návrhů: patří třídě žáka, který ho poslal.
+        case 'fb60_report':
+            $row = function_exists('fb60_item') ? fb60_item($id) : null;
             break;
         case 'proj60_app':
             $app = function_exists('proj60_application') ? proj60_application($id) : null;

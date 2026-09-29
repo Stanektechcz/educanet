@@ -113,6 +113,15 @@ function teacher58_modules(): array
             'post' => ['proj60_' => 'proj60_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { proj60_render_teacher_tab($c, $csrf()); },
         ],
+        // v60 · hlášení chyb a návrhů žáků: potvrzení = body + XP (jen jednou). Admin vidí vše, učitel jen své třídy
+        // (fb60_list + politika fb60_decide → entita fb60_report); asistent má jen 'view' → post neprojde.
+        'hlaseni' => [
+            'label' => 'Hlášení', 'hint' => 'Chyby a návrhy vylepšení od žáků, odměny body a XP', 'group' => 'podpora',
+            'files' => ['feedback_v60.php', 'feedback_v60_teacher_views.php', 'points_v53.php'],
+            'css' => ['assets/feedback-v60.css'],
+            'post' => ['fb60_' => 'fb60_teacher_handle_post'],
+            'render' => static function (array $m, string $c) use ($csrf): void { fb60_render_teacher_tab($c, $csrf()); },
+        ],
     ];
 }
 

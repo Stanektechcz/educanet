@@ -667,4 +667,6 @@ return [
     'Obchod' => 'Shop',
     // v60 · odkaz na projekty podle levelu v hlavní navigaci
     'Projekty' => 'Projects',
+    // v60 · odkaz na hlášení chyb v menu účtu a v patičce
+    'Nahlásit chybu' => 'Report a bug',
 ];

@@ -74,6 +74,7 @@ function v59sf_build_fixtures(array $modules): array
             $result = proj60_apply($c, $c . ':student:' . $mk . ' Zajemce', (string)$ids['proj60_project'][$k], $mk . ' motivace', 9);
             return (string)($result['application_id'] ?? '');
         });
+        $ids['fb60_report'][$k] = v59sf_try($errors, 'fb60 ' . $k, static fn() => (string)fb60_submit($c, $c . ':student:' . $mk . ' Hlasitel', ['type' => 'bug', 'title' => $mk . ' hlášení', 'description' => $mk . ' popis chyby dostatečně dlouhý'])['id']);
         $key = $student($c);
         $ids['student_key'][$k] = $key;
         $ids['grade_target'][$k] = $key;
@@ -168,7 +169,7 @@ function v59sf_build_fixtures(array $modules): array
     $missing = [];
     foreach (['race', 'match', 'tg58_game', 'ctf_event', 'inc_session', 'sess53', 'lab58e_level', 'demo_account', 'intervention', 'skill_evidence', 'skill_assignment',
         'peer_feedback', 'ml_live', 'ml_scenario', 'ml_tip', 'group', 'intake_response', 'intake_activation', 'mkt60_item',
-        'proj60_project', 'proj60_app'] as $type) {
+        'proj60_project', 'proj60_app', 'fb60_report'] as $type) {
         if (($ids[$type]['3a'] ?? null) === null || teacher59_entity_classes($type, (string)$ids[$type]['3a']) !== ['class_3a']) $missing[] = $type;
     }
     return ['ids' => $ids, 'missing' => $missing, 'errors' => $errors, 'student_3a' => $student3a, 'student_2a' => $student2a, 'label_3a_only' => $label3a];
@@ -283,6 +284,7 @@ function v59sf_post_defaults(string $action, string $classId): array
 {
     return match ($action) {
         'teacher_ops_report_export' => ['report_format' => 'json'],
+        'fb60_decide' => ['decision' => 'reject'],
         'tg58_bank_add' => ['line' => 'graphics', 'prompt' => 'Audit otázka', 'answer' => 'ano'],
         'teacher_saved_filter_save' => ['filter_name' => 'Audit filtr'],
         'teacher_followup_create' => ['followup_title' => 'Audit follow-up'],

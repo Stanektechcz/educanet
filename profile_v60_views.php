@@ -260,6 +260,8 @@ function profile60_render_badges(string $classId, string $target, array $data, b
     if (function_exists('render_profile_role_experience')) {
         render_profile_role_experience($classId, $target, $isMe);
     }
+    // v60 · souhrn hlášení chyb/návrhů – jen vlastní profil.
+    if ($isMe && function_exists('feedback60_render_profile_summary')) feedback60_render_profile_summary($classId, $target);
 }
 
 /** Menší variantou v55_render_badge_board() nad už spočítanou tabulí (bez druhého výpočtu). */
