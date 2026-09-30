@@ -27,5 +27,7 @@ if ($action === 'mkt60_cosmetic_set') {
     if (!mkt60_set_cosmetic((string)$classId, $studentKey, $slot, $itemId)) {
         $_SESSION['flash'] = tr('Kosmetiku se nepodařilo nastavit.');
     }
-    redirect_to('?view=obchod');
+    // Návrat jen na povolené místo (whitelist) – z nastavení profilu zpět do nastavení, jinak do obchodu.
+    $returnToSettings = ($_POST['return_tab'] ?? '') === 'nastaveni';
+    redirect_to($returnToSettings ? '?view=profile&tab=nastaveni' : '?view=obchod');
 }

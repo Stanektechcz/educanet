@@ -30,33 +30,164 @@ function render_student_profile_view(string $classId, array $module, string $fla
 }
 
 /**
- * v60: formulář „Upravit profil“ (chování beze změny, jen přesunuto z render_student_profile_view()
- * do vlastní funkce, aby ho šlo zobrazit jen v záložce Nastavení – viz profile_v60_views.php).
+ * v60: Nastavení profilu (záložka Nastavení). Chování formuláře beze změny (akce save_student_profile,
+ * CSRF, validace na serveru) – jen přehlednější rozvržení ve skupinách, počitadla znaků a lepivé tlačítko Uložit.
+ * Kosmetika se nastavuje samostatnými formuláři (akce mkt60_cosmetic_set), proto stojí mimo hlavní formulář.
  */
 function social_render_profile_editor(string $classId, string $target): void
 {
     $profile = social_profile_get($classId, $target);
+    echo '<section class="p60-settings" data-p60-settings><header class="p60-settings-head"><h2>' . e(tr('Nastavení profilu')) . '</h2>'
+        . '<p>' . e(tr('Uprav, co o sobě ukážeš spolužákům. Profil je školní a třídní – nepřidávej telefon, adresu ani jiné citlivé údaje.')) . '</p></header>';
+    echo '<form method="post" id="p60-profile-form" class="p60-form" data-p60-form data-dirty-text="' . e(tr('Máš neuložené změny.')) . '">'
+        . '<input type="hidden" name="csrf" value="' . e(csrf_token()) . '"><input type="hidden" name="action" value="save_student_profile">';
+    social_editor_group_about($profile);
+    social_editor_group_skills($profile);
+    social_editor_group_badges($classId, $profile);
+    echo '</form>';
+    social_editor_appearance($classId, $target);
+    social_editor_privacy();
+    echo '<div class="p60-savebar"><p class="p60-save-status" role="status" aria-live="polite" data-p60-status></p>'
+        . '<button class="btn primary" type="submit" form="p60-profile-form">' . e(tr('Uložit profil')) . '</button></div></section>';
+}
+
+/** Jedno pole formuláře: popisek, nápověda, ovládací prvek a volitelné počitadlo znaků. */
+function social_editor_field(string $id, string $label, string $hint, string $control, int $max = 0, int $len = 0): string
+{
+    $counter = $max > 0 ? '<span class="p60-count" data-p60-count-for="' . e($id) . '" data-max="' . $max . '">' . e(tr('{n} / {max} znaků', ['n' => $len, 'max' => $max])) . '</span>' : '';
+    return '<div class="p60-field"><label for="' . e($id) . '">' . e($label) . '</label>' . $control
+        . '<div class="p60-field-meta"><small id="' . e($id) . '-hint">' . e($hint) . '</small>' . $counter . '</div></div>';
+}
+
+function social_editor_group_about(array $profile): void
+{
+    $headline = (string)$profile['headline'];
+    $bio = (string)$profile['bio'];
+    echo '<fieldset class="p60-group"><legend>' . e(tr('O mně')) . '</legend>';
+    echo social_editor_field('p60-f-headline', tr('Krátké motto / co teď dělám'), tr('Zobrazí se pod jménem v hlavičce profilu.'),
+        '<input id="p60-f-headline" name="headline" maxlength="80" aria-describedby="p60-f-headline-hint" value="' . e($headline) . '" placeholder="' . e(tr('Např. baví mě motion design a prototypování')) . '">', 80, mb_strlen($headline));
+    echo social_editor_field('p60-f-bio', tr('Krátké představení'), tr('Co tě baví a s čím můžeš pomoct týmu? Bez telefonu a adresy.'),
+        '<textarea id="p60-f-bio" name="bio" maxlength="320" rows="4" aria-describedby="p60-f-bio-hint" placeholder="' . e(tr('Co tě baví, co se chceš naučit a s čím můžeš pomoct týmu?')) . '">' . e($bio) . '</textarea>', 320, mb_strlen($bio));
+    echo '</fieldset>';
+}
+
+function social_editor_select(string $id, string $name, string $label, array $options, string $current): string
+{
+    $html = '<select id="' . e($id) . '" name="' . e($name) . '">';
+    foreach ($options as $value => $text) {
+        $html .= '<option value="' . e((string)$value) . '"' . ($current === (string)$value ? ' selected' : '') . '>' . e($text) . '</option>';
+    }
+    return '<div class="p60-field"><label for="' . e($id) . '">' . e($label) . '</label>' . $html . '</select></div>';
+}
+
+function social_editor_group_skills(array $profile): void
+{
+    $roles = [];
+    foreach (['flexible', 'leader', 'designer', 'researcher', 'developer', 'presenter', 'qa'] as $role) { $roles[$role] = social_role_label($role); }
+    $statuses = [];
+    foreach (['available', 'ask_me', 'full'] as $status) { $statuses[$status] = social_team_status_label($status); }
+    $hint = tr('Odděl čárkou, nejvýše 8 položek.');
+    echo '<fieldset class="p60-group"><legend>' . e(tr('Dovednosti a zájmy')) . '</legend><div class="p60-grid-2">';
+    echo social_editor_field('p60-f-skills', tr('Dovednosti · odděl čárkou'), $hint,
+        '<input id="p60-f-skills" name="skills" aria-describedby="p60-f-skills-hint" value="' . e(implode(', ', (array)$profile['skills'])) . '" placeholder="' . e(tr('Figma, CSS, prezentace')) . '">');
+    echo social_editor_field('p60-f-interests', tr('Zájmy · odděl čárkou'), $hint,
+        '<input id="p60-f-interests" name="interests" aria-describedby="p60-f-interests-hint" value="' . e(implode(', ', (array)$profile['interests'])) . '" placeholder="' . e(tr('UI, sítě, motion, fotografie')) . '">');
+    echo social_editor_select('p60-f-role', 'preferred_role', tr('Preferovaná role v týmu'), $roles, (string)($profile['preferred_role'] ?? ''));
+    echo social_editor_select('p60-f-status', 'team_status', tr('Stav pro týmové projekty'), $statuses, (string)($profile['team_status'] ?? ''));
+    echo '</div></fieldset>';
+}
+
+/** Výběr vystavených odznaků (max 3) a ověřených skills (max 5) – karty s unikátním SVG odznaku. */
+function social_editor_group_badges(string $classId, array $profile): void
+{
     $badgeDefs = learning_badge_definitions();
     $featured = array_values(array_filter((array)$profile['featured_badges'], static fn($id): bool => is_string($id)));
-    $students = project_students_for_class($classId);
-    $student = $students[$target] ?? ['label' => ''];
-    $skillKey = skill_student_key_for_label($classId, (string)$student['label']);
     $earned = (array)(learning_profile($classId)['badges'] ?? []);
-    ?>
-    <section class="dashboard-panel profile-editor"><div class="dashboard-panel-head"><div><div class="eyebrow"><?=e(tr('Upravit profil'))?></div><h2><?=e(tr('Jak tě mají spolužáci najít do projektu?'))?></h2><p><?=e(tr('Profil je školní a třídní. Nepřidávej telefon, adresu ani jiné citlivé údaje.'))?></p></div></div>
-      <form method="post" class="social-profile-form"><input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="action" value="save_student_profile">
-        <label><span><?=e(tr('Krátké motto / co teď dělám'))?></span><input name="headline" maxlength="80" value="<?=e((string)$profile['headline'])?>" placeholder="<?=e(tr('Např. baví mě motion design a prototypování'))?>"></label>
-        <label class="wide"><span><?=e(tr('Krátké představení'))?></span><textarea name="bio" maxlength="320" rows="4" placeholder="<?=e(tr('Co tě baví, co se chceš naučit a s čím můžeš pomoct týmu?'))?>"><?=e((string)$profile['bio'])?></textarea></label>
-        <label><span><?=e(tr('Dovednosti · odděl čárkou'))?></span><input name="skills" value="<?=e(implode(', ',(array)$profile['skills']))?>" placeholder="<?=e(tr('Figma, CSS, prezentace'))?>"></label>
-        <label><span><?=e(tr('Zájmy · odděl čárkou'))?></span><input name="interests" value="<?=e(implode(', ',(array)$profile['interests']))?>" placeholder="<?=e(tr('UI, sítě, motion, fotografie'))?>"></label>
-        <label><span><?=e(tr('Preferovaná role v týmu'))?></span><select name="preferred_role"><?php foreach(['flexible','leader','designer','researcher','developer','presenter','qa'] as $role):?><option value="<?=e($role)?>" <?=($profile['preferred_role']??'')===$role?'selected':''?>><?=e(social_role_label($role))?></option><?php endforeach;?></select></label>
-        <label><span><?=e(tr('Stav pro týmové projekty'))?></span><select name="team_status"><?php foreach(['available','ask_me','full'] as $st):?><option value="<?=e($st)?>" <?=($profile['team_status']??'')===$st?'selected':''?>><?=e(social_team_status_label($st))?></option><?php endforeach;?></select></label>
-        <fieldset class="wide badge-picker"><legend><?=e(tr('Vystavit až 3 získané badge'))?></legend><?php if(!$earned):?><p><?=e(tr('První badge se odemkne až za významný milník — například level 10 nebo výjimečnou zkoušku.'))?></p><?php else:foreach($earned as $bid=>$_):if(!isset($badgeDefs[$bid]))continue;$b=$badgeDefs[$bid];?><label><input type="checkbox" name="featured_badges[]" value="<?=e((string)$bid)?>" <?=in_array($bid,$featured,true)?'checked':''?>><span><b><?=e((string)$b['mark'])?></b><strong><?=e((string)$b['title'])?></strong></span></label><?php endforeach;endif;?></fieldset>
-        <fieldset class="wide badge-picker skill-picker"><legend><?=e(tr('Vystavit až 5 ověřených skills'))?></legend><?php $ownSkillMap=skill_progress_map($classId,$skillKey);$ownFeatured=(array)($profile['featured_skills']??[]);$hasSkill=false;foreach(skill_relevant_skills($classId) as $ss):$osp=$ownSkillMap[(string)$ss['slug']]??[];if((float)($osp['mastery_percent']??0)<60)continue;$hasSkill=true;?><label><input type="checkbox" name="featured_skills[]" value="<?=e((string)$ss['slug'])?>" <?=in_array((string)$ss['slug'],$ownFeatured,true)?'checked':''?>><span><b><?=edu_number((float)$osp['mastery_percent'],0)?>%</b><strong><?=e((string)$ss['name'])?></strong></span></label><?php endforeach;if(!$hasSkill):?><p><?=e(tr('Jakmile u některé dovednosti dosáhneš alespoň Competent (60 %), můžeš ji vystavit v profilovém showcase.'))?></p><?php endif;?></fieldset>
-        <div class="wide"><button class="btn primary" type="submit"><?=e(tr('Uložit profil'))?></button></div>
-      </form>
-    </section>
-    <?php
+    $student = project_students_for_class($classId)[social_current_student_key($classId)] ?? ['label' => ''];
+    $skillKey = skill_student_key_for_label($classId, (string)$student['label']);
+    echo '<fieldset class="p60-group" data-p60-max="3"><legend>' . e(tr('Vystavit až 3 získané badge')) . '</legend>';
+    if (!$earned) {
+        echo '<p class="p60-empty">' . e(tr('První badge se odemkne až za významný milník — například level 10 nebo výjimečnou zkoušku.')) . '</p>';
+    } else {
+        echo '<div class="b60-picks">';
+        foreach ($earned as $bid => $_) {
+            if (!isset($badgeDefs[$bid])) continue;
+            $b = (array)$badgeDefs[$bid];
+            echo '<label class="b60-pick"><input type="checkbox" name="featured_badges[]" value="' . e((string)$bid) . '"' . (in_array($bid, $featured, true) ? ' checked' : '') . '>'
+                . '<span class="b60-pick-card">' . badge60_svg((string)$bid, $b, true, 56, true) . '<strong>' . e((string)$b['title']) . '</strong></span></label>';
+        }
+        echo '</div>';
+    }
+    echo '</fieldset>';
+    social_editor_group_skill_picker($classId, $profile, $skillKey);
+}
+
+function social_editor_group_skill_picker(string $classId, array $profile, string $skillKey): void
+{
+    $map = skill_progress_map($classId, $skillKey);
+    $picked = (array)($profile['featured_skills'] ?? []);
+    $rows = '';
+    foreach (skill_relevant_skills($classId) as $skill) {
+        $mastery = (float)(($map[(string)$skill['slug']] ?? [])['mastery_percent'] ?? 0);
+        if ($mastery < 60) continue;
+        $rows .= '<label class="b60-pick b60-pick-skill"><input type="checkbox" name="featured_skills[]" value="' . e((string)$skill['slug']) . '"' . (in_array((string)$skill['slug'], $picked, true) ? ' checked' : '') . '>'
+            . '<span class="b60-pick-card"><b>' . edu_number($mastery, 0) . '%</b><strong>' . e((string)$skill['name']) . '</strong></span></label>';
+    }
+    echo '<fieldset class="p60-group" data-p60-max="5"><legend>' . e(tr('Vystavit až 5 ověřených skills')) . '</legend>';
+    echo $rows !== '' ? '<div class="b60-picks">' . $rows . '</div>'
+        : '<p class="p60-empty">' . e(tr('Jakmile u některé dovednosti dosáhneš alespoň Competent (60 %), můžeš ji vystavit v profilovém showcase.')) . '</p>';
+    echo '</fieldset>';
+}
+
+/** Vzhled profilu: koupená kosmetika (rámeček/titulek) s náhledem; volba přes existující akci obchodu. */
+function social_editor_appearance(string $classId, string $target): void
+{
+    echo '<section class="p60-group p60-appearance" aria-labelledby="p60-appearance-title"><h3 id="p60-appearance-title">' . e(tr('Vzhled profilu')) . '</h3>'
+        . '<p class="p60-lead">' . e(tr('Rámeček a titulek z obchodu. Zapni ten, který se ti líbí.')) . '</p>';
+    $owned = [];
+    if (function_exists('mkt60_my_purchases') && function_exists('mkt60_item')) {
+        foreach (mkt60_my_purchases($classId, $target) as $p) {
+            $item = ($p['refunded'] || $p['type'] !== 'cosmetic') ? null : mkt60_item((string)$p['item_id']);
+            if ($item !== null && in_array((string)($item['slot'] ?? ''), ['frame', 'title'], true)) { $owned[(string)$p['item_id']] = $item; }
+        }
+    }
+    if ($owned === []) {
+        echo '<p class="p60-empty">' . e(tr('Zatím nemáš žádnou kosmetiku.')) . ' <a href="?view=obchod">' . e(tr('Otevřít obchod →')) . '</a></p></section>';
+        return;
+    }
+    $active = mkt60_cosmetics($classId, $target);
+    $initial = u_substr((string)(project_students_for_class($classId)[$target]['label'] ?? '?'), 0, 1);
+    echo '<ul class="p60-cosmetics">';
+    foreach ($owned as $itemId => $item) {
+        echo social_editor_cosmetic_row((string)$itemId, $item, in_array((string)$itemId, [(string)($active['frame'] ?? ''), (string)($active['title'] ?? '')], true), $initial);
+    }
+    echo '</ul></section>';
+}
+
+function social_editor_cosmetic_row(string $itemId, array $item, bool $isActive, string $initial): string
+{
+    $slot = (string)$item['slot'];
+    if ($slot === 'frame') {
+        [$a, $b] = badge60_frame_colors($itemId);
+        $preview = '<span class="p60-avatar-frame has-frame" style="--p60-fa: ' . e($a) . '; --p60-fb: ' . e($b) . '"><span class="p60-avatar" aria-hidden="true">' . e($initial) . '</span></span>';
+    } else {
+        $preview = '<span class="p60-title-pill">' . e((string)$item['title']) . '</span>';
+    }
+    return '<li class="p60-cosmetic' . ($isActive ? ' is-active' : '') . '"><div class="p60-cosmetic-preview">' . $preview . '</div>'
+        . '<div class="p60-cosmetic-info"><strong>' . e((string)$item['title']) . '</strong><small>' . e($slot === 'frame' ? tr('Rámeček avataru') : tr('Titulek u jména')) . ($isActive ? ' · ' . e(tr('Aktivní')) : '') . '</small></div>'
+        . '<form method="post"><input type="hidden" name="csrf" value="' . e(csrf_token()) . '"><input type="hidden" name="action" value="mkt60_cosmetic_set"><input type="hidden" name="return_tab" value="nastaveni">'
+        . '<input type="hidden" name="slot" value="' . e($slot) . '"><input type="hidden" name="item_id" value="' . e($isActive ? '' : $itemId) . '">'
+        . '<button class="btn secondary" type="submit">' . e($isActive ? tr('Vypnout') : tr('Použít na profilu')) . '</button></form></li>';
+}
+
+/** Soukromí: jen informace o tom, co je vidět spolužákům (žádná nová data se neukládají). */
+function social_editor_privacy(): void
+{
+    echo '<section class="p60-group p60-privacy" aria-labelledby="p60-privacy-title"><h3 id="p60-privacy-title">' . e(tr('Soukromí')) . '</h3><div class="p60-grid-2">'
+        . '<div><h4>' . e(tr('Vidí spolužáci ze třídy')) . '</h4><ul><li>' . e(tr('jméno, motto a představení')) . '</li><li>' . e(tr('dovednosti, zájmy, role a stav pro týmy')) . '</li>'
+        . '<li>' . e(tr('level, vystavené odznaky a skills')) . '</li><li>' . e(tr('mastery po větvích')) . '</li></ul></div>'
+        . '<div><h4>' . e(tr('Vidíš jen ty')) . '</h4><ul><li>' . e(tr('body a nákupy')) . '</li><li>' . e(tr('postup v Linux Labu')) . '</li><li>' . e(tr('tato nastavení')) . '</li></ul></div></div>'
+        . '<p class="p60-lead">' . e(tr('Jména v žebříčcích Arény se řídí nastavením soukromí Arény.')) . '</p></section>';
 }
 
 function render_community_view(string $classId,array $module,string $flash=''): void

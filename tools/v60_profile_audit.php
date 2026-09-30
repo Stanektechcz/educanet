@@ -143,9 +143,12 @@ unset($_GET['tab'], $_GET['student']);
 $_GET['tab'] = 'prehled';
 $overviewHtml = audit_capture(static function () use ($classId): void { render_profile60_view($classId, []); });
 $svgCount = substr_count($overviewHtml, '<svg');
-$titleCount = substr_count($overviewHtml, '<title id="p60-chart-title-');
-$check('overview obsahuje aspoň jeden graf', $svgCount > 0);
-$check('každé <svg> má odpovídající <title>', $svgCount === $titleCount);
+preg_match_all('/<svg\b.*?<\/svg>/s', $overviewHtml, $svgBlocks);
+$titleCount = count(array_filter($svgBlocks[0], static fn(string $b): bool => str_contains($b, '<title')));
+$chartSvgs = preg_match_all('/<svg[^>]*aria-labelledby="p60-chart-title-/', $overviewHtml);
+$check('overview obsahuje aspoň jeden graf', $chartSvgs > 0);
+$check('každé <svg> (graf, prstenec úrovně, odznak) má <title>', $svgCount > 0 && $svgCount === $titleCount);
+$check('každý graf má vlastní <title id="p60-chart-title-…">', $chartSvgs === substr_count($overviewHtml, '<title id="p60-chart-title-'));
 $check('graf má navazující tabulku (<table class="p60-data-table">)', str_contains($overviewHtml, 'p60-data-table'));
 unset($_GET['tab']);
 

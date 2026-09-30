@@ -18,7 +18,7 @@ if (in_array($action, $socialActions, true)) {
         if ($action === 'save_student_profile') {
             social_profile_save($actionClassId,$studentKey,$_POST);
             $_SESSION['flash']=tr('Profil byl uložen.');
-            redirect_to('?view=profile');
+            redirect_to('?view=profile&tab=nastaveni');
         }
         if ($action === 'friend_request') {
             friendship_request($actionClassId,$studentKey,(string)($_POST['student_key']??''));

@@ -31,7 +31,7 @@ function v55_render_badge_card(array $b): void
 {
     ?>
     <article class="v55-badge<?= $b['earned'] ? ' earned' : '' ?> rarity-<?= e($b['rarity']) ?>">
-      <span class="v55-badge-mark" aria-hidden="true"><?= e($b['mark']) ?></span>
+      <span class="v55-badge-mark" aria-hidden="true"><?= function_exists('badge60_svg') ? badge60_svg((string)$b['id'], $b, (bool)$b['earned'], 44, true) : e($b['mark']) ?></span>
       <div class="v55-badge-body">
         <strong><?= e($b['title']) ?></strong>
         <small><?= e($b['earned'] ? $b['text'] : $b['condition']) ?></small>

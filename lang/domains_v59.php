@@ -127,6 +127,10 @@ return [
             'profile_v60.php',
             'profile_v60_views.php',
         ],
+        // v60 · unikátní odznaky (inline SVG) – badges_v60.php.
+        'badges' => [
+            'badges_v60.php',
+        ],
         // v60 · ARN-07 – výzvy spolužákům (1v1 souboje z profilu, opt-in).
         'arena_challenge' => [
             'arena_v60_challenge.php',
