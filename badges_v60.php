@@ -139,21 +139,33 @@ function badge60_points(int $count, float $outer, float $inner): string
     return implode(' ', $points);
 }
 
-/** Prvek tvaru (škálovaný okolo středu, s posunem dy). */
+/** Geometrie tvaru ve viewBoxu 100×100; $attrs = ostatní atributy prvku (barvy, transformace, id). */
+function badge60_shape_element(string $shape, string $attrs): string
+{
+    $poly = ['hexagon' => [6, 46, 0], 'octagon' => [8, 46, 0], 'star6' => [6, 47, 30], 'star8' => [8, 47, 32], 'seal12' => [12, 47, 41], 'seal16' => [16, 47, 42]];
+    if (isset($poly[$shape])) {
+        return '<polygon points="' . badge60_points($poly[$shape][0], (float)$poly[$shape][1], (float)$poly[$shape][2]) . '" ' . $attrs . '/>';
+    }
+    return match ($shape) {
+        'squircle' => '<rect x="6" y="6" width="88" height="88" rx="26" ' . $attrs . '/>',
+        'diamond' => '<polygon points="50,3 96,50 50,97 4,50" ' . $attrs . '/>',
+        'shield' => '<path d="M50 4 88 16v30c0 24-18 40-38 50C30 86 12 70 12 46V16z" ' . $attrs . '/>',
+        default => '<circle cx="50" cy="50" r="46" ' . $attrs . '/>',
+    };
+}
+
+/**
+ * Prvek tvaru (škálovaný okolo středu, s posunem dy). Ve spritovém režimu je geometrie definovaná jednou
+ * (id b60s-s-<tvar>) a tady jen <use> s barvami/transformací (dědí se do geometrie).
+ */
 function badge60_shape(string $shape, string $attrs, float $scale = 1.0, float $dy = 0.0): string
 {
     $transform = ($scale !== 1.0 || $dy !== 0.0)
         ? ' transform="translate(50 ' . badge60_num(50 + $dy) . ') scale(' . badge60_num($scale) . ') translate(-50 -50)"' : '';
-    $poly = ['hexagon' => [6, 46, 0], 'octagon' => [8, 46, 0], 'star6' => [6, 47, 30], 'star8' => [8, 47, 32], 'seal12' => [12, 47, 41], 'seal16' => [16, 47, 42]];
-    if (isset($poly[$shape])) {
-        return '<polygon points="' . badge60_points($poly[$shape][0], (float)$poly[$shape][1], (float)$poly[$shape][2]) . '" ' . $attrs . $transform . '/>';
-    }
-    return match ($shape) {
-        'squircle' => '<rect x="6" y="6" width="88" height="88" rx="26" ' . $attrs . $transform . '/>',
-        'diamond' => '<polygon points="50,3 96,50 50,97 4,50" stroke-linejoin="round" ' . $attrs . $transform . '/>',
-        'shield' => '<path d="M50 4 88 16v30c0 24-18 40-38 50C30 86 12 70 12 46V16z" ' . $attrs . $transform . '/>',
-        default => '<circle cx="50" cy="50" r="46" ' . $attrs . $transform . '/>',
-    };
+    $join = $shape === 'diamond' ? 'stroke-linejoin="round" ' : '';
+    if (!badge60_sprite_mode()) return badge60_shape_element($shape, $join . $attrs . $transform);
+    badge60_define('b60s-s-' . $shape, static fn(): string => badge60_shape_element($shape, 'id="b60s-s-' . $shape . '"'));
+    return '<use href="#b60s-s-' . $shape . '" ' . $join . $attrs . $transform . '/>';
 }
 
 /** Rám podle rarity (jen tahy okolo těla odznaku). */
@@ -188,23 +200,44 @@ function badge60_pattern(int $pattern, string $shape): string
     return $dots;
 }
 
-function badge60_accent(int $accent, string $dark): string
+/** Akcent (tečka na obvodu). $stroke = atribut(y) obrysu: inline stroke="#…", ve spritu class="b60a". */
+function badge60_accent(int $accent, string $stroke): string
 {
     $spots = [1 => [50, 25], 2 => [75, 50], 3 => [50, 75], 4 => [25, 50]];
     if (!isset($spots[$accent])) return '';
-    return '<circle cx="' . $spots[$accent][0] . '" cy="' . $spots[$accent][1] . '" r="3" fill="#fff" stroke="' . $dark . '" stroke-width="1.4"/>';
+    return '<circle cx="' . $spots[$accent][0] . '" cy="' . $spots[$accent][1] . '" r="3" fill="#fff" ' . $stroke . ' stroke-width="1.4"/>';
 }
 
-/** Střed odznaku: ikona kategorie, číslo (level) nebo zámek. */
-function badge60_glyph(array $variant, bool $earned, string $color): string
+const BADGE60_LOCK_PATH = 'M7 11V8a5 5 0 0 1 10 0v3 M6 11h12v9H6z M12 15v2';
+
+/**
+ * Ikona na odznaku: nejdřív tmavší obrys (kontrast bílé ikony na světlém podkladu ≥ 3:1), pak vlastní tah.
+ * $outline / $main = atributy tahů (inline stroke="#…", ve spritu class="b60o" / class="b60g"); $outline '' = bez obrysu.
+ */
+function badge60_glyph_markup(string $path, string $outline, string $main): string
 {
-    $g = '<g transform="translate(50 50) scale(1.5) translate(-12 -12)" fill="none" stroke="' . $color . '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
-    if (!$earned) return $g . '<path d="M7 11V8a5 5 0 0 1 10 0v3 M6 11h12v9H6z M12 15v2"/></g>';
+    return '<g transform="translate(50 50) scale(1.5) translate(-12 -12)" fill="none" stroke-linecap="round" stroke-linejoin="round">'
+        . ($outline !== '' ? '<path d="' . $path . '" stroke-width="3.8" ' . $outline . '/>' : '')
+        . '<path d="' . $path . '" stroke-width="2" ' . $main . '/></g>';
+}
+
+/** Nápis levelu (číslo/znak) – obrys přes paint-order, aby šel bílý text přečíst i na světlém podkladu. */
+function badge60_level_text(string $mark, string $paint): string
+{
+    $size = [1 => 34, 2 => 30, 3 => 24][mb_strlen($mark)] ?? 24;
+    return '<text x="50" y="52" text-anchor="middle" dominant-baseline="central" font-family="system-ui,Segoe UI,Arial,sans-serif" font-weight="800" font-size="' . $size . '" ' . $paint . '>' . e($mark) . '</text>';
+}
+
+/** Střed odznaku (inline režim): ikona kategorie, číslo (level) nebo zámek. */
+function badge60_glyph(array $variant, bool $earned, string $color, string $outlineColor = ''): string
+{
+    $main = 'stroke="' . $color . '"';
+    $outline = $outlineColor !== '' ? 'stroke="' . $outlineColor . '"' : '';
+    if (!$earned) return badge60_glyph_markup(BADGE60_LOCK_PATH, '', $main);
     if ($variant['category'] === 'level' && $variant['mark'] !== '') {
-        $size = [1 => 34, 2 => 30, 3 => 24][mb_strlen($variant['mark'])] ?? 24;
-        return '<text x="50" y="52" text-anchor="middle" dominant-baseline="central" font-family="system-ui,Segoe UI,Arial,sans-serif" font-weight="800" font-size="' . $size . '" fill="' . $color . '">' . e($variant['mark']) . '</text>';
+        return badge60_level_text($variant['mark'], 'fill="' . $color . '"' . ($outlineColor !== '' ? ' stroke="' . $outlineColor . '" stroke-width="3.5" paint-order="stroke" stroke-linejoin="round"' : ''));
     }
-    return $g . '<path d="' . badge60_icons()[$variant['category']] . '"/></g>';
+    return badge60_glyph_markup(badge60_icons()[$variant['category']], $outline, $main);
 }
 
 /** Přístupný název: „Titul – rarita, získáno“ / „… zamčeno. Jak získat: podmínka“. */
@@ -218,7 +251,77 @@ function badge60_label(array $meta, string $rarity, bool $earned): string
 }
 
 /**
+ * Režim spritu: karty obsahují jen <svg><use href="#b60s-…"></svg>, definice tvarů/rámů/vzorů/ikon se
+ * vypíší jednou přes badge60_sprite_flush() (profil ho volá na konci stránky). Barvy dodává třída palety
+ * (b60p0–b60p9) a CSS proměnné z assets/profile-v60.css. Mimo profil (dashboard) zůstává samostatné inline SVG.
+ */
+function badge60_sprite_mode(?bool $on = null): bool
+{
+    static $mode = false;
+    if ($on !== null) $mode = $on;
+    return $mode;
+}
+
+/** Registr použitých symbolů (id => markup). 'drain' vrátí a vyprázdní (jeden výpis = jedna stránka). */
+function badge60_sprite_store(string $op, string $id = '', string $markup = ''): array
+{
+    static $symbols = [];
+    if ($op === 'set') { $symbols[$id] = $markup; return []; }
+    if ($op === 'has') return isset($symbols[$id]) ? [1] : [];
+    if ($op === 'drain') { $out = $symbols; $symbols = []; return $out; }
+    return $symbols;
+}
+
+/** Holá definice (např. geometrie tvaru) bez obalu <symbol>; vytvoří se až při prvním použití. */
+function badge60_define(string $id, callable $markup): void
+{
+    if (badge60_sprite_store('has', $id) === []) badge60_sprite_store('set', $id, $markup());
+}
+
+/** <use> na symbol; definici (vytvořenou až při prvním použití) zaregistruje. */
+function badge60_use(string $id, callable $inner): string
+{
+    if (badge60_sprite_store('has', $id) === []) {
+        badge60_sprite_store('set', $id, '<symbol id="' . $id . '" viewBox="0 0 100 100">' . $inner() . '</symbol>');
+    }
+    return '<use href="#' . $id . '"/>';
+}
+
+/** Skrytý sprite se všemi dosud použitými symboly; prázdný řetězec, pokud se žádný odznak nevykreslil. */
+function badge60_sprite_flush(): string
+{
+    $symbols = badge60_sprite_store('drain');
+    if ($symbols === []) return '';
+    ksort($symbols);
+    return '<svg class="b60-sprite" width="0" height="0" aria-hidden="true" focusable="false">' . implode('', $symbols) . '</svg>';
+}
+
+/** Vnitřek odznaku ve spritu: rám, tělo, vzor, akcent, ikona/číslo/zámek – každé jako samostatný symbol. */
+function badge60_sprite_body(array $v, bool $earned): string
+{
+    $shape = (string)$v['shape'];
+    if (!$earned) {
+        return badge60_use('b60s-l-' . $shape, static fn(): string => badge60_frame_for($shape, 'common', false) . badge60_shape($shape, 'class="b60d"', 0.88) . badge60_shape($shape, 'class="b60l"', 0.77, -1.2) . badge60_glyph_markup(BADGE60_LOCK_PATH, '', 'class="b60g"'));
+    }
+    $out = badge60_use('b60s-f-' . $shape . '-' . $v['rarity'], static fn(): string => badge60_frame_for($shape, (string)$v['rarity'], true));
+    $out .= badge60_use('b60s-b-' . $shape, static fn(): string => badge60_shape($shape, 'class="b60d"', 0.88) . badge60_shape($shape, 'class="b60l"', 0.77, -1.2));
+    $pattern = (int)$v['pattern'];
+    if ($pattern >= 1 && $pattern <= 4) {
+        $pid = $pattern <= 2 ? 'b60s-p-' . $shape . '-' . $pattern : 'b60s-p-' . $pattern;
+        $out .= badge60_use($pid, static fn(): string => badge60_pattern($pattern, $shape));
+    }
+    $accent = (int)$v['accent'];
+    if ($accent >= 1 && $accent <= 4) {
+        $out .= badge60_use('b60s-a-' . $accent, static fn(): string => badge60_accent($accent, 'class="b60a"'));
+    }
+    if ($v['category'] === 'level' && $v['mark'] !== '') return $out . badge60_level_text((string)$v['mark'], 'class="b60t"');
+    $category = (string)$v['category'];
+    return $out . badge60_use('b60s-g-' . $category, static fn(): string => badge60_glyph_markup(badge60_icons()[$category], 'class="b60o"', 'class="b60g"'));
+}
+
+/**
  * Kompletní <svg> odznaku. $decorative = true → aria-hidden (název je hned vedle v textu karty).
+ * Ve spritovém režimu (profil) jen odkazy <use>; jinak samostatné SVG s vlastními tvary.
  */
 function badge60_svg(string $badgeId, array $meta, bool $earned, int $size = 64, bool $decorative = false): string
 {
@@ -226,14 +329,16 @@ function badge60_svg(string $badgeId, array $meta, bool $earned, int $size = 64,
     $v = badge60_variant($badgeId, $meta);
     $label = badge60_label($meta, $v['rarity'], $earned);
     [$light, $dark, $inkIcon] = badge60_palettes()[$v['palette']];
-    $a11y = $decorative ? ' aria-hidden="true" focusable="false"' : ' role="img" aria-label="' . e($label) . '"';
-    $out = '<svg class="b60 b60-' . e($v['rarity']) . ($earned ? ' is-earned' : ' is-locked') . '" viewBox="0 0 100 100" width="' . $size . '" height="' . $size . '"' . $a11y . '>';
-    $out .= '<title>' . e($label) . '</title>';
+    $a11y = $decorative ? ' aria-hidden="true"' : ' role="img" aria-label="' . e($label) . '"';
+    $sprite = badge60_sprite_mode();
+    $out = '<svg class="b60 b60-' . e($v['rarity']) . ($earned ? ' is-earned' : ' is-locked') . ($sprite ? ' b60p' . (int)$v['palette'] : '') . '" viewBox="0 0 100 100" width="' . $size . '" height="' . $size . '"' . $a11y . '>';
+    if (!$decorative || !$sprite) $out .= '<title>' . e($label) . '</title>';
+    if ($sprite) return $out . badge60_sprite_body($v, $earned) . '</svg>';
     $out .= badge60_frame_for($v['shape'], $v['rarity'], $earned);
     $out .= badge60_shape($v['shape'], 'fill="' . ($earned ? $dark : '#c9d2d8') . '"', 0.88);
     $out .= badge60_shape($v['shape'], 'fill="' . ($earned ? $light : '#eef2f4') . '"', 0.77, -1.2);
-    if ($earned) $out .= badge60_pattern((int)$v['pattern'], $v['shape']) . badge60_accent((int)$v['accent'], $dark);
-    $out .= badge60_glyph($v, $earned, $earned ? ($inkIcon ? '#12212b' : '#ffffff') : '#7b8892');
+    if ($earned) $out .= badge60_pattern((int)$v['pattern'], $v['shape']) . badge60_accent((int)$v['accent'], 'stroke="' . $dark . '"');
+    $out .= badge60_glyph($v, $earned, $earned ? ($inkIcon ? '#12212b' : '#ffffff') : '#5d6a74', $earned && !$inkIcon ? $dark : '');
     return $out . '</svg>';
 }
 
@@ -259,6 +364,18 @@ function badge60_card(string $id, array $meta, bool $earned, int $percent = 0): 
             . '<span class="b60-state">' . e(tr('{percent} %', ['percent' => $percent])) . '</span>';
     }
     return $html . '</div></article>';
+}
+
+/**
+ * Řádek zamčeného odznaku (sbalený seznam): jen název, rarita a podmínka – bez SVG, ať je stránka lehká.
+ * Jedinečný vzhled odznaku se ukáže, až ho žák získá (nebo když je rozpracovaný).
+ */
+function badge60_row(string $id, array $meta): string
+{
+    $v = badge60_variant($id, $meta);
+    $how = trim((string)($meta['condition'] ?? $meta['text'] ?? ''));
+    return '<li class="b60-row rarity-' . e($v['rarity']) . '" data-b60-state="locked"><strong>' . e((string)($meta['title'] ?? '')) . '</strong>'
+        . '<span class="b60-rarity">' . e(badge60_rarity_label($v['rarity'])) . '</span>' . ($how !== '' ? '<small>' . e($how) . '</small>' : '') . '</li>';
 }
 
 /** Barvy rámečku avataru podle id kosmetiky (klíčová slova, jinak deterministicky z hashe). */

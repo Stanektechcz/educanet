@@ -37,11 +37,11 @@ return [
     'Zatím jsi nic neposlal/a.' => 'You have not sent anything yet.',
     'Odměna: {p} b a {x} XP' => 'Reward: {p} pts and {x} XP',
     'Poznámka učitele' => 'Teacher note',
-    'Nahlášené chyby' => 'Reported bugs',
     'Nahlášené chyby a návrhy' => 'Reported bugs and ideas',
-    'Nahlášeno: {t} · potvrzeno: {c}' => 'Reported: {t} · confirmed: {c}',
     'odměna celkem: {p} b a {x} XP' => 'total reward: {p} pts and {x} XP',
     'Nahlásit chybu nebo návrh' => 'Report a bug or idea',
     'Nahlásit chybu' => 'Report a bug',
     'Díky! Hlášení je odeslané, učitel ho posoudí.' => 'Thanks! Your report has been sent, your teacher will review it.',
+    'Nahlášeno' => 'Reported',
+    'potvrzeno' => 'confirmed',
 ];

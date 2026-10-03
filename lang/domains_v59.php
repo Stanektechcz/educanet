@@ -126,6 +126,7 @@ return [
             'project_workspace.php',
             'profile_v60.php',
             'profile_v60_views.php',
+            'profile_v60_ui.php',
         ],
         // v60 · unikátní odznaky (inline SVG) – badges_v60.php.
         'badges' => [

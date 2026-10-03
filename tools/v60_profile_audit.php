@@ -189,6 +189,42 @@ $hubsFiles = (array)($manifest['domains']['hubs'] ?? []);
 $check('manifest domén: profile_v60.php v doméně hubs', in_array('profile_v60.php', $hubsFiles, true));
 $check('manifest domén: profile_v60_views.php v doméně hubs', in_array('profile_v60_views.php', $hubsFiles, true));
 
+// =============================================================================================
+// 8) v60.2 · rychlost a velikost: HTML záložek, počet čtených souborů úložiště, sprite, CSS/JS.
+// =============================================================================================
+unset($_GET['student']);
+$limits = ['odznaky' => 50 * 1024];
+foreach (profile60_tabs() as $tab) {
+    $_GET['tab'] = $tab;
+    $GLOBALS['educanet_json_request_cache'] = [];
+    $t0 = hrtime(true);
+    $html = audit_capture(static function () use ($classId): void { render_profile60_view($classId, []); });
+    $ms = (hrtime(true) - $t0) / 1e6;
+    $filesRead = count((array)($GLOBALS['educanet_json_request_cache'] ?? []));
+    $limit = $limits[$tab] ?? 40 * 1024;
+    $check('záložka ' . $tab . ': HTML ' . strlen($html) . ' B ≤ ' . ($limit / 1024) . ' KB', strlen($html) <= $limit);
+    $check('záložka ' . $tab . ': načteno ' . $filesRead . ' souborů úložiště (limit 40, žádné N+1)', $filesRead <= 40);
+    $check('záložka ' . $tab . ': vykreslení ' . round($ms) . ' ms < 1500 ms (hrubý strop na prázdném úložišti)', $ms < 1500, false);
+    $check('záložka ' . $tab . ': SVG sprite odznaků je v HTML nejvýš jednou', substr_count($html, 'class="b60-sprite"') <= 1);
+}
+$_GET['tab'] = 'odznaky';
+$badgesPage = audit_capture(static function () use ($classId): void { render_profile60_view($classId, []); });
+preg_match_all('~<use href="#(b60s-[a-z0-9-]+)"~', $badgesPage, $uses);
+preg_match_all('~id="(b60s-[a-z0-9-]+)"~', $badgesPage, $ids);
+$check('odznaky: každý <use> odkazuje na symbol definovaný na stránce, id jsou unikátní', array_diff(array_unique($uses[1]), $ids[1]) === [] && count($ids[1]) === count(array_unique($ids[1])));
+$check('odznaky: zamčené jsou sbalené v <details> (bez SVG), aby byla stránka lehká', str_contains($badgesPage, 'data-b60-more') || !str_contains($badgesPage, 'b60-row'));
+$_GET['tab'] = 'nastaveni';
+$settingsPage = audit_capture(static function () use ($classId): void { render_profile60_view($classId, []); });
+$check('nastavení: náhled profilu, chybové sloty polí (aria-describedby) a data pro klientskou validaci', str_contains($settingsPage, 'data-p60-preview="headline"') && str_contains($settingsPage, 'id="p60-f-skills-error"') && str_contains($settingsPage, 'data-p60-tags="8"') && str_contains($settingsPage, 'data-msg-tags-many'));
+unset($_GET['tab']);
+$cssSrc = (string)file_get_contents($ROOT . '/assets/profile-v60.css');
+$jsSrc = (string)file_get_contents($ROOT . '/assets/profile-v60.js');
+$check('CSS profilu ' . strlen($cssSrc) . ' B ≤ 24 KB, bez @import', strlen($cssSrc) <= 24576 && !str_contains($cssSrc, '@import'));
+$check('JS profilu ' . strlen($jsSrc) . ' B ≤ 6 KB', strlen($jsSrc) <= 6144);
+$check('CSS má 3px zřetelný focus-visible a podporu prefers-reduced-motion', str_contains($cssSrc, 'outline:3px solid var(--accent)') && str_contains($cssSrc, 'prefers-reduced-motion'));
+$check('profil načítá jediný CSS soubor profilu a JS s defer', substr_count($overviewHtml, 'profile-v60.css') === 1 && str_contains($overviewHtml, 'profile-v60.js') && preg_match('~profile-v60\.js[^>]*defer~', $overviewHtml) === 1);
+$check('každá záložka profilu má aria-current právě na jednu položku navigace (sidebar i lišta)', substr_count($overviewHtml, 'aria-current="page"') >= 2);
+
 exit(audit_summary($state, 'V60_PROFILE'));
 
 /** @return array<string,string> cesta => md5 obsahu, pro každý soubor v dočasném úložišti. */

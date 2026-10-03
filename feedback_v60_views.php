@@ -112,9 +112,10 @@ function feedback60_render_mine(string $classId, string $studentKey): void
 /** Malý souhrn pro záložku Odznaky vlastního profilu. */
 function feedback60_render_profile_summary(string $classId, string $studentKey): void
 {
+    require_once __DIR__ . '/profile_v60_ui.php';
     $sum = fb60_summary($classId, $studentKey);
-    echo '<section class="dashboard-panel fb60-profile" aria-label="' . e(tr('Nahlášené chyby')) . '"><div class="dashboard-panel-head"><div><div class="eyebrow">' . e(tr('Hlášení')) . '</div><h2>' . e(tr('Nahlášené chyby a návrhy')) . '</h2></div></div>'
-        . '<p>' . e(tr('Nahlášeno: {t} · potvrzeno: {c}', ['t' => $sum['total'], 'c' => $sum['confirmed']]))
-        . ($sum['confirmed'] > 0 ? ' · ' . e(tr('odměna celkem: {p} b a {x} XP', ['p' => $sum['points'], 'x' => $sum['xp']])) : '') . '</p>'
-        . '<a class="btn secondary" href="?view=hlaseni">' . e(tr('Nahlásit chybu nebo návrh')) . '</a></section>';
+    echo profile60_panel_open(tr('Nahlášené chyby a návrhy'), tr('Hlášení'), tr('Nahlásit chybu nebo návrh'), '?view=hlaseni', '', 'fb60-profile')
+        . profile60_stats([[(string)(int)$sum['total'], tr('Nahlášeno'), 'teal'], [(string)(int)$sum['confirmed'], tr('potvrzeno'), 'yellow']])
+        . ($sum['confirmed'] > 0 ? '<p class="p60-muted-note">' . e(tr('odměna celkem: {p} b a {x} XP', ['p' => $sum['points'], 'x' => $sum['xp']])) . '</p>' : '')
+        . profile60_panel_close();
 }

@@ -62,4 +62,11 @@ return [
     'soubojů' => 'duels',
     'výher' => 'wins',
     'Vyzvat na souboj' => 'Challenge to a duel',
+    'Čeká na tebe' => 'Waiting for you',
+    'Přijmi výzvu, nebo ji odmítni níže.' => 'Accept the challenge or decline it below.',
+    'Vyzvi spolužáka' => 'Challenge a classmate',
+    'Najít spolužáka' => 'Find a classmate',
+    'Nastavení výzev' => 'Challenge settings',
+    'Aréna' => 'Arena',
+    '{n} nových výzev' => ['one' => '{n} new challenge', 'other' => '{n} new challenges'],
 ];

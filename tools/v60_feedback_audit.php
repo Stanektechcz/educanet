@@ -193,7 +193,7 @@ require_once $root . '/profile_v60.php';
 require_once $root . '/profile_v60_views.php';
 $own = audit_capture(static function () use ($A, $zak): void { profile60_render_badges($A, $zak, ['defs' => [], 'featured' => []], true); });
 $foreign = audit_capture(static function () use ($A, $zak): void { profile60_render_badges($A, $zak, ['defs' => [], 'featured' => []], false); });
-$check('profil: vlastní záložka Odznaky ukáže souhrn nahlášených chyb, cizí profil ne', str_contains($own, 'fb60-profile') && str_contains($own, 'Nahlášeno: ') && !str_contains($foreign, 'fb60-profile'));
+$check('profil: vlastní záložka Odznaky ukáže souhrn nahlášených chyb, cizí profil ne', str_contains($own, 'fb60-profile') && str_contains($own, 'Nahlášeno') && !str_contains($foreign, 'fb60-profile'));
 
 // --- 7) Zdroj: bez CDN, innerHTML, dvojic load+save a zakázaných funkcí ------------------------------
 $src = '';

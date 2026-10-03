@@ -36,10 +36,12 @@ function render_student_profile_view(string $classId, array $module, string $fla
  */
 function social_render_profile_editor(string $classId, string $target): void
 {
-    $profile = social_profile_get($classId, $target);
+    $profile = profile60_social($classId, $target);
     echo '<section class="p60-settings" data-p60-settings><header class="p60-settings-head"><h2>' . e(tr('Nastavení profilu')) . '</h2>'
         . '<p>' . e(tr('Uprav, co o sobě ukážeš spolužákům. Profil je školní a třídní – nepřidávej telefon, adresu ani jiné citlivé údaje.')) . '</p></header>';
-    echo '<form method="post" id="p60-profile-form" class="p60-form" data-p60-form data-dirty-text="' . e(tr('Máš neuložené změny.')) . '">'
+    social_editor_preview($classId, $target, $profile);
+    echo '<form method="post" id="p60-profile-form" class="p60-form" data-p60-form data-dirty-text="' . e(tr('Máš neuložené změny.')) . '"'
+        . ' data-msg-tags-many="' . e(tr('Uloží se jen prvních {max} položek.')) . '" data-msg-tag-long="' . e(tr('Položky delší než {max} znaků se zkrátí.')) . '">'
         . '<input type="hidden" name="csrf" value="' . e(csrf_token()) . '"><input type="hidden" name="action" value="save_student_profile">';
     social_editor_group_about($profile);
     social_editor_group_skills($profile);
@@ -51,12 +53,24 @@ function social_render_profile_editor(string $classId, string $target): void
         . '<button class="btn primary" type="submit" form="p60-profile-form">' . e(tr('Uložit profil')) . '</button></div></section>';
 }
 
+/** Náhled „Takto tě vidí spolužáci“ – motto a štítky se při psaní průběžně aktualizují (JS), rámeček a titulek jsou aktuálně zapnuté. */
+function social_editor_preview(string $classId, string $target, array $profile): void
+{
+    $cos = profile60_cosmetics($classId, $target);
+    $label = (string)(project_students_for_class($classId)[$target]['label'] ?? '');
+    $frame = $cos['frame_colors'] ? ' style="--p60-fa: ' . e((string)$cos['frame_colors'][0]) . '; --p60-fb: ' . e((string)$cos['frame_colors'][1]) . '"' : '';
+    echo '<section class="p60-preview" aria-label="' . e(tr('Náhled profilu')) . '"><span class="p60-avatar-frame' . ($cos['frame_colors'] ? ' has-frame' : '') . '"' . $frame . '>'
+        . '<span class="p60-avatar xl" aria-hidden="true">' . e(u_substr($label, 0, 1)) . '</span></span><div><p class="p60-eyebrow p60-preview-eyebrow">' . e(tr('Takto tě vidí spolužáci')) . '</p>'
+        . '<strong>' . e($label) . '</strong>' . ($cos['title'] !== '' ? '<span class="p60-title-pill">' . e($cos['title']) . '</span>' : '')
+        . '<p data-p60-preview="headline" data-empty="' . e(tr('Zatím bez profilového motta.')) . '">' . e((string)($profile['headline'] !== '' ? $profile['headline'] : tr('Zatím bez profilového motta.'))) . '</p></div></section>';
+}
+
 /** Jedno pole formuláře: popisek, nápověda, ovládací prvek a volitelné počitadlo znaků. */
 function social_editor_field(string $id, string $label, string $hint, string $control, int $max = 0, int $len = 0): string
 {
     $counter = $max > 0 ? '<span class="p60-count" data-p60-count-for="' . e($id) . '" data-max="' . $max . '">' . e(tr('{n} / {max} znaků', ['n' => $len, 'max' => $max])) . '</span>' : '';
     return '<div class="p60-field"><label for="' . e($id) . '">' . e($label) . '</label>' . $control
-        . '<div class="p60-field-meta"><small id="' . e($id) . '-hint">' . e($hint) . '</small>' . $counter . '</div></div>';
+        . '<div class="p60-field-meta"><small id="' . e($id) . '-hint">' . e($hint) . '</small>' . $counter . '</div><p class="p60-field-error" id="' . e($id) . '-error" data-p60-error-for="' . e($id) . '"></p></div>';
 }
 
 function social_editor_group_about(array $profile): void
@@ -65,9 +79,9 @@ function social_editor_group_about(array $profile): void
     $bio = (string)$profile['bio'];
     echo '<fieldset class="p60-group"><legend>' . e(tr('O mně')) . '</legend>';
     echo social_editor_field('p60-f-headline', tr('Krátké motto / co teď dělám'), tr('Zobrazí se pod jménem v hlavičce profilu.'),
-        '<input id="p60-f-headline" name="headline" maxlength="80" aria-describedby="p60-f-headline-hint" value="' . e($headline) . '" placeholder="' . e(tr('Např. baví mě motion design a prototypování')) . '">', 80, mb_strlen($headline));
+        '<input id="p60-f-headline" name="headline" maxlength="80" aria-describedby="p60-f-headline-hint p60-f-headline-error" data-p60-live="headline" value="' . e($headline) . '" placeholder="' . e(tr('Např. baví mě motion design a prototypování')) . '">', 80, mb_strlen($headline));
     echo social_editor_field('p60-f-bio', tr('Krátké představení'), tr('Co tě baví a s čím můžeš pomoct týmu? Bez telefonu a adresy.'),
-        '<textarea id="p60-f-bio" name="bio" maxlength="320" rows="4" aria-describedby="p60-f-bio-hint" placeholder="' . e(tr('Co tě baví, co se chceš naučit a s čím můžeš pomoct týmu?')) . '">' . e($bio) . '</textarea>', 320, mb_strlen($bio));
+        '<textarea id="p60-f-bio" name="bio" maxlength="320" rows="4" aria-describedby="p60-f-bio-hint p60-f-bio-error" placeholder="' . e(tr('Co tě baví, co se chceš naučit a s čím můžeš pomoct týmu?')) . '">' . e($bio) . '</textarea>', 320, mb_strlen($bio));
     echo '</fieldset>';
 }
 
@@ -89,9 +103,9 @@ function social_editor_group_skills(array $profile): void
     $hint = tr('Odděl čárkou, nejvýše 8 položek.');
     echo '<fieldset class="p60-group"><legend>' . e(tr('Dovednosti a zájmy')) . '</legend><div class="p60-grid-2">';
     echo social_editor_field('p60-f-skills', tr('Dovednosti · odděl čárkou'), $hint,
-        '<input id="p60-f-skills" name="skills" aria-describedby="p60-f-skills-hint" value="' . e(implode(', ', (array)$profile['skills'])) . '" placeholder="' . e(tr('Figma, CSS, prezentace')) . '">');
+        '<input id="p60-f-skills" name="skills" aria-describedby="p60-f-skills-hint p60-f-skills-error" data-p60-tags="8" data-p60-taglen="32" value="' . e(implode(', ', (array)$profile['skills'])) . '" placeholder="' . e(tr('Figma, CSS, prezentace')) . '">');
     echo social_editor_field('p60-f-interests', tr('Zájmy · odděl čárkou'), $hint,
-        '<input id="p60-f-interests" name="interests" aria-describedby="p60-f-interests-hint" value="' . e(implode(', ', (array)$profile['interests'])) . '" placeholder="' . e(tr('UI, sítě, motion, fotografie')) . '">');
+        '<input id="p60-f-interests" name="interests" aria-describedby="p60-f-interests-hint p60-f-interests-error" data-p60-tags="8" data-p60-taglen="32" value="' . e(implode(', ', (array)$profile['interests'])) . '" placeholder="' . e(tr('UI, sítě, motion, fotografie')) . '">');
     echo social_editor_select('p60-f-role', 'preferred_role', tr('Preferovaná role v týmu'), $roles, (string)($profile['preferred_role'] ?? ''));
     echo social_editor_select('p60-f-status', 'team_status', tr('Stav pro týmové projekty'), $statuses, (string)($profile['team_status'] ?? ''));
     echo '</div></fieldset>';

@@ -182,7 +182,7 @@ $render = static function (string $tab) use ($classId): string {
     return audit_capture(static function () use ($classId): void { render_profile60_view($classId, []); });
 };
 $badgesHtml = $render('odznaky');
-$check('záložka Odznaky: mřížka s unikátními SVG, počitadlem a filtrem', str_contains($badgesHtml, 'class="b60-grid"') && str_contains($badgesHtml, 'b60-card') && str_contains($badgesHtml, 'v55-badge-score') && str_contains($badgesHtml, 'data-b60-filter'));
+$check('záložka Odznaky: mřížka s unikátními SVG, počitadlem a filtrem', str_contains($badgesHtml, 'class="b60-grid"') && str_contains($badgesHtml, 'b60-card') && str_contains($badgesHtml, 'p60-score') && str_contains($badgesHtml, 'data-b60-filter'));
 $check('záložka Odznaky: karty mají stav earned/locked a postup (v55-badge-bar)', str_contains($badgesHtml, 'data-b60-state="locked"') && str_contains($badgesHtml, 'v55-badge-bar'));
 $check('záložka Odznaky: sekce Milníky s achievementy', str_contains($badgesHtml, 'id="milniky"'));
 $check('záložka Odznaky: bez fatální chyby', !preg_match('/Fatal error|Uncaught|Warning:/', $badgesHtml));
@@ -198,6 +198,9 @@ unset($_GET['tab']);
 $js = (string)file_get_contents($ROOT . '/assets/profile-v60.js');
 $cssSize = (int)filesize($ROOT . '/assets/profile-v60.css');
 $check('JS bez innerHTML a bez externích URL', !preg_match('/innerHTML|https?:\/\//', $js), false);
-$check('CSS < 25 KB (' . $cssSize . ' B) a respektuje prefers-reduced-motion', $cssSize < 25000 && str_contains((string)file_get_contents($ROOT . '/assets/profile-v60.css'), 'prefers-reduced-motion'), false);
+$check('CSS < 25 KB (' . $cssSize . ' B) a respektuje prefers-reduced-motion', $cssSize <= 24576 && str_contains((string)file_get_contents($ROOT . '/assets/profile-v60.css'), 'prefers-reduced-motion'), false);
+
+require __DIR__ . '/lib/v60_badges_sprite_checks.php';
+v60_badges_sprite_checks($check, $ROOT, $all);
 
 exit(audit_summary($state, 'V60_BADGES'));

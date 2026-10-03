@@ -169,7 +169,7 @@ try {
     // ne na výchozím přehledu profilu – viz profile_v60_views.php.
     $profileBadges = $harness->request('GET', '/?view=profile&tab=odznaky');
     $profileBadgesBody = (string)$profileBadges['body'];
-    $check('profil ukazuje získávání odznaků s postupem i podmínkami', str_contains($profileBadgesBody, 'v55-badge-bar') && str_contains($profileBadgesBody, 'v55-badge-score'));
+    $check('profil ukazuje získávání odznaků s postupem i podmínkami', str_contains($profileBadgesBody, 'v55-badge-bar') && str_contains($profileBadgesBody, 'p60-score'));
 
     $calendar = $harness->request('GET', '/?view=calendar');
     $calBody = (string)$calendar['body'];

@@ -37,11 +37,11 @@ return [
     'Zatím jsi nic neposlal/a.' => 'Ти ще нічого не надсилав/-ла.',
     'Odměna: {p} b a {x} XP' => 'Винагорода: {p} б і {x} XP',
     'Poznámka učitele' => 'Примітка вчителя',
-    'Nahlášené chyby' => 'Повідомлені помилки',
     'Nahlášené chyby a návrhy' => 'Повідомлені помилки та пропозиції',
-    'Nahlášeno: {t} · potvrzeno: {c}' => 'Повідомлено: {t} · підтверджено: {c}',
     'odměna celkem: {p} b a {x} XP' => 'загальна винагорода: {p} б і {x} XP',
     'Nahlásit chybu nebo návrh' => 'Повідомити про помилку чи ідею',
     'Nahlásit chybu' => 'Повідомити про помилку',
     'Díky! Hlášení je odeslané, učitel ho posoudí.' => 'Дякуємо! Повідомлення надіслано, вчитель його розгляне.',
+    'Nahlášeno' => 'Надіслано',
+    'potvrzeno' => 'підтверджено',
 ];

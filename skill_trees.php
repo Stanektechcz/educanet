@@ -162,6 +162,12 @@ function skill_current_student_key(string $classId): string
 }
 function skill_student_label_from_key(string $classId,string $studentKey): string
 {
+    static $memo=[]; $mk=$classId."|".$studentKey; if(isset($memo[$mk]))return $memo[$mk];
+    $label=skill_student_label_lookup($classId,$studentKey); if($label!=="")$memo[$mk]=$label;
+    return $label;
+}
+function skill_student_label_lookup(string $classId,string $studentKey): string
+{
     foreach(project_students_for_class($classId) as $student){
         $label=(string)($student['label']??'');
         if(skill_student_key_for_label($classId,$label)===$studentKey) return $label;
@@ -330,6 +336,14 @@ function skill_effective_points(array $skill,array $evidence): array
     }
     return ['points'=>round($total,2),'by_type'=>$best,'pending'=>array_keys($pending)];
 }
+/** Level žáka pro podmínky skillů; během jednoho přepočtu (skill_req_level) se počítá jen jednou. */
+function skill_student_level(string $classId,string $studentKey): int
+{
+    $memo=$GLOBALS['skill_req_level'][$classId.'|'.$studentKey]??null; if(is_int($memo))return $memo;
+    $label=skill_student_label_from_key($classId,$studentKey);
+    if($studentKey===skill_current_student_key($classId)){ $xp=(int)(learning_profile($classId)['xp']??0); } else { $snap=$label!==''?learning_profile_snapshot_for_student($classId,$label):['xp'=>0]; $xp=(int)($snap['xp']??0); }
+    return (int)(learning_level($xp)['level']??1);
+}
 function skill_requirement_status(string $classId,string $studentKey,array $skill,array $progressMap): array
 {
     $missing=[];
@@ -337,7 +351,7 @@ function skill_requirement_status(string $classId,string $studentKey,array $skil
         if(!is_array($req))continue; $slug=(string)($req['skill']??''); $need=(float)($req['mastery']??60); $have=(float)($progressMap[$slug]['mastery_percent']??0);
         if($have+0.001<$need)$missing[]=['type'=>'skill','skill'=>$slug,'need'=>$need,'have'=>$have];
     }
-    $requiredLevel=max(1,(int)($skill['tier']??1)*3-2); $label=skill_student_label_from_key($classId,$studentKey); if($studentKey===skill_current_student_key($classId)){ $profile=learning_profile($classId); $xp=(int)($profile['xp']??0); } else { $snap=$label!==''?learning_profile_snapshot_for_student($classId,$label):['xp'=>0]; $xp=(int)($snap['xp']??0); } $level=(int)(learning_level($xp)['level']??1);
+    $requiredLevel=max(1,(int)($skill['tier']??1)*3-2); $level=skill_student_level($classId,$studentKey);
     if($level<$requiredLevel)$missing[]=['type'=>'level','need'=>$requiredLevel,'have'=>$level];
     return ['met'=>!$missing,'missing'=>$missing,'required_level'=>$requiredLevel,'level'=>$level];
 }
@@ -346,6 +360,7 @@ function skill_recalculate_all(string $classId,string $studentKey=''): array
     if($studentKey==='')$studentKey=skill_current_student_key($classId);
     $skills=skill_relevant_skills($classId); usort($skills,static fn($a,$b)=>[(int)$a['tier'],(int)$a['sort_order']]<=>[(int)$b['tier'],(int)$b['sort_order']]);
     $evidence=skill_student_evidence($classId,$studentKey); $bySkill=[]; foreach($evidence as $r)$bySkill[(string)$r['skill']][]=$r;
+    $GLOBALS['skill_req_level'][$classId.'|'.$studentKey]=skill_student_level($classId,$studentKey);
     $storedProgress=skill_progress_rows();$map=[];
     // Multiple passes let same-tier dependency changes settle without recursion.
     for($pass=0;$pass<3;$pass++){
@@ -357,6 +372,7 @@ function skill_recalculate_all(string $classId,string $studentKey=''): array
             $map[$slug]=['class_id'=>$classId,'student_key'=>$studentKey,'skill'=>$slug,'branch'=>(string)$skill['branch'],'mastery_points'=>$p,'mastery_percent'=>$p,'mastery_level'=>skill_mastery_level($p),'unlock_state'=>$unlock,'missing_requirements'=>$req['missing'],'evidence_by_type'=>$calc['by_type'],'pending_types'=>$calc['pending'],'started_at'=>(string)($previous['started_at']??'')!==''?$previous['started_at']:($p>0?$now:null),'unlocked_at'=>(string)($previous['unlocked_at']??'')!==''?$previous['unlocked_at']:($unlock!=='locked'?$now:null),'mastered_at'=>(string)($previous['mastered_at']??'')!==''?$previous['mastered_at']:($unlock==='mastered'?$now:null),'last_evidence_at'=>$lastEvidence,'updated_at'=>$now];
         }
     }
+    unset($GLOBALS['skill_req_level'][$classId.'|'.$studentKey]);
     $mine=[]; foreach($map as $slug=>$row)$mine[$studentKey.'|'.$slug]=$row; skill_store_merge('progress',$mine);
     $GLOBALS['skill_runtime_progress'][$classId.'|'.$studentKey]=$map;
     skill_recalculate_branches($classId,$studentKey,$map); skill_refresh_gamification($classId,$studentKey,$map);
