@@ -102,7 +102,7 @@ function comp62_render_teacher_tab(string $requestedClass, string $csrf): void
     $classes = comp62_teacher_classes();
     echo '<section class="teacher-panel c62-wrap"><h2>Kompetence a důkazy</h2>';
     if ($classes === []) {
-        echo '<p class="teacher-empty">Kompetence zatím běží jen v pilotní třídě 3.A a vy k ní nemáte přístup.</p></section>';
+        echo '<p class="teacher-empty">Kompetence zatím běží jen v pilotních třídách 3.A a 1.A a vy k nim nemáte přístup.</p></section>';
         return;
     }
     $classId = in_array($requestedClass, $classes, true) ? $requestedClass : $classes[0];
@@ -112,7 +112,7 @@ function comp62_render_teacher_tab(string $requestedClass, string $csrf): void
         . 'Hra ani aréna samy zvládnutí nedají. Žák vidí jen svou mapu.</p>';
     echo '<form method="post" class="c62-sync"><input type="hidden" name="csrf" value="' . e($csrf) . '"><input type="hidden" name="action" value="comp62_sync">'
         . '<input type="hidden" name="class_id" value="' . e($classId) . '"><button type="submit" aria-describedby="c62-sync-note">Přepočítat důkazy třídy</button>'
-        . '<span class="c62-note" id="c62-sync-note">Pilot: ' . e(comp62_class_label(COMP62_PILOT_CLASSES[0])) . ' · důkazy se mažou ' . (int)COMP62_RETENTION_GRACE_DAYS . ' dní po odchodu žáka.</span></form>';
+        . '<span class="c62-note" id="c62-sync-note">Pilot: ' . e(implode(', ', array_map('comp62_class_label', COMP62_PILOT_CLASSES))) . ' · důkazy se mažou ' . (int)COMP62_RETENTION_GRACE_DAYS . ' dní po odchodu žáka.</span></form>';
     echo comp62_teacher_table($classId, $competencies, m62_class($classId));
     echo '</section>';
 }

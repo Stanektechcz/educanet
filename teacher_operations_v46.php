@@ -95,6 +95,8 @@ function teacher_action_permission_prefixes(): array
         'ov61_'=>'content.manage',
         // v62 · kompetence: ruční přepočet důkazů třídy (jen čtení zdrojů + zápis odvozených důkazů), jako analytika labu.
         'comp62_'=>'analytics.view',
+        // v63 · výukové cesty: přiřazení a zrušení přiřazení cesty třídě = správa obsahu (assistant jen čte).
+        'p63_'=>'content.manage',
     ];
 }
 function teacher_action_permission(string $action): ?string

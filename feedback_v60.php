@@ -46,7 +46,7 @@ function fb60_pages(): array
         'knowledgebase', 'kb_lesson', 'kb_quiz', 'graphics_studio', 'study', 'mistakes', 'study_loop', 'skills', 'skill_branch',
         'skill_detail', 'mastery_challenge', 'mastery_result', 'profile', 'community', 'project_lobbies', 'project_workspace',
         'prestige_exams', 'project_results', 'project_result', 'review', 'recovery', 'create_challenge', 'case_study', 'test', 'result',
-        'practice', 'practice_done', 'extra_challenge', 'graphics_guide', 'course_lesson', 'next_lesson', 'privacy', 'hlaseni'];
+        'practice', 'practice_done', 'extra_challenge', 'graphics_guide', 'course_lesson', 'next_lesson', 'privacy', 'hlaseni', 'cesty', 'cesta'];
 }
 
 function fb60_page_clean(string $page): string

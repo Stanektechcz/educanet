@@ -33,6 +33,14 @@ function comp62_label_msgids(): array
         'lnx_services' => trm('Umím spravovat služby a číst systémové logy'),
         'lnx_ssh' => trm('Umím se bezpečně připojit přes SSH a klíče'),
         'lnx_automation' => trm('Umím automatizovat úlohy skriptem a cronem'),
+        'web_html_structure' => trm('Umím postavit sémantickou kostru webové stránky'),
+        'web_css_layout' => trm('Umím rozmístit prvky pomocí CSS a přizpůsobit stránku úzkému displeji'),
+        'web_a11y' => trm('Umím posoudit přístupnost webu a opravit běžné chyby'),
+        'web_ux' => trm('Umím navrhnout srozumitelné ovládání a text výzvy k akci'),
+        'gfx_color_contrast' => trm('Umím zvolit barvy a ověřit kontrast textu'),
+        'gfx_typography' => trm('Umím zvolit a skloubit písma pro čitelný text'),
+        'gfx_formats' => trm('Umím vybrat správný grafický formát a export'),
+        'gfx_composition' => trm('Umím vystavět kompozici s jasnou hierarchií'),
     ];
 }
 

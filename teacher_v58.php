@@ -147,11 +147,21 @@ function teacher58_modules(): array
         // třídu v rozsahu (teacher59_action_policy_prefixes), oprávnění analytics.view (teacher_action_permission_prefixes).
         // Žádný zvláštní GET parametr registru.
         'kompetence' => [
-            'label' => 'Kompetence', 'hint' => 'Mapa „umím / učím se / zatím ne“ za třídu (pilot 3.A)', 'group' => 'podpora',
+            'label' => 'Kompetence', 'hint' => 'Mapa „umím / učím se / zatím ne“ za třídu (pilot 3.A a 1.A)', 'group' => 'podpora',
             'files' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'competency_v62_teacher_views.php'],
             'css' => ['assets/competency-v62.css'],
             'post' => ['comp62_' => 'comp62_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { comp62_render_teacher_tab($c, $csrf()); },
+        ],
+        // v63 · výukové cesty: přiřazení třídě, trychtýř kroků a průměrná kalibrace (bez jmen a bez reflexních vět). POST p63_assign /
+        // p63_unassign mají exact politiky v teacher_scope_v59.php (třída povinná a v rozsahu), oprávnění p63_ = content.manage
+        // (asistent jen čte). Žádný zvláštní GET parametr registru.
+        'cesty' => [
+            'label' => 'Výukové cesty', 'hint' => 'Přiřazení cest, trychtýř kroků a kalibrace (1.A a 3.A)', 'group' => 'podpora',
+            'files' => ['competencies_v62.php', 'evidence_v62.php', 'paths_v63.php', 'paths_v63_class.php', 'paths_v63_teacher_views.php'],
+            'css' => ['assets/paths-v63.css'],
+            'post' => ['p63_' => 'p63_teacher_handle_post'],
+            'render' => static function (array $m, string $c) use ($csrf): void { p63_render_teacher_tab($c, $csrf()); },
         ],
     ];
 }

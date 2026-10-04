@@ -1,0 +1,8 @@
+/* EDUCANET v63 · karta „Co dál“ na přehledu (jen nezbytné styly, zbytek vrstvy je v paths-v63.css). */
+.p63-card h2{margin:0 0 8px;font-size:1.15rem}
+.p63-reason{margin:0 0 8px}
+.p63-meta{margin:0;font-size:.875rem;color:#4d5b68}
+.p63-go,.p63-all{display:inline-flex;align-items:center;justify-content:center;min-height:44px}
+.p63-go{padding:0 16px}
+.p63-all{margin-left:12px}
+.p63-card a:focus-visible,.p63-go:focus-visible{outline:3px solid #007a87;outline-offset:2px}

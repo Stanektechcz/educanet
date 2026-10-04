@@ -43,4 +43,5 @@ return [
     'Můj dotazník' => 'My questionnaire',
     'Nahlásit chybu' => 'Report a bug',
     'živě' => 'live',
+    'Moje cesty' => 'My paths',
 ];

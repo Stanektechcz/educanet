@@ -45,13 +45,20 @@ $tagsOk = true;
 foreach ($comps as $c) foreach ($c['tags'] as $t) if (preg_match('/^(cmd|pack|bank|topic|tg):[a-z0-9\-]+$/', $t) !== 1) $tagsOk = false;
 $check('katalog: 8–12 kompetencí, každá „Umím …“, úroveň 1–4, tagy ve tvaru cmd:/pack:/bank:/topic:/tg:, id platná pro důkaz',
     count($comps) >= 8 && count($comps) <= 12 && $tagsOk && array_reduce($comps, static fn(bool $ok, array $c): bool => $ok && str_starts_with($c['label'], 'Umím ') && $c['level'] >= 1 && $c['level'] <= 4 && $c['tags'] !== [] && preg_match(EV62_COMP_RE, $c['id']) === 1, true));
-$check('katalog: pilot jen 3.A, předmět třídy nalezen, 1.A mimo katalog', COMP62_PILOT_CLASSES === ['class_3a'] && comp62_subject_for_class('class_3a') === $subject && comp62_subject_for_class('class_1a') === null && !comp62_enabled_for_class('class_1a'));
+$check('katalog: pilot 3.A a 1.A (v63), předmět třídy nalezen, 2.A a 4.A mimo katalog i pilot', COMP62_PILOT_CLASSES === ['class_3a', 'class_1a'] && comp62_subject_for_class('class_3a') === $subject && comp62_subject_for_class('class_1a') === 'grafika_web'
+    && comp62_subject_for_class('class_2a') === null && comp62_subject_for_class('class_4a') === null && comp62_enabled_for_class('class_1a') && !comp62_enabled_for_class('class_2a'));
+$web = comp62_competencies('grafika_web');
+$check('katalog grafika_web (v63): 8 kompetencí z rozhodnutí školy, každá „Umím …“, tagy topic:/bank: a id platná pro důkaz', array_keys($web) === ['web_html_structure', 'web_css_layout', 'web_a11y', 'web_ux', 'gfx_color_contrast', 'gfx_typography', 'gfx_formats', 'gfx_composition']
+    && array_reduce($web, static fn(bool $ok, array $c): bool => $ok && str_starts_with($c['label'], 'Umím ') && $c['tags'] !== [] && preg_match(EV62_COMP_RE, $c['id']) === 1 && array_filter($c['tags'], static fn(string $t): bool => preg_match('/^(topic|bank):[a-z0-9\-]+$/', $t) !== 1) === [], true));
+$check('katalog grafika_web: shoda tagů přiřadí aktivitu z tématu kb a z banky gfx (kontrast → gfx_color_contrast, HTML → web_html_structure), cizí tag nic', comp62_match('grafika_web', ['topic:contrast-color']) === ['gfx_color_contrast'] && comp62_match('grafika_web', ['bank:gfx-html']) === ['web_html_structure'] && comp62_match('grafika_web', ['cmd:ls']) === []);
 $msgids = comp62_label_msgids();
 $en = require $root . '/lang/en/ui/competency.php';
 $uk = require $root . '/lang/uk/ui/competency.php';
 $labelsMatch = true;
-foreach ($comps as $id => $c) if (($msgids[$id] ?? null) !== $c['label'] || ($en[$c['label']] ?? '') === '' || ($uk[$c['label']] ?? '') === '') $labelsMatch = false;
-$check('katalog: každý název kompetence má žákovský msgid shodný s katalogem a překlad en i uk', $labelsMatch && count($msgids) === count($comps));
+$allComps = [];
+foreach (array_keys(comp62_catalog()) as $catalogSubject) $allComps += comp62_competencies($catalogSubject);
+foreach ($allComps as $id => $c) if (($msgids[$id] ?? null) !== $c['label'] || ($en[$c['label']] ?? '') === '' || ($uk[$c['label']] ?? '') === '') $labelsMatch = false;
+$check('katalog: každý název kompetence (os_site i grafika_web) má žákovský msgid shodný s katalogem a překlad en i uk', $labelsMatch && count($msgids) === count($allComps));
 $check('katalog: shoda tagů je deterministická (stejný vstup = stejný výsledek, max 2 kompetence) a výjimka má přednost',
     comp62_match($subject, ['cmd:dig', 'topic:dns']) === ['net_dns_dhcp'] && comp62_match($subject, ['cmd:dig', 'topic:dns']) === comp62_match($subject, ['topic:dns', 'cmd:dig']) && count(comp62_match($subject, array_merge(...array_column($comps, 'tags')))) <= COMP62_MATCH_LIMIT && comp62_match($subject, ['pack:neexistuje']) === []);
 
@@ -165,16 +172,16 @@ $check('backfill: --apply na kopii přidá důkazy a druhé spuštění je idemp
     $apply1['code'] === 0 && ($j1['added'] ?? 0) > 0 && ($j2['added'] ?? -1) === 0 && ($j2['new_rows'] ?? -1) === 0 && ($j2['duplicates'] ?? 0) === ($j2['rows'] ?? -1));
 $liveRun = $runCli(['--apply'], ['EDUCANET_STORAGE_DIR' => '']);
 $check('backfill: --apply bez EDUCANET_STORAGE_DIR (ostrá storage/) se odmítne s kódem 2 a nezapíše nic', $liveRun['code'] === 2 && str_contains($liveRun['out'], 'V62_BACKFILL_REFUSED'));
-$check('backfill: třída mimo pilot (1.A) se odmítne', $runCli(['--class=class_1a'], $env)['code'] === 1);
+$check('backfill: třída mimo pilot (2.A) se odmítne', $runCli(['--class=class_2a'], $env)['code'] === 1);
 
 // --- 7) Pilot: 1.A bez záložky a bez zápisu --------------------------------------------------------------
-$sub1a = ev62_sync_student('class_1a', 'class_1a:student:neexistuje', true);
-$check('pilot: synchronizace mimo 3.A je no-op (skipped=pilot) a nevytvoří soubor', ($sub1a['skipped'] ?? '') === 'pilot' && glob($tmp . '/evidence_v62/*class_1a*') === []);
-$check('pilot: záložka kompetence jen v profilu pilotní třídy a jen vlastním; ne ve veřejných záložkách', in_array('kompetence', profile60_tabs_for('class_3a'), true) && !in_array('kompetence', profile60_tabs_for('class_1a'), true)
+$sub1a = ev62_sync_student('class_2a', 'class_2a:student:neexistuje', true);
+$check('pilot: synchronizace mimo pilot (2.A) je no-op (skipped=pilot) a nevytvoří soubor', ($sub1a['skipped'] ?? '') === 'pilot' && glob($tmp . '/evidence_v62/*class_2a*') === []);
+$check('pilot: záložka kompetence jen v profilu pilotní třídy a jen vlastním; ne ve veřejných záložkách', in_array('kompetence', profile60_tabs_for('class_3a'), true) && !in_array('kompetence', profile60_tabs_for('class_2a'), true)
     && !in_array('kompetence', profile60_tabs_for(null), true) && !in_array('kompetence', profile60_public_tabs(), true) && !in_array('kompetence', profile60_tabs(), true));
 $_GET['tab'] = 'kompetence';
 $check('pilot: ?tab=kompetence mimo pilot → přehled; v pilotu vlastní profil → kompetence; cizí profil → přehled',
-    profile60_current_tab(true, 'class_1a') === 'prehled' && profile60_current_tab(true, 'class_3a') === 'kompetence' && profile60_current_tab(false, 'class_3a') === 'prehled' && profile60_current_tab(true) === 'prehled');
+    profile60_current_tab(true, 'class_2a') === 'prehled' && profile60_current_tab(true, 'class_3a') === 'kompetence' && profile60_current_tab(false, 'class_3a') === 'prehled' && profile60_current_tab(true) === 'prehled');
 unset($_GET['tab']);
 
 // --- 8) Retence -----------------------------------------------------------------------------------------------
@@ -244,12 +251,12 @@ $html = audit_capture(static function (): void { comp62_render_teacher_tab(V62FX
 $check('učitel: mapa třídy má <th scope="col"> i <th scope="row">, scrollovací kontejner, formulář comp62_sync s CSRF a souhrn tfoot, bez PHP chyb',
     str_contains($html, '<th scope="col">') && str_contains($html, '<th scope="row">') && str_contains($html, 'c62-scroll') && str_contains($html, 'name="action" value="comp62_sync"') && str_contains($html, 'value="tok-csrf"')
     && str_contains($html, '<tfoot>') && audit_response_clean(['status' => 200, 'body' => $html]));
-$check('učitel: cizí/nepilotní třída v požadavku se nezobrazí (zobrazí se jen pilotní z rozsahu)', !str_contains(audit_capture(static function (): void { comp62_render_teacher_tab('class_1a', 't'); }), 'class_1a'));
+$check('učitel: cizí/nepilotní třída v požadavku se nezobrazí (zobrazí se jen pilotní z rozsahu)', !str_contains(audit_capture(static function (): void { comp62_render_teacher_tab('class_2a', 't'); }), 'class_2a'));
 $_SESSION = ['next_class_id' => V62FX_CLASS];
 $stu = audit_capture(static function (): void { comp62_render_student_tab(V62FX_CLASS, v62fx_key('good')); });
 $check('žák: záložka zobrazí skupiny Umím / Učím se / Zatím ne, stav textem i ikonou, bez jmen jiných žáků a bez PHP chyb',
     str_contains($stu, 'Umím') && str_contains($stu, 'Učím se') && str_contains($stu, 'Zatím ne') && str_contains($stu, 'Zvládnuto') && str_contains($stu, 'aria-hidden="true">✓') && !str_contains($stu, 'Audit Hrac') && audit_response_clean(['status' => 200, 'body' => $stu]));
-$check('žák: mimo pilotní třídu záložka nic nevykreslí', audit_capture(static function (): void { comp62_render_student_tab('class_1a', 'x'); }) === '');
+$check('žák: mimo pilotní třídu záložka nic nevykreslí', audit_capture(static function (): void { comp62_render_student_tab('class_2a', 'x'); }) === '');
 $cssSize = (int)filesize($root . '/assets/competency-v62.css');
 $check('CSS: ≤ 8 kB, žádný JS asset vrstvy, žádné CDN', $cssSize <= 8192 && !is_file($root . '/assets/competency-v62.js') && !str_contains((string)file_get_contents($root . '/assets/competency-v62.css'), 'http'));
 

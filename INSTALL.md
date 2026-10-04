@@ -497,3 +497,24 @@ Vrstva je **pilot jen pro třídu 3.A** (`COMP62_PILOT_CLASSES` v `competencies_
   a oprávnění `analytics.view`; mapu třídy vidí každý učitel s rozsahem na 3.A.
 - **Kontrola po nasazení:** `php tools/v62_competency_audit.php` → `V62_COMPETENCY_AUDIT_OK`; celá sada
   `php tools/run_audits.php --with-smoke` (očekávaný konec `RUN_AUDITS_OK`).
+
+## v63 · Výukové cesty a moderní metody
+
+Podrobnosti: `docs/CESTY_V63.md`, `CHANGELOG_V63.md`, `BUILD_MANIFEST_V63.md`. Nic z v63 nevyžaduje nové PHP rozšíření.
+Cesty existují pro **3.A** (`lnx_chmod`, `net_dns`) a **1.A** (`web_html`, `gfx_contrast`); ostatní třídy je nevidí. Rozhodnutím školy
+je od v63 pilot kompetencí v62 **3.A + 1.A** (`COMP62_PILOT_CLASSES`), takže cesty 1.A zapisují důkazy do nového katalogu `grafika_web`.
+
+- **Co se děje:** žák dělá cesty v *Dnes → Moje cesty* (nebo z karty *Co dál* na přehledu). Stav je v
+  `storage/paths_v63/<student_id>.json.php` (včetně volitelné reflexní věty žáka, max 200 znaků), přiřazení učitelem v
+  `assign.json.php`, počty trychtýře v `_funnel_<třída>.json.php` (jen počty, smazatelná cache). Soubory se založí samy.
+  Hodnocené kroky zapisují důkazy do `storage/evidence_v62/`. Cesty nedávají XP ani body.
+- **Předpočítané výstupy (jen při změně obsahu cest):** `php tools/v63_paths_build_pre.php` (náhled), `--apply` přepíše
+  `paths_v63_pre_data.php`, `--check` skončí chybou, když data neodpovídají simulátoru. Za běhu se nic nespouští.
+- **Retence:** stav cest se **mažou 30 dní po stavu `left`/`archived`** (i s reflexní větou) existujícím denním cronem
+  `tools/v58_retention.php --apply` (souhrn `paths_v63_purged=N`). Žák bez data odchodu se nemaže.
+- **Učitelská oprávnění:** přiřazení a zrušení přiřazení (`p63_assign`, `p63_unassign`) vyžaduje třídu v rozsahu učitele a oprávnění
+  `content.manage` (asistent jen čte). Učitel vidí počty a průměrnou kalibraci, nikdy reflexní věty.
+- **Zdrojový obsah:** `paths_v63_content_os.php` (3.A) a `paths_v63_content_gfx.php` (1.A); otázky ověřování a opakování jsou z banky
+  týmových her (`teamgames_v58_bank_net*.php`, `teamgames_v58_bank_gfx*.php`).
+- **Kontrola po nasazení:** `php tools/v63_paths_audit.php` → `V63_PATHS_AUDIT_OK`; `php tools/v62_competency_audit.php`; celá sada
+  `php tools/run_audits.php --since=all --with-smoke --with-router`.

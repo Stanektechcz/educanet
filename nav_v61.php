@@ -134,10 +134,12 @@ function nav61_entry(string $href, string $label, array $views, string $view, st
 }
 
 /** Skupina Dnes: Přehled, Dnešní hodina (když ji třída má), Kalendář. */
-function nav61_group_today(?array $lesson, string $view): array
+function nav61_group_today(?array $lesson, string $view, ?string $classId = null): array
 {
     $items = [nav61_entry('?view=dashboard', trm('Přehled'), ['dashboard'], $view)];
     if ($lesson !== null) $items[] = nav61_entry('?view=hodina', trm('Dnešní hodina'), ['hodina', 'intake'], $view, (string)$lesson['class']);
+    // v63: výukové cesty jen třídám, které je mají (3.A, 1.A).
+    if ($classId !== null && function_exists('p63_enabled_for_class') && p63_enabled_for_class($classId)) $items[] = nav61_entry('?view=cesty', trm('Moje cesty'), ['cesty', 'cesta'], $view);
     $items[] = nav61_entry('?view=calendar', trm('Kalendář'), ['calendar'], $view);
     return ['key' => 'today', 'label' => trm('Dnes'), 'icon' => 'today', 'flag' => (string)($lesson['class'] ?? '') === 'is-today' ? 'today' : '', 'items' => $items];
 }
@@ -181,7 +183,7 @@ function nav61_groups(?string $classId, string $view): array
         $views = (array)($item['views'] ?? []);
         $byKey[in_array('hodina', $views, true) ? 'hodina' : (in_array('lab', $views, true) ? 'lab' : basename((string)$item['href']))] = $item;
     }
-    $groups = [nav61_group_today($byKey['hodina'] ?? null, $view), nav61_group_learn($view)];
+    $groups = [nav61_group_today($byKey['hodina'] ?? null, $view, $classId), nav61_group_learn($view)];
     if (isset($byKey['lab'])) $groups[] = nav61_group_play($byKey['lab'], $view);
     $groups[] = ['key' => 'projects', 'label' => trm('Projekty'), 'icon' => 'projects', 'flag' => '', 'items' => [
         nav61_entry('?view=projekty', trm('Moje projekty'), ['projekty'], $view),

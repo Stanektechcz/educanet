@@ -12,12 +12,12 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  *   topic:<kb>     téma znalostní báze (test, lekce) bank:<id>       banka otázek (rezerva)
  *   tg:<linka>     linka týmové hry (networks/graphics)
  * Aktivita bez shody se nezapíše a audit ji hlásí jako WARN (ne FAIL). Ruční výjimky: COMP62_OVERRIDES.
- * Pilot: jen třída 3.A (rozhodnutí školy); ostatní třídy tuto vrstvu nevidí a nic se jim nepočítá.
+ * Pilot: třída 3.A (od v62) a 1.A (od v63, rozhodnutí školy: výukové cesty 1.A zapisují důkazy); ostatní třídy tuto vrstvu nevidí a nic se jim nepočítá.
  * Katalog je čistá data bez zápisu do storage.
  */
 
-/** Třídy, kde vrstva běží (rozhodnutí školy: pilot jen 3.A). */
-const COMP62_PILOT_CLASSES = ['class_3a'];
+/** Třídy, kde vrstva běží (rozhodnutí školy: pilot 3.A, od v63 i 1.A). */
+const COMP62_PILOT_CLASSES = ['class_3a', 'class_1a'];
 /** Retence důkazů: do konce studia, smazání 30 dní po stavu left/archived (rozhodnutí školy). */
 const COMP62_RETENTION_GRACE_DAYS = 30;
 /** Nejvýš kolik kompetencí dostane jedna aktivita (nejlepší shody podle počtu společných tagů). */
@@ -77,6 +77,34 @@ function comp62_catalog(): array
                         'tags' => ['topic:ssh-sftp', 'topic:ssh-keys-ops', 'topic:ssh-key-operations', 'pack:klice', 'cmd:ssh', 'cmd:ssh-keygen', 'cmd:ssh-copy-id', 'cmd:scp']],
                     'lnx_automation' => ['label' => 'Umím automatizovat úlohy skriptem a cronem', 'level' => 3,
                         'tags' => ['topic:shell-cron', 'topic:bash-error-handling', 'pack:cron', 'cmd:crontab']],
+                ]],
+            ],
+        ],
+        // v63 · rozhodnutí školy: katalog pro grafiku a webdesign (1.A). Tagy topic: z témat znalostní báze 1.A/2.A,
+        // bank: z kategorií banky týmových her gfx.* (color, type, formats, html, css, a11y, ux, license).
+        'grafika_web' => [
+            'label' => 'Grafika a webdesign',
+            'classes' => ['class_1a'],
+            'areas' => [
+                'web' => ['label' => 'Web', 'competencies' => [
+                    'web_html_structure' => ['label' => 'Umím postavit sémantickou kostru webové stránky', 'level' => 2,
+                        'tags' => ['topic:web-layout-basics-i', 'topic:components-i', 'bank:gfx-html']],
+                    'web_css_layout' => ['label' => 'Umím rozmístit prvky pomocí CSS a přizpůsobit stránku úzkému displeji', 'level' => 2,
+                        'tags' => ['topic:responsive-layout-i', 'topic:responsive-art-direction', 'topic:responsive-series', 'topic:spacing', 'topic:layout-rhythm-i', 'bank:gfx-css']],
+                    'web_a11y' => ['label' => 'Umím posoudit přístupnost webu a opravit běžné chyby', 'level' => 3,
+                        'tags' => ['topic:forms-a11y-i', 'bank:gfx-a11y']],
+                    'web_ux' => ['label' => 'Umím navrhnout srozumitelné ovládání a text výzvy k akci', 'level' => 3,
+                        'tags' => ['topic:cta', 'topic:microcopy-cta', 'topic:content-first-layout', 'topic:design-system-i', 'topic:design-feedback', 'topic:template-critique', 'bank:gfx-ux']],
+                ]],
+                'grafika' => ['label' => 'Grafika', 'competencies' => [
+                    'gfx_color_contrast' => ['label' => 'Umím zvolit barvy a ověřit kontrast textu', 'level' => 2,
+                        'tags' => ['topic:contrast-color', 'topic:color', 'topic:color-harmony', 'bank:gfx-color']],
+                    'gfx_typography' => ['label' => 'Umím zvolit a skloubit písma pro čitelný text', 'level' => 2,
+                        'tags' => ['topic:typography', 'topic:editorial-typography-i', 'topic:web-typography-i', 'bank:gfx-type']],
+                    'gfx_formats' => ['label' => 'Umím vybrat správný grafický formát a export', 'level' => 2,
+                        'tags' => ['topic:raster-vector', 'topic:export', 'topic:assets', 'topic:image-web-i', 'topic:production-preflight-i', 'topic:preflight', 'bank:gfx-formats', 'bank:gfx-license']],
+                    'gfx_composition' => ['label' => 'Umím vystavět kompozici s jasnou hierarchií', 'level' => 2,
+                        'tags' => ['topic:composition', 'topic:hierarchy', 'topic:image-composition', 'topic:image-crop', 'topic:visual-story-i', 'topic:iconography']],
                 ]],
             ],
         ],

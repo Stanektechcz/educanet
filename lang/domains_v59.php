@@ -150,6 +150,13 @@ return [
         'competency' => [
             'competency_v62_views.php',
         ],
+        // v63 · výukové cesty (žákovské UI); obsah cest (paths_v63_content_*.php) a cockpit paths_v63_teacher_views.php jsou česky.
+        'paths' => [
+            'app/views/paths.php',
+            'app/actions/paths.php',
+            'paths_v63_views.php',
+            'paths_v63_actions.php',
+        ],
         // v60 · obchod bodů (žákovské UI); učitelský registr marketplace_v60_teacher_views.php je vždy česky.
         'marketplace' => [
             'app/views/marketplace.php',

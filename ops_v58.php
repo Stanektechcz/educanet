@@ -190,6 +190,9 @@ function ops58_retention_policy(): array
         // left/archived se MAŽOU. Rozhodnutí podle stavu žáka (ne podle stáří souboru) dělá ev62_retention_purge(), kterou
         // volá tools/v58_retention.php – ops58_apply_retention() tuto akci přeskakuje (jen ji ukazuje v náhledu politiky).
         ['pattern' => 'evidence_v62/*.json.php', 'label' => 'Důkazy kompetencí v62 (mažou se 30 dní po odchodu žáka)', 'action' => 'student_left', 'max_age_days' => 30],
+        // v63 · stav výukových cest žáka (storage/paths_v63/stu_*.json.php, vč. reflexní věty): stejně jako důkazy se MAŽE 30 dní po
+        // stavu left/archived; rozhoduje p63_retention_purge() z tools/v58_retention.php. Přiřazení a trychtýř (bez jmen) se nemažou.
+        ['pattern' => 'paths_v63/stu_*.json.php', 'label' => 'Stav výukových cest v63 včetně reflexní věty (maže se 30 dní po odchodu žáka)', 'action' => 'student_left', 'max_age_days' => 30],
         // Záznamy provedených migrací a manifest schémat se nearchivují (potřebné pro tools/migrate.php).
     ];
 }

@@ -49,7 +49,7 @@ return [
         'core' => ['accounts_v53.php', 'intake_v51.php'],
         // Hlavička a patička žákovských stránek (render_header/render_footer) a vše, co volají.
         // arena_v57.php si při načtení vyžádá linux_v57_lab.php (a ten celý simulátor) – viz INTEGRATION.md.
-        'layout' => ['app/views/_layout.php', 'student_v55.php', 'student_v55_views.php', 'zero_friction_v50_6.php', 'unified_page_shell_v50_7.php', 'one_task_v50_5.php', 'goal_navigator_v50_4.php', 'hands_on_learning_v50.php', 'independent_growth_v50.php', 'learning_v56.php', 'session_v53.php', 'tutorial_v52.php', 'linux_v57_lab.php', 'arena_v57.php'],
+        'layout' => ['app/views/_layout.php', 'student_v55.php', 'student_v55_views.php', 'zero_friction_v50_6.php', 'unified_page_shell_v50_7.php', 'one_task_v50_5.php', 'goal_navigator_v50_4.php', 'hands_on_learning_v50.php', 'independent_growth_v50.php', 'learning_v56.php', 'session_v53.php', 'tutorial_v52.php', 'linux_v57_lab.php', 'arena_v57.php', 'paths_v63.php'],
         'intake_views' => ['intake_v51_views.php'],
         'session_views' => ['session_v53.php', 'session_v53_views.php'],
         'one_task' => ['one_task_v50_5.php', 'goal_navigator_v50_4.php', 'hands_on_learning_v50.php', 'independent_growth_v50.php', 'zero_friction_v50_6.php', 'teacher_operations_v46.php', 'project_workspace_views.php'],
@@ -81,7 +81,9 @@ return [
         'projects' => ['projects_v60.php', 'projects_v60_views.php'],
         // v62 · záložka Kompetence v profilu (pilot 3.A); kód se spouští jen na záložce kompetence v pilotní třídě (audit routeru vyžaduje celé skupiny).
         'competency' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'competency_v62_views.php'],
-        'dashboard' => ['motivation_v61_views.php', 'teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'mastery_learning_views_v41.php', 'learning_studio_views_v44.php', 'skill_views.php', 'project_workspace_views.php'],
+        // v63 · výukové cesty (?view=cesty, ?view=cesta, akce p63_*); jádro paths_v63.php je lehké, obsah a banka se načítají líně.
+        'paths' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'paths_v63_flow.php', 'paths_v63_actions.php', 'paths_v63_views.php'],
+        'dashboard' => ['motivation_v61_views.php', 'paths_v63.php', 'paths_v63_flow.php', 'paths_v63_views.php', 'teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'mastery_learning_views_v41.php', 'learning_studio_views_v44.php', 'skill_views.php', 'project_workspace_views.php'],
         'diagrams' => ['app/views/_diagrams.php'],
         // POST
         'lesson_path' => ['tutorial_v52.php', 'session_v53.php', 'learning_v56.php'],
@@ -127,6 +129,8 @@ return [
         ['match' => ['hadanka'], 'file' => 'views/hadanka.php', 'libs' => ['layout', 'linux_lab', 'weekly']],
         ['match' => ['obchod'], 'file' => 'views/marketplace.php', 'libs' => ['layout', 'marketplace']],
         ['match' => ['projekty'], 'file' => 'views/projects.php', 'libs' => ['layout', 'projects']],
+        // v63: výukové cesty žáka (seznam a krok; třída bez cest dostane 404).
+        ['match' => ['cesty', 'cesta'], 'file' => 'views/paths.php', 'libs' => ['layout', 'paths']],
         ['match' => ['hlaseni'], 'file' => 'views/feedback.php', 'libs' => ['layout', 'feedback']],
         ['match' => ['hodina'], 'file' => 'views/hodina.php', 'libs' => ['layout', 'tutorial_views', 'lesson_path_views']],
         ['match' => ['course_lesson', 'next_lesson'], 'file' => 'views/tutorial_redirect.php', 'libs' => []],
@@ -177,6 +181,8 @@ return [
         ['match' => ['mot61_fav_toggle'], 'file' => 'actions/motivation.php', 'libs' => ['marketplace']],
         ['match' => ['proj60_apply', 'proj60_withdraw'], 'file' => 'actions/projects.php', 'libs' => ['projects']],
         ['match' => ['fb60_submit'], 'file' => 'actions/feedback.php', 'libs' => ['feedback']],
+        // v63 · výukové cesty: odevzdání kroku, posun řádku Parsonovy úlohy bez JS, reflexe (identita ze session).
+        ['match' => ['p63_*'], 'file' => 'actions/paths.php', 'libs' => ['paths']],
         // v60 · ARN-07 – výzvy spolužákům (opt-in 1v1 souboje z profilu).
         ['match' => ['arena60_challenge_create', 'arena60_challenge_respond', 'arena60_challenge_cancel', 'arena60_optin_set', 'arena61_rematch'], 'file' => 'actions/arena_challenge.php', 'libs' => ['layout', 'student_hubs']],
     ],
