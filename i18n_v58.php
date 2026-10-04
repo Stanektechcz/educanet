@@ -183,3 +183,23 @@ function edu_lang_switcher_html(string $csrf, string $returnUrl = '?view=dashboa
     }
     return $html . '</select></label> <button type="submit" class="edu-lang-switcher__apply edu-lang-apply">' . e(t('core.lang.apply')) . '</button></form>';
 }
+
+/**
+ * v63 · Segmentovaný přepínač jazyka pro přihlašovací stránku: stejný POST edu_set_lang s CSRF jako
+ * edu_lang_switcher_html(), ale každý jazyk je samostatné tlačítko (kód + název), bez JavaScriptu.
+ * Aktivní jazyk má aria-current="true". Skupina má trojjazyčný název (žák ho přečte v kterémkoli jazyce).
+ */
+function edu_lang_segmented_html(string $csrf, string $returnUrl = '?view=home'): string
+{
+    $html = '<form class="login63-lang" method="post" action="index.php" role="group" aria-label="Jazyk · Language · Мова">'
+        . '<input type="hidden" name="action" value="edu_set_lang">'
+        . '<input type="hidden" name="csrf" value="' . e($csrf) . '">'
+        . '<input type="hidden" name="return" value="' . e(edu_i18n_return_url($returnUrl)) . '">';
+    foreach (edu_active_locales() as $code) {
+        $current = $code === edu_locale();
+        $html .= '<button type="submit" name="lang" value="' . e($code) . '" lang="' . e($code) . '"'
+            . ($current ? ' aria-current="true"' : '') . '>'
+            . '<b aria-hidden="true">' . e(strtoupper($code)) . '</b><span>' . e((string)(EDU_LOCALES[$code] ?? $code)) . '</span></button>';
+    }
+    return $html . '</form>';
+}

@@ -9,10 +9,17 @@ declare(strict_types=1);
  */
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
+    $GLOBALS['login63'] = true;   // v63: jednoobrazovkové přihlášení (login-v63.css, vlastní patička místo topbaru/footeru)
     render_header(tr('Přihlášení'));
+    $login63Flash = $flash !== '' ? ' aria-describedby="login63-flash"' : '';
     ?>
-    <div class="auth54">
-      <section class="auth54-hero">
+    <div class="login63">
+    <div class="login63-top">
+      <a class="brand" href="?view=home"><span class="brand-mark" aria-hidden="true">E</span><span>EDUCANET</span></a>
+      <?= edu_lang_segmented_html(csrf_token(), '?view=home') ?>
+    </div>
+    <div class="auth54 login63-body">
+      <section class="auth54-hero login63-hero">
         <span class="auth54-badge">EDUCANET Learning Lab</span>
         <h1><?= e(tr('Přihlas se a pokračuj tam, kde jsi skončil')) ?><span>.</span></h1>
         <p><?= e(tr('Kurz vedený krok za krokem: animované ukázky, interaktivní úkoly za body a dnešní hodina vždy po ruce.')) ?></p>
@@ -23,10 +30,10 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
         </ul>
       </section>
 
-      <div class="auth54-panel">
-        <?php if ($flash !== ''): ?><div class="auth54-flash"><?= e($flash) ?></div><?php endif; ?>
+      <div class="auth54-panel login63-card">
+        <?php if ($flash !== ''): ?><div class="auth54-flash" id="login63-flash" role="alert"><?= e($flash) ?></div><?php endif; ?>
 
-        <div class="auth54-tabs" role="tablist">
+        <div class="auth54-tabs" role="tablist" aria-label="<?= e(tr('Přihlášení')) ?>">
           <button type="button" role="tab" class="active" data-auth54-tab="login" aria-selected="true"><?= e(tr('Přihlášení')) ?></button>
           <?php if (local_auth_enabled()): ?><button type="button" role="tab" data-auth54-tab="register" aria-selected="false"><?= e(tr('Nový účet')) ?></button><?php endif; ?>
         </div>
@@ -39,8 +46,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
           <?php if (local_auth_enabled()): ?>
           <form class="auth54-form" method="post" id="local-login">
             <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="local_login">
-            <label class="auth54-field"><span><?= e(tr('Školní e-mail')) ?></span><input type="email" name="email" inputmode="email" autocomplete="username" placeholder="jmeno.prijmeni@<?= e(google_workspace_domain()) ?>" required autofocus></label>
-            <label class="auth54-field"><span><?= e(tr('Heslo')) ?></span><input type="password" name="password" autocomplete="current-password" maxlength="200" required></label>
+            <label class="auth54-field"><span><?= e(tr('Školní e-mail')) ?></span><input type="email" name="email" inputmode="email" autocomplete="username" placeholder="jmeno.prijmeni@<?= e(google_workspace_domain()) ?>" required autofocus<?= $login63Flash ?>></label>
+            <label class="auth54-field"><span><?= e(tr('Heslo')) ?></span><input type="password" name="password" autocomplete="current-password" maxlength="200" required<?= $login63Flash ?>></label>
             <button class="btn primary wide" type="submit"><?= e(tr('Přihlásit se')) ?></button>
           </form>
           <?php endif; ?>
@@ -89,6 +96,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 
         <p class="auth54-foot"><?= tr_html('Přihlášením souhlasíš s {a}pravidly zpracování údajů{/a}.', ['a' => '<a href="?view=privacy">', '/a' => '</a>']) ?></p>
       </div>
+    </div>
     </div>
     <script src="<?= e(asset_url('assets/auth-v54.js?v=54.0')) ?>" defer></script>
     <?php if (educanet_dev_bypass_enabled() || getenv('EDUCANET_ALLOW_FREE_CLASS_ENTRY') === '1'): ?>

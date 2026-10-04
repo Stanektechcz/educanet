@@ -53,15 +53,17 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
     <?php if (in_array((string)$view, ['lab', 'prikazy'], true)): ?><link rel="stylesheet" href="<?= e(asset_url('assets/linux-v57.css?v=59.1')) ?>"><link rel="stylesheet" href="<?= e(asset_url('assets/arena-v57.css?v=57.0')) ?>"><?php endif; ?>
     <?php if ($module === null && google_auth_configured()): ?><script src="https://accounts.google.com/gsi/client" async defer></script><?php endif; ?>
     <link rel="stylesheet" href="<?= e(asset_url('assets/i18n-v59.css?v=59.0')) ?>">
+    <?php if (!empty($GLOBALS['login63'])): ?><link rel="stylesheet" href="<?= e(asset_url('assets/login-v63.css?v=63.0')) ?>"><?php endif; ?>
     <script src="<?= e(asset_url('assets/i18n-v58.js?v=58.0')) ?>" defer></script>
     <?= edu_tr_json_js() ?>
 </head>
 <?php $v507ShellActive=$module!==null&&in_array((string)$view,v507_shell_views(),true); ?>
 <?php $v55Lock = v55_lock_active((string)$view); ?>
 <?php $ui61Bottom = $module !== null && !nav61_bottom_hidden((string)$view); $GLOBALS['ui61_bottomnav'] = $ui61Bottom; ?>
-<body class="accent-<?= e($accent) ?><?= $compactAssessment ? ' assessment-mode' : '' ?> view-<?= e((string)$view) ?><?= $v507ShellActive?' v507-shell-active':'' ?><?= $v55Lock ? ' v55-locked' : '' ?><?= $ui61Bottom ? ' ui61-has-bottomnav' : '' ?>"<?= $v55Lock ? ' data-v55-lock="on"' : '' ?>>
+<body class="accent-<?= e($accent) ?><?= $compactAssessment ? ' assessment-mode' : '' ?> view-<?= e((string)$view) ?><?= $v507ShellActive?' v507-shell-active':'' ?><?= $v55Lock ? ' v55-locked' : '' ?><?= $ui61Bottom ? ' ui61-has-bottomnav' : '' ?><?= !empty($GLOBALS['login63']) ? ' login63-page' : '' ?>"<?= $v55Lock ? ' data-v55-lock="on"' : '' ?>>
 <?= nav61_skip_html() ?>
 <div class="shell">
+    <?php if (empty($GLOBALS['login63'])): ?>
     <header class="topbar<?= $compactAssessment ? ' assessment-topbar' : '' ?>">
         <a class="brand" href="?view=<?= $module ? 'dashboard' : 'home' ?>"><span class="brand-mark">E</span><span>EDUCANET</span></a>
         <?php if (!$module): ?>
@@ -88,6 +90,7 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
             <?php endif; ?>
         <?php endif; ?>
     </header>
+    <?php endif; ?>
     <main class="ui-page" id="main-content" tabindex="-1"><?php /* v62: h1 stránkového shellu leží uvnitř <main> */ ?>
     <?php if($module!==null&&!$compactAssessment): ?>
     <?php if($v507ShellActive): ?>
@@ -104,8 +107,10 @@ function render_footer(): void
 {
     ?>
     </main>
+    <?php if (!empty($GLOBALS['login63'])): echo login63_footer_html(); else: ?>
     <?php v55_footer_cta(); ?>
     <footer class="footer"><a href="?view=privacy"><?= e(tr('Soukromí')) ?></a><?php $fbView = (string)($GLOBALS['view'] ?? ''); if (!empty($_SESSION['next_class_id']) && $fbView !== 'home'): ?><a class="fb60-footer-link" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;margin-left:8px" href="?view=hlaseni<?= preg_match('/^[a-z0-9_]{1,40}$/', $fbView) === 1 && $fbView !== 'hlaseni' ? '&amp;page=' . e($fbView) : '' ?>"><?= e(tr('Nahlásit chybu')) ?></a><?php endif; ?><?= edu_lang_switcher_html(csrf_token(), '?view=' . (string)($GLOBALS['view'] ?? 'dashboard')) ?></footer>
+    <?php endif; ?>
 <?php if (!empty($GLOBALS['ui61_bottomnav'])): $ui61Cid = current_class_id($GLOBALS['modules'] ?? []); echo nav61_bottom_html(is_string($ui61Cid) ? $ui61Cid : null, (string)($GLOBALS['view'] ?? '')); endif; ?>
 </div>
 <script src="<?= e(asset_url('assets/app.js?v=46')) ?>"></script>
@@ -122,4 +127,14 @@ function render_footer(): void
 </body>
 </html>
     <?php
+}
+
+/** v63 · Patička přihlašovací stránky (render_footer() ji použije místo běžné patičky). Vrací HTML. */
+function login63_footer_html(): string
+{
+    $year = (string)($GLOBALS['schoolYear']['meta']['school_year'] ?? '');
+    $heart = '<span class="login63-heart" aria-hidden="true">❤️</span><span class="login63-sr">' . e(tr('láskou')) . '</span>';
+    $credit = tr_html('S {heart} vytvořil {a}stanektech.cz{/a}', ['heart' => $heart, 'a' => '<a href="' . e(safe_url('https://stanektech.cz')) . '" target="_blank" rel="noopener noreferrer">', '/a' => '</a>']);
+    return '<footer class="login63-footer"><p class="login63-credit">' . $credit . '</p><p class="login63-meta">'
+        . ($year !== '' ? e(tr('Školní rok')) . ' ' . e($year) . ' · ' : '') . 'EDUCANET v63 · <a href="?view=privacy">' . e(tr('Soukromí')) . '</a></p></footer>';
 }

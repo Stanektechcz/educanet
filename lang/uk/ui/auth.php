@@ -656,4 +656,8 @@ return [
     // v60 · odkaz na projekty podle levelu v hlavní navigaci
     // v60 · odkaz na hlášení chyb v menu účtu a v patičce
     'Nahlásit chybu' => 'Повідомити про помилку',
+    // v63 · patička přihlašovací stránky
+    'S {heart} vytvořil {a}stanektech.cz{/a}' => 'Створено з {heart} командою {a}stanektech.cz{/a}',
+    'láskou' => 'любов’ю',
+    'Školní rok' => 'Навчальний рік',
 ];

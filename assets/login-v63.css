@@ -1,0 +1,79 @@
+/* EDUCANET v63 · přihlašovací stránka na jednu obrazovku + patička (jen s body.login63-page).
+   Staví na tokenech v61 a na pravidlech .auth54-* z brand-v54.css; tady je jen rozložení, segmentovaný
+   přepínač jazyka a patička. Obsah se nikdy neořezává: min-height místo height, při zoomu 200 % / chybě
+   stránka smí scrollovat (WCAG 1.4.4, 1.4.10). */
+.login63-page { background: radial-gradient(1100px 520px at 85% -10%, var(--edu-teal-soft), transparent 70%), radial-gradient(900px 480px at -10% 110%, var(--edu-orange-soft), transparent 65%), var(--ui-bg, #f6f7f9); }
+.login63-page .shell { width: min(1120px, calc(100% - 32px)); min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+.login63-page main.ui-page { flex: 1; display: flex; flex-direction: column; padding: 0; margin: 0; max-width: none; }
+.login63 { flex: 1; display: flex; flex-direction: column; gap: clamp(6px, 2vh, 18px); }
+.login63-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: clamp(8px, 2vh, 18px); }
+.login63-page .brand > span:last-child { display: inline; }
+.login63-page .brand { min-height: 44px; color: var(--edu-ink); }
+
+/* Segmentovaný přepínač jazyka: POST formulář, tři tlačítka, aria-current na aktivním */
+.login63-lang { display: inline-flex; gap: 2px; margin: 0; padding: 3px; border: 1px solid var(--ui-line, #dde3e8); border-radius: 999px; background: #fff; box-shadow: var(--ui-shadow-1); }
+.login63-lang button { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; min-width: 44px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent; color: var(--ui-muted, #4d5b68); font: inherit; font-size: .85rem; font-weight: 600; cursor: pointer; transition: background .15s, color .15s; }
+.login63-lang button b { font-size: .72rem; letter-spacing: .06em; }
+.login63-lang button:hover { background: var(--edu-teal-soft); color: var(--edu-ink); }
+.login63-lang button[aria-current="true"] { background: var(--edu-teal-dark); color: #fff; }
+.login63-lang button:focus-visible, .login63-page .brand:focus-visible, .login63-footer a:focus-visible, .login63-page .auth54-tabs button:focus-visible, .login63-page .auth54-code:focus-visible, .login63-page .auth54-help summary:focus-visible, .login63-page .auth54-foot a:focus-visible { outline: 3px solid var(--edu-ink); outline-offset: 2px; }
+
+/* Rozložení: brand panel vlevo, karta vpravo */
+.login63-body { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 440px); gap: clamp(16px, 3vw, 40px); align-items: center; max-width: none; margin: 0; }
+.login63-hero { align-self: stretch; display: flex; flex-direction: column; justify-content: center; max-height: 560px; margin: auto 0; border-radius: 24px; }
+.login63-hero h1 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+.login63-card { padding: clamp(14px, 2.4vh, 24px) clamp(16px, 2.6vw, 28px); box-shadow: var(--ui-shadow-2); }
+.login63-card .auth54-tabs { margin-bottom: clamp(10px, 1.8vh, 16px); }
+.login63-card .auth54-tabs button { min-height: 44px; }
+.login63-card .auth54-pane { gap: clamp(10px, 1.8vh, 14px); }
+.login63-card .auth54-form { gap: clamp(8px, 1.6vh, 12px); }
+.login63-card .auth54-field { gap: 4px; }
+.login63-card .auth54-field input { min-height: 44px; border-color: var(--ui-field-border, #6b7885) !important; }
+.login63-card .auth54-field input:focus-visible { outline: 3px solid var(--edu-ink); outline-offset: 1px; }
+.login63-card .auth54-code { padding: 10px 14px; }
+.login63-card .auth54-code-icon { flex-basis: 36px; height: 36px; }
+.login63-card .auth54-help summary { min-height: 44px; padding-block: 6px; }
+.login63-card .auth54-foot { margin-top: clamp(8px, 1.6vh, 14px); padding-top: clamp(8px, 1.4vh, 12px); }
+.login63-card .auth54-flash { margin-bottom: 10px; padding: 9px 12px; color: #5c3f00; }
+.login63-card .auth54-foot, .login63-card .auth54-hint, .login63-card .auth54-help-note, .login63-card .auth54-code small { color: var(--ui-muted, #4d5b68); }
+
+/* Patička */
+.login63-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 20px; padding: clamp(8px, 1.8vh, 16px) 0 clamp(10px, 2vh, 18px); border-top: 1px solid var(--ui-line, #dde3e8); color: var(--ui-muted, #4d5b68); font-size: .82rem; }
+.login63-footer p { margin: 0; }
+.login63-credit { font-weight: 600; color: var(--edu-ink); }
+.login63-heart { display: inline-block; margin: 0 2px; animation: login63-beat 2.4s ease-in-out infinite; }
+.login63-footer a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 2px; color: var(--edu-teal-ink); font-weight: 700; text-underline-offset: 3px; }
+.login63-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@keyframes login63-beat { 0%, 60%, 100% { transform: scale(1); } 70% { transform: scale(1.18); } 80% { transform: scale(1); } 90% { transform: scale(1.12); } }
+@media (prefers-reduced-motion: reduce) { .login63-heart { animation: none; } .login63-lang button { transition: none; } .login63-page .auth54-code { transition: none; } }
+
+/* Nízké okno (notebook 1366×768, telefon na výšku): zmenšit, ne scrollovat */
+@media (max-height: 760px) {
+  .login63-hero p, .login63-hero .auth54-points { display: none; }
+  .login63-card .auth54-code small { display: none; }
+  .login63-card .auth54-code { padding-block: 6px; }
+  .login63-card .auth54-hint { display: none; }
+}
+
+/* Tablet a telefon: jen karta, brand panel zůstává pro čtečky (h1) mimo obraz */
+@media (max-width: 899px) {
+  .login63-body { grid-template-columns: minmax(0, 1fr); align-items: start; gap: 0; }
+  .login63-hero { position: absolute; width: 1px; height: 1px; padding: 0; margin: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .login63-card { width: 100%; max-width: 480px; margin: 0 auto; }
+  .login63-footer { justify-content: center; text-align: center; }
+}
+@media (max-width: 520px) {
+  .login63-page .shell { width: calc(100% - 24px); }
+  .login63-lang button { padding: 0 10px; gap: 0; }
+  .login63-lang button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .login63-lang button b { font-size: .8rem; padding: 0 4px; }
+  .login63-card .auth54-grid { grid-template-columns: 1fr; }
+  .login63-footer { flex-direction: column; gap: 0; }
+  .login63-footer a { min-height: 36px; }
+}
+@media (max-height: 640px) and (max-width: 520px) {
+  .login63-card { padding: 10px 14px; border-radius: 16px; }
+  .login63-card .auth54-field > span { font-size: .78rem; }
+  .login63-footer { padding-block: 4px 6px; font-size: .78rem; }
+  .login63-footer .login63-meta { display: none; }
+}
