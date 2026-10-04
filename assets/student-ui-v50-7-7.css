@@ -30,7 +30,7 @@ body:not(.assessment-mode) main{padding-top:26px}
 /* Give feature pages calmer hierarchy without rewriting their internals. */
 body:not(.view-dashboard):not(.assessment-mode) main>.hero:first-child,body:not(.view-dashboard):not(.assessment-mode) main>.hero-center:first-child{padding-top:8px;padding-bottom:26px}
 body:not(.view-dashboard):not(.assessment-mode) main>.hero:first-child h1,body:not(.view-dashboard):not(.assessment-mode) main>.hero-center:first-child h1{font-size:clamp(2rem,4vw,3.55rem);max-width:900px}
-body:not(.view-dashboard):not(.assessment-mode) .panel,body:not(.view-dashboard):not(.assessment-mode) .dashboard-panel{box-shadow:0 10px 28px rgba(17,24,39,.035)}
+body:not(.view-dashboard):not(.assessment-mode) .panel{box-shadow:0 10px 28px rgba(17,24,39,.035)}
 
 /* Dashboard — default state is action-oriented, not analytics-oriented. --- */
 .student-cockpit-v502{display:grid;gap:18px;max-width:1120px;margin:0 auto}.student-cockpit-v502 .student-cockpit-main{display:grid;gap:14px}
@@ -120,10 +120,10 @@ body:not(.assessment-mode) .brand{gap:8px}.brand-mark{width:31px;height:31px;bor
 body:not(.assessment-mode) .hero{padding:clamp(18px,3vw,30px)!important;margin-bottom:14px!important;border-radius:var(--v506-radius)!important;box-shadow:none!important}
 body:not(.assessment-mode) .hero h1{font-size:clamp(1.65rem,3.3vw,2.5rem)!important;line-height:1.06;margin:.35rem 0 .55rem!important}
 body:not(.assessment-mode) .hero p{max-width:720px!important;font-size:.94rem!important;line-height:1.52!important;opacity:.68}
-body:not(.assessment-mode) .dashboard-panel,body:not(.assessment-mode) .panel{box-shadow:none!important;border-color:var(--v506-line)!important;border-radius:var(--v506-radius)!important}
+body:not(.assessment-mode) .dashboard-panel,body:not(.assessment-mode) .panel{box-shadow:var(--ui-shadow-1)!important;border-color:var(--v506-line)!important;border-radius:var(--v506-radius)!important}
 body:not(.assessment-mode) .dashboard-panel-head h2{font-size:1.15rem!important}.dashboard-panel-head p{font-size:.84rem!important;line-height:1.45!important;opacity:.65}
-body:not(.assessment-mode) .btn{border-radius:10px!important;min-height:38px!important;font-size:.8rem!important;font-weight:800!important;box-shadow:none!important}.btn.secondary{background:transparent!important;border:1px solid var(--v506-line)!important}.btn.primary{box-shadow:none!important}
-body:not(.assessment-mode) .eyebrow{font-size:.65rem!important;letter-spacing:.08em!important;opacity:.55!important}
+:where(body:not(.assessment-mode)) .btn{border-radius:10px;min-height:38px;font-size:.8rem;font-weight:800;box-shadow:none}.btn.secondary{background:transparent;border:1px solid var(--v506-line)}:where(body:not(.assessment-mode)) .btn.primary{box-shadow:none}
+:where(body:not(.assessment-mode)) .eyebrow{font-size:var(--ui-text-xs,.75rem);letter-spacing:.08em}
 
 /* Dashboard = greeting + exactly one action. */
 .view-dashboard main{max-width:930px;margin-inline:auto}.view-dashboard .student-cockpit{gap:12px}.student-welcome-row{padding:4px 2px 8px!important}.student-welcome-row .student-avatar{display:none}.student-welcome-copy>span{font-size:.7rem!important;opacity:.5}.student-welcome-copy h1{font-size:clamp(1.35rem,3vw,1.95rem)!important;margin:.15rem 0!important}.student-profile-link{display:none!important}
@@ -149,7 +149,7 @@ body:not(.assessment-mode) .eyebrow{font-size:.65rem!important;letter-spacing:.0
 .view-calendar main,.view-community main,.view-project_lobbies main{max-width:1020px;margin-inline:auto}.school-calendar-hero{padding:17px!important}.school-calendar-summary{display:none!important}.school-calendar-legend{font-size:.7rem!important;opacity:.55}.school-week{box-shadow:none!important}.school-week:not(.current){opacity:.78}.school-week .week-plan span{font-size:.74rem!important}.school-week .week-class-focus{font-size:.74rem!important}
 
 /* Forms and reading surfaces */
-body:not(.assessment-mode) input,body:not(.assessment-mode) textarea,body:not(.assessment-mode) select{border-radius:10px!important;box-shadow:none!important}.notice{border-radius:11px!important;box-shadow:none!important;font-size:.8rem!important}.text-link,.mini-action{font-size:.76rem!important}
+:where(body:not(.assessment-mode)) :is(input,textarea,select){border-radius:var(--ui-radius-sm,10px);box-shadow:none}.notice{border-radius:11px!important;box-shadow:none!important;font-size:.8rem!important}.text-link,.mini-action{font-size:.76rem!important}
 
 @media(max-width:900px){
   body:not(.assessment-mode) .shell{width:min(100% - 18px,1180px)}
@@ -228,7 +228,7 @@ body.v507-shell-active main{max-width:1020px;margin-inline:auto}
 .v507-shell-active.view-profile .profile-editor{max-width:900px;margin-inline:auto;box-shadow:none!important}
 
 /* Shared low-density details across all consolidated views. */
-.v507-shell-active .dashboard-panel,.v507-shell-active .panel{box-shadow:none!important}.v507-shell-active .dashboard-panel-head p{max-width:680px}.v507-shell-active .hero-actions{gap:6px!important}.v507-shell-active .button-row{gap:6px!important}
+.v507-shell-active .dashboard-panel,.v507-shell-active .panel{box-shadow:var(--ui-shadow-1)!important}.v507-shell-active .dashboard-panel-head p{max-width:680px}.v507-shell-active .hero-actions{gap:6px!important}.v507-shell-active .button-row{gap:6px!important}
 
 @media(max-width:760px){
  .v507-page-shell{padding:15px 14px 11px;margin-top:7px}.v507-shell-main{grid-template-columns:1fr;gap:12px}.v507-shell-actions{display:grid;grid-template-columns:1fr auto;min-width:0}.v507-shell-actions .v507-primary{width:100%!important}.v507-shell-rule small{display:none}.v507-shell-kicker{margin-bottom:7px}
@@ -244,14 +244,15 @@ body.v507-shell-active main{max-width:1020px;margin-inline:auto}
   --edu-muted:#66717e;--edu-soft:color-mix(in srgb,var(--text,#111827) 4%,transparent);
 }
 body:not(.assessment-mode){font-family:var(--edu-font)!important;line-height:1.45;background:#f6f7f9!important;color:#111827!important}
-body:not(.assessment-mode) button,body:not(.assessment-mode) input,body:not(.assessment-mode) textarea,body:not(.assessment-mode) select{font-family:var(--edu-font)!important}
-body:not(.assessment-mode) h1,body:not(.assessment-mode) h2,body:not(.assessment-mode) h3,body:not(.assessment-mode) h4{font-family:var(--edu-font)!important;letter-spacing:-.025em!important;color:#111827}
-body:not(.assessment-mode) p{color:var(--edu-muted)}
+:where(body:not(.assessment-mode)) :is(button,input,textarea,select){font-family:var(--edu-font)}
+/* v61: základní typografie nadpisů a odstavců ve :where() – specificita jen elementu (0,0,1), bez !important; moduly ji přebijí obyčejnou třídou. */
+:where(body:not(.assessment-mode)) :is(h1,h2,h3,h4){font-family:var(--edu-font);letter-spacing:-.025em;color:var(--ui-ink,#111827)}
+:where(body:not(.assessment-mode)) :is(p){color:var(--edu-muted)}
 body:not(.assessment-mode) main{padding:28px 0 64px!important}
 body:not(.assessment-mode) main>section,body:not(.assessment-mode) main>article,body:not(.assessment-mode) main>details{scroll-margin-top:92px}
 body:not(.assessment-mode) .hero h1{font-size:clamp(1.75rem,3.1vw,2.65rem)!important;line-height:1.08!important;margin-bottom:10px!important}
 body:not(.assessment-mode) .hero p{font-size:.94rem!important;line-height:1.55!important;max-width:720px!important}
-body:not(.assessment-mode) .eyebrow{font-size:.68rem!important;letter-spacing:.09em!important;margin-bottom:7px!important}
+:where(body:not(.assessment-mode)) .eyebrow{font-size:var(--ui-text-xs,.75rem);letter-spacing:.08em;margin-bottom:7px}
 
 /* Header: one stable row, no competing decorative icon families. */
 body:not(.assessment-mode) .topbar{min-height:64px!important;margin-top:10px!important;padding:8px 10px!important;border:1px solid var(--edu-line)!important;border-radius:14px!important;background:#fff!important;box-shadow:none!important;position:relative!important;top:auto!important}
@@ -287,12 +288,12 @@ body:not(.assessment-mode) .v507-shell-main h1{font-size:clamp(1.35rem,2.5vw,1.8
 body:not(.assessment-mode) .v507-shell-main p{font-size:.86rem!important;color:var(--edu-muted)!important;opacity:1!important}
 
 /* Shared components: consistent radii, typography and spacing. */
-body:not(.assessment-mode) .panel,body:not(.assessment-mode) .dashboard-panel,body:not(.assessment-mode) .action-card,body:not(.assessment-mode) .question-card,body:not(.assessment-mode) .kb-article,body:not(.assessment-mode) .student-result-card{border-radius:var(--edu-radius)!important;box-shadow:none!important;border-color:var(--edu-line)!important}
-body:not(.assessment-mode) .btn{min-height:42px!important;padding:0 16px!important;border-radius:10px!important;font-size:.78rem!important;font-weight:750!important;box-shadow:none!important;transform:none!important}
+body:not(.assessment-mode) .panel,body:not(.assessment-mode) .dashboard-panel,body:not(.assessment-mode) .action-card,body:not(.assessment-mode) .question-card,body:not(.assessment-mode) .kb-article,body:not(.assessment-mode) .student-result-card{border-radius:var(--edu-radius)!important;box-shadow:var(--ui-shadow-1)!important;border-color:var(--edu-line)!important}
+:where(body:not(.assessment-mode)) .btn{min-height:42px;padding:0 16px;border-radius:10px;font-size:.78rem;font-weight:750;box-shadow:none;transform:none}
 body:not(.assessment-mode) .btn:hover{transform:none!important;filter:brightness(.98)}
 body:not(.assessment-mode) .btn.secondary{background:#fff!important;border-color:var(--edu-line)!important}
 body:not(.assessment-mode) .button-row{gap:8px!important;margin-top:18px!important}
-body:not(.assessment-mode) input,body:not(.assessment-mode) textarea,body:not(.assessment-mode) select{border-radius:9px!important;border-color:var(--edu-line)!important;box-shadow:none!important;font-size:.85rem!important}
+:where(body:not(.assessment-mode)) :is(input,textarea,select){border-radius:var(--ui-radius-sm,9px);border-color:var(--ui-field-border,var(--edu-line));box-shadow:none;font-size:.9rem}
 body:not(.assessment-mode) details>summary{font-family:var(--edu-font)!important}
 
 /* Dashboard regression fix: legacy grid column survived v50.6 and broke the page. */
@@ -366,9 +367,9 @@ body:not(.assessment-mode) .v506-dashboard-quiet-links a:first-child::first-lett
 /* EDUCANET v50.7.2 · UI Consistency Pass · semantic normalization */
 :root{color-scheme:light;--edu-content:960px;--edu-content-narrow:880px;--edu-space-1:6px;--edu-space-2:10px;--edu-space-3:14px;--edu-space-4:20px;--edu-space-5:28px}
 body:not(.assessment-mode){font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-body:not(.assessment-mode) h1,body:not(.assessment-mode) h2,body:not(.assessment-mode) h3{overflow-wrap:normal;word-break:normal}
-body:not(.assessment-mode) h1{font-weight:780!important} body:not(.assessment-mode) h2{font-weight:760!important} body:not(.assessment-mode) h3{font-weight:740!important}
-body:not(.assessment-mode) p,body:not(.assessment-mode) li{line-height:1.55}
+:where(body:not(.assessment-mode)) :is(h1,h2,h3){overflow-wrap:normal;word-break:normal}
+:where(body:not(.assessment-mode)) :is(h1){font-weight:780} :where(body:not(.assessment-mode)) :is(h2){font-weight:760} :where(body:not(.assessment-mode)) :is(h3){font-weight:740}
+:where(body:not(.assessment-mode)) :is(p,li){line-height:1.55}
 body:not(.assessment-mode) :focus-visible{outline:3px solid var(--accent,#2459ff)!important;outline-offset:2px!important}
 
 /* Header: every action is understandable without decoding an icon. */
@@ -439,8 +440,8 @@ body:not(.assessment-mode) .v507-shell-actions{gap:7px!important}
 
 /* Forms and empty states look like normal system surfaces, not separate mini-apps. */
 body:not(.assessment-mode) label{color:#4f5967}
-body:not(.assessment-mode) input,body:not(.assessment-mode) textarea,body:not(.assessment-mode) select{min-height:42px!important;background:#fff!important;color:#111827!important;padding:10px 12px!important}
-body:not(.assessment-mode) textarea{min-height:96px!important;resize:vertical}
+:where(body:not(.assessment-mode)) :is(input,textarea,select){min-height:var(--ui-tap,42px);background:var(--ui-surface,#fff);color:var(--ui-ink,#111827);padding:10px 12px}
+:where(body:not(.assessment-mode)) textarea{min-height:96px;resize:vertical}
 body:not(.assessment-mode) fieldset{border:1px solid var(--edu-line)!important;box-shadow:none!important}
 body:not(.assessment-mode) .student-result-empty,body:not(.assessment-mode) .adaptive-empty,body:not(.assessment-mode) .empty-state{padding:28px!important;border:1px solid var(--edu-line)!important;border-radius:14px!important;background:#fff!important;text-align:left!important;box-shadow:none!important}
 body:not(.assessment-mode) .student-result-empty>span,body:not(.assessment-mode) .adaptive-empty>span,body:not(.assessment-mode) .empty-state>i{display:none!important}
@@ -501,10 +502,9 @@ body:not(.assessment-mode) .shell{width:min(calc(100% - 28px),1080px)!important}
 body:not(.assessment-mode) .topbar{min-height:52px!important;padding-block:6px!important}
 body:not(.assessment-mode) .student-main-menu>a,
 body:not(.assessment-mode) .student-nav-group>summary{min-height:38px!important}
-body:not(.assessment-mode) .btn{min-height:var(--edu-control-h)!important}
-body:not(.assessment-mode) input,
-body:not(.assessment-mode) select{min-height:var(--edu-control-h)!important}
-body:not(.assessment-mode) textarea{min-height:104px!important}
+:where(body:not(.assessment-mode)) .btn{min-height:var(--edu-control-h)}
+:where(body:not(.assessment-mode)) :is(input,select){min-height:var(--ui-tap,var(--edu-control-h))}
+:where(body:not(.assessment-mode)) textarea{min-height:104px}
 
 /* Fewer floating islands: major student surfaces follow one vertical rhythm. */
 body:not(.assessment-mode) main>section,
@@ -601,7 +601,7 @@ body:not(.assessment-mode) .brand>span:last-child{font-size:.82rem!important;fon
 .v5075-do-now .student-do-now-copy h2{font-size:clamp(1.2rem,2.2vw,1.65rem)!important;line-height:1.15!important}
 .v5075-do-now .student-do-now-copy p{font-size:.82rem!important;line-height:1.45!important;max-width:620px!important;color:#667085!important}
 .v5075-do-now .student-do-now-action{min-width:0!important}
-.v5075-do-now .student-primary-cta{min-height:42px!important;border-radius:10px!important;padding-inline:16px!important;box-shadow:none!important}
+.v5075-do-now .student-primary-cta{min-height:var(--ui-tap,44px)!important;border-radius:10px!important;padding-inline:16px!important;box-shadow:none!important}
 .v5075-dashboard-detail-link{justify-content:flex-start!important;margin-top:-2px!important}.v5075-dashboard-detail-link a{padding:6px 2px!important;border:0!important;background:transparent!important;font-size:.72rem!important}
 .student-attention-bar{border-radius:12px!important;box-shadow:none!important;padding:12px 14px!important}.student-attention-bar small{display:none!important}
 .student-dashboard-more{border-radius:14px!important;box-shadow:none!important}.student-dashboard-more>summary{padding:12px 14px!important}.student-dashboard-more>summary small{display:none!important}
@@ -609,7 +609,7 @@ body:not(.assessment-mode) .brand>span:last-child{font-size:.82rem!important;fon
 .v507-page-shell{padding:14px 16px!important;border-radius:14px!important;margin:7px 0 10px!important}.v507-shell-main{gap:16px!important}.v507-shell-main h1{font-size:clamp(1.2rem,2.2vw,1.65rem)!important}.v507-shell-main p{font-size:.79rem!important;max-width:600px!important}.v507-shell-rule{display:none!important}
 .course-hero,.skill-hero,.growth-hero,.school-calendar-hero,.social-profile-hero{box-shadow:none!important}
 .course-focus-card,.skill-next-card,.v506-growth-focus,.v506-calendar-next{border-radius:14px!important;box-shadow:none!important;padding:16px!important}
-.course-card,.skill-card,.kb-topic-card,.recovery-step,.dashboard-panel{box-shadow:none!important}
+.course-card,.skill-card,.kb-topic-card,.recovery-step{box-shadow:none!important}
 .footer{font-size:.66rem!important;opacity:.62!important;padding-block:18px!important}
 @media(max-width:760px){body:not(.assessment-mode) main{padding-top:12px!important}.v5075-do-now{grid-template-columns:1fr!important;padding:16px!important}.v5075-do-now .student-primary-cta{width:100%!important}.dashboard-metrics{grid-template-columns:1fr!important}.v5075-compass{padding-inline:2px!important}.v507-page-shell{padding:13px!important}.v507-shell-main{grid-template-columns:1fr!important}.v507-shell-actions{min-width:0!important;flex-wrap:wrap!important}.v507-shell-actions .btn{width:100%!important}.student-nav-group>summary{padding-inline:7px!important}}
 
@@ -627,12 +627,12 @@ body:not(.assessment-mode) .brand>span:last-child{letter-spacing:.01em!important
 .v507-shell-main>div:first-child>span{display:none!important}
 .v507-shell-main h1{font-size:clamp(1.15rem,2vw,1.45rem)!important;margin:.08rem 0 .25rem!important}
 .v507-shell-main p{font-size:.75rem!important;line-height:1.42!important;margin:0!important;max-width:56ch!important}
-.v507-shell-actions{gap:6px!important}.v507-shell-actions .btn{min-height:36px!important;padding:0 11px!important;border-radius:9px!important}
+.v507-shell-actions{gap:6px!important}.v507-shell-actions .btn{min-height:var(--ui-tap,44px)!important;padding:0 11px!important;border-radius:9px!important}
 .v5076-attention{padding:0!important;border-radius:10px!important}.v5076-attention>summary{min-height:42px!important;padding:8px 12px!important}.v5076-attention>summary b{font-size:.68rem!important}.v5076-attention .student-attention-actions{padding:0 12px 10px!important;gap:5px!important}
 .student-dashboard-more>summary{min-height:44px!important}.student-dashboard-more>summary b{font-size:.68rem!important}
 .v5076-core-metrics{grid-template-columns:repeat(3,minmax(0,1fr))!important;margin:4px 0 10px!important}.v5076-core-metrics article{min-height:76px!important;display:flex!important;align-items:center!important;padding:11px 12px!important}.v5076-core-metrics article strong{font-size:1.15rem!important}.v5076-core-metrics article span{font-size:.68rem!important;color:var(--muted)!important}.v5076-core-metrics article small,.v5076-core-metrics article i{display:none!important}
 .v5076-progress-advanced{margin-top:10px!important;border:1px solid var(--v5075-line)!important;border-radius:11px!important;background:#fff!important}.v5076-progress-advanced>summary{min-height:44px!important;padding:9px 12px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important}.v5076-progress-advanced>summary span{font-size:.67rem!important;color:var(--muted)!important}.v5076-progress-advanced-body{padding:4px 10px 12px!important}.v5076-progress-advanced-body>*{margin-top:8px!important}
-.view-dashboard .dashboard-row{gap:8px!important}.view-dashboard .dashboard-panel{border-radius:11px!important}.view-dashboard .dashboard-panel-head p{display:none!important}.view-dashboard .quick-action-grid a span{display:none!important}.view-dashboard .quick-action-grid a i{display:none!important}
+.view-dashboard .dashboard-row{gap:8px!important}.view-dashboard .dashboard-panel-head p{display:none!important}.view-dashboard .quick-action-grid a span{display:none!important}.view-dashboard .quick-action-grid a i{display:none!important}
 @media(max-width:760px){.v507-shell-main{grid-template-columns:1fr!important}.v507-shell-actions{display:grid!important;grid-template-columns:1fr auto!important}.v507-shell-actions .btn{width:auto!important}.v5076-core-metrics{grid-template-columns:repeat(3,minmax(0,1fr))!important}.v5076-core-metrics article{min-height:66px!important;padding:9px!important}.v5076-progress-advanced>summary span{display:none!important}}
 @media(max-width:480px){.v5076-core-metrics{grid-template-columns:1fr!important}.v5076-core-metrics article{min-height:54px!important}.v507-shell-actions{grid-template-columns:1fr!important}.v507-shell-actions .btn{width:100%!important}}
 

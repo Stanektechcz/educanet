@@ -1,0 +1,87 @@
+/* EDUCANET v61 · tokeny značky (jediné místo, kde se definují barvy, mezery, radiusy, stíny a typografie).
+   Barvy značky (--edu-*) sem přešly z brand-v54.css; komponenty .ui-* jsou v components-v61.css.
+   Tmavý režim: odložen (viz BUILD_MANIFEST_V61.md, bod C5) – tokeny jsou připravené, ale starší vrstvy mají pevné barvy. */
+:root {
+  --edu-yellow: #f3b21f;
+  --edu-orange: #ec6b10;
+  --edu-teal: #00a8b9;
+  --edu-teal-dark: #007a87;
+  --edu-teal-ink: #05616c;
+  --edu-orange-dark: #c4550a;
+  --edu-ink: #12212b;
+  --edu-yellow-soft: #fef5e0;
+  --edu-orange-soft: #fdeee3;
+  --edu-teal-soft: #e2f6f8;
+
+  --ui-ink: var(--edu-ink);
+  --ui-muted: #4d5b68;
+  --ui-line: #dde3e8;
+  --ui-bg: #f6f7f9;
+  --ui-surface: #fff;
+  --ui-surface-2: #f2f5f7;
+  --ui-accent: var(--edu-teal-dark);
+  --ui-accent-ink: var(--edu-teal-ink);
+  --ui-accent-soft: var(--edu-teal-soft);
+  --ui-on-accent: #fff;
+  --ui-warn-ink: #5c3f00;
+  --ui-warn-soft: var(--edu-yellow-soft);
+  --ui-hot-ink: #a8440a;
+  --ui-hot-soft: var(--edu-orange-soft);
+  --ui-ok-ink: #0b6b49;
+  --ui-bad-ink: #a92f2f;
+  --ui-dashed: #b6c2cb;
+  --ui-track: #e6ebef;
+  --ui-field-border: #6b7885;
+  --ui-bad-soft: #fdecec;
+
+  --ui-space-1: 4px;
+  --ui-space-2: 8px;
+  --ui-space-3: 12px;
+  --ui-space-4: 16px;
+  --ui-space-5: 24px;
+  --ui-space-6: 32px;
+  --ui-radius-sm: 12px;
+  --ui-radius: 16px;
+  --ui-radius-lg: 20px;
+  --ui-radius-pill: 999px;
+  --ui-shadow-1: 0 1px 3px rgba(18, 33, 43, .06);
+  --ui-shadow-2: 0 12px 36px rgba(18, 33, 43, .08);
+  --ui-shadow-up: 0 -4px 16px rgba(18, 33, 43, .08);
+  --ui-bottomnav-h: 60px;
+
+  --ui-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --ui-text-xs: .75rem;
+  --ui-text-sm: .875rem;
+  --ui-text: .95rem;
+  --ui-text-lg: 1.15rem;
+  --ui-text-xl: 1.4rem;
+  --ui-leading: 1.55;
+  --ui-tap: 44px;
+  --ui-focus: 3px;
+}
+/* Most ke starším vrstvám: jejich tokeny (--u-* z ui-v51.css, --edu-*, --v506/507-*) berou hodnoty odtud, takže se karty, okraje,
+   zaoblení a písmo sjednotí bez přepisování pravidel jednotlivých modulů. ':root:not(.x)' = stejná specificita jako ui-v51.css. */
+:root, :root:not(.x) {
+  --u-bg: var(--ui-bg);
+  --u-surface: var(--ui-surface);
+  --u-soft: var(--ui-surface-2);
+  --u-line: var(--ui-line);
+  --u-line-strong: var(--ui-field-border);
+  --u-text: var(--ui-ink);
+  --u-muted: var(--ui-muted);
+  --u-radius: var(--ui-radius);
+  --u-radius-sm: var(--ui-radius-sm);
+  --u-shadow: var(--ui-shadow-1);
+  --u-font: var(--ui-font);
+  --edu-font: var(--ui-font);
+  --edu-radius: var(--ui-radius);
+  --edu-radius-sm: var(--ui-radius-sm);
+  --edu-line: var(--ui-line);
+  --edu-muted: var(--ui-muted);
+  --v506-radius: var(--ui-radius);
+  --v506-line: var(--ui-line);
+  --v507-line: var(--ui-line);
+}
+
+/* Předmět grafika a webdesign má oranžový akcent (stejně jako brand-v54.css); ostatní předměty zůstávají tyrkysové. */
+body.accent-graphics { --ui-accent: var(--edu-orange-dark); --ui-accent-ink: var(--ui-hot-ink); --ui-accent-soft: var(--edu-orange-soft); }

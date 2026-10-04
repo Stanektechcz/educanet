@@ -25,7 +25,9 @@ $state = audit_counter();
 $check = audit_checker($state);
 $read = static fn(string $rel): string => (string)@file_get_contents($root . '/' . $rel);
 $views = $read('tutorial_v52_views.php');
-$brand = $read('assets/brand-v54.css');
+// v61: barvy značky (--edu-*) jsou v tokens-v61.css, subjektové akcenty a přihlašovací stránka zůstaly v brand-v54.css.
+$brand = $read('assets/brand-v54.css') . "
+" . $read('assets/tokens-v61.css');
 
 // --- Firemní barvy: skutečné rozpuštění vlastních CSS proměnných, ne hledání podřetězce ---
 $rootVars = audit_css_vars($brand);

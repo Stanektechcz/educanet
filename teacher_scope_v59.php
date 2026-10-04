@@ -304,6 +304,9 @@ function teacher59_action_policies(): array
     $table['proj60_decide'] = $ent('application_id', 'proj60_app');
     // v60 · hlášení chyb: rozhodnutí smí jen učitel s rozsahem třídy hlášení (entita fb60_report).
     $table['fb60_decide'] = $ent('id', 'fb60_report');
+    // v61 · přehled třídy: hromadné potvrzení hlášení – třída formuláře povinná a v rozsahu; každé id (ids[]) si handler
+    // ověří zvlášť přes teacher59_entity_classes('fb60_report', …) a výsledek vrací po položkách.
+    $table['ov61_bulk_confirm'] = $req;
     return $table;
 }
 
@@ -561,6 +564,8 @@ function teacher59_get_policies(): array
         'intake|artifact' => ['entity' => ['artifact', 'intake_response']],
         'intake|export' => ['class' => 'required'],
         'ucitele|karticka' => ['admin' => true],
+        // v61: export přehledu třídy do CSV – třída povinná a v rozsahu (ov61_export_csv ji ověřuje znovu).
+        'prehled|export' => ['class' => 'required'],
     ];
 }
 
@@ -714,7 +719,11 @@ function teacher59_render_unavailable(): never
         header('Content-Type: text/html; charset=utf-8');
     }
     echo teacher59_page('Učitelské rozhraní je nedostupné', '<section class="t59-card" role="alert"><div class="eyebrow">Údržba</div>'
-        . '<h1>Učitelské přihlášení je dočasně nedostupné</h1><p>Úložiště učitelských účtů chybí nebo nejde přečíst. Správce ho obnoví ze zálohy '
-        . '(soubor <code>storage/teacher_accounts_v59.json.php</code>). Sdílený klíč se z bezpečnostních důvodů automaticky nezapíná.</p></section>');
+        . '<h1>Učitelské přihlášení je dočasně nedostupné</h1>'
+        . (is_file(teacher59_accounts_path())
+            ? '<p>Úložiště učitelských účtů nejde přečíst. Správce ho obnoví ze zálohy (soubor <code>storage/teacher_accounts_v59.json.php</code>).'
+            : '<p>Učitelské účty ještě nejsou založené. Správce na serveru spustí <code>tools/v59_teacher_accounts.php create-admin</code> (první nasazení), '
+                . 'nebo obnoví soubor <code>storage/teacher_accounts_v59.json.php</code> ze zálohy.')
+        . ' Sdílený klíč se z bezpečnostních důvodů automaticky nezapíná.</p></section>');
     exit;
 }

@@ -8,7 +8,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Identita žáka vždy ze session ($actionClassId/$studentKey), nikdy z parametru.
  */
 
-if (in_array($action, ['arena60_challenge_create', 'arena60_challenge_respond', 'arena60_challenge_cancel', 'arena60_optin_set'], true)) {
+if (in_array($action, ['arena60_challenge_create', 'arena60_challenge_respond', 'arena60_challenge_cancel', 'arena60_optin_set', 'arena61_rematch'], true)) {
     $actionClassId = current_class_id($modules);
     if ($actionClassId === null || !isset($modules[$actionClassId])) { $_SESSION['flash'] = tr('Nejdřív se přihlas do své třídy.'); redirect_to('?view=home'); }
     $studentKey = social_current_student_key($actionClassId);
@@ -29,6 +29,10 @@ if (in_array($action, ['arena60_challenge_create', 'arena60_challenge_respond', 
             $accept = (string)($_POST['accept'] ?? '') === '1';
             arena60_challenge_respond($actionClassId, $studentKey, $id, $accept, $now);
             $_SESSION['flash'] = $accept ? tr('Výzva přijata, hodně štěstí!') : tr('Výzva byla odmítnuta.');
+        } elseif ($action === 'arena61_rematch') {
+            // v61 · odveta jedním klikem: stejná pravidla jako výzva (opt-in soupeře, limity), jen k dokončenému souboji.
+            arena61_rematch($actionClassId, $studentKey, (string)($_POST['id'] ?? ''), $now);
+            $_SESSION['flash'] = tr('Odveta byla odeslána.');
         } elseif ($action === 'arena60_challenge_cancel') {
             $id = (string)($_POST['id'] ?? '');
             arena60_challenge_cancel($actionClassId, $studentKey, $id, $now);

@@ -10,6 +10,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  */
 
 require_once __DIR__ . '/profile_v60_ui.php';
+require_once __DIR__ . '/arena_v61_views.php';
 
 /** Skrytá pole POST formuláře výzvy (CSRF + akce + id). */
 function arena60_form_open(string $action, string $id = '', array $extra = []): string
@@ -60,6 +61,8 @@ function arena60_render_history(array $rows, string $studentKey): void
 {
     echo '<h3 class="p60-subhead">' . e(tr('Historie soubojů')) . '</h3>';
     if (!$rows) { echo profile60_empty(tr('Zatím žádný dokončený souboj.')); return; }
+    $rematched = arena61_rematched_ids((string)($rows[0]['class_id'] ?? ''));
+    $now = arena57_now();
     echo '<ul class="arena60-list">';
     foreach ($rows as $row) {
         $opponent = (string)$row['from_key'] === $studentKey ? $row['to_name'] : $row['from_name'];
@@ -69,7 +72,7 @@ function arena60_render_history(array $rows, string $studentKey): void
             'cancelled' => tr('zrušeno'),
             default => tr('vypršelo'),
         };
-        echo '<li><span>' . e($row['level_title'] . ' · ' . $label) . '</span></li>';
+        echo '<li><span>' . e($row['level_title'] . ' · ' . $label) . '</span>' . arena61_rematch_html($row, $studentKey, $rematched, $now) . '</li>';
     }
     echo '</ul>';
 }
@@ -90,6 +93,7 @@ function arena60_render_profile_tab(string $classId, string $studentKey): void
         if ($data['history']) arena60_render_history($data['history'], $studentKey);
     }
     echo profile60_panel_close();
+    arena61_render_class_stats($classId, $studentKey);
     echo profile60_panel_open(tr('Nastavení výzev'));
     echo arena60_form_open('arena60_optin_set', '', ['on' => $data['optin'] ? '0' : '1']) . '<div class="arena60-optin"><span class="arena60-optin-state">'
         . e($data['optin'] ? tr('Přijímám výzvy od spolužáků: zapnuto') : tr('Přijímám výzvy od spolužáků: vypnuto')) . '</span>'

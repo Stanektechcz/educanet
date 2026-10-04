@@ -46,10 +46,10 @@ body:not(.assessment-mode) .lab57-hero p { color: rgba(255, 255, 255, .85); }
 .lab57-progress { height: 8px; border-radius: 999px; background: var(--u-soft, #f1f3f6); overflow: hidden; }
 /* v58 A11Y-A14: --edu-teal (#00a8b9) je na tomto podkladu jen ~2.6:1 (potřeba 3:1 u grafického prvku) –
    lokální přepis proměnné jen pro tento pruh, sdílený token --edu-teal jinde v aplikaci zůstává beze změny. */
-.lab57-progress-bar { --edu-teal: #007c89; height: 100%; background: var(--edu-teal); border-radius: inherit; transition: width .3s ease; }
+.lab57-progress-bar { height: 100%; background: var(--edu-teal-dark); border-radius: inherit; transition: width .3s ease; }
 .lab57-pack-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: .84rem; color: var(--u-muted, #5f6b7a); }
 .lab57-done-chip { color: var(--u-ok, #0f7b4f); font-weight: 700; }
-.btn.small { min-height: 34px !important; padding: 6px 14px !important; font-size: .84rem !important; }
+.btn.small { min-height: var(--ui-tap, 44px) !important; padding: 6px 14px !important; font-size: .84rem !important; }
 
 .lab57-pack-levels { border-top: 1px dashed var(--u-line, #e3e6eb); padding-top: 8px; }
 .lab57-pack-levels summary { cursor: pointer; font-size: .82rem; font-weight: 650; color: var(--u-muted, #5f6b7a); list-style: none; }

@@ -137,6 +137,14 @@ return [
             'arena_v60_challenge.php',
             'arena_v60_challenge_views.php',
             'app/actions/arena_challenge.php',
+            'arena_v61_duels.php',
+            'arena_v61_views.php',
+        ],
+        // v61 · motivace: denní/týdenní cíle, série, sezónní odznaky (karta na přehledu a v profilu).
+        'motivation' => [
+            'motivation_v61.php',
+            'motivation_v61_views.php',
+            'app/actions/motivation.php',
         ],
         // v60 · obchod bodů (žákovské UI); učitelský registr marketplace_v60_teacher_views.php je vždy česky.
         'marketplace' => [
@@ -144,6 +152,7 @@ return [
             'app/actions/marketplace.php',
             'marketplace_v60.php',
             'marketplace_v60_views.php',
+            'marketplace_v61_views.php',
         ],
         // v60 · projekty podle levelu (žákovské UI); učitelský registr projects_v60_teacher_views.php je vždy česky.
         'projects' => [
@@ -238,6 +247,10 @@ return [
             'arena_v58_ctf.php',
             'arena_v58_incident.php',
             'arena_v58_events_api.php',
+        ],
+        // v61 · C – navigace žákovské aplikace (drobečky, spodní lišta).
+        'nav_v61' => [
+            'nav_v61.php',
         ],
         // Integrátor – sdílené soubory, dokončí se až po B1–B6 (F2).
         'shared' => [

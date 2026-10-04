@@ -9,6 +9,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * (viz tools/backup_storage.php, tools/restore_storage.php, tools/v58_retention.php).
  */
 
+require_once __DIR__ . '/ops_v61.php';
+
 function ops58_format_bytes(int $bytes): string
 {
     $units = ['B', 'KB', 'MB', 'GB', 'TB'];
@@ -45,6 +47,7 @@ function ops58_render_health_tab(string $csrf): void
     <?php if ($lastBackup): ?>
       <ul class="ops58-stat-list">
         <li><span>Vytvořena</span><b><?= e((string)($lastBackup['created_at'] ?: 'neznámo')) ?></b></li>
+        <li><span>Šifrovaná</span><b><?= !empty($lastBackup['encrypted']) ? 'ano (.edubak)' : 'ne' ?></b></li>
         <li><span>Souborů v záloze</span><b><?= $lastBackup['file_count'] !== null ? (int)$lastBackup['file_count'] : '?' ?></b></li>
         <li><span>Manifest</span><b><?= !empty($lastBackup['manifest_ok']) ? 'OK' : 'poškozen/chybí' ?></b></li>
         <li><span>Umístění</span><code><?= e((string)$lastBackup['path']) ?></code></li>
@@ -92,5 +95,6 @@ function ops58_render_health_tab(string $csrf): void
   <?php endif; ?>
 </section>
     <?php
+    ops61_render_health_panel();
     unset($csrf); // zatím bez formulářové akce na této záložce (jen CLI provádí zápisy)
 }

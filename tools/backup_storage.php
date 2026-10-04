@@ -11,10 +11,15 @@ if (PHP_SAPI !== 'cli' && basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) 
  *
  * Použití:
  *   php tools/backup_storage.php [--src=<adresář>] [--dest=<adresář>] [--keep=N] [--with-uploads] [--quiet]
+ *                                [--encrypt | --encrypt-if-key]
  *
  * --src   Zdroj (výchozí: STORAGE_DIR z bootstrap.php, tj. EDUCANET_STORAGE_DIR nebo storage/).
  * --dest  Cíl mimo web root (výchozí: EDUCANET_BACKUP_DIR nebo "<rodič kořene projektu>/educanet-backups").
  * --keep  Kolik posledních záloh v cíli ponechat, starší se smažou (výchozí 14).
+ *
+ * --encrypt  (v61) šifrovaná záloha storage-….edubak (sodium secretstream, klíč = tajemství backup_key); bez klíče
+ *            chyba a exit 1 – nikdy se nevytvoří nešifrovaná náhrada. Rotace --keep se týká archivů .edubak.
+ * --encrypt-if-key  šifruje, jen když je backup_key nastavený; jinak varování na STDERR a nešifrovaná záloha (cron).
  *
  * Záloha = adresář storage-YYYYmmdd-HHMMSS/ se zkopírovanými soubory + manifest.json
  * (relativní cesta, velikost, sha256, čas). Každý zdrojový soubor se čte pod flock(LOCK_SH),
@@ -239,6 +244,59 @@ function backup_storage_rotate(string $destRoot, int $keep): void
     }
 }
 
+/** Cesta nového archivu storage-YYYYmmdd-HHMMSS.edubak; při kolizi počká na další sekundu (názvy se řadí podle času → rotace). */
+function bkp_unique_archive_path(string $destRoot): string
+{
+    for ($i = 0; $i < 40; $i++) {
+        $path = rtrim($destRoot, '/\\') . '/storage-' . date('Ymd-His') . '.edubak';
+        if (!file_exists($path)) {
+            return $path;
+        }
+        usleep(100000);
+    }
+    throw new RuntimeException('Nelze vybrat jedinečný název archivu.');
+}
+
+/**
+ * v61 · Šifrovaná záloha: plná záloha do dočasného adresáře (0700, v cíli), zašifrování do storage-….edubak
+ * + storage-….edubak.sha256 (otisk šifrovaného souboru), dočasný otevřený adresář se vždy smaže.
+ * Při chybě nezůstane žádný archiv ani otevřená kopie. Rotace jen šifrovaných archivů.
+ *
+ * @return string cesta k archivu
+ */
+function backup_storage_run_encrypted(string $src, string $destRoot, int $keep, bool $withUploads, ?string $uploadsSrc, string $key): string
+{
+    require_once __DIR__ . '/lib/backup_crypto_v61.php';
+    if (!is_dir($destRoot) && !mkdir($destRoot, 0770, true) && !is_dir($destRoot)) {
+        throw new RuntimeException("Nelze vytvořit cílový adresář $destRoot.");
+    }
+    $tmp = rtrim($destRoot, '/\\') . '/.enc-tmp-' . bin2hex(random_bytes(6));
+    if (!mkdir($tmp, 0700)) {
+        throw new RuntimeException('Nelze vytvořit dočasný adresář zálohy.');
+    }
+    try {
+        $plain = backup_storage_run($src, $tmp, 0, $withUploads, $uploadsSrc, true);
+        $archive = bkp_unique_archive_path($destRoot);
+        $info = bkc61_encrypt_dir($plain, $archive, $key);
+        // Kontrola hned po zápisu: archiv jde rozšifrovat a odpovídá manifestu (jinak by byla záloha k ničemu).
+        $verify = $tmp . '/verify';
+        mkdir($verify, 0700);
+        bkc61_decrypt_to_dir($archive, $verify, $key);
+        bkc61_verify_manifest($verify);
+        file_put_contents($archive . '.sha256', $info['sha256'] . '  ' . basename($archive) . "\n");
+        @chmod($archive, 0640);
+    } catch (Throwable $e) {
+        if (isset($archive) && is_file($archive)) {
+            @unlink($archive);
+        }
+        throw $e;
+    } finally {
+        bkp_rrmdir($tmp);
+    }
+    bkc61_rotate($destRoot, $keep);
+    return $archive;
+}
+
 if (basename((string)($argv[0] ?? '')) === basename(__FILE__)) {
     $src = bkp_arg($argv, 'src', STORAGE_DIR);
     $destDefault = rtrim((string)getenv('EDUCANET_BACKUP_DIR'), '/\\');
@@ -254,6 +312,20 @@ if (basename((string)($argv[0] ?? '')) === basename(__FILE__)) {
     }
 
     try {
+        $encrypt = bkp_flag($argv, 'encrypt');
+        if (!$encrypt && bkp_flag($argv, 'encrypt-if-key')) {
+            require_once __DIR__ . '/lib/backup_crypto_v61.php';
+            $encrypt = bkc61_has_key();
+            if (!$encrypt) {
+                fwrite(STDERR, "WARN backup_key není nastavený – záloha NENÍ šifrovaná (viz docs/ZALOHY_V61.md).\n");
+            }
+        }
+        if ($encrypt) {
+            require_once __DIR__ . '/lib/backup_crypto_v61.php';
+            $target = backup_storage_run_encrypted((string)$src, (string)$dest, $keep, $withUploads, $uploadsSrc, bkc61_key_from_secrets());
+            echo "BACKUP_STORAGE_OK encrypted=1 dest=" . $target . "\n";
+            exit(0);
+        }
         $target = backup_storage_run((string)$src, (string)$dest, $keep, $withUploads, $uploadsSrc);
         echo "BACKUP_STORAGE_OK dest=" . $target . "\n";
         exit(0);

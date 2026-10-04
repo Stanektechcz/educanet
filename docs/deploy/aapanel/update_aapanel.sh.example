@@ -1,0 +1,166 @@
+#!/usr/bin/env bash
+# EDUCANET v61 · jedním příkazem aktualizovat server z GitHubu a ověřit výsledek – is.stanektech.cz
+#
+# Na serveru:  /www/server/educanet/update.sh   (root:root, 0750), spouští root přes SSH:
+#
+#   /www/server/educanet/update.sh
+#
+# Postup: stáhne ZIP větve main (s cache-busterem) → rozbalí do /tmp → nainstaluje aktuální deploy skript z ZIPu
+# → spustí nasazení (záloha dat i kódu, rsync, migrace, preflight, selftest) → reload nginx (jen když projde
+# `nginx -t`) → ověří built_at (server = rozbalený RELEASE_MANIFEST.json) → storage_selftest --base=<doména>
+# → tools/http_smoke.php --base=<doména> → uklidí /tmp.
+# Poslední řádek výstupu je VŽDY právě jeden z:
+#     NASAZENO_OK
+#     NASAZENI_FAIL <důvod>
+# Exit kód: 0 = NASAZENO_OK, 1 = NASAZENI_FAIL, 2 = chybné použití.
+# Při selhání se NIC automaticky nevrací zpět – skript jen vypíše příkaz pro rollback (záloha kódu vznikla před nasazením).
+# storage/ ani uploads/ skript nikdy nemaže ani nepřepisuje (to hlídá deploy_aapanel.sh).
+set -uo pipefail
+umask 027
+
+ZIP_URL=https://github.com/Stanektechcz/educanet/archive/refs/heads/main.zip
+SITE=/www/wwwroot/is.stanektech.cz
+CONF=/www/server/educanet
+ENV_FILE="$CONF/educanet.env"
+DEPLOY="$CONF/deploy_aapanel.sh"
+WORK=/www/educanet
+LOG_DIR="$WORK/update-logs"
+PHP=${EDUCANET_PHP:-/www/server/php/83/bin/php}
+NGINX=${EDUCANET_NGINX:-/www/server/nginx/sbin/nginx}
+WEB_USER=www
+DEFAULT_URL=https://is.stanektech.cz
+
+TMP=""   # vzniká v rodičovském shellu, aby ho trap uklidil i při přerušení (Ctrl-C)
+FAIL_REASON=""
+
+fail() {  # zapamatuje jen PRVNÍ důvod (jeden řádek, bez zalomení)
+  [ -n "$FAIL_REASON" ] || FAIL_REASON="$(printf '%s' "$*" | tr '\r\n' '  ')"
+  echo "!! $*" >&2
+}
+
+cleanup() { [ -n "$TMP" ] && [ -d "$TMP" ] && rm -rf -- "$TMP"; return 0; }
+trap cleanup EXIT
+
+as_web() {  # PHP nástroj jako uživatel webu s prostředím aplikace (stejně jako v deploy_aapanel.sh)
+  runuser -u "$WEB_USER" -- env -i PATH=/usr/bin:/bin HOME=/tmp bash -c \
+    'set -a; . "$1"; set +a; cd "$2"; shift 2; exec "$@"' _ "$ENV_FILE" "$SITE" "$PHP" "$@"
+}
+
+manifest_built_at() {  # $1 = RELEASE_MANIFEST.json → vypíše built_at (nebo nic)
+  "$PHP" -r '$m = json_decode((string)@file_get_contents($argv[1]), true); echo is_array($m) ? (string)($m["built_at"] ?? "") : "";' "$1" 2>/dev/null
+}
+
+preconditions() {
+  [ "$(id -u)" -eq 0 ] || { fail "spusť jako root"; return 1; }
+  local bin
+  for bin in curl unzip rsync runuser; do
+    command -v "$bin" >/dev/null || { fail "chybí příkaz $bin"; return 1; }
+  done
+  [ -x "$PHP" ] || { fail "PHP nenalezeno: $PHP (nastav EDUCANET_PHP)"; return 1; }
+  [ -r "$ENV_FILE" ] || { fail "chybí $ENV_FILE"; return 1; }
+  [ -f "$DEPLOY" ] || { fail "chybí $DEPLOY (poprvé ho nahraj ručně, viz docs/NASAZENI_AAPANEL.md)"; return 1; }
+  return 0
+}
+
+download_and_unpack() {  # nastaví SRC
+  echo "== Stahuji vydání z GitHubu =="
+  curl -fsSL --retry 2 --max-time 180 -o "$TMP/main.zip" "$ZIP_URL?cb=$(date +%s)" || { fail "stažení ZIPu z GitHubu selhalo"; return 1; }
+  [ "$(stat -c %s "$TMP/main.zip" 2>/dev/null || echo 0)" -gt 100000 ] || { fail "stažený ZIP je podezřele malý"; return 1; }
+  unzip -tq "$TMP/main.zip" >/dev/null || { fail "stažený ZIP je poškozený"; return 1; }
+  mkdir -p "$TMP/src" && unzip -q "$TMP/main.zip" -d "$TMP/src" || { fail "rozbalení ZIPu selhalo"; return 1; }
+  SRC=$(find "$TMP/src" -mindepth 1 -maxdepth 1 -type d | head -n1)
+  { [ -n "$SRC" ] && [ -f "$SRC/index.php" ] && [ -f "$SRC/RELEASE_MANIFEST.json" ]; } || { fail "ZIP nevypadá jako vydání (chybí index.php nebo RELEASE_MANIFEST.json)"; return 1; }
+  [ -d "$SRC/V1" ] && { fail "vydání obsahuje V1/ – není sestavené přes build_release.php"; return 1; }
+  EXPECTED_BUILT_AT=$(manifest_built_at "$SRC/RELEASE_MANIFEST.json")
+  [ -n "$EXPECTED_BUILT_AT" ] || { fail "RELEASE_MANIFEST.json v ZIPu nemá built_at"; return 1; }
+  echo "Vydání built_at=$EXPECTED_BUILT_AT"
+  return 0
+}
+
+install_deploy_script() {
+  local new="$SRC/docs/deploy/aapanel/deploy_aapanel.sh.example"
+  [ -f "$new" ] || { fail "ZIP neobsahuje docs/deploy/aapanel/deploy_aapanel.sh.example"; return 1; }
+  bash -n "$new" || { fail "nový deploy skript neprošel bash -n"; return 1; }
+  grep -q '^  from-dir)' "$new" || { fail "nový deploy skript neumí příkaz from-dir"; return 1; }
+  install -m 0750 -o root -g root "$new" "$DEPLOY" || { fail "nelze nainstalovat deploy skript"; return 1; }
+  echo "== Deploy skript aktualizován z ZIPu =="
+  return 0
+}
+
+run_deploy() {
+  mkdir -p "$WORK/code-backup"
+  local marker="$TMP/.start" log="$TMP/deploy.log" rc
+  touch "$marker"
+  echo "== Nasazení =="
+  "$DEPLOY" from-dir "$SRC" --apply 2>&1 | tee "$log"
+  rc=${PIPESTATUS[0]}
+  LAST_BACKUP=$(find "$WORK/code-backup" -mindepth 1 -maxdepth 1 -type d -newer "$marker" 2>/dev/null | sort | tail -n1)
+  [ "$rc" -eq 0 ] || { fail "nasazení skončilo chybou (kód $rc)"; return 1; }
+  grep -q '^!! Preflight hlásí FAIL' "$log" && { fail "preflight po nasazení hlásí FAIL"; return 1; }
+  grep -q '^!! POZOR: ve storage/ ubylo souborů' "$log" && { fail "ve storage/ ubylo souborů – obnov data (restore_storage.php)"; return 1; }
+  return 0
+}
+
+reload_nginx() {
+  local bin="$NGINX"
+  [ -x "$bin" ] || bin=$(command -v nginx || true)
+  if [ -z "$bin" ]; then echo "== nginx: příkaz nenalezen, reload přeskočen =="; return 0; fi
+  echo "== nginx -t =="
+  if "$bin" -t; then
+    "$bin" -s reload && echo "nginx reload OK" || { fail "reload nginx selhal"; return 1; }
+  else
+    fail "nginx -t selhalo – reload přeskočen"
+    return 1
+  fi
+  return 0
+}
+
+verify_built_at() {
+  local actual
+  actual=$(manifest_built_at "$SITE/RELEASE_MANIFEST.json")
+  if [ "$actual" != "$EXPECTED_BUILT_AT" ]; then
+    fail "built_at na serveru (${actual:-žádné}) se liší od vydání ($EXPECTED_BUILT_AT)"
+    return 1
+  fi
+  echo "built_at souhlasí: $actual"
+  return 0
+}
+
+verify_http() {
+  local url="$1"
+  echo "== storage_selftest proti $url =="
+  as_web tools/storage_selftest.php --base="$url" --open-basedir="$SITE/:$CONF/:/tmp/" || { fail "storage_selftest selhal"; return 1; }
+  echo "== http_smoke proti $url =="
+  as_web -d allow_url_fopen=1 tools/http_smoke.php --base="$url" || { fail "http_smoke selhal"; return 1; }
+  return 0
+}
+
+main() {
+  local url step
+  url=$(sed -n 's/^EDUCANET_APP_URL=//p' "$ENV_FILE" 2>/dev/null | head -n1)
+  url=${url:-$DEFAULT_URL}
+  mkdir -p "$LOG_DIR" 2>/dev/null
+  SRC=""; EXPECTED_BUILT_AT=""; LAST_BACKUP=""
+  for step in preconditions download_and_unpack install_deploy_script run_deploy reload_nginx verify_built_at; do
+    "$step" || break   # první selhání zastaví další kroky (nasazení se nevrací zpět)
+  done
+  [ -z "$FAIL_REASON" ] && { verify_http "$url" || true; }
+  cleanup
+  if [ -z "$FAIL_REASON" ]; then
+    echo "NASAZENO_OK"
+    return 0
+  fi
+  if [ -n "$LAST_BACKUP" ]; then
+    echo "Rollback kódu (spusť ručně, nic se nevrací automaticky): $DEPLOY rollback $LAST_BACKUP --apply"
+  fi
+  echo "NASAZENI_FAIL $FAIL_REASON"
+  return 1
+}
+
+[ "$#" -eq 0 ] || { echo "použití: $0   (bez argumentů)" >&2; exit 2; }
+TMP=$(mktemp -d /tmp/edu-update.XXXXXX) || { echo "NASAZENI_FAIL nelze vytvořit dočasný adresář v /tmp"; exit 1; }
+LOG="$LOG_DIR/update-$(date +%Y%m%d-%H%M%S).log"
+mkdir -p "$LOG_DIR" 2>/dev/null
+{ [ -d "$LOG_DIR" ] && [ -w "$LOG_DIR" ]; } || LOG=/dev/null   # bez zapisovatelného logu jen vypisuj
+main 2>&1 | tee -a "$LOG"
+exit "${PIPESTATUS[0]}"

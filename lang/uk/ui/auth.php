@@ -656,7 +656,6 @@ return [
     'Upravit profil' => 'Редагувати профіль',
     'Moje cesta' => 'Мій шлях',
     'EDUCANET' => 'EDUCANET',
-    'Aktuální místo' => 'Поточне місце',
     // v59 integrátor: hlavní navigace (_layout.php)
     'Hlavní studentské menu' => 'Головне меню учня',
     'Menu účtu' => 'Меню облікового запису',

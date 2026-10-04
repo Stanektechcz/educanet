@@ -225,6 +225,8 @@ if ($view === 'dashboard') {
           </div>
         </article>
 
+        <?php if (function_exists('mot61_render_goals_card')) mot61_render_goals_card((string)$classId); // v61: dnešní cíle ?>
+
         <div class="v506-dashboard-quiet-links v5075-dashboard-detail-link">
           <a href="?view=dashboard&details=1"><?= e(tr('Zobrazit můj progres')) ?></a>
         </div>

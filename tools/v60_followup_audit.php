@@ -80,7 +80,9 @@ $check('okraj volby (#8b96a3) na bílé ≥ 3 : 1 (WCAG 1.4.11)', (audit_contras
 $check('mřížky obchodu/projektů/profilu používají minmax(0,…)/min(100%,…) – na 390 px nepřetečou', str_contains($css['marketplace'], 'minmax(min(100%,240px),1fr)') && str_contains($css['projects'], 'minmax(min(100%,260px),1fr)') && str_contains($css['projects'], 'minmax(0,1fr)') && substr_count($css['profile'], 'minmax(0,1fr)') >= 3);
 $check('dlouhá slova: karty, seznamy a statistiky mají overflow-wrap + min-width:0', substr_count($allCss, 'overflow-wrap') >= 10 && substr_count($css['marketplace'] . $css['projects'], 'min-width:0') >= 8);
 $check('cíle ≥ 44 px i proti globálnímu .btn{min-height:38px!important}', str_contains($css['marketplace'], 'body:not(.assessment-mode) .mkt60-card .btn') && str_contains($css['projects'], 'body:not(.assessment-mode) .proj60-card .btn') && str_contains($css['profile'], 'min-height:44px'));
-$focus = substr_count($css['marketplace'] . $css['projects'] . $css['feedback'], 'outline:3px solid #2459ff!important');
+$focusCss = $css['marketplace'] . $css['projects'] . $css['feedback'];
+// v61: barva obrysu je token akcentu (--ui-accent) s původní modrou jako záložní hodnotou (učitelské záložky tokeny nenačítají)
+$focus = substr_count($focusCss, 'outline:3px solid #2459ff!important') + substr_count($focusCss, 'outline:3px solid var(--ui-accent,#2459ff)!important');
 $check('viditelný focus 3 px #2459ff přebíjí průhledný globální focus (!important)', $focus >= 3);
 $check('tlumený text nepoužívá opacity (snižovala by kontrast)', !preg_match('/\.(mkt60|proj60|fb60|arena60)-(note|type|client|hint)[^{]*\{[^}]*opacity/', $allCss));
 

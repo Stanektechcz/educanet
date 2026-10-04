@@ -1,22 +1,22 @@
 /* v60 · Nahlášení chyby / návrh vylepšení (žák + učitelský registr). Bez CDN, prostý CSS.
    Světlé plochy – dřív tmavé pozadí z nedefinované proměnné + globální tmavý h1–h4/p ze student-ui-v50-7-7.css ≈ 1:1. */
-.fb60-hero{padding:20px;border-radius:16px;background:var(--surface,#fff);border:1px solid var(--line,#d9e0e6);margin-bottom:16px;min-width:0;overflow-wrap:anywhere;}
+.fb60-hero{padding:20px;border-radius:var(--ui-radius,16px);background:var(--ui-surface,#fff);border:1px solid var(--ui-line,#dde3e8);margin-bottom:16px;min-width:0;overflow-wrap:anywhere;}
 .fb60-panel{margin-bottom:16px;}
 .fb60-form{display:flex;flex-direction:column;gap:10px;max-width:720px;min-width:0;}
-.fb60-form input[type=text],.fb60-form textarea{width:100%;min-height:44px;padding:10px 12px;font:inherit;}
+.fb60-form input[type=text],.fb60-form textarea{width:100%;min-height:44px;padding:10px 12px;font:inherit;border:1px solid var(--ui-field-border,#6b7885);border-radius:var(--ui-radius-sm,12px);background:var(--ui-surface,#fff);color:var(--ui-ink,#111827);}
 .fb60-form textarea{resize:vertical;min-height:140px;}
-.fb60-form input:focus-visible,.fb60-form textarea:focus-visible,.fb60-form button:focus-visible,.fb60-choice:focus-within,.fb60-footer-link:focus-visible,.fb60-t-form :focus-visible{outline:3px solid #2459ff!important;outline-offset:2px!important;}
+.fb60-form input:focus-visible,.fb60-form textarea:focus-visible,.fb60-form button:focus-visible,.fb60-choice:focus-within,.fb60-footer-link:focus-visible,.fb60-t-form :focus-visible{outline:3px solid var(--ui-accent,#2459ff)!important;outline-offset:2px!important;}
 .fb60-types{border:0;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:10px;}
 .fb60-types legend{font-weight:700;margin-bottom:6px;}
-.fb60-choice{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid #8b96a3;cursor:pointer;background:#fff;color:#111827;}
+.fb60-choice{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:var(--ui-radius-sm,12px);border:1px solid var(--ui-field-border,#6b7885);cursor:pointer;background:var(--ui-surface,#fff);color:var(--ui-ink,#111827);}
 .fb60-choice input{width:20px;height:20px;}
 .fb60-field{font-weight:700;}
 .fb60-form button,.fb60-t-actions button{min-height:44px;min-width:44px;padding:8px 16px;}
-body:not(.assessment-mode) .fb60-note,.fb60-note{color:#4b5563;margin:0;}
+body:not(.assessment-mode) .fb60-note,.fb60-note{color:var(--ui-muted,#4b5563);margin:0;}
 .fb60-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
-.fb60-item{padding:12px 14px;border-radius:12px;background:#eef2f5;color:#111827;min-width:0;overflow-wrap:anywhere;}
+.fb60-item{padding:12px 14px;border-radius:var(--ui-radius-sm,12px);background:var(--ui-surface-2,#eef2f5);color:var(--ui-ink,#111827);min-width:0;overflow-wrap:anywhere;}
 .fb60-item-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
-.fb60-badge{padding:3px 9px;border-radius:999px;font-size:.78rem;background:#dde3e9;color:#111827;}
+.fb60-badge{padding:3px 9px;border-radius:999px;font-size:.78rem;background:#dde3e9;color:var(--ui-ink,#111827);}
 .fb60-confirmed .fb60-status,.fb60-done .fb60-status{background:#cdeedb;}
 .fb60-rejected .fb60-status,.fb60-duplicate .fb60-status{background:#f9d9d3;}
 .fb60-reward{font-weight:700;margin:6px 0 0;}
@@ -24,7 +24,7 @@ body:not(.assessment-mode) .fb60-note,.fb60-note{color:#4b5563;margin:0;}
 .fb60-profile p{margin:0 0 10px;}
 .fb60-footer-link{display:inline-flex;align-items:center;min-height:44px;padding:0 10px;margin-left:8px;}
 .fb60-t-list{display:flex;flex-direction:column;gap:12px;}
-.fb60-t-row{padding:14px;border:1px solid #d7dee6;border-radius:14px;background:#fff;color:#111827;min-width:0;}
+.fb60-t-row{padding:14px;border:1px solid var(--ui-line,#dde3e8);border-radius:var(--ui-radius,16px);background:var(--ui-surface,#fff);color:var(--ui-ink,#111827);min-width:0;}
 .fb60-t-row header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
 .fb60-t-desc{white-space:normal;overflow-wrap:anywhere;margin:8px 0;}
 .fb60-t-form{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-top:10px;}

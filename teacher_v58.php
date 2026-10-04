@@ -103,6 +103,14 @@ function teacher58_modules(): array
             'post' => ['mkt60_' => 'mkt60_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { mkt60_render_teacher_tab($c, $csrf()); },
         ],
+        // v61 · přehled soubojů v Aréně: JEN ČTENÍ (žádná POST akce ani GET parametr registru → nic k autorizaci
+        // kromě rozsahu tříd, který si seznam vynucuje sám přes teacher59_allowed_class_ids(); asistent nemá co měnit).
+        'souboje' => [
+            'label' => 'Souboje', 'hint' => 'Přehled výzev a soubojů žáků, statistiky tříd', 'group' => 'hry',
+            'files' => ['arena_v61_duels.php', 'arena_v61_teacher_views.php'],
+            'css' => ['assets/motivation-v61.css'],
+            'render' => static function (array $m, string $c) use ($csrf): void { arena61_render_teacher_tab($c, $csrf()); },
+        ],
         // v60 · projekty podle levelu: nabídky skutečné práce od klientů mimo systém. Admin vidí a
         // spravuje vše, učitel jen projekty a přihlášky ve svých třídách (deny-by-default v
         // teacher59_action_policy()/teacher59_entity_resolve()); asistent má jen 'view' → post neprojde.
@@ -112,6 +120,19 @@ function teacher58_modules(): array
             'css' => ['assets/projects-v60.css'],
             'post' => ['proj60_' => 'proj60_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { proj60_render_teacher_tab($c, $csrf()); },
+        ],
+        // v61 · přehled třídy: zaostávající žáci a vše, co čeká na schválení, na jedné obrazovce. POST ov61_bulk_confirm
+        // (hromadné potvrzení hlášení; rozsah per položka) a GET export CSV mají politiky v teacher_scope_v59.php (třída povinná),
+        // oprávnění ov61_ = content.manage (asistent jen čte).
+        'prehled' => [
+            'label' => 'Přehled třídy', 'hint' => 'Kdo zaostává a co čeká na schválení', 'group' => 'podpora',
+            'files' => ['points_v53.php', 'points_v60.php', 'feedback_v60.php', 'projects_v60.php', 'marketplace_v60.php', 'teacher_class_dashboard.php', 'teacher_overview_v61.php', 'teacher_overview_v61_views.php'],
+            'css' => ['assets/teacher-overview-v61.css'], 'js' => ['assets/teacher-overview-v61.js'],
+            'post' => ['ov61_' => 'ov61_teacher_handle_post'],
+            'get' => [
+                'export' => static function (array $m): void { ov61_export_csv((string)($_GET['class'] ?? '')); },
+            ],
+            'render' => static function (array $m, string $c) use ($csrf): void { ov61_render_teacher_tab($c, $csrf()); },
         ],
         // v60 · hlášení chyb a návrhů žáků: potvrzení = body + XP (jen jednou). Admin vidí vše, učitel jen své třídy
         // (fb60_list + politika fb60_decide → entita fb60_report); asistent má jen 'view' → post neprojde.

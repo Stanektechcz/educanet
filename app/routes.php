@@ -72,14 +72,14 @@ return [
         'kb' => ['assessment_visuals.php', 'app/views/_kb.php'],
         'lesson_page' => ['reality_demos.php', 'assessment_visuals.php', 'mastery_learning_views_v41.php', 'app/views/_lesson.php'],
         'structured_lesson' => ['reality_demos.php', 'assessment_visuals.php', 'adaptive_lesson_views_v42.php', 'cognitive_visualization_views_v43.php', 'learning_studio_views_v44.php', 'visual_simulation_views_v45.php', 'app/views/_lesson.php'],
-        'student_hubs' => ['teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'student_learning_accelerator_v47_1.php', 'student_learning_accelerator_views_v47_1.php', 'student_corrective_cycle_v47_2.php', 'student_corrective_cycle_views_v47_2.php', 'student_social_views.php', 'skill_views.php', 'project_workspace_views.php', 'points_v53.php', 'points_v60.php', 'learning_v56_views.php', 'profile_v60.php', 'profile_v60_views.php', 'feedback_v60.php', 'feedback_v60_views.php', 'marketplace_v60.php', 'arena_v60_challenge.php', 'arena_v60_challenge_views.php'],
+        'student_hubs' => ['teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'student_learning_accelerator_v47_1.php', 'student_learning_accelerator_views_v47_1.php', 'student_corrective_cycle_v47_2.php', 'student_corrective_cycle_views_v47_2.php', 'student_social_views.php', 'skill_views.php', 'project_workspace_views.php', 'points_v53.php', 'points_v60.php', 'learning_v56_views.php', 'profile_v60.php', 'profile_v60_views.php', 'feedback_v60.php', 'feedback_v60_views.php', 'marketplace_v60.php', 'arena_v60_challenge.php', 'arena_v60_challenge_views.php', 'motivation_v61_views.php', 'arena_v61_views.php'],
         // v60 · obchod bodů (?view=obchod).
-        'marketplace' => ['points_v53.php', 'points_v60.php', 'marketplace_v60.php', 'marketplace_v60_views.php'],
+        'marketplace' => ['points_v53.php', 'points_v60.php', 'marketplace_v60.php', 'motivation_v61_views.php', 'marketplace_v60_views.php'],
         // v60 · nahlášení chyby / návrh vylepšení (?view=hlaseni).
         'feedback' => ['points_v53.php', 'feedback_v60.php', 'feedback_v60_views.php'],
         // v60 · projekty podle levelu (?view=projekty).
         'projects' => ['projects_v60.php', 'projects_v60_views.php'],
-        'dashboard' => ['teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'mastery_learning_views_v41.php', 'learning_studio_views_v44.php', 'skill_views.php', 'project_workspace_views.php'],
+        'dashboard' => ['motivation_v61_views.php', 'teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'mastery_learning_views_v41.php', 'learning_studio_views_v44.php', 'skill_views.php', 'project_workspace_views.php'],
         'diagrams' => ['app/views/_diagrams.php'],
         // POST
         'lesson_path' => ['tutorial_v52.php', 'session_v53.php', 'learning_v56.php'],
@@ -133,11 +133,7 @@ return [
         ['match' => ['kb_lesson'], 'file' => 'views/kb_lesson.php', 'libs' => ['layout', 'kb', 'lesson_page']],
         ['match' => ['kb_quiz'], 'file' => 'views/kb_quiz.php', 'libs' => ['layout', 'kb']],
         ['match' => ['graphics_studio'], 'file' => 'views/graphics_studio_gate.php', 'libs' => []],
-        // Nedosažitelné (calendar vždy obslouží tutorial.php) – ponecháno: tools/v32_deployment_lesson_mode_audit.php
-        // a tools/v33_schedule_performance_audit.php čtou edu_app_source() a spoléhají na text „Přidat svůj rozvrh
-        // (.ics)“/„Každou středu ·“, který jinde v app/ není (viz educanet-retired/v59-F4/MANIFEST.md). NEMAZAT bez
-        // přepsání těch auditů na skutečně dosažitelnou stránku (tut52_render_calendar()).
-        ['match' => ['calendar'], 'file' => 'views/calendar_classic.php', 'libs' => ['layout']],
+        // v61: mrtvá starší šablona kalendáře vyřazena (kalendář obsluhuje views/tutorial.php → tut52_render_calendar()).
         ['match' => ['next_lesson', 'course_lesson'], 'file' => 'views/structured_lessons.php', 'libs' => ['layout', 'structured_lesson']],
         ['match' => ['study', 'mistakes', 'study_loop', 'skills', 'skill_branch', 'skill_detail', 'mastery_challenge', 'mastery_result', 'profile', 'community', 'project_lobbies', 'project_workspace', 'prestige_exams'], 'file' => 'views/student_hubs.php', 'libs' => ['layout', 'student_hubs', 'lab_badges']],
         ['match' => ['project_result', 'project_results'], 'file' => 'views/project_results.php', 'libs' => ['layout']],
@@ -175,9 +171,11 @@ return [
         ['match' => ['start_test', 'answer', 'continue_test', 'abort_test', 'start_practice', 'practice_hint', 'practice_answer', 'continue_practice', 'abort_practice'], 'file' => 'actions/assessment.php', 'libs' => []],
         ['match' => ['submit_extra', 'submit_graphics'], 'file' => 'actions/submissions.php', 'libs' => []],
         ['match' => ['mkt60_buy', 'mkt60_cosmetic_set'], 'file' => 'actions/marketplace.php', 'libs' => ['marketplace']],
+        // v61 · oblíbené položky obchodu (identita ze session).
+        ['match' => ['mot61_fav_toggle'], 'file' => 'actions/motivation.php', 'libs' => ['marketplace']],
         ['match' => ['proj60_apply', 'proj60_withdraw'], 'file' => 'actions/projects.php', 'libs' => ['projects']],
         ['match' => ['fb60_submit'], 'file' => 'actions/feedback.php', 'libs' => ['feedback']],
         // v60 · ARN-07 – výzvy spolužákům (opt-in 1v1 souboje z profilu).
-        ['match' => ['arena60_challenge_create', 'arena60_challenge_respond', 'arena60_challenge_cancel', 'arena60_optin_set'], 'file' => 'actions/arena_challenge.php', 'libs' => ['layout', 'student_hubs']],
+        ['match' => ['arena60_challenge_create', 'arena60_challenge_respond', 'arena60_challenge_cancel', 'arena60_optin_set', 'arena61_rematch'], 'file' => 'actions/arena_challenge.php', 'libs' => ['layout', 'student_hubs']],
     ],
 ];

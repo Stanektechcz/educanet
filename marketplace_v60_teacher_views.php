@@ -67,7 +67,7 @@ function mkt60_render_teacher_tab(string $classId, string $csrf): void
     foreach ($items as $id => $item) {
         if (!is_array($item)) continue;
         $itemClasses = array_values(array_filter((array)($item['classes'] ?? []), 'is_string'));
-        echo '<tr><td>' . e((string)$item['title']) . '</td><td>' . e((string)$item['type']) . '</td><td>' . (int)$item['price'] . '</td><td>' . ($item['stock'] === null ? '∞' : (int)$item['stock']) . '</td><td>' . e($itemClasses === [] ? tr('všechny') : implode(', ', $itemClasses)) . '</td><td>' . (empty($item['active']) ? e(tr('vypnuto')) : e(tr('aktivní'))) . '</td><td>';
+        echo '<tr><td>' . e((string)$item['title']) . '</td><td>' . e((string)$item['type']) . '</td><td>' . (int)$item['price'] . '</td><td>' . ($item['stock'] === null ? '∞' : (int)$item['stock']) . '</td><td>' . e($itemClasses === [] ? tr('všechny') : implode(', ', $itemClasses)) . '</td><td>' . (empty($item['active']) ? e(tr('vypnuto')) : e(tr('aktivní'))) . (mkt61_is_seasonal($item) ? ' <small>(' . e((string)($item['season_from'] ?: '…') . ' – ' . (string)($item['season_to'] ?: '…')) . ')</small>' : '') . '</td><td>';
         if ($itemClasses !== [] && array_diff($itemClasses, $allowed) === []) {
             echo '<form method="post" class="t-inline-form"><input type="hidden" name="csrf" value="' . e($csrf) . '"><input type="hidden" name="id" value="' . e((string)$id) . '"><input type="hidden" name="action" value="' . (empty($item['active']) ? 'mkt60_activate' : 'mkt60_deactivate') . '"><button class="btn secondary small" type="submit">' . e(empty($item['active']) ? tr('Zapnout') : tr('Vypnout')) . '</button></form>';
         }
@@ -89,6 +89,8 @@ function mkt60_render_item_form(string $id, array $item, array $allowed, string 
         . '<label>' . e(tr('Sklad (prázdné = neomezeno)')) . ' <input type="number" name="stock" min="0"></label>'
         . '<label>' . e(tr('Slot kosmetiky (jen typ Kosmetika)')) . ' <select name="slot"><option value="frame">' . e(tr('Rámeček')) . '</option><option value="title">' . e(tr('Titulek')) . '</option></select></label>'
         . '<label>' . e(tr('Odkaz na obsah (jen typ Obsah)')) . ' <input type="text" name="url" value="' . e((string)($item['url'] ?? '')) . '"></label>'
+        . '<label>' . e(tr('Sezónní nabídka od (volitelné)')) . ' <input type="date" name="season_from" value="' . e((string)($item['season_from'] ?? '')) . '"></label>'
+        . '<label>' . e(tr('Sezónní nabídka do (volitelné)')) . ' <input type="date" name="season_to" value="' . e((string)($item['season_to'] ?? '')) . '"></label>'
         . '<label>' . e(tr('Popis')) . ' <textarea name="desc">' . e((string)($item['desc'] ?? '')) . '</textarea></label>'
         . '<fieldset><legend>' . e(tr('Třídy (prázdné = jen admin)')) . '</legend>';
     foreach ($allowed as $c) {

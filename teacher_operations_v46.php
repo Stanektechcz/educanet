@@ -91,6 +91,8 @@ function teacher_action_permission_prefixes(): array
         'proj60_'=>'content.manage',
         // v60 · hlášení chyb a návrhů: rozhodování (odměna body + XP) jako správa obsahu (assistant jen čte).
         'fb60_'=>'content.manage',
+        // v61 · přehled třídy: hromadné potvrzení hlášení = rozhodování o hlášeních (assistant jen čte).
+        'ov61_'=>'content.manage',
     ];
 }
 function teacher_action_permission(string $action): ?string

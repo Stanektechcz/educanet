@@ -12,6 +12,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 
 require_once __DIR__ . '/badges_v60.php';
 require_once __DIR__ . '/profile_v60_ui.php';
+require_once __DIR__ . '/motivation_v61_views.php';
 
 function profile60_assets(): void
 {
@@ -42,7 +43,7 @@ function render_profile60_view(string $classId, array $module, string $flash = '
     render_header($isMe ? tr('Můj profil') : tr('Profil studenta'), $module);
     profile60_assets();
     badge60_sprite_mode(true);
-    if ($flash !== '') { echo '<div class="notice p60-flash" role="status">' . e($flash) . '</div>'; }
+    if ($flash !== '') { echo '<div class="notice p60-flash ui-flash" role="status">' . e($flash) . '</div>'; }
     $snapshot = profile60_snapshot($classId, $student, $isMe);
 
     echo '<div class="p60-layout">';
@@ -218,7 +219,7 @@ function profile60_overview_tiles(array $d, string $target): string
         profile60_tile(profile60_tab_url('body', $target, true), tr('Body'), (string)(int)$d['balance'], tr('k utracení'), 'yellow'),
         profile60_tile(profile60_tab_url('nastaveni', $target, true), tr('Nastavení'), $d['profile_filled'] ? tr('Hotovo') : tr('Doplnit'), tr('motto a představení')),
     ];
-    return '<div class="p60-tiles">' . implode('', $tiles) . '</div>';
+    return '<div class="p60-tiles ui-tiles">' . implode('', $tiles) . '</div>';
 }
 
 /** Graf XP za 14 dní + ukazatel levelu. */
@@ -269,6 +270,7 @@ function profile60_render_overview(string $classId, string $target, array $data,
     $featured = array_values(array_filter((array)$data['profile']['featured_badges'], static fn($id): bool => is_string($id)));
     if ($isMe) {
         echo profile60_overview_task($data, $target) . profile60_overview_tiles($data, $target) . profile60_overview_xp($data);
+        mot61_render_goals_card($classId); // v61: dnešní cíle a série
         profile60_render_showcase($featured, $defs, profile60_tab_url('nastaveni', $target, true));
         return;
     }
@@ -371,6 +373,7 @@ function profile60_render_badges(string $classId, string $target, array $data, b
         echo profile60_badges_task($data['board'], (array)($data['achievements'] ?? []), (array)($data['achievement_defs'] ?? []));
     }
     profile60_render_showcase($data['featured'], $data['defs'], $isMe ? profile60_tab_url('nastaveni', $target, true) : '');
+    if ($isMe) mot61_render_seasons($classId); // v61: sezónní sbírka (pololetí)
     if ($isMe && isset($data['board'])) {
         $lockedUrl = profile60_locked_url();
         v55_render_badge_board_from_data($data['board'], profile60_show_locked(), $lockedUrl);

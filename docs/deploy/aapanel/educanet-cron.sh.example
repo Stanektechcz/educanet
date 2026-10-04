@@ -8,6 +8,7 @@
 #   bash /www/server/educanet/educanet-cron.sh automation  (pondělí 03:00)
 #   bash /www/server/educanet/educanet-cron.sh preflight   (pondělí 06:00)
 #   bash /www/server/educanet/educanet-cron.sh perf        (ručně po nasazení; měření rychlosti jen čtením, v61)
+#   bash /www/server/educanet/educanet-cron.sh health      (pondělí 06:30; v61: týdenní souhrn selftest + preflight + perf do logu a do cockpitu)
 # Úlohy aaPanelu běží jako root – skript proto PHP spouští jako uživatel webu `www`
 # (soubory v storage/ musí dál patřit www). Výstup uvidíš v logu úlohy v panelu.
 # Přechod školního roku (tools/v58_rollover.php) se spouští RUČNĚ, ne cronem.
@@ -23,10 +24,12 @@ run() {
 }
 
 case "${1:-}" in
-  backup)     run tools/backup_storage.php --keep=14 --with-uploads ;;
+  # v61: je-li v secrets nastavený backup_key, záloha je šifrovaná (.edubak); jinak varování a nešifrovaná záloha.
+  backup)     run tools/backup_storage.php --keep=14 --with-uploads --encrypt-if-key ;;
   retention)  run tools/v58_retention.php --apply ;;
   automation) run tools/v46_automation_tick.php ;;
   preflight)  run tools/preflight.php --env-file="$ENV_FILE" --strict ;;
   perf)       run tools/v61_perf_report.php ;;   # jen čte (EDUCANET_STORAGE_READONLY), nic nezapisuje; konec PERF_REPORT_OK|WARN
-  *) echo "použití: $0 backup|retention|automation|preflight|perf" >&2; exit 2 ;;
+  health)     run tools/v61_weekly_health.php --env-file="$ENV_FILE" ;;  # výsledek: storage/ops_health_v61.json.php + log health-v61.log v EDUCANET_BACKUP_DIR; exit 0 OK, 2 WARN, 1 FAIL
+  *) echo "použití: $0 backup|retention|automation|preflight|perf|health" >&2; exit 2 ;;
 esac

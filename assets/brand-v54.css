@@ -1,17 +1,7 @@
 /* EDUCANET v54 · firemní barvy a přihlašovací stránka
    Paleta: #f3b21f žlutá · #ec6b10 oranžová · #00a8b9 tyrkysová */
 :root, :root:not(.x) {
-  --edu-yellow: #f3b21f;
-  --edu-orange: #ec6b10;
-  --edu-teal: #00a8b9;
-  --edu-teal-dark: #007a87;
-  --edu-orange-dark: #c4550a;
-  --edu-ink: #12212b;
-
-  --edu-yellow-soft: #fef5e0;
-  --edu-orange-soft: #fdeee3;
-  --edu-teal-soft: #e2f6f8;
-
+  /* v61: barvy značky (--edu-*) jsou v tokens-v61.css */
   --u-accent: var(--edu-teal-dark);
   --u-accent-soft: var(--edu-teal-soft);
   --u-text: var(--edu-ink);

@@ -60,7 +60,7 @@ function social_editor_preview(string $classId, string $target, array $profile):
     $label = (string)(project_students_for_class($classId)[$target]['label'] ?? '');
     $frame = $cos['frame_colors'] ? ' style="--p60-fa: ' . e((string)$cos['frame_colors'][0]) . '; --p60-fb: ' . e((string)$cos['frame_colors'][1]) . '"' : '';
     echo '<section class="p60-preview" aria-label="' . e(tr('Náhled profilu')) . '"><span class="p60-avatar-frame' . ($cos['frame_colors'] ? ' has-frame' : '') . '"' . $frame . '>'
-        . '<span class="p60-avatar xl" aria-hidden="true">' . e(u_substr($label, 0, 1)) . '</span></span><div><p class="p60-eyebrow p60-preview-eyebrow">' . e(tr('Takto tě vidí spolužáci')) . '</p>'
+        . '<span class="p60-avatar xl" aria-hidden="true">' . e(u_substr($label, 0, 1)) . '</span></span><div><p class="p60-eyebrow ui-eyebrow p60-preview-eyebrow">' . e(tr('Takto tě vidí spolužáci')) . '</p>'
         . '<strong>' . e($label) . '</strong>' . ($cos['title'] !== '' ? '<span class="p60-title-pill">' . e($cos['title']) . '</span>' : '')
         . '<p data-p60-preview="headline" data-empty="' . e(tr('Zatím bez profilového motta.')) . '">' . e((string)($profile['headline'] !== '' ? $profile['headline'] : tr('Zatím bez profilového motta.'))) . '</p></div></section>';
 }

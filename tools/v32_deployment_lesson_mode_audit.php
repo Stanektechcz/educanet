@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 require_once __DIR__ . '/lib/app_source.php';
+require_once __DIR__ . '/lib/audit_storage.php';
+require_once __DIR__ . '/lib/http_harness.php';
 if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 
+$tmpStorage = rtrim(str_replace('\\', '/', edu_audit_temp_storage('v32-deploy')), '/'); // v61: audit nikdy nesahá na ostrou storage/
 require dirname(__DIR__) . '/bootstrap.php';
 require dirname(__DIR__) . '/teacher_curriculum.php';
 require dirname(__DIR__) . '/teacher_lesson_mode.php';
@@ -49,7 +52,21 @@ $assert(str_contains($teacher,'install_teacher_secret.sh'),'Nenakonfigurovaný t
 
 $index=edu_app_source()?:'';
 $assert(str_contains($index,'Soustředěný režim'),'Student dashboard nemá Focus Mode.');
-$assert(str_contains($index,'calendar.ics.php'),'Student kalendář nemá ICS export.');
+// v61 (ROADMAP_V60 §3): export .ics se ověřuje na skutečně dosažitelné stránce (?view=calendar → tut52_render_calendar()):
+// odkaz „Přidat svůj rozvrh (.ics)“ vede na calendar.ics.php?class=<třída žáka> a ten vrátí platný VCALENDAR.
+$v32Http = Harness::start(['EDUCANET_STORAGE_DIR' => $tmpStorage, 'EDUCANET_DEV_BYPASS' => '1', 'EDUCANET_LOCAL_AUTH_REQUIRE_EMAIL_VERIFY' => '0']);
+try {
+    $v32Http->request('GET', '/', ['class' => 'class_3a', 'student' => 'Audit Kalendar']);
+    $calendarPage = $v32Http->request('GET', '/?view=calendar');
+    $linkOk = (int)$calendarPage['status'] === 200 && str_contains((string)$calendarPage['body'], 'href="calendar.ics.php?class=class_3a"') && str_contains((string)$calendarPage['body'], 'Přidat svůj rozvrh (.ics)');
+    $assert($linkOk, 'Student kalendář nemá odkaz na ICS export.');
+    $icsOwn = $v32Http->request('GET', '/calendar.ics.php?class=class_3a');
+    $assert((int)$icsOwn['status'] === 200 && str_starts_with((string)$icsOwn['body'], 'BEGIN:VCALENDAR') && str_contains((string)$icsOwn['body'], 'BEGIN:VEVENT'), 'ICS vlastní třídy není platný kalendář.');
+    $icsForeign = $v32Http->request('GET', '/calendar.ics.php?class=class_4a');
+    $assert((int)$icsForeign['status'] === 403, 'ICS cizí třídy musí být zakázán (403).');
+} finally {
+    $v32Http->stop();
+}
 
 $ics=file_get_contents($root.'/calendar.ics.php')?:'';
 $assert(str_contains($ics,'DTSTART;VALUE=DATE'),'ICS nesmí vymýšlet konkrétní čas rozvrhu.');

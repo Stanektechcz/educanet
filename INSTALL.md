@@ -450,3 +450,29 @@ produkční server nebo větší upgrade** postupuj podle podrobného průvodce 
     ```
     Přesná čísla, rozpad podle vrstev a zbývající otevřené body: `BUILD_MANIFEST_V59.md`,
     `AUDIT_V59.md`, `ROADMAP_V60.md`.
+
+## v61 · rychlost, jednotný design, motivace, učitelský přehled a provoz
+
+Podrobnosti: `CHANGELOG_V61.md`, `BUILD_MANIFEST_V61.md`. Nic z v61 nevyžaduje nové PHP rozšíření kromě
+`sodium` pro šifrované zálohy (volitelné).
+
+- **Rychlost (B):** `tools/v61_perf_audit.php`, `tools/v61_perf_report.php` (měření nasazené instance jen
+  čtením: `bash /www/server/educanet/educanet-cron.sh perf`); `EDUCANET_STORAGE_READONLY=1` = režim bez zápisů.
+  Pravidla HTTP cache v nginx/Apache šablonách (`docs/deploy/…`) po aktualizaci znovu vlož a ověř `nginx -t`.
+- **Design (C):** `assets/tokens-v61.css`, `components-v61.css`, `nav_v61.php` – žádná instalace navíc.
+- **Motivace (D):** denní/týdenní cíle, sezónní odznaky, souboje v Aréně a obchod (`storage/motivation_v61.json.php`
+  a další soubory se založí samy); bez vlivu na známky.
+- **Učitel (E):** záložka **Přehled třídy** (skupina Podpora), hromadné potvrzení hlášení, CSV export;
+  CLI `php tools/v61_teacher_data_reassign.php` (výchozí `--dry-run`, `--apply` jen se zálohou).
+- **Provoz (F):**
+  1. První nasazení: `EDUCANET_TEACHER_ACCOUNTS_REQUIRED=1` zůstává zapnuté; `php tools/v59_teacher_accounts.php create-admin …`
+     funguje i bez souboru účtů (do té doby web učitelské části vrací 503).
+  2. `update.sh` (`docs/deploy/aapanel/update_aapanel.sh.example` → `/www/server/educanet/update.sh`, root, 0750):
+     jediný příkaz pro aktualizaci z GitHubu s ověřením; poslední řádek `NASAZENO_OK` / `NASAZENI_FAIL <důvod>`.
+     Nahraj také aktualizovaný `deploy_aapanel.sh` (nový příkaz `from-dir`) a `educanet-cron.sh` (případ `health`).
+  3. Týdenní kontrola: cron `bash /www/server/educanet/educanet-cron.sh health` (týdně) → `storage/ops_health_v61.json.php`,
+     pruh pro administrátora v učitelském cockpitu, panel v záložce Provoz.
+  4. Šifrované zálohy: `backup_key` v `educanet.secrets.php` (base64, 32 B; uložit i mimo server) →
+     `tools/backup_storage.php --encrypt`, obnova `tools/restore_storage.php --decrypt`; návod `docs/ZALOHY_V61.md`.
+- **Kontrola po nasazení:** `php tools/run_audits.php --since=all --with-smoke --with-router`
+  (očekávaný konec `RUN_AUDITS_OK`), audit části F: `php tools/v61_ops_audit.php` → `V61_OPS_AUDIT_OK checks=67 failed=0`.

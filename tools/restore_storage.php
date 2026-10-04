@@ -10,12 +10,18 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  *
  * Použití:
  *   php tools/restore_storage.php --from=<adresář zálohy> [--dest=<adresář>] [--apply] [--prune] [--keep=N]
+ *   php tools/restore_storage.php --from=<storage-….edubak> --decrypt [--tmp=<adresář>] [--dest=…] [--apply] …
  *
  * Výchozí je dry-run: vypíše přidané/změněné/chybějící soubory a nic nemění.
  * --apply: nejdřív vytvoří bezpečnostní zálohu aktuálního stavu (přes backup_storage_run,
  *          se stejnou rotací --keep), ověří manifest zálohy (sha256) a pak obnoví soubory
  *          atomicky (zápis do dočasného souboru + rename). Soubory, které v záloze nejsou,
  *          se nemažou, pokud není zadáno --prune.
+ *
+ * --decrypt (v61): --from je šifrovaný archiv .edubak. Rozšifruje se (klíč = tajemství backup_key) do dočasného
+ *          adresáře 0700 (výchozí systémový temp, --tmp), ověří se otisk .sha256 a všechny soubory proti manifestu,
+ *          pak běží stejná obnova jako výše (včetně bezpečnostní zálohy). Dočasný adresář se vždy smaže.
+ *          Špatný klíč / poškozený nebo zkrácený archiv = chyba, do cíle se nezapíše nic.
  *
  * Exit 0 = úspěch/žádné rozdíly, exit 1 = rozdíly nalezeny (dry-run) nebo chyba (--apply).
  */
@@ -182,6 +188,37 @@ function restore_apply(array $manifest, string $backupDir, string $dest, bool $p
     return $applied;
 }
 
+/**
+ * v61 · Rozšifruje archiv .edubak do nového dočasného adresáře (0700) a ověří ho proti manifestu.
+ * Vrací cestu k adresáři ve tvaru běžné zálohy (manifest.json + storage/ + uploads/); volající ho po použití smaže.
+ */
+function restore_decrypt_archive(string $archive, string $tmpRoot, string $key): string
+{
+    require_once __DIR__ . '/lib/backup_crypto_v61.php';
+    if (!is_file($archive)) {
+        throw new RuntimeException('Archiv nenalezen: ' . basename($archive));
+    }
+    $sidecar = $archive . '.sha256';
+    if (is_file($sidecar)) {
+        $expected = strtok((string)file_get_contents($sidecar), " \t\r\n");
+        $actual = hash_file('sha256', $archive);
+        if (!is_string($expected) || $actual === false || !hash_equals($expected, $actual)) {
+            throw new RuntimeException('Otisk SHA-256 šifrovaného archivu nesouhlasí s .sha256 – archiv je poškozený.');
+        }
+    }
+    $dir = rtrim(str_replace(chr(92), '/', $tmpRoot), '/') . '/educanet-restore-' . bin2hex(random_bytes(6));
+    if (!mkdir($dir, 0700, true)) {
+        throw new RuntimeException('Nelze vytvořit dočasný adresář pro rozšifrování.');
+    }
+    try {
+        bkc61_decrypt_to_dir($archive, $dir, $key);
+        bkc61_verify_manifest($dir);
+    } catch (Throwable $e) {
+        bkp_rrmdir($dir);
+        throw $e;
+    }
+    return $dir;
+}
 if (basename((string)($argv[0] ?? '')) === basename(__FILE__)) {
     $from = restore_arg($argv, 'from');
     $dest = restore_arg($argv, 'dest', STORAGE_DIR);
@@ -189,12 +226,20 @@ if (basename((string)($argv[0] ?? '')) === basename(__FILE__)) {
     $prune = restore_flag($argv, 'prune');
     $keep = (int)restore_arg($argv, 'keep', '14');
 
-    if (!is_string($from) || $from === '' || !is_dir($from)) {
-        fwrite(STDERR, "RESTORE_STORAGE_FAIL --from je povinné a musí existovat.\n");
+    $decrypt = restore_flag($argv, 'decrypt');
+    if (!is_string($from) || $from === '' || !($decrypt ? is_file($from) : is_dir($from))) {
+        fwrite(STDERR, "RESTORE_STORAGE_FAIL --from je povinné a musí existovat" . ($decrypt ? " (soubor .edubak).\n" : ".\n"));
         exit(1);
     }
 
     try {
+        if ($decrypt) {
+            require_once __DIR__ . '/lib/backup_crypto_v61.php';
+            $tmpDir = restore_decrypt_archive($from, (string)restore_arg($argv, 'tmp', sys_get_temp_dir()), bkc61_key_from_secrets());
+            register_shutdown_function(static function () use ($tmpDir): void { bkp_rrmdir($tmpDir); }); // i při exit()
+            $from = $tmpDir;
+            echo "DECRYPT_OK\n";
+        }
         $manifest = restore_load_manifest($from);
         $diff = restore_diff($manifest, (string)$dest);
         foreach ($diff['added'] as $rel) {

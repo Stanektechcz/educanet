@@ -23,7 +23,7 @@ $check(str_contains($index,'assets/student-ui-v50-7-7.css?v=51.0'),'consolidated
 $check(str_contains($css,'.view-dashboard .student-cockpit-main')&&str_contains($css,'grid-template-columns:1fr!important'),'dashboard legacy two-column regression removed');
 $check(str_contains($css,'.student-main-menu>a>i')&&str_contains($css,'display:none!important'),'primary navigation decorative icons normalized');
 $check(str_contains($css,'--edu-font:'),'single student font stack defined');
-$check(str_contains($css,'.btn{min-height:42px!important'),'button geometry normalized');
+$check(str_contains($css,'.btn{min-height:42px;'),'button geometry normalized');
 $check(str_contains($css,'.panel,body:not(.assessment-mode) .dashboard-panel'),'shared cards normalized');
 $check(str_contains($css,'.account-chip span{display:none!important'),'duplicate account label removed');
 $check(str_contains($css,'@media(max-width:560px)'),'mobile repair breakpoint present');

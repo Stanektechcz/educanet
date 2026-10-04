@@ -230,6 +230,6 @@ function profile60_svg_bars(array $points, string $title, string $unit): string
     return '<figure class="p60-chart"><svg role="img" aria-labelledby="' . $titleId . '" viewBox="0 0 ' . $svgW . ' ' . ($h + 2) . '" preserveAspectRatio="xMinYMid meet">'
         . '<title id="' . $titleId . '">' . e($title) . '</title><desc>' . e(tr('Sloupcový graf, hodnoty jsou i v tabulce pod grafem.')) . '</desc>'
         . $bars . '</svg>'
-        . '<details><summary>' . e(tr('Zobrazit jako tabulku')) . '</summary><table class="p60-data-table"><caption>' . e($title) . '</caption><tbody>' . $table . '</tbody></table></details>'
+        . '<details><summary>' . e(tr('Zobrazit jako tabulku')) . '</summary><table class="p60-data-table ui-table"><caption>' . e($title) . '</caption><tbody>' . $table . '</tbody></table></details>'
         . '</figure>';
 }

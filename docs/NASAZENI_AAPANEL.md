@@ -48,10 +48,11 @@ otázky pro školu jsou v `docs/NASAZENI_PRODUKCE.md` – tady je jen to, co je 
    - `docs/deploy/aapanel/educanet.env.example` jako `educanet.env`,
    - `docs/deploy/aapanel/deploy_aapanel.sh.example` jako `deploy_aapanel.sh`,
    - `docs/deploy/aapanel/educanet-cron.sh.example` jako `educanet-cron.sh`,
+   - `docs/deploy/aapanel/update_aapanel.sh.example` jako `update.sh` (v61, viz §5),
    - `educanet.secrets.example.php` jako `educanet.secrets.php`.
 
    Práva: `chown root:www educanet.env educanet.secrets.php && chmod 0640 educanet.env educanet.secrets.php`,
-   `chmod 0750 deploy_aapanel.sh educanet-cron.sh`, `chmod 0644 educanet-rules.conf`.
+   `chmod 0750 deploy_aapanel.sh educanet-cron.sh update.sh`, `chmod 0644 educanet-rules.conf`.
 7. **Secrety**: v `educanet.secrets.php` nastav `otp_card_key` na nový klíč
    (`php -r "echo base64_encode(random_bytes(32)), PHP_EOL;"`) a `teacher_export_key` nech
    prázdný (v režimu učitelských účtů se nepoužívá). **Stěhuješ-li existující data** a je v nich
@@ -100,10 +101,11 @@ edu() { runuser -u www -- env -i PATH=/usr/bin:/bin HOME=/tmp bash -c 'set -a; .
    ```bash
    edu tools/v59_teacher_accounts.php create-admin --login=jmeno.prijmeni --name="Jméno Příjmení"
    ```
-   Do tohoto kroku nech `EDUCANET_TEACHER_ACCOUNTS_REQUIRED=1` v **obou** souborech
-   (`educanet.env` i `educanet-rules.conf`) zakomentované; po vytvoření admina ho odkomentuj
-   (produkční stav – bez účtů web vrací 503) a reloadni nginx (`nginx -t && nginx -s reload`,
-   nebo App Store → Nginx → Reload).
+   `EDUCANET_TEACHER_ACCOUNTS_REQUIRED=1` nech v **obou** souborech (`educanet.env` i
+   `educanet-rules.conf`) zapnuté **po celou dobu, i při prvním nasazení** (od v61 už se nic
+   nekomentuje). `create-admin` funguje i bez souboru účtů; do jeho spuštění web učitelskou část
+   vrací 503 s hláškou „Učitelské účty ještě nejsou založené“ a sdílený klíč nežije (ověřuje
+   `tools/v61_ops_audit.php`). Po prvním nasazení tedy jen: `create-admin` → přihlášení admina.
 2. Admin se přihlásí na `https://is.stanektech.cz/teacher.php`, nastaví si heslo a v záložce
    **Učitelé** založí ostatní vyučující s jejich třídami a předměty.
 3. Hesla žáků: `edu tools/v58_issue_passwords.php --migrate`, kartičky v `teacher.php?tab=pristupy`.
@@ -115,9 +117,20 @@ edu() { runuser -u www -- env -i PATH=/usr/bin:/bin HOME=/tmp bash -c 'set -a; .
    | Retence logů | denně 00:45 | `bash /www/server/educanet/educanet-cron.sh retention` |
    | Automatizace | pondělí 03:00 | `bash /www/server/educanet/educanet-cron.sh automation` |
    | Preflight (hlídání) | pondělí 06:00 | `bash /www/server/educanet/educanet-cron.sh preflight` |
+   | Týdenní kontrola provozu (v61) | pondělí 06:30 | `bash /www/server/educanet/educanet-cron.sh health` |
 
-   Zálohy v `/www/educanet-backup` (ne `/www/backup/educanet` – ten aaPanel drží jen pro roota a `www` do něj nezapíše) leží na stejném serveru. Kopii mimo server a šifrování musí
-   zajistit škola.
+   **Týdenní kontrola** (`tools/v61_weekly_health.php`) spustí samotest úložiště, preflight a
+   měření rychlosti jen čtením. Souhrn (jen PASS/WARN/FAIL a počty, žádné osobní údaje) zapíše do
+   `storage/ops_health_v61.json.php` (posledních 12 běhů), do logu úlohy a do
+   `/www/educanet-backup/health-v61.log`. Při posledním FAIL/WARN (nebo když kontrola neběžela déle
+   než 10 dní) vidí **jen administrátor** v učitelském cockpitu žlutý/červený pruh s odkazem na
+   detail v záložce **Provoz**. Úloha končí kódem 0 (OK), 2 (WARN) nebo 1 (FAIL); aaPanel pak úlohu
+   označí jako neúspěšnou – chtěné.
+
+   Zálohy v `/www/educanet-backup` (ne `/www/backup/educanet` – ten aaPanel drží jen pro roota a `www` do něj nezapíše) leží na stejném serveru. Kopii mimo server musí zajistit škola.
+   **Šifrování (v61):** nastav-li se v secrets `backup_key`, cron `backup` a nasazení vytvářejí šifrované
+   archivy `.edubak` (jinak varování a nešifrovaná záloha). Generování a uložení klíče mimo server,
+   obnova krok za krokem a test obnovy: **`docs/ZALOHY_V61.md`**.
 
 ## 4. Kontrola před zpřístupněním žákům
 
@@ -154,6 +167,30 @@ platnost TLS certifikátu (`session.cookie_secure=1` bez platného certifikátu 
 Při `FAIL` ve vlastnictví souborů: `chown -R www:www storage uploads cache`.
 
 ## 5. Aktualizace a rollback
+
+### 5a. Jedním příkazem: `update.sh` (v61)
+
+```bash
+/www/server/educanet/update.sh
+```
+
+Skript (root) stáhne ZIP větve `main` z GitHubu (s cache-busterem), rozbalí ho do `/tmp`, nainstaluje
+**aktuální** `deploy_aapanel.sh` z ZIPu (po `bash -n`), spustí `deploy_aapanel.sh from-dir <vydání> --apply`
+(záloha dat i kódu, rsync bez dotyku `storage/` a `uploads/`, migrace, preflight, samotest), reloadne
+nginx **jen když projde `nginx -t`**, ověří, že `built_at` v `RELEASE_MANIFEST.json` na serveru
+odpovídá rozbalenému vydání, spustí `storage_selftest.php --base=https://is.stanektech.cz` a
+`tools/http_smoke.php --base=https://is.stanektech.cz` (s `-d allow_url_fopen=1`) a uklidí `/tmp`.
+**Poslední řádek** výstupu je vždy právě jeden z:
+
+- `NASAZENO_OK` (exit 0),
+- `NASAZENI_FAIL <důvod>` (exit 1) – před ním je vypsaný příkaz pro rollback kódu. Nic se automaticky
+  nevrací (nová verze mohla změnit formát dat – viz níže).
+
+Log běhu: `/www/educanet/update-logs/update-<čas>.log`. `update.sh` sám sebe neaktualizuje; po změně
+v `update_aapanel.sh.example` ho nahraj ručně (§1). Preflight `FAIL` po nasazení se počítá jako
+`NASAZENI_FAIL` – před prvním nasazením proto nejdřív proveď §2–§3 (secrets, `create-admin`).
+
+### 5b. Ruční nasazení ze ZIPu
 
 ```bash
 /www/server/educanet/deploy_aapanel.sh deploy /root/educanet-v60-….zip          # suchý běh

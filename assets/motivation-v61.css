@@ -1,0 +1,26 @@
+/* EDUCANET v61 · Motivace (cíle, série, sezónní sbírka, náhled kosmetiky, oblíbené, souboje). Jen tokeny z tokens-v61.css. */
+.mot61-card { margin: 0 0 var(--ui-space-5, 20px); }
+.mot61-sub { margin: var(--ui-space-4, 16px) 0 var(--ui-space-2, 8px); font-size: var(--ui-text-sm, .9rem); font-weight: 800; color: var(--ui-muted); text-transform: uppercase; letter-spacing: .05em; }
+.mot61-streak { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--ui-space-2, 8px); padding: var(--ui-space-3, 12px) var(--ui-space-4, 16px); border-radius: var(--ui-radius-sm, 8px); background: var(--ui-warn-soft); color: var(--ui-warn-ink); }
+.mot61-streak strong { font-size: 1.9rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.mot61-streak small { flex-basis: 100%; font-size: var(--ui-text-sm, .9rem); }
+.mot61-goals { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--ui-space-3, 12px); }
+.mot61-goal-row { display: flex; justify-content: space-between; gap: var(--ui-space-3, 12px); margin-bottom: 6px; font-size: .95rem; }
+.mot61-goal-row span { min-width: 0; overflow-wrap: anywhere; font-weight: 600; }
+.mot61-goal-row b { flex: none; color: var(--ui-accent-ink); font-variant-numeric: tabular-nums; }
+.mot61-goal.is-done .mot61-goal-row b { color: var(--ui-ok-ink); }
+.mot61-foot { margin: var(--ui-space-3, 12px) 0 0; color: var(--ui-muted); font-size: var(--ui-text-sm, .9rem); }
+.mot61-count { color: var(--ui-accent-ink); font-weight: 800; font-variant-numeric: tabular-nums; }
+.mot61-badges { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--ui-space-3, 12px); }
+.mot61-future { list-style: none; margin: 0; padding: 0; }
+.mot61-fav-form { display: inline; margin: 0; }
+.mot61-fav { min-height: 44px; min-width: 44px; }
+.mot61-preview { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-4, 16px); }
+.mot61-preview-name { margin: 0; font-weight: 800; }
+.mot61-preview-title { margin: 2px 0 0; color: var(--ui-muted); }
+.mot61-season-note { display: inline-block; margin: 0 0 var(--ui-space-2, 8px); padding: 2px var(--ui-space-3, 12px); border-radius: 999px; background: var(--ui-accent-soft); color: var(--ui-accent-ink); font-size: var(--ui-text-sm, .9rem); font-weight: 700; }
+.mot61-table-wrap { overflow-x: auto; }
+.mot61-btn-row { display: flex; flex-wrap: wrap; gap: var(--ui-space-2, 8px); align-items: center; }
+@media (prefers-reduced-motion: reduce) { .mot61-card * { transition: none !important; animation: none !important; } }
+.mot61-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.mkt61-heading { margin: var(--ui-space-5, 20px) 0 var(--ui-space-3, 12px); font-size: var(--ui-text-lg, 1.2rem); }

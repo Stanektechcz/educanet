@@ -496,6 +496,7 @@ return [
     'Školní rok {year} · {label}' => 'School year {year} · {label}',
     'Kalendář třídy {name}' => 'Calendar for class {name}',
     'Každou středu {time}' => 'Every Wednesday {time}',
+    'Přidat svůj rozvrh (.ics)' => 'Add your timetable (.ics)',
     '{period}. hodina' => 'period {period}',
     'Nejbližší hodina · {when} · {time}' => 'Next class · {when} · {time}',
     'dnes' => 'today',

@@ -15,6 +15,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  *   proud marketplace_v60_log (storage_append) – log nákupů/vrácení/administrace (jen pro dohled).
  */
 
+require_once __DIR__ . '/marketplace_v61.php';
+
 const MKT60_TYPES = ['cosmetic', 'content', 'lab_hint', 'other'];
 const MKT60_COSMETIC_SLOTS = ['frame', 'title'];
 
@@ -54,7 +56,7 @@ function mkt60_catalog_for_class(string $classId): array
 {
     $out = [];
     foreach (mkt60_catalog_all() as $id => $item) {
-        if (!is_array($item) || empty($item['active'])) continue;
+        if (!is_array($item) || empty($item['active']) || !mkt61_item_in_season($item)) continue; // v61: sezónní nabídka
         $classes = array_values(array_filter((array)($item['classes'] ?? []), 'is_string'));
         if ($classes !== [] && !in_array($classId, $classes, true)) continue;
         $out[(string)$id] = $item;
@@ -106,7 +108,9 @@ function mkt60_item_from_input(array $input, array $allowedClasses): ?array
     if ($type === 'cosmetic' && !in_array($slot, MKT60_COSMETIC_SLOTS, true)) return null;
     $url = trim((string)($input['url'] ?? ''));
     if ($type === 'content' && $url !== '' && !mkt60_url_ok($url)) return null;
-    return [
+    $season = mkt61_season_from_input($input); // v61: platnost od–do (jen viditelnost v nabídce)
+    if ($season === null) return null;
+    return $season + [
         'type' => $type,
         'title' => $title,
         'desc' => trim((string)($input['desc'] ?? '')),
@@ -177,7 +181,7 @@ function mkt60_buy(string $classId, string $studentKey, string $itemId, int $qty
             $outcome = ['ok' => true, 'error' => null, 'balance' => max(0, (int)$walletRow['earned'] - (int)$walletRow['spent'])];
             return $data;
         }
-        if ($item === null || empty($item['active']) || !mkt60_item_valid_type((string)($item['type'] ?? ''))) {
+        if ($item === null || empty($item['active']) || !mkt61_item_in_season($item) || !mkt60_item_valid_type((string)($item['type'] ?? ''))) {
             $outcome = ['ok' => false, 'error' => 'item_unavailable', 'balance' => max(0, (int)$walletRow['earned'] - (int)$walletRow['spent'])];
             return $data;
         }

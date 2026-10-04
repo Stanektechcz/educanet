@@ -110,11 +110,18 @@ function ops58_last_backup(): ?array
 {
     $dir = ops58_backup_dir();
     $dirs = glob(rtrim($dir, '/\\') . '/storage-*', GLOB_ONLYDIR) ?: [];
-    if (!$dirs) {
+    // v61: šifrované archivy storage-….edubak (stejné časové razítko v názvu jako u adresářů).
+    $archives = glob(rtrim($dir, '/\\') . '/storage-*.edubak') ?: [];
+    $all = array_merge($dirs, $archives);
+    if (!$all) {
         return null;
     }
-    sort($dirs);
-    $latest = end($dirs);
+    usort($all, static fn(string $a, string $b): int => strcmp(basename($a), basename($b)));
+    $latest = end($all);
+    if (str_ends_with($latest, '.edubak')) {
+        return ['path' => $latest, 'created_at' => date(DATE_ATOM, (int)filemtime($latest)), 'file_count' => null,
+            'manifest_ok' => is_file($latest . '.sha256'), 'encrypted' => true];
+    }
     $manifestPath = $latest . '/manifest.json';
     if (!is_file($manifestPath)) {
         return ['path' => $latest, 'created_at' => null, 'file_count' => null, 'manifest_ok' => false];

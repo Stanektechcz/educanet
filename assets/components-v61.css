@@ -1,0 +1,108 @@
+/* EDUCANET v61 · jednotné komponenty žákovské aplikace (.ui-*), drobečková navigace a spodní lišta.
+   Používají jen tokeny z tokens-v61.css (žádné vlastní barvy). Profil v60 generuje stejné třídy vedle .p60-*.
+   Sekce „Starší třídy“ na konci mapuje dosavadní třídy stránek (.dashboard-panel, .btn, .v56-stat …) na stejné komponenty. */
+
+/* ---------- Karta a nadpisy ---------- */
+.ui-card { margin: 0; padding: var(--ui-space-5); background: var(--ui-surface); border: 1px solid var(--ui-line); border-radius: var(--ui-radius); box-shadow: var(--ui-shadow-1); min-width: 0; }
+.ui-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ui-space-4); margin-bottom: var(--ui-space-4); }
+.ui-card-head :is(h2, h3) { margin: 0; font-size: var(--ui-text-lg); line-height: 1.25; }
+.ui-eyebrow { margin: 0 0 var(--ui-space-1); color: var(--ui-accent-ink); font-size: var(--ui-text-xs); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.ui-section-title { margin: 0 0 var(--ui-space-3); color: var(--ui-ink); font-size: var(--ui-text-lg); font-weight: 700; line-height: 1.25; }
+.ui-link { display: inline-flex; align-items: center; flex: none; min-height: var(--ui-tap); color: var(--ui-accent-ink); font-size: var(--ui-text-sm); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- Statistická dlaždice, odkazová dlaždice, tóny ---------- */
+.ui-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-3); margin-bottom: var(--ui-space-4); }
+.ui-stat { min-width: 0; overflow-wrap: anywhere; padding: var(--ui-space-4); border-radius: var(--ui-radius-sm); background: var(--ui-surface-2); }
+.ui-stat strong { display: block; color: var(--ui-ink); font-size: 1.6rem; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.ui-stat span { display: block; margin-top: var(--ui-space-1); color: var(--ui-muted); font-size: var(--ui-text-sm); }
+.ui-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-3); }
+.ui-tile { display: grid; gap: 2px; align-content: start; min-height: var(--ui-tap); padding: var(--ui-space-4); border: 1px solid var(--ui-line); border-radius: var(--ui-radius); background: var(--ui-surface); box-shadow: var(--ui-shadow-1); text-decoration: none; color: var(--ui-ink); transition: border-color .15s, transform .15s; }
+.ui-tile:hover { border-color: var(--ui-accent); transform: translateY(-2px); }
+.ui-tile-label { color: var(--ui-accent-ink); font-size: var(--ui-text-xs); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.ui-tile strong { font-size: 1.5rem; font-weight: 800; line-height: 1.15; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.ui-tile-hint { color: var(--ui-muted); font-size: var(--ui-text-sm); overflow-wrap: anywhere; }
+.ui-stat.is-teal { background: var(--ui-accent-soft); }
+.ui-stat.is-yellow { background: var(--ui-warn-soft); }
+.ui-stat.is-orange { background: var(--ui-hot-soft); }
+.ui-tile.is-teal { border-top: 4px solid var(--edu-teal); }
+.ui-tile.is-yellow { border-top: 4px solid var(--edu-yellow); }
+.ui-tile.is-orange { border-top: 4px solid var(--edu-orange); background: var(--ui-hot-soft); }
+
+@media (min-width: 760px) { .ui-stats { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); } .ui-tiles { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); } }
+
+/* ---------- Progress a štítek ---------- */
+.ui-meters { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--ui-space-4); }
+.ui-meter-row { display: flex; justify-content: space-between; gap: var(--ui-space-3); margin-bottom: 6px; font-size: .92rem; }
+.ui-meter-row span { min-width: 0; overflow-wrap: anywhere; font-weight: 600; }
+.ui-meter-row b { flex: none; color: var(--ui-accent-ink); font-variant-numeric: tabular-nums; }
+.ui-meter-bar { display: block; height: 10px; border-radius: var(--ui-radius-pill); background: var(--ui-track); overflow: hidden; }
+.ui-meter-bar i { display: block; height: 100%; border-radius: var(--ui-radius-pill); background: linear-gradient(90deg, var(--edu-teal), var(--ui-accent)); }
+.ui-meter.is-yellow .ui-meter-bar i { background: linear-gradient(90deg, var(--edu-yellow), var(--edu-orange)); }
+.ui-tags { list-style: none; margin: 0 0 var(--ui-space-2); padding: 0; display: flex; flex-wrap: wrap; gap: var(--ui-space-2); }
+.ui-tag { display: inline-flex; align-items: center; padding: 2px var(--ui-space-3); border-radius: var(--ui-radius-pill); background: var(--ui-accent-soft); color: var(--ui-accent-ink); font-size: var(--ui-text-sm); font-weight: 600; }
+
+/* ---------- Tlačítka: primární, sekundární, tiché ---------- */
+.ui-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--ui-space-2); min-height: var(--ui-tap); padding: 0 var(--ui-space-4); border: 1px solid transparent; border-radius: var(--ui-radius-sm); background: transparent; color: var(--ui-accent-ink); font: inherit; font-size: var(--ui-text); font-weight: 700; line-height: 1.2; text-decoration: none; cursor: pointer; }
+.ui-btn--primary { background: var(--ui-accent); border-color: var(--ui-accent); color: var(--ui-on-accent); }
+.ui-btn--primary:hover { background: var(--ui-accent-ink); border-color: var(--ui-accent-ink); }
+.ui-btn--secondary { background: var(--ui-surface); border-color: var(--ui-accent); color: var(--ui-accent-ink); }
+.ui-btn--secondary:hover, .ui-btn--quiet:hover { background: var(--ui-accent-soft); }
+.ui-btn--quiet { text-decoration: underline; text-underline-offset: 3px; }
+.ui-btn:focus-visible, .ui-link:focus-visible, .ui-tile:focus-visible { outline: var(--ui-focus) solid var(--ui-accent); outline-offset: 2px; }
+.ui-btn[disabled], .ui-btn[aria-disabled="true"] { opacity: .6; cursor: not-allowed; }
+
+/* ---------- Prázdný stav, flash zpráva ---------- */
+.ui-empty { padding: var(--ui-space-4); border: 1px dashed var(--ui-dashed); border-radius: var(--ui-radius-sm); background: var(--ui-surface-2); }
+.ui-empty p { margin: 0 0 var(--ui-space-2); color: var(--ui-muted); font-size: .92rem; }
+.ui-flash { margin: 0 0 var(--ui-space-4); padding: var(--ui-space-3) var(--ui-space-4); border: 0; border-left: 4px solid var(--ui-accent); border-radius: var(--ui-radius-sm); background: var(--ui-accent-soft); color: var(--ui-ink); }
+.ui-flash--warn { border-left-color: var(--edu-yellow); background: var(--ui-warn-soft); color: var(--ui-warn-ink); }
+.ui-flash--bad { border-left-color: var(--ui-bad-ink); background: var(--ui-bad-soft); color: var(--ui-bad-ink); }
+
+/* ---------- Tabulka a formulářové prvky ---------- */
+.ui-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.ui-table { width: 100%; border-collapse: collapse; font-size: var(--ui-text-sm); }
+.ui-table th, .ui-table td { padding: var(--ui-space-2) var(--ui-space-3); border-bottom: 1px solid var(--ui-line); text-align: left; vertical-align: top; }
+.ui-table th { font-weight: 700; }
+.ui-table thead th { color: var(--ui-muted); font-size: var(--ui-text-xs); letter-spacing: .04em; text-transform: uppercase; }
+.ui-field { display: grid; gap: var(--ui-space-1); }
+.ui-label { color: var(--ui-ink); font-size: var(--ui-text-sm); font-weight: 700; }
+.ui-hint { margin: 0; color: var(--ui-muted); font-size: var(--ui-text-sm); }
+.ui-input, .ui-select, .ui-textarea { width: 100%; min-height: var(--ui-tap); padding: var(--ui-space-2) var(--ui-space-3); border: 1px solid var(--ui-field-border); border-radius: var(--ui-radius-sm); background: var(--ui-surface); color: var(--ui-ink); font: inherit; }
+.ui-textarea { min-height: 96px; resize: vertical; }
+:is(.ui-input, .ui-select, .ui-textarea):focus-visible { outline: var(--ui-focus) solid var(--ui-accent); outline-offset: 2px; border-color: var(--ui-accent); }
+:is(.ui-input, .ui-select, .ui-textarea)[aria-invalid="true"] { border-color: var(--ui-bad-ink); }
+
+/* ---------- Drobečková navigace ---------- */
+.ui-crumbs { margin: 0 0 var(--ui-space-3); font-size: var(--ui-text-sm); }
+.ui-crumbs ol { display: flex; flex-wrap: wrap; align-items: center; margin: 0; padding: 0; list-style: none; }
+.ui-crumbs li { display: inline-flex; align-items: center; min-width: 0; line-height: 1.3; }
+.ui-crumbs li + li::before { content: "›"; content: "›" / ""; margin: 0 var(--ui-space-1); color: var(--ui-muted); }
+.ui-crumbs a { display: inline-flex; align-items: center; min-height: var(--ui-tap); padding: 0 var(--ui-space-1); color: var(--ui-accent-ink); text-decoration: underline; text-underline-offset: 3px; }
+.ui-crumbs a:focus-visible { outline: var(--ui-focus) solid var(--ui-accent); outline-offset: 2px; }
+.ui-crumbs [aria-current="page"] { color: var(--ui-ink); font-weight: 700; overflow-wrap: anywhere; }
+
+/* ---------- Spodní lišta (mobil): odkazy, ne JS; v testu a v terminálu labu se nevykresluje ---------- */
+.ui-bottomnav { display: none; }
+@media (max-width: 620px) {
+  body.ui61-has-bottomnav { padding-bottom: calc(var(--ui-bottomnav-h) + env(safe-area-inset-bottom, 0px)); }
+  body.ui61-has-bottomnav .main-menu.v55-nav { display: none !important; }
+  .ui-bottomnav { display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; background: var(--ui-surface); border-top: 1px solid var(--ui-line); box-shadow: var(--ui-shadow-up); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .ui-bottomnav ul { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); margin: 0; padding: 0; list-style: none; }
+  .ui-bottomnav a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: calc(var(--ui-bottomnav-h) - 4px); padding: var(--ui-space-1) 2px; border-top: 3px solid transparent; color: var(--ui-muted); font-size: var(--ui-text-xs); font-weight: 650; line-height: 1.2; text-align: center; text-decoration: none; }
+  .ui-bottomnav a[aria-current="page"] { border-top-color: var(--ui-accent); background: var(--ui-accent-soft); color: var(--ui-accent-ink); }
+  .ui-bottomnav a.is-today { color: var(--ui-hot-ink); }
+  .ui-bottomnav a:focus-visible { outline: var(--ui-focus) solid var(--ui-accent); outline-offset: -3px; }
+  .ui-bottomnav i { font-style: normal; font-size: 1.15rem; line-height: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .ui-tile { transition: none; } .ui-tile:hover { transform: none; } }
+
+/* ---------- Starší třídy stránek → stejné komponenty (jen povrch, rozložení zůstává) ---------- */
+:where(.ui-page) :is(.dashboard-panel, .fb60-panel, .v56-stat, .v56-lesson-card, .lab57-pack, .lab57-hub-card, .t52-card) { border-color: var(--ui-line); border-radius: var(--ui-radius); box-shadow: var(--ui-shadow-1); }
+.ui-page .btn { min-height: var(--ui-tap); padding: 0 var(--ui-space-4); border-radius: var(--ui-radius-sm); font-size: var(--ui-text-sm); font-weight: 700; }
+.ui-page .btn.primary { background: var(--ui-accent); border-color: var(--ui-accent); color: var(--ui-on-accent); }
+.ui-page .btn.primary:hover { background: var(--ui-accent-ink); border-color: var(--ui-accent-ink); }
+.ui-page .btn.secondary { background: var(--ui-surface); border-color: var(--ui-accent); color: var(--ui-accent-ink); }
+.ui-page .btn.secondary:hover { background: var(--ui-accent-soft); }
+.v56-menu-panel :is(a, button) { min-height: var(--ui-tap); }
+.ui-page :is(.dashboard-empty, .v56-empty) { border: 1px dashed var(--ui-dashed); border-radius: var(--ui-radius-sm); background: var(--ui-surface-2); color: var(--ui-muted); }
+.ui-page :is(.v56-bar, .lab57-progress-bar) { background: var(--ui-track); border-radius: var(--ui-radius-pill); }

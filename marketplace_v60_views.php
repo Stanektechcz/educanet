@@ -8,8 +8,12 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * v60 · Vykreslení obchodu bodů (žák) – volá ho app/views/marketplace.php.
  */
 
+require_once __DIR__ . '/marketplace_v61_views.php';
+
 function marketplace60_assets(): void
 {
+    echo '<link rel="stylesheet" href="' . e(asset_url('assets/motivation-v61.css?v=61.0')) . '">' . "
+";
     echo '<link rel="stylesheet" href="' . e(asset_url('assets/marketplace-v60.css?v=60.0')) . '">' . "\n";
 }
 
@@ -32,20 +36,33 @@ function marketplace60_render_shop(string $classId, string $studentKey): void
         . '<p>' . e(tr('Body získáváš za úkoly a známky. Obchod nikdy neovlivní tvoji známku, XP ani žebříček.')) . '</p></div>'
         . '<div class="mkt60-balance"><strong>' . (int)$balance . '</strong><span>' . e(tr('bodů k utracení')) . '</span></div></section>';
 
+    mkt61_render_preview($classId, $studentKey);
+    $favorites = mot61_fav_list($classId, $studentKey);
     if ($items === []) {
         echo '<section class="dashboard-panel mkt60-empty"><p>' . e(tr('Obchod je zatím prázdný. Zeptej se učitele, kdy přidá první položky.')) . '</p></section>';
     } else {
-        echo '<section class="mkt60-grid" aria-label="' . e(tr('Nabídka obchodu')) . '">';
-        foreach ($items as $id => $item) {
-            marketplace60_render_item((string)$id, $item, $classId, $studentKey, $balance);
-        }
-        echo '</section>';
+        echo mkt61_toolbar(count(array_intersect($favorites, array_keys($items))));
+        [$seasonal, $regular] = mkt61_split_offer($items, $favorites);
+        if ($seasonal === [] && $regular === []) echo '<section class="dashboard-panel mkt60-empty"><p>' . e(tr('Zatím nemáš žádné oblíbené položky.')) . '</p></section>';
+        marketplace60_render_grid(tr('Sezónní nabídka'), $seasonal, $classId, $studentKey, $balance, $favorites);
+        marketplace60_render_grid($seasonal === [] ? tr('Nabídka obchodu') : tr('Stálá nabídka'), $regular, $classId, $studentKey, $balance, $favorites);
     }
 
     marketplace60_render_purchases($classId, $studentKey);
 }
 
-function marketplace60_render_item(string $id, array $item, string $classId, string $studentKey, int $balance): void
+/** Mřížka karet s nadpisem (prázdná se nevykreslí). */
+function marketplace60_render_grid(string $heading, array $items, string $classId, string $studentKey, int $balance, array $favorites): void
+{
+    if ($items === []) return;
+    echo '<h2 class="mkt61-heading">' . e($heading) . '</h2><section class="mkt60-grid" aria-label="' . e($heading) . '">';
+    foreach ($items as $id => $item) {
+        marketplace60_render_item((string)$id, $item, $classId, $studentKey, $balance, $favorites);
+    }
+    echo '</section>';
+}
+
+function marketplace60_render_item(string $id, array $item, string $classId, string $studentKey, int $balance, array $favorites = []): void
 {
     $price = (int)$item['price'];
     $stock = $item['stock'] ?? null;
@@ -53,7 +70,7 @@ function marketplace60_render_item(string $id, array $item, string $classId, str
     $canAfford = $balance >= $price;
     echo '<article class="mkt60-card">'
         . '<span class="mkt60-type">' . e(marketplace60_type_label((string)$item['type'])) . '</span>'
-        . '<h2>' . e((string)$item['title']) . '</h2>';
+        . mkt61_season_note($item) . '<h2>' . e((string)$item['title']) . '</h2>';
     if ((string)$item['desc'] !== '') echo '<p>' . e((string)$item['desc']) . '</p>';
     echo '<div class="mkt60-card-foot"><strong>' . e(tr('{n} bodů', ['n' => $price])) . '</strong>';
     if ($stock !== null) echo '<small>' . e(tr('Skladem: {n}', ['n' => (int)$stock])) . '</small>';
@@ -69,7 +86,7 @@ function marketplace60_render_item(string $id, array $item, string $classId, str
             . '</form>';
         if (!$canAfford) echo '<small class="mkt60-note">' . e(tr('Nemáš dost bodů.')) . '</small>';
     }
-    echo '</div></article>';
+    echo '</div><div class="mot61-btn-row">' . mkt61_item_actions($id, $item, $favorites) . '</div></article>';
 }
 
 function marketplace60_render_purchases(string $classId, string $studentKey): void

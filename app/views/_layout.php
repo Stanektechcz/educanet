@@ -8,6 +8,7 @@ declare(strict_types=1);
  * Spouští ho jen router v index.php (viz app/routes.php).
  */
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
+require_once dirname(__DIR__, 2) . '/nav_v61.php';   // v61: drobečky a spodní lišta
 
 function render_header(string $title, ?array $module = null, bool $titleIsContent = false): void
 {
@@ -18,6 +19,9 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
     if ($module !== null) {
         $cid = current_class_id($modules);
     }
+    $ui61Cid = ($module !== null && is_string($cid)) ? $cid : null;
+    $GLOBALS['ui61_primary_nav'] = null;   // nové vykreslení hlavičky = čerstvé položky (v jednom požadavku se počítají jednou)
+    $ui61Nav = $module !== null ? nav61_primary_items($ui61Cid, (string)$view) : [];   // v61: položky hlavní navigace se počítají jednou pro menu, drobečky i spodní lištu
     $continueUrl=($module!==null&&is_string($cid)&&$cid!=='')?v506_continue_url((string)$cid,$module,$nextLessons,$extendedLessons):'?view=dashboard';
     $GLOBALS['v55_continue_url']=$continueUrl;
     ?>
@@ -39,9 +43,11 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
     <link rel="stylesheet" href="<?= e(asset_url('assets/ui-v51.css?v=51.0')) ?>">
     <?php if ($module !== null): ?><link rel="stylesheet" href="<?= e(asset_url('assets/tutorial-v52.css?v=52.0')) ?>"><?php endif; ?>
     <link rel="stylesheet" href="<?= e(asset_url('assets/session-v53.css?v=53.0')) ?>">
-    <link rel="stylesheet" href="<?= e(asset_url('assets/brand-v54.css?v=54.1')) ?>">
+    <link rel="stylesheet" href="<?= e(asset_url('assets/tokens-v61.css?v=61.0')) ?>">
+    <link rel="stylesheet" href="<?= e(asset_url('assets/brand-v54.css?v=61.0')) ?>">
     <link rel="stylesheet" href="<?= e(asset_url('assets/student-v55.css?v=55.1')) ?>">
     <link rel="stylesheet" href="<?= e(asset_url('assets/learning-v56.css?v=56.1')) ?>">
+    <link rel="stylesheet" href="<?= e(asset_url('assets/components-v61.css?v=61.0')) ?>">
     <?php if (in_array((string)$view, ['lab', 'prikazy'], true)): ?><link rel="stylesheet" href="<?= e(asset_url('assets/linux-v57.css?v=59.1')) ?>"><link rel="stylesheet" href="<?= e(asset_url('assets/arena-v57.css?v=57.0')) ?>"><?php endif; ?>
     <?php if ($module === null && google_auth_configured()): ?><script src="https://accounts.google.com/gsi/client" async defer></script><?php endif; ?>
     <link rel="stylesheet" href="<?= e(asset_url('assets/i18n-v59.css?v=59.0')) ?>">
@@ -50,7 +56,8 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
 </head>
 <?php $v507ShellActive=$module!==null&&in_array((string)$view,v507_shell_views(),true); ?>
 <?php $v55Lock = v55_lock_active((string)$view); ?>
-<body class="accent-<?= e($accent) ?><?= $compactAssessment ? ' assessment-mode' : '' ?> view-<?= e((string)$view) ?><?= $v507ShellActive?' v507-shell-active':'' ?><?= $v55Lock ? ' v55-locked' : '' ?>"<?= $v55Lock ? ' data-v55-lock="on"' : '' ?>>
+<?php $ui61Bottom = $module !== null && !nav61_bottom_hidden((string)$view); $GLOBALS['ui61_bottomnav'] = $ui61Bottom; ?>
+<body class="accent-<?= e($accent) ?><?= $compactAssessment ? ' assessment-mode' : '' ?> view-<?= e((string)$view) ?><?= $v507ShellActive?' v507-shell-active':'' ?><?= $v55Lock ? ' v55-locked' : '' ?><?= $ui61Bottom ? ' ui61-has-bottomnav' : '' ?>"<?= $v55Lock ? ' data-v55-lock="on"' : '' ?>>
 <div class="shell">
     <header class="topbar<?= $compactAssessment ? ' assessment-topbar' : '' ?>">
         <a class="brand" href="?view=<?= $module ? 'dashboard' : 'home' ?>"><span class="brand-mark">E</span><span>EDUCANET</span></a>
@@ -61,7 +68,7 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
             <?php if (!$compactAssessment): ?>
                 <?php /* v56: pět položek, nic víc. Vše ostatní je uvnitř Materiálů nebo v účtovém menu. */ ?>
                 <nav class="main-menu student-main-menu v5077-calm-nav v55-nav" aria-label="<?= e(tr('Hlavní studentské menu')) ?>" data-main-menu>
-                    <?php foreach (v55_primary_nav($cid, (string)$view) as $item): $navLabel = (string)$item['label']; ?>
+                    <?php foreach ($ui61Nav as $item): $navLabel = (string)$item['label']; ?>
                         <a class="<?= e((string)$item['class']) ?>" href="<?= e((string)$item['href']) ?>"<?= !empty($item['active']) ? ' aria-current="page"' : '' ?>><i aria-hidden="true"><?= e((string)$item['mark']) ?></i><?= e(tr($navLabel)) ?></a>
                     <?php endforeach; ?>
                 </nav>
@@ -71,7 +78,7 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
                         <button class="v56-menu-button" type="button" data-v56-menu-button aria-label="<?= e(tr('Menu účtu')) ?>" aria-expanded="false" aria-controls="v56-account-menu"><span><?= e(tr('Menu')) ?></span><i aria-hidden="true">⌄</i></button>
                         <div class="v56-menu-panel" id="v56-account-menu" data-v56-menu-panel>
                             <span class="v56-menu-label"><?= e(tr('Učení')) ?></span>
-                            <?php foreach (v55_primary_nav($cid, (string)$view) as $item): $navLabel = (string)$item['label']; ?><a class="v55-mobile-only" href="<?= e((string)$item['href']) ?>"><?= e(tr($navLabel)) ?></a><?php endforeach; ?>
+                            <?php foreach ($ui61Nav as $item): $navLabel = (string)$item['label']; ?><a class="v55-mobile-only" href="<?= e((string)$item['href']) ?>"><?= e(tr($navLabel)) ?></a><?php endforeach; ?>
                             <a href="?view=materialy&amp;sekce=temata"><?= e(tr('Témata a vysvětlení')) ?></a>
                             <a href="?view=materialy&amp;sekce=programy"><?= e(tr('Programy a zkratky')) ?></a>
                             <a href="?view=prikazy"><?= e(tr('Linux příkazy')) ?></a>
@@ -98,12 +105,13 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
     </header>
     <?php if($module!==null&&!$compactAssessment): ?>
     <?php if($v507ShellActive): ?>
+    <?= nav61_breadcrumb_html(is_string($cid) ? $cid : null, (string)$view, $title, $titleIsContent) ?>
     <?php v507_render_page_shell((string)$cid,(string)$view,$title,$module,$nextLessons,$extendedLessons,$titleIsContent); ?>
     <?php else: ?>
     <?php v506_render_student_compass((string)$cid,(string)$view,$title,$module,$continueUrl,$titleIsContent); ?>
     <?php endif; ?>
     <?php endif; ?>
-    <main>
+    <main class="ui-page">
     <?php
 }
 
@@ -113,6 +121,7 @@ function render_footer(): void
     </main>
     <?php v55_footer_cta(); ?>
     <footer class="footer"><a href="?view=privacy"><?= e(tr('Soukromí')) ?></a><?php $fbView = (string)($GLOBALS['view'] ?? ''); if (!empty($_SESSION['next_class_id']) && $fbView !== 'home'): ?><a class="fb60-footer-link" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;margin-left:8px" href="?view=hlaseni<?= preg_match('/^[a-z0-9_]{1,40}$/', $fbView) === 1 && $fbView !== 'hlaseni' ? '&amp;page=' . e($fbView) : '' ?>"><?= e(tr('Nahlásit chybu')) ?></a><?php endif; ?><?= edu_lang_switcher_html(csrf_token(), '?view=' . (string)($GLOBALS['view'] ?? 'dashboard')) ?></footer>
+<?php if (!empty($GLOBALS['ui61_bottomnav'])): $ui61Cid = current_class_id($GLOBALS['modules'] ?? []); echo nav61_bottom_html(is_string($ui61Cid) ? $ui61Cid : null, (string)($GLOBALS['view'] ?? '')); endif; ?>
 </div>
 <script src="<?= e(asset_url('assets/app.js?v=46')) ?>"></script>
 <?php if(($GLOBALS['module']??null)!==null): ?><script src="<?= e(asset_url('assets/student-ui-v50-7-7.js?v=51.0')) ?>"></script><?php endif; ?>

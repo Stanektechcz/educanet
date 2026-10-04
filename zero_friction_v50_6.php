@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
+require_once __DIR__ . '/nav_v61.php';   // v61: drobečková navigace místo kompasu
 
 /** EDUCANET v50.6 · Zero Friction Student UX */
 
@@ -57,17 +58,8 @@ function v506_section_for_view(string $view): string
     };
 }
 
+/** v61: místo „kompasu“ (jen název stránky) vykreslí drobečkovou navigaci Domů › sekce › stránka (nav_v61.php). */
 function v506_render_student_compass(string $classId,string $view,string $title,array $module,string $continueUrl,bool $titleIsContent=false): void
 {
-    if($view==='dashboard')return;
-    $section=v506_section_for_view($view);
-    $goal=function_exists('v504_goal_selected')?v504_goal_selected($classId):null;
-    $isSectionText=$title==='Přehled';
-    $compassText=$isSectionText?tr($section):$title;
-    $compassIsContent=!$isSectionText&&$titleIsContent;
-    ?>
-    <div class="v506-compass v5075-compass v5077-compass" aria-label="<?=e(tr('Aktuální místo'))?>">
-      <div class="v506-compass-location"><strong<?=$compassIsContent?edu_content_lang_attr():''?>><?=e($compassText)?></strong></div>
-    </div>
-    <?php
+    echo nav61_breadcrumb_html($classId!==''?$classId:null,$view,$title,$titleIsContent);
 }

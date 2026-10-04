@@ -496,6 +496,7 @@ return [
     'Školní rok {year} · {label}' => 'Навчальний рік {year} · {label}',
     'Kalendář třídy {name}' => 'Календар класу {name}',
     'Každou středu {time}' => 'Щосереди {time}',
+    'Přidat svůj rozvrh (.ics)' => 'Додати свій розклад (.ics)',
     '{period}. hodina' => '{period}-й урок',
     'Nejbližší hodina · {when} · {time}' => 'Найближче заняття · {when} · {time}',
     'dnes' => 'сьогодні',

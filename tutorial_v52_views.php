@@ -399,7 +399,8 @@ function tut52_render_calendar(string $classId, array $module, array $modules, a
     <div class="t52 t52-calendar">
       <?php if ($flash !== ''): ?><div class="u51-notice"><?= e($flash) ?></div><?php endif; ?>
       <header class="t52-page-head">
-        <div><span class="t52-kicker"><?= tr_html('Školní rok {year} · {label}', ['year' => e((string)($schoolYear['meta']['school_year'] ?? '')), 'label' => edu_cs((string)($schedule['label'] ?? $module['name']))]) ?></span><h1><?= tr_html('Kalendář třídy {name}', ['name' => edu_cs((string)$module['name'])]) ?></h1><p><?= e(tr('Každou středu {time}', ['time' => (string)$time])) ?><?= $periods ? ' · ' . e(tr('{period}. hodina', ['period' => implode('.–', $periods)])) : '' ?><?= !empty($schedule['room']) ? ' · ' . tr_html('učebna {room}', ['room' => edu_cs((string)$schedule['room'])]) : '' ?></p></div>
+        <div><span class="t52-kicker"><?= tr_html('Školní rok {year} · {label}', ['year' => e((string)($schoolYear['meta']['school_year'] ?? '')), 'label' => edu_cs((string)($schedule['label'] ?? $module['name']))]) ?></span><h1><?= tr_html('Kalendář třídy {name}', ['name' => edu_cs((string)$module['name'])]) ?></h1><p><?= e(tr('Každou středu {time}', ['time' => (string)$time])) ?><?= $periods ? ' · ' . e(tr('{period}. hodina', ['period' => implode('.–', $periods)])) : '' ?><?= !empty($schedule['room']) ? ' · ' . tr_html('učebna {room}', ['room' => edu_cs((string)$schedule['room'])]) : '' ?></p>
+          <p class="t52-ics"><a class="btn secondary" href="calendar.ics.php?class=<?= e(rawurlencode($classId)) ?>" download><?= e(tr('Přidat svůj rozvrh (.ics)')) ?></a></p></div>
       </header>
 
       <?php if ($next): $nNo = (int)($next['lesson_number'] ?? 0); $nl = $lessons[$nNo] ?? null; $days = (int)floor((strtotime((string)$next['date']) - strtotime($today)) / 86400); ?>
