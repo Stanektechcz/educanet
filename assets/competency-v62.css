@@ -1,0 +1,31 @@
+/* EDUCANET v62 · mapa kompetencí (profil žáka + cockpit učitele). Tokeny v61, žádný JS. */
+.c62-wrap { display: grid; gap: var(--ui-space-4, 16px); }
+.c62-intro { margin: 0; color: var(--ui-muted, #4d5b68); max-width: 70ch; }
+.c62-summary { display: flex; flex-wrap: wrap; gap: var(--ui-space-2, 8px); margin: 0; padding: 0; list-style: none; }
+.c62-summary li { padding: 6px 12px; border-radius: 999px; background: var(--ui-surface-2, #f2f5f7); border: 1px solid var(--ui-line, #dde3e8); font-size: var(--ui-text-sm, .875rem); }
+.c62-group { padding: var(--ui-space-4, 16px); background: var(--ui-surface, #fff); border: 1px solid var(--ui-line, #dde3e8); border-radius: var(--ui-radius, 16px); }
+.c62-group h3 { margin: 0 0 var(--ui-space-3, 12px); font-size: var(--ui-text-lg, 1.15rem); }
+.c62-list { display: grid; gap: var(--ui-space-2, 8px); margin: 0; padding: 0; list-style: none; }
+.c62-item { display: grid; grid-template-columns: auto 1fr; gap: var(--ui-space-3, 12px); align-items: start; min-height: 44px; padding: var(--ui-space-2, 8px) var(--ui-space-3, 12px); border-radius: var(--ui-radius-sm, 12px); background: var(--ui-surface-2, #f2f5f7); }
+.c62-icon { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; box-sizing: border-box; border-radius: 50%; font-weight: 700; background: var(--ui-surface, #fff); border: 2px solid currentColor; }
+.c62-name { display: block; font-weight: 600; }
+.c62-meta { display: block; color: var(--ui-muted, #4d5b68); font-size: var(--ui-text-sm, .875rem); }
+.c62-state { font-weight: 600; }
+.c62-s-upevneno, .c62-s-zvladnuto { color: var(--ui-ok-ink, #0b6b49); }
+.c62-s-rozpracovano { color: var(--ui-warn-ink, #5c3f00); }
+.c62-s-neovereno { color: var(--ui-muted, #4d5b68); }
+.c62-empty { margin: 0; color: var(--ui-muted, #4d5b68); }
+.c62-note { margin: 0; font-size: var(--ui-text-sm, .875rem); color: var(--ui-muted, #4d5b68); }
+.c62-scroll { overflow: auto; max-width: 100%; border: 1px solid var(--ui-line, #dde3e8); border-radius: var(--ui-radius-sm, 12px); }
+.c62-scroll:focus-visible, .c62-sync button:focus-visible { outline: var(--ui-focus, 3px) solid var(--ui-accent, #007a87); outline-offset: 2px; }
+.c62-map { border-collapse: collapse; width: 100%; font-size: var(--ui-text-sm, .875rem); }
+.c62-map caption { text-align: left; padding: var(--ui-space-2, 8px) var(--ui-space-3, 12px); font-weight: 600; }
+.c62-map th, .c62-map td { padding: 8px 10px; border-bottom: 1px solid var(--ui-line, #dde3e8); text-align: left; vertical-align: top; }
+.c62-map thead th { background: var(--ui-surface-2, #f2f5f7); min-width: 9rem; position: sticky; top: 0; }
+.c62-map tbody th { position: sticky; left: 0; background: var(--ui-surface, #fff); white-space: nowrap; min-width: 8rem; }
+.c62-map tfoot td, .c62-map tfoot th { background: var(--ui-surface-2, #f2f5f7); font-weight: 600; }
+.c62-map tfoot th { position: sticky; left: 0; }
+.c62-sync { display: flex; flex-wrap: wrap; gap: var(--ui-space-3, 12px); align-items: center; }
+.c62-sync button { min-height: 44px; padding: 0 var(--ui-space-4, 16px); border-radius: var(--ui-radius-sm, 12px); border: 1px solid var(--ui-accent, #007a87); background: var(--ui-accent, #007a87); color: var(--ui-on-accent, #fff); font: inherit; cursor: pointer; }
+@media (max-width: 480px) { .c62-group { padding: var(--ui-space-3, 12px); } }
+@media (prefers-reduced-motion: reduce) { .c62-wrap * { transition: none !important; animation: none !important; } }

@@ -33,7 +33,8 @@ foreach (['student_v55.php', 'nav_v61.php', 'profile_v60_ui.php'] as $rel) { req
 $state = audit_counter();
 $check = audit_checker($state);
 $read = static fn(string $rel): string => (string)@file_get_contents($ROOT . '/' . $rel);
-const V61D_CSS_BUDGET_BYTES = 20480;
+/** 20 KB původní rozpočet části C + 8 KB pro assets/nav-v61.css (nová horní navigace se skupinami a podmenu; viz CHANGELOG nav). */
+const V61D_CSS_BUDGET_BYTES = 28672;
 /** Součet linkovaných CSS souborů na stránku těsně před částí C (měřeno 2026-10-04, dev server, třída 3.A). */
 const V61D_CSS_BASELINE = [
     'dashboard' => 723577, 'materialy' => 706085, 'calendar' => 706085, 'vysledky' => 706085, 'lab' => 748297,
@@ -188,6 +189,11 @@ try {
         } else {
             $check('stránka ' . $id . ': drobečková navigace <nav aria-label><ol> s odkazem Domů a aktuální stránkou (aria-current)', $crumbs && str_contains($cm[1], 'href="?view=dashboard"') && substr_count($cm[1], 'aria-current="page"') === 1 && substr_count($cm[1], '<li>') >= 2);
         }
+        $hasMain = preg_match('~<nav class="nav61-main" aria-label="[^"]+"><ul class="nav61-list">(.*?)</ul></nav>~s', $body, $mm) === 1;
+        $groupCount = $hasMain ? preg_match_all('~<button type="button" class="nav61-trigger" aria-expanded="false" aria-controls="(nav61-panel-[a-z]+)"~', $mm[1], $gm) : 0;
+        $panelsOk = $hasMain && $groupCount > 0 && count(array_filter($gm[1], static fn(string $pid): bool => str_contains($mm[1], 'id="' . $pid . '"'))) === $groupCount;
+        $check('stránka ' . $id . ': horní navigace má 4–5 skupin s tlačítkem aria-expanded a existujícím panelem (' . $groupCount . '), nejvýš jednu položku aria-current="page"', $panelsOk && $groupCount >= 4 && $groupCount <= 5 && substr_count($mm[1], 'aria-current="page"') <= 1);
+        $check('stránka ' . $id . ': skip link vede na <main id="main-content">', str_contains($body, '<a class="nav61-skip" href="#main-content">') && preg_match('~<main class="ui-page" id="main-content"~', $body) === 1);
         $linked = [];
         preg_match_all('~<link rel="stylesheet" href="(assets/[^"?]+\.css)~', $body, $lm2);
         foreach (array_unique($lm2[1]) as $cssFile) { $linked[$cssFile] = (int)@filesize($ROOT . '/' . $cssFile); }
@@ -195,7 +201,7 @@ try {
         if ($id === 'materialy') {
             $order = array_keys($linked);
             $check('CSS se linkuje: tokens-v61.css před brand-v54.css i components-v61.css, každý právě jednou', isset($linked['assets/tokens-v61.css'], $linked['assets/components-v61.css']) && array_search('assets/tokens-v61.css', $order, true) < array_search('assets/brand-v54.css', $order, true) && array_search('assets/tokens-v61.css', $order, true) < array_search('assets/components-v61.css', $order, true) && substr_count($body, 'tokens-v61.css') === 1 && substr_count($body, 'components-v61.css') === 1);
-            $check('<main> nese třídu ui-page (kořen pro mapování starších tříd na komponenty)', str_contains($body, '<main class="ui-page">'));
+            $check('<main> nese třídu ui-page (kořen pro mapování starších tříd na komponenty)', preg_match('~<main class="ui-page"[ >]~', $body) === 1);
         }
     }
     $login2 = $h->request('GET', '/?view=precache');
@@ -234,7 +240,19 @@ $check('spodní lišta: v labu je 3. místo Linux Lab a je aktivní, i když bě
 $check('spodní lišta: bez hodiny je 3. místo Linux Lab', $scenario('dashboard', false, true) === ['?view=dashboard*', '?view=materialy', '?view=lab', '?view=vysledky', '?view=profile']);
 $check('spodní lišta: bez hodiny a bez labu jsou 4 položky (ne mrtvá „Dnešní hodina“)', $scenario('dashboard', false, false) === ['?view=dashboard*', '?view=materialy', '?view=vysledky', '?view=profile']);
 $GLOBALS['ui61_primary_nav'] = null;
-$crumbHtml = nav61_breadcrumb_html(null, 'materialy', 'Název <script>x</script>', true);
+$navGroups = nav61_groups(null, 'materialy');
+$activeGroups = array_values(array_filter($navGroups, static fn(array $g): bool => $g['active']));
+$allHrefs = array_merge(...array_map(static fn(array $g): array => array_column($g['items'], 'href'), $navGroups));
+$check('nav61_groups: nejvýš 5 skupin; pro materialy je aktivní právě „learn“ s jednou aktivní položkou ?view=materialy', count($navGroups) <= 5 && count($activeGroups) === 1 && $activeGroups[0]['key'] === 'learn' && array_column(array_filter($activeGroups[0]['items'], static fn(array $i): bool => $i['active']), 'href') === ['?view=materialy']);
+$check('nav61_groups: zachovává všechny dřívější cíle (hodina, kalendář, příkazy, obchod, tým, dotazník, hlášení, pomoc, spolužáci)', count(array_diff(['?view=hodina', '?view=calendar', '?view=prikazy', '?view=obchod', '?view=project_lobbies', '?view=my_intake', '?view=hlaseni', '?view=study_loop', '?view=community', '?view=projekty', '?view=profile', '?view=vysledky'], $allHrefs)) === 0);
+$navHtml = nav61_main_html(null, 'materialy');
+$check('nav61_main_html: aktivní skupina má aria-current="true", položka aria-current="page", panel je <ul>', substr_count($navHtml, 'aria-current="true"') === 1 && substr_count($navHtml, 'aria-current="page"') === 1 && substr_count($navHtml, '<ul class="nav61-panel"') === count($navGroups) && !str_contains($navHtml, '<script'));
+$check('nav61_icon: neznámá ikona nespadne a vrací aria-hidden SVG bez interpolace dat', str_contains(nav61_icon('<x>'), 'aria-hidden="true"') && !str_contains(nav61_icon('<x>'), '<x>'));
+$navCss = $read('assets/nav-v61.css');
+$check('nav-v61.css: no-JS fallback (:focus-within), prefers-reduced-motion, viditelný fokus a cíle ≥ 44 px (--ui-tap)', str_contains($navCss, ':focus-within') && str_contains($navCss, 'prefers-reduced-motion') && str_contains($navCss, 'outline: var(--ui-focus)') && str_contains($navCss, 'min-height: var(--ui-tap)') && !preg_match('/#[0-9a-f]{3,6}\b/i', $navCss));
+$navJs = $read('assets/nav-v61.js');
+$check('nav-v61.js: bez innerHTML/eval, zavírá na Escape, přepíná aria-expanded', !str_contains($navJs, 'innerHTML') && !str_contains($navJs, 'eval(') && str_contains($navJs, "'Escape'") && str_contains($navJs, 'aria-expanded'));
+$crumbHtml =nav61_breadcrumb_html(null, 'materialy', 'Název <script>x</script>', true);
 $check('drobečky: název stránky se escapuje a aktuální položka není odkaz', !str_contains($crumbHtml, '<script>') && str_contains($crumbHtml, '<span aria-current="page"') && !str_contains($crumbHtml, 'href="?view=materialy"'));
 foreach (['en', 'uk'] as $loc) {
     $cat = edu_tr_domain($loc, 'nav_v61');

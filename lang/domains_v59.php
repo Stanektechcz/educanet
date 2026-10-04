@@ -146,6 +146,10 @@ return [
             'motivation_v61_views.php',
             'app/actions/motivation.php',
         ],
+        // v62 · kompetence: žákovská záložka profilu; učitelský registr competency_v62_teacher_views.php je vždy česky.
+        'competency' => [
+            'competency_v62_views.php',
+        ],
         // v60 · obchod bodů (žákovské UI); učitelský registr marketplace_v60_teacher_views.php je vždy česky.
         'marketplace' => [
             'app/views/marketplace.php',

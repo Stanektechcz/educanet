@@ -18,8 +18,8 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  * --only    Filtr: audit se zahrne, jen pokud jeho název obsahuje některý z uvedených
  *           podřetězců (čárkou oddělený seznam).
  * --exclude Audit se vynechá, pokud jeho název obsahuje některý z uvedených podřetězců.
- * --with-smoke  Spustí navíc tools/v58_smoke_audit.php (jinak se do výchozí sady nepočítá,
- *               protože potřebuje běžící HTTP server).
+ * --with-smoke  Zajistí zařazení tools/v58_smoke_audit.php; ten je už ve výchozí sadě (v5[1-9]*), takže
+ *               příznak je pojistka pro případ, že by ho filtr --since/--only vyřadil.
  * --with-router Spustí navíc tests/app_router_audit.php (statická kontrola routeru bez storage;
  *               jinak se do výchozí sady nepočítá, protože leží mimo tools/ a glob() ho nevidí).
  * --json    Výstup jako JSON pole místo tabulky.

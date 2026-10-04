@@ -445,7 +445,7 @@ produkční server nebo větší upgrade** postupuj podle podrobného průvodce 
     platnost uloženého nastavení.
 11. **Kontrola po nasazení:**
     ```bash
-    php tools/run_audits.php --since=all --with-smoke --with-router   # očekávaný konec: RUN_AUDITS_OK total=75 failed=0
+    php tools/run_audits.php --since=all --with-smoke --with-router   # očekávaný konec: RUN_AUDITS_OK total=91 failed=0
     php tools/v59_i18n_audit.php                                      # očekávaný konec: V59_I18N_AUDIT_OK checks=809 failed=0
     ```
     Přesná čísla, rozpad podle vrstev a zbývající otevřené body: `BUILD_MANIFEST_V59.md`,
@@ -476,3 +476,24 @@ Podrobnosti: `CHANGELOG_V61.md`, `BUILD_MANIFEST_V61.md`. Nic z v61 nevyžaduje 
      `tools/backup_storage.php --encrypt`, obnova `tools/restore_storage.php --decrypt`; návod `docs/ZALOHY_V61.md`.
 - **Kontrola po nasazení:** `php tools/run_audits.php --since=all --with-smoke --with-router`
   (očekávaný konec `RUN_AUDITS_OK`), audit části F: `php tools/v61_ops_audit.php` → `V61_OPS_AUDIT_OK checks=67 failed=0`.
+
+## v62 · Kompetence a důkazy
+
+Podrobnosti: `docs/KOMPETENCE_V62.md`, `CHANGELOG_V62.md`, `BUILD_MANIFEST_V62.md`. Nic z v62 nevyžaduje nové PHP rozšíření.
+Vrstva je **pilot jen pro třídu 3.A** (`COMP62_PILOT_CLASSES` v `competencies_v62.php`); ostatní třídy ji nevidí a nic se jim nepočítá.
+
+- **Co se děje:** při otevření záložky *Kompetence* v profilu žáka 3.A (nebo ručním přepočtem v cockpitu, záložka
+  *Kompetence*, skupina Podpora) se z existujících dat (stav labu, lekce, testy, souboje, týmové hry, projekty) odvodí
+  důkazy do `storage/evidence_v62/<student_id>.json.php` (jen odkaz na zdroj, skóre a čas; žádný volný text). Cache
+  zvládnutí je v `storage/mastery_v62/` (kdykoli smazatelná). Soubory se založí samy.
+- **Zpětné doplnění z historie (jednou po nasazení):** nejdřív náhled `php tools/v62_evidence_backfill.php` (výchozí
+  `--dry-run`, nic nezapisuje, vypíše statistiku), potom `php tools/v62_evidence_backfill.php --apply`. Příkaz `--apply`
+  se na ostré `storage/` bez `EDUCANET_STORAGE_DIR` **odmítne** – před ostrým během si zazálohuj `storage/`
+  (`tools/backup_storage.php`) a spusť ho jako uživatel webu. Opakované spuštění nic nepřidá (idempotentní).
+- **Retence:** důkazy se drží do konce studia a **30 dní po stavu `left`/`archived`** se mažou. Maže je existující denní cron
+  `tools/v58_retention.php --apply` (souhrn `evidence_v62_purged=N`); bez `--apply` jen spočítá. Žák bez data odchodu
+  (`archived_at`) se nemaže.
+- **Učitelská oprávnění:** POST `comp62_sync` (ruční přepočet) vyžaduje třídu v rozsahu učitele (`teacher59_action_policy_prefixes`)
+  a oprávnění `analytics.view`; mapu třídy vidí každý učitel s rozsahem na 3.A.
+- **Kontrola po nasazení:** `php tools/v62_competency_audit.php` → `V62_COMPETENCY_AUDIT_OK`; celá sada
+  `php tools/run_audits.php --with-smoke` (očekávaný konec `RUN_AUDITS_OK`).

@@ -249,7 +249,8 @@ function teacher59_action_policies(): array
         'v42_lesson_resource_save', 'v42_lesson_resource_remove', 'teacher_calendar_exception_save', 'teacher_calendar_exception_remove',
         'ml_live_start', 'ml_failure_inject', 'teacher_demo_account_create', 'v50_teacher_growth_control', 'intake_t_toggle', 'intake_t_save',
         'sess53_t_open', 'acc58_issue_one', 'acc58_issue_class', 'arena57_create', 'arena57_lab_toggle', 'robots58_create', 'tg58_create',
-        'arena58_inc_create', 'lab58t_export'] as $action) {
+        'arena58_inc_create', 'lab58t_export',
+        'comp62_sync'] as $action) { // v62 · kompetence: ruční přepočet důkazů třídy – třída v rozsahu povinná; jiné comp62_* akce zůstávají zakázané
         $table[$action] = $req;
     }
     $table['save_grade'] = $reqEnt('target_id', 'grade_target', false);

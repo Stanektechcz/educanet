@@ -186,6 +186,10 @@ function ops58_retention_policy(): array
         ['pattern' => 'adaptive_retrieval_attempts/*.jsonl.php', 'label' => 'Pokusy opakování (log pokusů)', 'action' => 'archive_after_days', 'max_age_days' => 365],
         ['pattern' => 'adaptive_help_events/*.jsonl.php', 'label' => 'Události nápovědy (log)', 'action' => 'archive_after_days', 'max_age_days' => 180],
         ['pattern' => 'adaptive_v505_events/*.jsonl.php', 'label' => 'Události „jeden úkol“ v50.5 (log)', 'action' => 'archive_after_days', 'max_age_days' => 180],
+        // v62 · důkazy kompetencí (storage/evidence_v62/<student_id>.json.php): drží se do konce studia, 30 dní po stavu
+        // left/archived se MAŽOU. Rozhodnutí podle stavu žáka (ne podle stáří souboru) dělá ev62_retention_purge(), kterou
+        // volá tools/v58_retention.php – ops58_apply_retention() tuto akci přeskakuje (jen ji ukazuje v náhledu politiky).
+        ['pattern' => 'evidence_v62/*.json.php', 'label' => 'Důkazy kompetencí v62 (mažou se 30 dní po odchodu žáka)', 'action' => 'student_left', 'max_age_days' => 30],
         // Záznamy provedených migrací a manifest schémat se nearchivují (potřebné pro tools/migrate.php).
     ];
 }

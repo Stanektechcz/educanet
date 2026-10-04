@@ -1589,4 +1589,5 @@ return [
     'Zobrazit všechny získané ({n})' => 'Показати всі здобуті ({n})',
     'Zobrazit všechny milníky ({n})' => 'Показати всі віхи ({n})',
     'Zamčené odznaky' => 'Заблоковані значки',
+    'Kompetence' => 'Компетентності',
 ];

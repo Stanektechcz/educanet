@@ -157,7 +157,7 @@ try {
     $navBodyOk = $labels !== [];
     foreach ($labels as $label) { if (!str_contains($dashBody, '>' . $label . '<')) { $navBodyOk = false; break; } }
     $check('v menu jsou jen nejdůležitější položky (skutečný výstup v55_primary_nav se vykreslí)', $navBodyOk);
-    $check('položky menu jsou na mobilu v rozbalovacím Více', str_contains($dashBody, 'class="v55-mobile-only"'));
+    $check('položky menu jsou na mobilu v rozbalovacím Více', (str_contains($dashBody, 'class="v55-mobile-only"') || str_contains($dashBody, 'class="nav61-drawer"')));
     $check('LVL prstenec je v horní liště', str_contains($dashBody, 'v55-lvl-ring') && (bool)preg_match('/--v55-lvl-percent:\s*\d+/', $dashBody));
     $check('tlačítko Pokračovat není v horní liště', !str_contains($dashBody, 'student-nav-continue'));
     $check('tlačítko Pokračovat je na konci stránky', str_contains($dashBody, 'v55-page-cta'));

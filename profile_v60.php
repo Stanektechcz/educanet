@@ -19,6 +19,18 @@ function profile60_tabs(): array
     return ['prehled', 'pokrok', 'lab', 'odznaky', 'arena', 'body', 'nastaveni'];
 }
 
+/**
+ * Záložky vlastního profilu pro třídu: v62 přidá „kompetence“ (hned za „pokrok“) jen pilotním třídám.
+ * Do profile60_public_tabs() záložka záměrně nepatří – žák vidí jen sebe.
+ */
+function profile60_tabs_for(?string $classId): array
+{
+    $tabs = profile60_tabs();
+    if ($classId === null || !function_exists('comp62_enabled_for_class') || !comp62_enabled_for_class($classId)) return $tabs;
+    array_splice($tabs, (int)array_search('pokrok', $tabs, true) + 1, 0, ['kompetence']);
+    return $tabs;
+}
+
 /** Záložky, které smí vidět cizí profil (spolužák). */
 function profile60_public_tabs(): array
 {
@@ -31,6 +43,7 @@ function profile60_tab_label(string $tab): string
     return [
         'prehled' => tr('Přehled'),
         'pokrok' => tr('Pokrok'),
+        'kompetence' => tr('Kompetence'),
         'lab' => tr('Linux Lab'),
         'odznaky' => tr('Odznaky'),
         'body' => tr('Body'),
@@ -43,10 +56,10 @@ function profile60_tab_label(string $tab): string
  * Rozhodne aktivní záložku z ?tab= s ohledem na to, jestli jde o vlastní, nebo cizí profil.
  * Cizí profil smí jen prehled/pokrok/odznaky/arena; neplatná nebo nepovolená hodnota → prehled.
  */
-function profile60_current_tab(bool $isMe): string
+function profile60_current_tab(bool $isMe, ?string $classId = null): string
 {
     $raw = is_string($_GET['tab'] ?? null) ? (string)$_GET['tab'] : '';
-    $allowed = $isMe ? profile60_tabs() : profile60_public_tabs();
+    $allowed = $isMe ? profile60_tabs_for($classId) : profile60_public_tabs();
     return in_array($raw, $allowed, true) ? $raw : 'prehled';
 }
 
@@ -91,6 +104,7 @@ function profile60_data(string $classId, string $target, string $skillKey, bool 
         case 'odznaky': return profile60_data_badges($classId, $target, $isMe);
         case 'body': return $isMe ? profile60_data_points($classId, $target) : [];
         case 'arena':
+        case 'kompetence':
         case 'nastaveni': return [];
         default: return profile60_data_overview($classId, $target, $skillKey, $isMe);
     }

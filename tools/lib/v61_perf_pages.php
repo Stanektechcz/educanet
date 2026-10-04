@@ -9,7 +9,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  */
 
 const V61_BUDGET_STUDENT_MS = 60.0;
-const V61_BUDGET_STUDENT_KB = 60.0;
+/** 60 KB + 2 KB pro navigaci se skupinami a podmenu (nav_v61.php; nejtěžší stránka prikazy měřila 58,8 -> 61,3 KB). */
+const V61_BUDGET_STUDENT_KB = 62.0;
 const V61_BUDGET_TEACHER_MS = 150.0;
 /**
  * Tolerance šumu měření: medián z ≥ 5 běhů kolísá na sdíleném stroji (Windows + antivirus i ±25 % u téže stránky),

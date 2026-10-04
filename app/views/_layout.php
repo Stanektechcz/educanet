@@ -48,6 +48,8 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
     <link rel="stylesheet" href="<?= e(asset_url('assets/student-v55.css?v=55.1')) ?>">
     <link rel="stylesheet" href="<?= e(asset_url('assets/learning-v56.css?v=56.1')) ?>">
     <link rel="stylesheet" href="<?= e(asset_url('assets/components-v61.css?v=61.0')) ?>">
+    <link rel="stylesheet" href="<?= e(asset_url('assets/nav-v61.css?v=61.1')) ?>">
+    <?php if ($module !== null): ?><script src="<?= e(asset_url('assets/nav-v61.js?v=61.1')) ?>" defer></script><?php endif; ?>
     <?php if (in_array((string)$view, ['lab', 'prikazy'], true)): ?><link rel="stylesheet" href="<?= e(asset_url('assets/linux-v57.css?v=59.1')) ?>"><link rel="stylesheet" href="<?= e(asset_url('assets/arena-v57.css?v=57.0')) ?>"><?php endif; ?>
     <?php if ($module === null && google_auth_configured()): ?><script src="https://accounts.google.com/gsi/client" async defer></script><?php endif; ?>
     <link rel="stylesheet" href="<?= e(asset_url('assets/i18n-v59.css?v=59.0')) ?>">
@@ -58,6 +60,7 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
 <?php $v55Lock = v55_lock_active((string)$view); ?>
 <?php $ui61Bottom = $module !== null && !nav61_bottom_hidden((string)$view); $GLOBALS['ui61_bottomnav'] = $ui61Bottom; ?>
 <body class="accent-<?= e($accent) ?><?= $compactAssessment ? ' assessment-mode' : '' ?> view-<?= e((string)$view) ?><?= $v507ShellActive?' v507-shell-active':'' ?><?= $v55Lock ? ' v55-locked' : '' ?><?= $ui61Bottom ? ' ui61-has-bottomnav' : '' ?>"<?= $v55Lock ? ' data-v55-lock="on"' : '' ?>>
+<?= nav61_skip_html() ?>
 <div class="shell">
     <header class="topbar<?= $compactAssessment ? ' assessment-topbar' : '' ?>">
         <a class="brand" href="?view=<?= $module ? 'dashboard' : 'home' ?>"><span class="brand-mark">E</span><span>EDUCANET</span></a>
@@ -66,32 +69,14 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
         <?php endif; ?>
         <?php if ($module): ?>
             <?php if (!$compactAssessment): ?>
-                <?php /* v56: pět položek, nic víc. Vše ostatní je uvnitř Materiálů nebo v účtovém menu. */ ?>
-                <nav class="main-menu student-main-menu v5077-calm-nav v55-nav" aria-label="<?= e(tr('Hlavní studentské menu')) ?>" data-main-menu>
-                    <?php foreach ($ui61Nav as $item): $navLabel = (string)$item['label']; ?>
-                        <a class="<?= e((string)$item['class']) ?>" href="<?= e((string)$item['href']) ?>"<?= !empty($item['active']) ? ' aria-current="page"' : '' ?>><i aria-hidden="true"><?= e((string)$item['mark']) ?></i><?= e(tr($navLabel)) ?></a>
-                    <?php endforeach; ?>
-                </nav>
+                <?php /* v61 (nav): pět míst (Dnes, Učení, Hry a aréna, Projekty, Profil) s podmenu; vykresluje nav_v61.php. */ ?>
+                <?= nav61_main_html($ui61Cid, (string)$view) ?>
                 <div class="topbar-right v55-right">
                     <?php if (is_string($cid) && $cid !== ''): v55_render_level_chip($cid); endif; ?>
                     <div class="v56-menu" data-v56-menu>
-                        <button class="v56-menu-button" type="button" data-v56-menu-button aria-label="<?= e(tr('Menu účtu')) ?>" aria-expanded="false" aria-controls="v56-account-menu"><span><?= e(tr('Menu')) ?></span><i aria-hidden="true">⌄</i></button>
+                        <button class="v56-menu-button" type="button" data-v56-menu-button aria-label="<?= e(tr('Menu účtu')) ?>" aria-expanded="false" aria-controls="v56-account-menu"><?= nav61_icon('menu') ?><span><?= e(tr('Menu')) ?></span><i aria-hidden="true">⌄</i></button>
                         <div class="v56-menu-panel" id="v56-account-menu" data-v56-menu-panel>
-                            <span class="v56-menu-label"><?= e(tr('Učení')) ?></span>
-                            <?php foreach ($ui61Nav as $item): $navLabel = (string)$item['label']; ?><a class="v55-mobile-only" href="<?= e((string)$item['href']) ?>"><?= e(tr($navLabel)) ?></a><?php endforeach; ?>
-                            <a href="?view=materialy&amp;sekce=temata"><?= e(tr('Témata a vysvětlení')) ?></a>
-                            <a href="?view=materialy&amp;sekce=programy"><?= e(tr('Programy a zkratky')) ?></a>
-                            <a href="?view=prikazy"><?= e(tr('Linux příkazy')) ?></a>
-                            <span class="v56-menu-label"><?= e(tr('Třída')) ?></span>
-                            <a href="?view=community"><?= e(tr('Spolužáci')) ?></a>
-                            <a href="?view=project_lobbies"><?= e(tr('Týmy a projekty')) ?></a>
-                            <span class="v56-menu-label"><?= e(tr('Účet')) ?></span>
-                            <a href="?view=profile"><?= e(tr('Můj profil')) ?></a>
-                            <a href="?view=obchod"><?= e(tr('Obchod')) ?></a>
-                            <a href="?view=projekty"><?= e(tr('Projekty')) ?></a>
-                            <a href="?view=hlaseni"><?= e(tr('Nahlásit chybu')) ?></a>
-                            <a href="?view=my_intake"><?= e(tr('Můj dotazník')) ?></a>
-                            <a href="?view=study_loop"><?= e(tr('Potřebuju pomoct')) ?></a>
+                            <?= nav61_drawer_html($ui61Cid, (string)$view) /* v61: skupiny odkazů jen na úzkém displeji; na širším je nahrazuje horní lišta */ ?>
                             <div class="v56-menu-lang"><?= edu_lang_switcher_html(csrf_token(), '?view=' . (string)$view) ?></div>
                             <form method="post"><input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="logout_class"><button type="submit"><?= e(tr('Odhlásit se')) ?></button></form>
                         </div>
@@ -103,6 +88,7 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
             <?php endif; ?>
         <?php endif; ?>
     </header>
+    <main class="ui-page" id="main-content" tabindex="-1"><?php /* v62: h1 stránkového shellu leží uvnitř <main> */ ?>
     <?php if($module!==null&&!$compactAssessment): ?>
     <?php if($v507ShellActive): ?>
     <?= nav61_breadcrumb_html(is_string($cid) ? $cid : null, (string)$view, $title, $titleIsContent) ?>
@@ -111,7 +97,6 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
     <?php v506_render_student_compass((string)$cid,(string)$view,$title,$module,$continueUrl,$titleIsContent); ?>
     <?php endif; ?>
     <?php endif; ?>
-    <main class="ui-page">
     <?php
 }
 

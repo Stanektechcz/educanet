@@ -93,6 +93,8 @@ function teacher_action_permission_prefixes(): array
         'fb60_'=>'content.manage',
         // v61 · přehled třídy: hromadné potvrzení hlášení = rozhodování o hlášeních (assistant jen čte).
         'ov61_'=>'content.manage',
+        // v62 · kompetence: ruční přepočet důkazů třídy (jen čtení zdrojů + zápis odvozených důkazů), jako analytika labu.
+        'comp62_'=>'analytics.view',
     ];
 }
 function teacher_action_permission(string $action): ?string

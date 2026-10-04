@@ -79,6 +79,8 @@ return [
         'feedback' => ['points_v53.php', 'feedback_v60.php', 'feedback_v60_views.php'],
         // v60 · projekty podle levelu (?view=projekty).
         'projects' => ['projects_v60.php', 'projects_v60_views.php'],
+        // v62 · záložka Kompetence v profilu (pilot 3.A); kód se spouští jen na záložce kompetence v pilotní třídě (audit routeru vyžaduje celé skupiny).
+        'competency' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'competency_v62_views.php'],
         'dashboard' => ['motivation_v61_views.php', 'teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'mastery_learning_views_v41.php', 'learning_studio_views_v44.php', 'skill_views.php', 'project_workspace_views.php'],
         'diagrams' => ['app/views/_diagrams.php'],
         // POST
@@ -135,7 +137,7 @@ return [
         ['match' => ['graphics_studio'], 'file' => 'views/graphics_studio_gate.php', 'libs' => []],
         // v61: mrtvá starší šablona kalendáře vyřazena (kalendář obsluhuje views/tutorial.php → tut52_render_calendar()).
         ['match' => ['next_lesson', 'course_lesson'], 'file' => 'views/structured_lessons.php', 'libs' => ['layout', 'structured_lesson']],
-        ['match' => ['study', 'mistakes', 'study_loop', 'skills', 'skill_branch', 'skill_detail', 'mastery_challenge', 'mastery_result', 'profile', 'community', 'project_lobbies', 'project_workspace', 'prestige_exams'], 'file' => 'views/student_hubs.php', 'libs' => ['layout', 'student_hubs', 'lab_badges']],
+        ['match' => ['study', 'mistakes', 'study_loop', 'skills', 'skill_branch', 'skill_detail', 'mastery_challenge', 'mastery_result', 'profile', 'community', 'project_lobbies', 'project_workspace', 'prestige_exams'], 'file' => 'views/student_hubs.php', 'libs' => ['layout', 'student_hubs', 'lab_badges', 'competency']],
         ['match' => ['project_result', 'project_results'], 'file' => 'views/project_results.php', 'libs' => ['layout']],
         ['match' => ['review', 'recovery', 'create_challenge'], 'file' => 'views/review_recovery.php', 'libs' => ['layout']],
         ['match' => ['dashboard'], 'file' => 'views/dashboard.php', 'libs' => ['layout', 'dashboard']],

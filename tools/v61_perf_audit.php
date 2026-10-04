@@ -7,7 +7,7 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  * EDUCANET v61 · audit rychlosti celé aplikace (část B).
  *   1) fiktivní třída 30 žáků (deterministicky, dočasné úložiště) s historií: XP, body, testy, úrovně labu,
  *   2) 20 stránek žáka + 10 učitelských záložek: medián ms serveru, KB HTML, počet čtení úložiště (samostatný
- *      proces na stránku, opcache jako v PHP-FPM); rozpočty ≤ 60 ms / ≤ 60 KB (žák), ≤ 150 ms (učitel),
+ *      proces na stránku, opcache jako v PHP-FPM); rozpočty ≤ 60 ms / ≤ 62 KB (žák; +2 KB navigace), ≤ 150 ms (učitel),
  *      čas s tolerancí šumu (V61_NOISE_TOLERANCE v tools/lib/v61_perf_pages.php),
  *   3) žádné N+1 čtení (stejný soubor ≤ 12×, celkem ≤ 120 čtení na stránku) a GET v ustáleném stavu nic nezapisuje,
  *   4) paměti v rámci požadavku se po zápisu zneplatní (čerstvá data), storage_update beze změny nepřepisuje,

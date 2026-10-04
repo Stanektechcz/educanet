@@ -143,6 +143,16 @@ function teacher58_modules(): array
             'post' => ['fb60_' => 'fb60_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { fb60_render_teacher_tab($c, $csrf()); },
         ],
+        // v62 · mapa kompetencí třídy (pilot jen 3.A). POST comp62_sync = ruční přepočet důkazů; politika comp62_ vyžaduje
+        // třídu v rozsahu (teacher59_action_policy_prefixes), oprávnění analytics.view (teacher_action_permission_prefixes).
+        // Žádný zvláštní GET parametr registru.
+        'kompetence' => [
+            'label' => 'Kompetence', 'hint' => 'Mapa „umím / učím se / zatím ne“ za třídu (pilot 3.A)', 'group' => 'podpora',
+            'files' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'competency_v62_teacher_views.php'],
+            'css' => ['assets/competency-v62.css'],
+            'post' => ['comp62_' => 'comp62_teacher_handle_post'],
+            'render' => static function (array $m, string $c) use ($csrf): void { comp62_render_teacher_tab($c, $csrf()); },
+        ],
     ];
 }
 

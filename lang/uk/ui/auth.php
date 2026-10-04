@@ -10,16 +10,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 
 return [
     'Učení' => 'Навчання',
-    'Témata a vysvětlení' => 'Теми та пояснення',
-    'Programy a zkratky' => 'Програми та скорочення',
-    'Linux příkazy' => 'Команди Linux',
     'Třída' => 'Клас',
-    'Spolužáci' => 'Однокласники',
-    'Týmy a projekty' => 'Команди та проєкти',
-    'Účet' => 'Обліковий запис',
-    'Můj profil' => 'Мій профіль',
-    'Můj dotazník' => 'Моя анкета',
-    'Potřebuju pomoct' => 'Мені потрібна допомога',
     'Odhlásit se' => 'Вийти',
     'Soustředění' => 'Режим зосередження',
     'Startovní test' => 'Вхідний тест',
@@ -657,15 +648,12 @@ return [
     'Moje cesta' => 'Мій шлях',
     'EDUCANET' => 'EDUCANET',
     // v59 integrátor: hlavní navigace (_layout.php)
-    'Hlavní studentské menu' => 'Головне меню учня',
     'Menu účtu' => 'Меню облікового запису',
     'Menu' => 'Меню',
     // v59 SECFIX (SEC59-16): obecná hláška místo textu neočekávané chyby (intake_v51.php, app/actions/session_join.php)
     'Akci se nepodařilo dokončit.' => 'Не вдалося виконати дію.',
     // v60 · odkaz na obchod bodů v hlavní navigaci
-    'Obchod' => 'Магазин',
     // v60 · odkaz na projekty podle levelu v hlavní navigaci
-    'Projekty' => 'Проєкти',
     // v60 · odkaz na hlášení chyb v menu účtu a v patičce
     'Nahlásit chybu' => 'Повідомити про помилку',
 ];

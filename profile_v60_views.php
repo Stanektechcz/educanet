@@ -38,7 +38,7 @@ function render_profile60_view(string $classId, array $module, string $flash = '
     if ($target === '' || !isset($students[$target])) { $_SESSION['flash'] = tr('Profil nebyl nalezen.'); redirect_to('?view=dashboard'); }
     $isMe = hash_equals($me, $target);
     $student = $students[$target];
-    $tab = profile60_current_tab($isMe);
+    $tab = profile60_current_tab($isMe, $classId);
 
     render_header($isMe ? tr('Můj profil') : tr('Profil studenta'), $module);
     profile60_assets();
@@ -74,6 +74,7 @@ function profile60_render_tab(string $classId, string $target, string $skillKey,
     switch ($tab) {
         case 'pokrok': profile60_render_progress($data, $isMe); break;
         case 'lab': if ($isMe) profile60_render_lab($data); break;
+        case 'kompetence': if ($isMe && function_exists('comp62_render_student_tab')) comp62_render_student_tab($classId, $target); break;
         case 'odznaky': profile60_render_badges($classId, $target, $data, $isMe); break;
         case 'arena':
             if ($isMe) { arena60_render_profile_tab($classId, $target); }
@@ -89,7 +90,7 @@ function profile60_render_tab(string $classId, string $target, string $skillKey,
 function profile60_nav_items(string $classId, string $tab, string $target, bool $isMe, string $class): string
 {
     $html = '';
-    foreach ($isMe ? profile60_tabs() : profile60_public_tabs() as $t) {
+    foreach ($isMe ? profile60_tabs_for($classId) : profile60_public_tabs() as $t) {
         $current = $t === $tab;
         $badge = '';
         if ($isMe && $t === 'arena' && ($n = profile60_incoming($classId, $target)) > 0) {
