@@ -72,11 +72,14 @@ server {
 
     # --- Explicitně povolené statické cesty ---------------------------------
     location = /lab-offline.html { try_files $uri =404; }
-    location = /sw.js { try_files $uri =404; }
+    location = /sw.js { try_files $uri =404; expires off; }
     location = /manifest.webmanifest { try_files $uri =404; }
     location ^~ /assets/ {
         try_files $uri =404;
         # assets/*.json (manuál labu, offline katalogy) musí zůstat čitelné pro JS.
+        # v61: ?v=<čas změny> z asset_url() (9+ číslic) = nová URL při každé úpravě → rok; jinak hodina (viz aapanel šablona).
+        expires 1h;
+        if ($arg_v ~ "^[0-9]{9,}$") { expires 365d; }
     }
 
     # --- PHP whitelist -------------------------------------------------------

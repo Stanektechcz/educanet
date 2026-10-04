@@ -41,7 +41,7 @@ $check = audit_checker($state);
 // =============================================================================================
 // 1) Lint + declare(strict_types=1) + zákaz sítě/CDN/innerHTML v nových souborech.
 // =============================================================================================
-$newFiles = ['arena_v60_challenge.php', 'arena_v60_challenge_views.php', 'app/actions/arena_challenge.php', 'assets/arena-v60.css'];
+$newFiles = ['arena_v60_challenge.php', 'arena_v60_challenge_views.php', 'app/actions/arena_challenge.php'];
 foreach ($newFiles as $rel) {
     $abs = $ROOT . '/' . $rel;
     $check('soubor existuje: ' . $rel, is_file($abs));

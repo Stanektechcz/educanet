@@ -372,14 +372,65 @@ function profile60_render_badges(string $classId, string $target, array $data, b
     }
     profile60_render_showcase($data['featured'], $data['defs'], $isMe ? profile60_tab_url('nastaveni', $target, true) : '');
     if ($isMe && isset($data['board'])) {
-        v55_render_badge_board_from_data($data['board']);
-        profile60_render_achievements((array)($data['achievements'] ?? []), (array)($data['achievement_defs'] ?? []));
+        $lockedUrl = profile60_locked_url();
+        v55_render_badge_board_from_data($data['board'], profile60_show_locked(), $lockedUrl);
+        profile60_render_achievements((array)($data['achievements'] ?? []), (array)($data['achievement_defs'] ?? []), profile60_show_locked(), $lockedUrl);
     }
     if (function_exists('render_profile_role_experience')) {
         render_profile_role_experience($classId, $target, $isMe);
     }
     // v60 · souhrn hlášení chyb/návrhů – jen vlastní profil.
     if ($isMe && function_exists('feedback60_render_profile_summary')) feedback60_render_profile_summary($classId, $target);
+}
+
+const P60_BADGE_PAGE = 8;
+const P60_NEAR_PAGE = 2;
+const P60_MILESTONE_PAGE = 4;
+
+/** Zamčené odznaky a milníky se vykreslí jen na samostatné URL ?zamcene=1 (bez JS i s JS stejně lehká stránka). */
+function profile60_show_locked(): bool
+{
+    return ($_GET['zamcene'] ?? '') === '1';
+}
+
+/** Adresa záložky Odznaky se zamčenými (kotva #zamcene) – jen vlastní profil. */
+function profile60_locked_url(): string
+{
+    return profile60_collection_url(['zamcene' => '1']) . '#zamcene';
+}
+
+/** Adresa záložky Odznaky s doplňujícími parametry (zachová už zapnuté ?vsechny / ?zamcene). */
+function profile60_collection_url(array $extra): string
+{
+    $keep = [];
+    foreach (['vsechny', 'zamcene'] as $name) { if (($_GET[$name] ?? '') === '1') $keep[$name] = '1'; }
+    return module_url('profile', ['tab' => 'odznaky'] + $extra + $keep);
+}
+
+/** ?vsechny=1 – i získané odznaky nad rámec první stránky (ať záložka zůstane lehká i u velké sbírky). */
+function profile60_show_all(): bool
+{
+    return ($_GET['vsechny'] ?? '') === '1';
+}
+
+/** Karty k vykreslení: nejnovější získané (max. P60_BADGE_PAGE) + nejbližší rozpracované; $hidden = kolik získaných se nevešlo. */
+function profile60_page_cards(array $earned, array $near, bool $all, int &$hidden): array
+{
+    usort($earned, static fn(array $a, array $b): int => strcmp((string)($b['earned_at'] ?? ''), (string)($a['earned_at'] ?? '')));
+    $hidden = $all ? 0 : max(0, count($earned) - P60_BADGE_PAGE);
+    usort($near, static fn(array $a, array $b): int => (int)($b['percent'] ?? 0) <=> (int)($a['percent'] ?? 0));
+    return array_merge($all ? $earned : array_slice($earned, 0, P60_BADGE_PAGE), $all ? $near : array_slice($near, 0, P60_NEAR_PAGE));
+}
+
+/** Odkaz „Zobrazit zamčené (N)“ místo sbaleného seznamu; po otevření je seznam vidět rovnou. */
+function profile60_locked_link(int $count, string $url): string
+{
+    return profile60_more_link(tr('Zobrazit zamčené ({n})', ['n' => $count]), $url);
+}
+
+function profile60_more_link(string $label, string $url): string
+{
+    return '<p class="p60-more-link"><a class="btn" href="' . e($url) . '">' . e($label) . '</a></p>';
 }
 
 /** Hlavní úkol záložky Odznaky: nejbližší nezískaný odznak (nebo milník) s procenty. */
@@ -405,34 +456,39 @@ function profile60_badges_task(array $board, array $progress, array $defs): stri
  * Sbírka odznaků: počitadlo, filtr (JS; bez JS jsou vidět všechny) a mřížka unikátních odznaků.
  * Získané a rozpracované jsou karty; zbylé zamčené jsou sbalené v <details>, ať stránka zůstane lehká.
  */
-function v55_render_badge_board_from_data(array $board): void
+function v55_render_badge_board_from_data(array $board, bool $showLocked = false, string $lockedUrl = ''): void
 {
     $earned = (array)$board['earned'];
     $near = (array)$board['progress'];
     $locked = (array)$board['locked'];
     $total = count($earned) + count($near) + count($locked);
     echo profile60_panel_open(tr('Získávání odznaků'), tr('Sbírka'), '', '', 'odznaky') . '<p class="p60-score"><strong>' . count($earned) . '</strong> ' . e(tr('z {total} odznaků', ['total' => $total])) . '</p>';
-    profile60_render_filter($total, count($earned));
+    profile60_render_filter($total, count($earned), $showLocked ? '' : $lockedUrl);
     echo '<div class="b60-grid" data-b60-grid>';
-    foreach (array_merge($earned, $near) as $b) {
+    $hiddenEarned = 0;
+    foreach (profile60_page_cards($earned, $near, profile60_show_all(), $hiddenEarned) as $b) {
         echo badge60_card((string)$b['id'], $b, !empty($b['earned']), (int)$b['percent']);
     }
     echo '</div>';
-    if ($locked) {
-        echo '<details class="p60-more" data-b60-more><summary>' . e(tr('Zobrazit všechny zamčené ({n})', ['n' => count($locked)])) . '</summary><ul class="b60-rows">';
+    if ($hiddenEarned > 0) echo profile60_more_link(tr('Zobrazit všechny získané ({n})', ['n' => count($earned)]), profile60_collection_url(['vsechny' => '1']));
+    if ($locked && !$showLocked) { echo profile60_locked_link(count($locked), $lockedUrl); }
+    if ($locked && $showLocked) {
+        echo '<h3 id="zamcene" class="p60-subhead" tabindex="-1">' . e(tr('Zamčené odznaky')) . ' (' . count($locked) . ')</h3><ul class="b60-rows">';
         foreach ($locked as $b) { echo badge60_row((string)$b['id'], $b); }
-        echo '</ul></details>';
+        echo '</ul>';
     }
     echo profile60_panel_close();
 }
 
 /** Filtr Všechny / Získané / Zamčené – zobrazí ho až JS (bez JS by tlačítka nic nedělala). */
-function profile60_render_filter(int $total, int $earned): void
+function profile60_render_filter(int $total, int $earned, string $lockedUrl = ''): void
 {
     echo '<div class="b60-filter" data-b60-filter hidden><div class="b60-filter-buttons" role="group" aria-label="' . e(tr('Filtr odznaků')) . '">'
         . '<button type="button" class="b60-chip" data-b60-show="all" aria-pressed="true">' . e(tr('Všechny')) . ' <b>' . $total . '</b></button>'
         . '<button type="button" class="b60-chip" data-b60-show="earned" aria-pressed="false">' . e(tr('Získané')) . ' <b>' . $earned . '</b></button>'
-        . '<button type="button" class="b60-chip" data-b60-show="locked" aria-pressed="false">' . e(tr('Zamčené')) . ' <b>' . max(0, $total - $earned) . '</b></button></div>'
+        . ($lockedUrl !== ''
+            ? '<a class="b60-chip" href="' . e($lockedUrl) . '">' . e(tr('Zamčené')) . ' <b>' . max(0, $total - $earned) . '</b></a></div>'
+            : '<button type="button" class="b60-chip" data-b60-show="locked" aria-pressed="false">' . e(tr('Zamčené')) . ' <b>' . max(0, $total - $earned) . '</b></button></div>')
         . '<p class="b60-filter-status" role="status" aria-live="polite" data-b60-status data-tpl="' . e(tr('Zobrazeno {shown} z {total}')) . '"></p></div>';
 }
 
@@ -446,13 +502,16 @@ function profile60_achievement_category(string $kind): string
 }
 
 /** Milníky (achievementy): stejné unikátní SVG, rarita běžná / vzácná podle náročnosti; nezačaté jsou sbalené. */
-function profile60_render_achievements(array $progress, array $defs): void
+function profile60_render_achievements(array $progress, array $defs, bool $showLocked = false, string $lockedUrl = ''): void
 {
     if ($defs === []) return;
     $earned = 0;
     $open = '';
     $rest = '';
     $restCount = 0;
+    $shownCards = 0;
+    $hiddenCards = 0;
+    $showAll = profile60_show_all();
     foreach ($defs as $id => $def) {
         $p = (array)($progress[$id] ?? []);
         $isEarned = !empty($p['earned']);
@@ -462,11 +521,16 @@ function profile60_render_achievements(array $progress, array $defs): void
         $kind = (string)($def['kind'] ?? '');
         $meta = ['title' => (string)($def['title'] ?? $id), 'text' => (string)($def['text'] ?? ''), 'condition' => (string)($def['text'] ?? ''), 'mark' => (string)($def['mark'] ?? ''),
             'rarity' => ($target >= 15 || ($kind === 'xp' && $target >= 2500)) ? 'rare' : 'common', 'category' => profile60_achievement_category($kind)];
-        if ($isEarned || $percent > 0) { $open .= badge60_card('ach_' . $id, $meta, $isEarned, $percent); }
-        else { $rest .= badge60_row('ach_' . $id, $meta); $restCount++; }
+        if ($isEarned || $percent > 0) {
+            if ($shownCards < P60_MILESTONE_PAGE || $showAll) { $open .= badge60_card('ach_' . $id, $meta, $isEarned, $percent); $shownCards++; }
+            else { $hiddenCards++; }
+        }
+        else { if ($showLocked) $rest .= badge60_row('ach_' . $id, $meta); $restCount++; }
     }
     echo profile60_panel_open(tr('Průběžné úspěchy'), tr('Milníky'), '', '', 'milniky') . '<p class="p60-score"><strong>' . $earned . '</strong> ' . e(tr('z {total} milníků', ['total' => count($defs)])) . '</p>'
         . '<div class="b60-grid" data-b60-grid>' . $open . '</div>';
-    if ($restCount > 0) echo '<details class="p60-more" data-b60-more><summary>' . e(tr('Zobrazit všechny zamčené ({n})', ['n' => $restCount])) . '</summary><ul class="b60-rows">' . $rest . '</ul></details>';
+    if ($hiddenCards > 0) echo profile60_more_link(tr('Zobrazit všechny milníky ({n})', ['n' => $shownCards + $hiddenCards]), profile60_collection_url(['vsechny' => '1']));
+    if ($restCount > 0 && !$showLocked) echo profile60_locked_link($restCount, $lockedUrl);
+    if ($restCount > 0 && $showLocked) echo '<ul class="b60-rows">' . $rest . '</ul>';
     echo profile60_panel_close();
 }

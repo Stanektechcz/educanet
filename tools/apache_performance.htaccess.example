@@ -2,17 +2,28 @@
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json image/svg+xml
 </IfModule>
+# v61: dlouhá cache jen pro assety, jejichž ?v= se mění s obsahem. asset_url() přidává ?v=<čas změny souboru>
+# (9+ číslic) → po úpravě je to jiná URL, takže stačí rok. Ručně psané ?v=57.0 a URL bez ?v= zůstávají krátce
+# (hodina; revalidace → 304). Vyžaduje mod_rewrite + mod_headers; bez nich platí jen mod_expires níže.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{QUERY_STRING} (^|&)v=[0-9]{9,}(&|$)
+  RewriteRule ^assets/ - [E=EDU_ASSET_LONG:1]
+</IfModule>
 <IfModule mod_expires.c>
   ExpiresActive On
-  ExpiresByType text/css "access plus 7 days"
-  ExpiresByType application/javascript "access plus 7 days"
+  ExpiresByType text/css "access plus 1 hour"
+  ExpiresByType application/javascript "access plus 1 hour"
+  ExpiresByType application/json "access plus 1 hour"
   ExpiresByType image/png "access plus 30 days"
   ExpiresByType image/jpeg "access plus 30 days"
   ExpiresByType image/webp "access plus 30 days"
   ExpiresByType image/svg+xml "access plus 30 days"
 </IfModule>
 <IfModule mod_headers.c>
-  <FilesMatch "\.(?:css|js)$">
-    Header set Cache-Control "public, max-age=604800, immutable"
-  </FilesMatch>
+  Header set Cache-Control "public, max-age=31536000, immutable" env=EDU_ASSET_LONG
+  # Service worker se nikdy nesmí držet v cache déle než pár minut, jinak se nová verze nenačte.
+  <Files "sw.js">
+    Header set Cache-Control "no-cache"
+  </Files>
 </IfModule>

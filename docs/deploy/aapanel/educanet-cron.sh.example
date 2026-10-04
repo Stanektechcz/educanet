@@ -7,6 +7,7 @@
 #   bash /www/server/educanet/educanet-cron.sh retention   (denně 00:45)
 #   bash /www/server/educanet/educanet-cron.sh automation  (pondělí 03:00)
 #   bash /www/server/educanet/educanet-cron.sh preflight   (pondělí 06:00)
+#   bash /www/server/educanet/educanet-cron.sh perf        (ručně po nasazení; měření rychlosti jen čtením, v61)
 # Úlohy aaPanelu běží jako root – skript proto PHP spouští jako uživatel webu `www`
 # (soubory v storage/ musí dál patřit www). Výstup uvidíš v logu úlohy v panelu.
 # Přechod školního roku (tools/v58_rollover.php) se spouští RUČNĚ, ne cronem.
@@ -26,5 +27,6 @@ case "${1:-}" in
   retention)  run tools/v58_retention.php --apply ;;
   automation) run tools/v46_automation_tick.php ;;
   preflight)  run tools/preflight.php --env-file="$ENV_FILE" --strict ;;
-  *) echo "použití: $0 backup|retention|automation|preflight" >&2; exit 2 ;;
+  perf)       run tools/v61_perf_report.php ;;   # jen čte (EDUCANET_STORAGE_READONLY), nic nezapisuje; konec PERF_REPORT_OK|WARN
+  *) echo "použití: $0 backup|retention|automation|preflight|perf" >&2; exit 2 ;;
 esac

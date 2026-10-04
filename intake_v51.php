@@ -18,6 +18,7 @@ const INTAKE_V51_VERSION = '51.0';
 function intake_v51_dir(string $sub = ''): string
 {
     $dir = STORAGE_DIR . '/intake' . ($sub !== '' ? '/' . $sub : '');
+    if (function_exists('storage_readonly') && storage_readonly()) return $dir; // v61: režim jen pro čtení nic nezakládá
     if (!is_dir($dir)) @mkdir($dir, 0770, true);
     $index = $dir . '/index.php';
     if (!is_file($index)) @file_put_contents($index, "<?php http_response_code(403); exit;\n");
@@ -32,6 +33,17 @@ function intake_v51_path(string $name): string
 function intake_v51_read(string $name): array
 {
     $path = intake_v51_path($name);
+    // v61: paměť požadavku podle epochy zápisů (intake_v51_update ji zvyšuje) – seznam žáků se nečte a nedekóduje stokrát.
+    $memoOn = function_exists('storage_request_memo_enabled') && storage_request_memo_enabled();
+    $hit = $memoOn ? ($GLOBALS['educanet_intake_read_memo'][$path] ?? null) : null;
+    if (is_array($hit) && $hit[0] === storage_epoch()) return $hit[1];
+    $data = intake_v51_read_file($path);
+    if ($memoOn) $GLOBALS['educanet_intake_read_memo'][$path] = [storage_epoch(), $data];
+    return $data;
+}
+
+function intake_v51_read_file(string $path): array
+{
     if (!is_file($path)) return [];
     $raw = (string)@file_get_contents($path);
     $pos = strpos($raw, "\n");
@@ -44,11 +56,16 @@ function intake_v51_read(string $name): array
 function intake_v51_update(string $name, callable $callback): array
 {
     $path = intake_v51_path($name);
+    if (function_exists('storage_readonly') && storage_readonly()) { // v61: suchý běh, nic se nezapíše (měření na ostrých datech)
+        $dry = $callback(intake_v51_read_file($path));
+        if (!is_array($dry)) throw new RuntimeException('Úprava dat dotazníku nevrátila platná data.');
+        return $dry;
+    }
     $lock = @fopen($path . '.lock', 'c+');
     if (!$lock) throw new RuntimeException('Nelze otevřít zámek úložiště dotazníku.');
     try {
         if (!flock($lock, LOCK_EX)) throw new RuntimeException('Nelze zamknout úložiště dotazníku.');
-        $data = intake_v51_read($name);
+        $data = intake_v51_read_file($path);
         $result = $callback($data);
         if (!is_array($result)) throw new RuntimeException('Úprava dat dotazníku nevrátila platná data.');
         // Kódování proběhne dřív, než se cokoli zapíše – chyba nikdy nenechá prázdný soubor.
@@ -60,6 +77,7 @@ function intake_v51_update(string $name, callable $callback): array
         }
         flock($lock, LOCK_UN);
         if (function_exists('php_json_cache_forget')) php_json_cache_forget($path);
+        $GLOBALS['educanet_storage_epoch'] = (int)($GLOBALS['educanet_storage_epoch'] ?? 0) + 1; // v61: zneplatní paměti požadavku
         return $result;
     } finally {
         fclose($lock);
@@ -499,6 +517,7 @@ function intake_v51_v1_read(string $name): array
  */
 function intake_v51_sync_v1(array $modules, bool $force = false): array
 {
+    if (function_exists('storage_readonly') && storage_readonly()) return ['imported' => 0, 'skipped' => 0, 'files' => 0, 'activations' => 0, 'ran' => false]; // v61: import V1 zapisuje a kopíruje soubory
     $dir = intake_v51_v1_data_dir();
     $files = [$dir . '/responses.json.php', $dir . '/classes.json.php'];
     $signature = '';

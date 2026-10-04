@@ -160,8 +160,9 @@ function badge60_shape_element(string $shape, string $attrs): string
  */
 function badge60_shape(string $shape, string $attrs, float $scale = 1.0, float $dy = 0.0): string
 {
+    // translate(50 50+dy) scale(s) translate(-50 -50) zapsané jako jediná matice (kratší značky ve spritu).
     $transform = ($scale !== 1.0 || $dy !== 0.0)
-        ? ' transform="translate(50 ' . badge60_num(50 + $dy) . ') scale(' . badge60_num($scale) . ') translate(-50 -50)"' : '';
+        ? ' transform="matrix(' . badge60_num($scale) . ' 0 0 ' . badge60_num($scale) . ' ' . badge60_num(50 - 50 * $scale) . ' ' . badge60_num(50 + $dy - 50 * $scale) . ')"' : '';
     $join = $shape === 'diamond' ? 'stroke-linejoin="round" ' : '';
     if (!badge60_sprite_mode()) return badge60_shape_element($shape, $join . $attrs . $transform);
     badge60_define('b60s-s-' . $shape, static fn(): string => badge60_shape_element($shape, 'id="b60s-s-' . $shape . '"'));
@@ -216,7 +217,7 @@ const BADGE60_LOCK_PATH = 'M7 11V8a5 5 0 0 1 10 0v3 M6 11h12v9H6z M12 15v2';
  */
 function badge60_glyph_markup(string $path, string $outline, string $main): string
 {
-    return '<g transform="translate(50 50) scale(1.5) translate(-12 -12)" fill="none" stroke-linecap="round" stroke-linejoin="round">'
+    return '<g transform="matrix(1.5 0 0 1.5 32 32)" fill="none" stroke-linecap="round" stroke-linejoin="round">'
         . ($outline !== '' ? '<path d="' . $path . '" stroke-width="3.8" ' . $outline . '/>' : '')
         . '<path d="' . $path . '" stroke-width="2" ' . $main . '/></g>';
 }
@@ -342,6 +343,17 @@ function badge60_svg(string $badgeId, array $meta, bool $earned, int $size = 64,
     return $out . '</svg>';
 }
 
+/** Zkrácený popis odznaku (stránka Odznaky musí zůstat lehká); celé znění je v učitelských podkladech a po získání. */
+const BADGE60_TEXT_MAX = 64;
+function badge60_short(string $text, int $max = BADGE60_TEXT_MAX): string
+{
+    $text = trim($text);
+    if (u_strlen($text) <= $max) return $text;
+    $cut = u_substr($text, 0, $max - 1);
+    $space = strrpos($cut, " ");
+    return rtrim(($space !== false && $space > (int)($max * 0.5)) ? substr($cut, 0, $space) : $cut, " ,.;:") . "…";
+}
+
 /**
  * Karta odznaku pro mřížku/showcase. $meta navíc: percent (0–100, u zamčených), earned_at (Y-m-d…).
  * Třída v55-badge-bar zůstává kvůli kompatibilitě s auditem v55.
@@ -350,7 +362,7 @@ function badge60_card(string $id, array $meta, bool $earned, int $percent = 0): 
 {
     $v = badge60_variant($id, $meta);
     $title = (string)($meta['title'] ?? '');
-    $text = $earned ? (string)($meta['text'] ?? '') : (string)($meta['condition'] ?? $meta['text'] ?? '');
+    $text = badge60_short($earned ? (string)($meta['text'] ?? '') : (string)($meta['condition'] ?? $meta['text'] ?? ''));
     $html = '<article class="b60-card ' . ($earned ? 'is-earned' : 'is-locked') . ' rarity-' . e($v['rarity']) . '" data-b60-state="' . ($earned ? 'earned' : 'locked') . '">';
     $html .= '<div class="b60-art">' . badge60_svg($id, $meta, $earned, 72, true) . '</div><div class="b60-body">';
     $html .= '<strong>' . e($title) . '</strong><span class="b60-rarity">' . e(badge60_rarity_label($v['rarity'])) . '</span>';
@@ -373,7 +385,7 @@ function badge60_card(string $id, array $meta, bool $earned, int $percent = 0): 
 function badge60_row(string $id, array $meta): string
 {
     $v = badge60_variant($id, $meta);
-    $how = trim((string)($meta['condition'] ?? $meta['text'] ?? ''));
+    $how = badge60_short((string)($meta['condition'] ?? $meta['text'] ?? ''));
     return '<li class="b60-row rarity-' . e($v['rarity']) . '" data-b60-state="locked"><strong>' . e((string)($meta['title'] ?? '')) . '</strong>'
         . '<span class="b60-rarity">' . e(badge60_rarity_label($v['rarity'])) . '</span>' . ($how !== '' ? '<small>' . e($how) . '</small>' : '') . '</li>';
 }

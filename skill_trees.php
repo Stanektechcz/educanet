@@ -162,8 +162,9 @@ function skill_current_student_key(string $classId): string
 }
 function skill_student_label_from_key(string $classId,string $studentKey): string
 {
-    static $memo=[]; $mk=$classId."|".$studentKey; if(isset($memo[$mk]))return $memo[$mk];
-    $label=skill_student_label_lookup($classId,$studentKey); if($label!=="")$memo[$mk]=$label;
+    // Jméno odpovídá klíči jednoznačně (klíč = hash jména) → stačí pamatovat jen nalezená jména; prázdný výsledek se nepamatuje.
+    $mk=$classId."|".$studentKey; $memo=$GLOBALS['skill_label_memo'][$mk]??null; if(is_string($memo))return $memo;
+    $label=skill_student_label_lookup($classId,$studentKey); if($label!=="")$GLOBALS['skill_label_memo'][$mk]=$label;
     return $label;
 }
 function skill_student_label_lookup(string $classId,string $studentKey): string
@@ -190,6 +191,14 @@ function skill_store_merge(string $name,array $rows): void
     foreach($rows as $k=>$row){$old=is_array($current[$k]??null)?$current[$k]:null;if($old===null||!is_array($row)||!storage_changes_empty($old,$row,['updated_at']))$changed[$k]=$row;}
     if(!$changed)return;
     storage_update(skill_storage($name),static function(array $all) use($changed): array {foreach($changed as $k=>$row)$all[$k]=$row;return $all;});
+}
+
+/** Zahodí paměť jednoho požadavku (progress, větve, úroveň, jména, počty pro úspěchy); po zápisu dat žáka. */
+function skill_memo_reset(string $classId='',string $studentKey=''): void
+{
+    if($classId===''||$studentKey===''){unset($GLOBALS['skill_runtime_progress'],$GLOBALS['skill_runtime_branches'],$GLOBALS['skill_req_level'],$GLOBALS['skill_label_memo'],$GLOBALS['skill_ach_cache']);return;}
+    $k=$classId.'|'.$studentKey;
+    unset($GLOBALS['skill_runtime_progress'][$k],$GLOBALS['skill_runtime_branches'][$k],$GLOBALS['skill_req_level'][$k],$GLOBALS['skill_ach_cache']);
 }
 
 function skill_runtime_indexes(): array
@@ -293,6 +302,7 @@ function skill_add_evidence(string $classId,string $studentKey,string $skillSlug
     });
     if($existing!==null) return $existing;
     skill_add_audit($classId,$studentKey,'evidence.created',$skillSlug,['type'=>$type,'points'=>$points,'state'=>$state]);
+    skill_memo_reset($classId,$studentKey);
     if($recalculate) skill_recalculate_all($classId,$studentKey);
     return $row;
 }
@@ -309,6 +319,7 @@ function skill_update_evidence_state(string $evidenceId,string $state,string $re
         return $rows;
     });
     skill_add_audit((string)$found['class_id'],(string)$found['student_key'],'evidence.'.$state,(string)$found['skill'],['evidence_id'=>$evidenceId,'reason'=>$reason]);
+    skill_memo_reset((string)$found['class_id'],(string)$found['student_key']);
     skill_recalculate_all((string)$found['class_id'],(string)$found['student_key']);
     return $found;
 }
@@ -340,6 +351,11 @@ function skill_effective_points(array $skill,array $evidence): array
 function skill_student_level(string $classId,string $studentKey): int
 {
     $memo=$GLOBALS['skill_req_level'][$classId.'|'.$studentKey]??null; if(is_int($memo))return $memo;
+    return skill_student_level_compute($classId,$studentKey);
+}
+/** Level vždy z aktuálních dat (bez paměti) – přepočet si ho zapíše do skill_req_level sám. */
+function skill_student_level_compute(string $classId,string $studentKey): int
+{
     $label=skill_student_label_from_key($classId,$studentKey);
     if($studentKey===skill_current_student_key($classId)){ $xp=(int)(learning_profile($classId)['xp']??0); } else { $snap=$label!==''?learning_profile_snapshot_for_student($classId,$label):['xp'=>0]; $xp=(int)($snap['xp']??0); }
     return (int)(learning_level($xp)['level']??1);
@@ -360,10 +376,10 @@ function skill_recalculate_all(string $classId,string $studentKey=''): array
     if($studentKey==='')$studentKey=skill_current_student_key($classId);
     $skills=skill_relevant_skills($classId); usort($skills,static fn($a,$b)=>[(int)$a['tier'],(int)$a['sort_order']]<=>[(int)$b['tier'],(int)$b['sort_order']]);
     $evidence=skill_student_evidence($classId,$studentKey); $bySkill=[]; foreach($evidence as $r)$bySkill[(string)$r['skill']][]=$r;
-    $GLOBALS['skill_req_level'][$classId.'|'.$studentKey]=skill_student_level($classId,$studentKey);
+    $GLOBALS['skill_req_level'][$classId.'|'.$studentKey]=skill_student_level_compute($classId,$studentKey);
     $storedProgress=skill_progress_rows();$map=[];
     // Multiple passes let same-tier dependency changes settle without recursion.
-    for($pass=0;$pass<3;$pass++){
+    try { for($pass=0;$pass<3;$pass++){
         foreach($skills as $skill){
             $slug=(string)$skill['slug']; $calc=skill_effective_points($skill,$bySkill[$slug]??[]); $req=skill_requirement_status($classId,$studentKey,$skill,$map);
             $p=(float)$calc['points'];
@@ -371,10 +387,9 @@ function skill_recalculate_all(string $classId,string $studentKey=''): array
             $now=date(DATE_ATOM);$previous=is_array($storedProgress[$studentKey.'|'.$slug]??null)?$storedProgress[$studentKey.'|'.$slug]:[];$lastEvidence=null;foreach((array)($bySkill[$slug]??[]) as $ev){if(!is_array($ev)||!in_array((string)($ev['state']??''),['automatic','approved'],true))continue;$at=(string)($ev['validated_at']??$ev['created_at']??'');if($at!==''&&($lastEvidence===null||strcmp($at,$lastEvidence)>0))$lastEvidence=$at;}
             $map[$slug]=['class_id'=>$classId,'student_key'=>$studentKey,'skill'=>$slug,'branch'=>(string)$skill['branch'],'mastery_points'=>$p,'mastery_percent'=>$p,'mastery_level'=>skill_mastery_level($p),'unlock_state'=>$unlock,'missing_requirements'=>$req['missing'],'evidence_by_type'=>$calc['by_type'],'pending_types'=>$calc['pending'],'started_at'=>(string)($previous['started_at']??'')!==''?$previous['started_at']:($p>0?$now:null),'unlocked_at'=>(string)($previous['unlocked_at']??'')!==''?$previous['unlocked_at']:($unlock!=='locked'?$now:null),'mastered_at'=>(string)($previous['mastered_at']??'')!==''?$previous['mastered_at']:($unlock==='mastered'?$now:null),'last_evidence_at'=>$lastEvidence,'updated_at'=>$now];
         }
-    }
-    unset($GLOBALS['skill_req_level'][$classId.'|'.$studentKey]);
+    } } finally { unset($GLOBALS['skill_req_level'][$classId.'|'.$studentKey]); }
     $mine=[]; foreach($map as $slug=>$row)$mine[$studentKey.'|'.$slug]=$row; skill_store_merge('progress',$mine);
-    $GLOBALS['skill_runtime_progress'][$classId.'|'.$studentKey]=$map;
+    unset($GLOBALS['skill_ach_cache']); $GLOBALS['skill_runtime_progress'][$classId.'|'.$studentKey]=$map;
     skill_recalculate_branches($classId,$studentKey,$map); skill_refresh_gamification($classId,$studentKey,$map);
     return $map;
 }
@@ -581,19 +596,21 @@ function skill_achievement_definitions(): array
 
 function skill_achievement_value(string $classId,string $achievementId): int
 {
-    static $cache=[];
-    if(!isset($cache[$classId])){
+    $ck=$classId.'|'.skill_current_student_key($classId); $cache=$GLOBALS['skill_ach_cache'][$ck]??null;
+    if(!is_array($cache)){
+        // Nejdřív spočítat (přepočet pokroku paměť počtů zahazuje), teprve potom zapsat.
         $map=skill_progress_map($classId);$branches=skill_branch_progress_map($classId);
-        $cache[$classId]=[
+        $cache=[
             'mastered'=>count(array_filter($map,static fn($p)=>(float)($p['mastery_percent']??0)>=100)),
             'advanced'=>count(array_filter($map,static fn($p)=>(float)($p['mastery_percent']??0)>=75)),
             'branches60'=>count(array_filter($branches,static fn($b)=>(float)($b['mastery_percent']??0)>=60)),
         ];
+        $GLOBALS['skill_ach_cache'][$ck]=$cache;
     }
     return match($achievementId){
-        'skill_first_mastered','skill_master_5','skill_master_10'=>$cache[$classId]['mastered'],
-        'skill_advanced_10'=>$cache[$classId]['advanced'],
-        'skill_double_talent','skill_polymath'=>$cache[$classId]['branches60'],
+        'skill_first_mastered','skill_master_5','skill_master_10'=>$cache['mastered'],
+        'skill_advanced_10'=>$cache['advanced'],
+        'skill_double_talent','skill_polymath'=>$cache['branches60'],
         default=>0,
     };
 }

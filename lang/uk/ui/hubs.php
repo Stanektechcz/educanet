@@ -1583,7 +1583,10 @@ return [
     'Sbírka odznaků' => 'Колекція значків',
     'První odznak je za rohem' => 'Перший значок уже близько',
     'Odznaky získáš za zkoušky, projekty, Linux Lab i pravidelné učení.' => 'Значки отримуєш за іспити, проєкти, Linux Lab і регулярне навчання.',
-    'Zobrazit všechny zamčené ({n})' => 'Показати всі заблоковані ({n})',
     '{n} nových výzev' => ['one' => '{n} новий виклик', 'few' => '{n} нові виклики', 'many' => '{n} нових викликів', 'other' => '{n} нових викликів'],
     '{n} bodů' => ['one' => '{n} бал', 'few' => '{n} бали', 'many' => '{n} балів', 'other' => '{n} балів'],
+    'Zobrazit zamčené ({n})' => 'Показати заблоковані ({n})',
+    'Zobrazit všechny získané ({n})' => 'Показати всі здобуті ({n})',
+    'Zobrazit všechny milníky ({n})' => 'Показати всі віхи ({n})',
+    'Zamčené odznaky' => 'Заблоковані значки',
 ];

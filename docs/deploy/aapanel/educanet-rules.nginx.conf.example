@@ -61,7 +61,12 @@ location ^~ /assets/ {
     # assets/*.json (manuál labu, offline katalogy) musí zůstat čitelné pro JS.
     location ~* \.php { deny all; return 404; }
     try_files $uri =404;
-    expires 7d;   # soubory mají ?v= verzi, po nasazení se načtou nové
+    # v61: cache podle toho, jestli se ?v= mění s obsahem. asset_url() přidává ?v=<čas změny souboru> (devět a více
+    # číslic) – po úpravě souboru je to jiná URL, takže stačí rok. Ručně psané ?v=57.0 nebo URL bez ?v= se po úpravě
+    # souboru nemusí změnit, proto jen hodina (revalidace se vyřídí přes 304). Bez add_header: ten by v této location
+    # zrušil dědění bezpečnostních hlaviček ze serveru.
+    expires 1h;
+    if ($arg_v ~ "^[0-9]{9,}$") { expires 365d; }
 }
 
 # --- PHP whitelist (jediné vstupní body aplikace) ----------------------------------------

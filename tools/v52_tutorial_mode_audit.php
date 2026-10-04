@@ -169,6 +169,6 @@ $check('reduced motion respected', str_contains($js, 'prefers-reduced-motion') &
 $check('keyboard navigation in tutorial', str_contains($js, "e.key === 'ArrowRight'"), false);
 $check('order exercise usable without drag (buttons)', str_contains($js, 'data-up') && str_contains($js, 'data-down'), false);
 $check('no horizontal overflow guards', str_contains($css, '.t52 * { min-width: 0; }'), false);
-$check('PWA caches v52 assets', preg_match('/educanet-v5\d/', $sw) === 1 && str_contains($sw, 'assets/tutorial-v52.css') && str_contains($sw, 'assets/tutorial-v52.js'), false);
+$check('PWA caches v52 assets', preg_match('/educanet-v[56]\d/', $sw) === 1 && str_contains($sw, 'assets/tutorial-v52.css') && str_contains($sw, 'assets/tutorial-v52.js'), false);
 
 exit(audit_summary($state, 'V52_TUTORIAL_MODE'));

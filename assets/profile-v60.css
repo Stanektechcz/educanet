@@ -98,6 +98,8 @@ body:not(.assessment-mode) .p60-layout .p60-hero .btn{background:#fff !important
 .p60-points-list li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 10px;min-width:0;overflow-wrap:anywhere;padding:var(--s3);border-radius:var(--r-sm);background:#f2f5f7}
 .p60-plus{color:#0b6b49;font-weight:700}
 .p60-minus{color:#a92f2f;font-weight:700}
+.p60-more-link{margin:var(--s3) 0 0}
+.p60-more-link .btn{display:inline-flex;align-items:center;min-height:44px}
 .p60-more{margin-top:var(--s4)}
 .p60-more > summary{display:flex;align-items:center;min-height:44px;cursor:pointer;color:var(--accent-ink);font-weight:700}
 .p60-more[open] > summary{margin-bottom:var(--s3)}

@@ -169,7 +169,7 @@ $check('mobile navigation stays visible', str_contains($css, '.student-main-menu
 // ř. 169 (dřív): "educanet-v51-light-clarity" je dnes jen historický komentář v sw.js (ř. 13), ne
 // živý CACHE název – ověřujeme aktivní `const CACHE=` (verzovaný educanet-v5x identifikátor) a
 // skutečnou přítomnost ui-v51.css v SHELL (viz PLAN_F4_PROD.md A.2).
-$v51ActiveCacheOk = (bool)preg_match('/const CACHE="educanet-v5\d/', $sw);
+$v51ActiveCacheOk = (bool)preg_match('/const CACHE="educanet-v[56]\d/', $sw);
 $check('PWA caches v51 assets', str_contains($sw, 'assets/ui-v51.css?v=51.0') && $v51ActiveCacheOk, false);
 
 // F4-5 (PLAN_F4_PROD.md A.3): dřívější pravidlo skrylo detail žákovi natvrdo (viz v59 F4-5 – smazáno

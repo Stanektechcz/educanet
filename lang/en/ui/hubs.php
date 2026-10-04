@@ -1583,7 +1583,10 @@ return [
     'Sbírka odznaků' => 'Badge collection',
     'První odznak je za rohem' => 'Your first badge is around the corner',
     'Odznaky získáš za zkoušky, projekty, Linux Lab i pravidelné učení.' => 'You earn badges for exams, projects, Linux Lab and regular learning.',
-    'Zobrazit všechny zamčené ({n})' => 'Show all locked ({n})',
     '{n} nových výzev' => ['one' => '{n} new challenge', 'other' => '{n} new challenges'],
     '{n} bodů' => ['one' => '{n} point', 'other' => '{n} points'],
+    'Zobrazit zamčené ({n})' => 'Show locked ({n})',
+    'Zobrazit všechny získané ({n})' => 'Show all earned ({n})',
+    'Zobrazit všechny milníky ({n})' => 'Show all milestones ({n})',
+    'Zamčené odznaky' => 'Locked badges',
 ];

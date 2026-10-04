@@ -854,14 +854,20 @@ function verify_google_id_token(string $jwt): array
 
 function normalized_person_name(string $value): string
 {
+    static $translit = false; // v61: instance se vytváří jednou (false = ještě nezkoušeno, null = nejde vytvořit)
+    static $memo = [];        // v61: čistá funkce – stejný vstup (adresář žáků ji volá stokrát) se přepočítá jen jednou
+    if (isset($memo[$value])) return $memo[$value];
+    $input = $value;
     $value = trim(preg_replace('/\s+/u', ' ', $value) ?? $value);
     if (class_exists('Transliterator')) {
-        $t = Transliterator::create('NFD; [:Nonspacing Mark:] Remove; NFC; Lower()');
-        if ($t) $value = $t->transliterate($value);
+        if ($translit === false) $translit = Transliterator::create('NFD; [:Nonspacing Mark:] Remove; NFC; Lower()');
+        if ($translit) $value = $translit->transliterate($value);
     } else {
         $value = strtolower(iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value) ?: $value);
     }
-    return preg_replace('/[^a-z0-9]+/', '', strtolower($value)) ?? '';
+    $result = preg_replace('/[^a-z0-9]+/', '', strtolower($value)) ?? '';
+    if (count($memo) > 4000) $memo = [];
+    return $memo[$input] = $result;
 }
 
 function student_directory(): array
@@ -1241,7 +1247,7 @@ function php_json_cache_forget(string $path): void
  */
 function load_php_json(string $path): array
 {
-    return storage_read($path);
+    return storage_read_request($path);
 }
 
 /**
@@ -1458,6 +1464,17 @@ function learning_profile_commit(string $key, array $profile): array
 
 function learning_profile(string $classId): array
 {
+    $memoKey = learning_profile_key($classId) . '|' . (auth_is_signed_in() ? 's' : 'a');
+    $memo = storage_request_memo_enabled() ? ($GLOBALS['educanet_learning_profile_memo'][$memoKey] ?? null) : null;
+    if (is_array($memo) && $memo['epoch'] === storage_epoch()) return $memo['profile'];
+    $profile = learning_profile_load($classId);
+    $GLOBALS['educanet_learning_profile_memo'][$memoKey] = ['epoch' => storage_epoch(), 'profile' => $profile];
+    return $profile;
+}
+
+/** Načtení profilu bez paměti požadavku (learning_profile() ho obaluje memoizací podle epochy zápisů). */
+function learning_profile_load(string $classId): array
+{
     if (!isset($_SESSION['learning_profiles']) || !is_array($_SESSION['learning_profiles'])) $_SESSION['learning_profiles'] = [];
     $key = learning_profile_key($classId);
     if (auth_is_signed_in()) {
@@ -1487,6 +1504,7 @@ function learning_profile(string $classId): array
 
 function learning_save_profile(string $classId, array $profile): void
 {
+    unset($GLOBALS['educanet_learning_profile_memo'], $GLOBALS['educanet_learning_refresh_memo']);
     if (!isset($_SESSION['learning_profiles']) || !is_array($_SESSION['learning_profiles'])) $_SESSION['learning_profiles'] = [];
     $key = learning_profile_key($classId);
     if (!auth_is_signed_in()) {
@@ -1793,7 +1811,28 @@ function learning_progress_metrics(string $classId, array $module, array $simula
     ];
 }
 
+/**
+ * v61: obnova odznaků/úspěchů je idempotentní – dokud tento požadavek nic nezapsal (storage_epoch()) a předchozí běh sám
+ * nic nezměnil, další volání (hlavička, přehled, widgety) nic nového nenajde, takže se přeskočí.
+ * Běh, který něco zapsal, se nepamatuje (příští volání ověří stav znovu).
+ */
+function learning_refresh_once(string $name, string $classId, array $module, array $simulationMap, callable $run): array
+{
+    if (!storage_request_memo_enabled()) return $run();
+    $key = $name . '|' . $classId . '|' . count($simulationMap) . '|' . count($module);
+    $epoch = storage_epoch();
+    if (($GLOBALS['educanet_learning_refresh_memo'][$key] ?? null) === $epoch) return [];
+    $new = $run();
+    if (storage_epoch() === $epoch) $GLOBALS['educanet_learning_refresh_memo'][$key] = $epoch;
+    return $new;
+}
+
 function learning_refresh_achievements(string $classId, array $module, array $simulationMap = []): array
+{
+    return learning_refresh_once('ach', $classId, $module, $simulationMap, static fn(): array => learning_refresh_achievements_run($classId, $module, $simulationMap));
+}
+
+function learning_refresh_achievements_run(string $classId, array $module, array $simulationMap): array
 {
     $profile = learning_profile($classId);
     $earned = is_array($profile['achievements'] ?? null) ? $profile['achievements'] : [];
@@ -1844,6 +1883,11 @@ function learning_achievement_progress(string $classId, array $module, array $si
 }
 
 function learning_refresh_badges(string $classId, array $module, array $simulationMap = []): array
+{
+    return learning_refresh_once('badges', $classId, $module, $simulationMap, static fn(): array => learning_refresh_badges_run($classId, $module, $simulationMap));
+}
+
+function learning_refresh_badges_run(string $classId, array $module, array $simulationMap): array
 {
     $profile = learning_profile($classId);
     $badges = is_array($profile['badges'] ?? null) ? $profile['badges'] : [];

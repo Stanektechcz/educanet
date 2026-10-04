@@ -91,12 +91,45 @@ function storage_lock_exclusive(string $path)
 
 function storage_unlock($fp, string $path): void
 {
+    $GLOBALS['educanet_storage_epoch'] = (int)($GLOBALS['educanet_storage_epoch'] ?? 0) + 1;
     unset($GLOBALS['educanet_storage_held'][storage_path_key($path)]);
     flock($fp, LOCK_UN);
     fclose($fp);
     php_json_cache_forget($path);
 }
 
+/**
+ * v61: počet zápisů tohoto procesu (každé uvolnění výlučného zámku ho zvýší). Paměti v rámci požadavku (memoizace
+ * odvozených dat) platí, dokud se epocha nezmění – stejný požadavek tak nečte a nepřepočítává totéž znovu.
+ */
+function storage_epoch(): int
+{
+    return (int)($GLOBALS['educanet_storage_epoch'] ?? 0);
+}
+
+/**
+ * v61: čtení s pamětí požadavku (N+1). Dokud tento proces nic nezapsal (storage_epoch() beze změny), vrací stejná data
+ * bez nového stat() souboru – šablona, která stejný soubor čte stokrát, ho nečte stokrát. Zapnuto jen v rámci webového
+ * požadavku (PHP_SAPI ≠ cli) nebo když měřicí nástroj nastaví $GLOBALS['educanet_request_memo']; dlouhoběžící CLI
+ * (audity, cron) a testy, které soubor mění mimo tento proces, tak vždy čtou čerstvě. Chování storage_read() se nemění.
+ */
+function storage_request_memo_enabled(): bool
+{
+    static $enabled = null;
+    return $enabled ??= PHP_SAPI !== 'cli' || !empty($GLOBALS['educanet_request_memo']);
+}
+
+function storage_read_request(string $path, bool $strict = true): array
+{
+    if (!storage_request_memo_enabled()) return storage_read($path, $strict);
+    $memo = &$GLOBALS['educanet_storage_request_memo'];
+    $epoch = storage_epoch();
+    $hit = $memo[$path] ?? null;
+    if (is_array($hit) && $hit[0] === $epoch) return $hit[1];
+    $data = storage_read($path, $strict);
+    $memo[$path] = [$epoch, $data];
+    return $data;
+}
 /** Obsah datového souboru (bez zamykání – volající drží zámek). null = soubor neexistuje / nelze číst. */
 function storage_read_file_raw(string $path): ?string
 {
@@ -152,6 +185,7 @@ function storage_atomic_replace(string $path, string $payload): void
  */
 function storage_read_locked_raw(string $path): ?string
 {
+    storage_stats_hit($path, true);
     if (storage_held_handle($path) !== null) return storage_read_file_raw($path);
     $lk = @fopen(storage_lock_path($path), 'rb');
     if ($lk === false) return storage_read_file_raw($path);
@@ -194,12 +228,30 @@ function storage_signature(string $path): ?string
 }
 
 /**
+ * v61 · měření výkonu: počítadla čtení v rámci požadavku (volání storage_read, fyzická čtení souboru, po souborech).
+ * Jen pole v $GLOBALS – žádný zápis, žádný I/O; čte je tools/lib/v61_perf_worker.php.
+ */
+function storage_stats_hit(string $path, bool $disk): void
+{
+    $stats = &$GLOBALS['educanet_storage_stats'];
+    if (!is_array($stats)) $stats = ['calls' => 0, 'disk' => 0, 'by' => []];
+    $name = basename($path);
+    if ($disk) {
+        $stats['disk']++;
+        return;
+    }
+    $stats['calls']++;
+    $stats['by'][$name] = ($stats['by'][$name] ?? 0) + 1;
+}
+
+/**
  * Čtení JSON úložiště pod LOCK_SH s cache podle podpisu souboru.
  * $strict = true: poškozený soubor → výjimka (výchozí, bezpečné pro následný zápis).
  * $strict = false: poškozený soubor → [] + záznam do error_logu (jen pro čistě zobrazovací místa).
  */
 function storage_read(string $path, bool $strict = true): array
 {
+    storage_stats_hit($path, false);
     $signature = storage_signature($path);
     if ($signature === null) return [];
     $cache = &$GLOBALS['educanet_json_request_cache'];
@@ -237,19 +289,44 @@ function storage_read(string $path, bool $strict = true): array
 }
 
 /**
+ * v61 · režim „jen čtení“ (EDUCANET_STORAGE_READONLY=1) pro měření na ostrých datech (tools/v61_perf_report.php):
+ * storage_update/_many/_write/_append se nezapíší (suchý běh nad aktuálními daty, bez zámků a bez souborů).
+ * Ve výchozím stavu (proměnná není nastavená) se chování nemění.
+ */
+function storage_readonly(): bool
+{
+    static $ro = null;
+    return $ro ??= getenv('EDUCANET_STORAGE_READONLY') === '1';
+}
+
+/** Suchý běh úpravy: $mutate dostane aktuální data (bez zámku), výsledek se vrátí, ale nezapíše. */
+function storage_readonly_update(array $paths, callable $mutate): array
+{
+    $data = [];
+    foreach ($paths as $path) $data[$path] = storage_read_current($path);
+    $new = $mutate($data);
+    if (!is_array($new)) throw new RuntimeException('Úprava úložiště nevrátila platná data.');
+    return array_replace($data, $new);
+}
+/**
  * Atomická úprava JSON úložiště: jeden LOCK_EX drží čtení → $mutate($data) → zápis.
  * $mutate dostane aktuální data a vrací nová data; výjimka z $mutate zápis zruší.
  * Vrátí-li $mutate beze změny stejná data, soubor se nepřepisuje.
  */
 function storage_update(string $path, callable $mutate): array
 {
+    if (storage_readonly()) return storage_readonly_update([$path], static fn(array $d): array => [$path => $mutate($d[$path])])[$path];
     $fp = storage_lock_exclusive($path);
     try {
         $raw = storage_read_file_raw($path);
         $data = storage_decode_raw($raw ?? '');
         $new = $mutate($data);
         if (!is_array($new)) throw new RuntimeException('Úprava úložiště nevrátila platná data.');
-        if ($new !== $data || $raw === null || $raw === '') storage_atomic_replace($path, storage_encode_payload($new));
+        if ($new !== $data || $raw === null || $raw === '') {
+            $payload = storage_encode_payload($new);
+            // v61: stejný obsah (jen jiný typ, např. 0 vs 0.0 po round-tripu přes JSON) se nepřepisuje – GET nesmí zapisovat pokaždé.
+            if ($raw !== $payload) storage_atomic_replace($path, $payload);
+        }
     } finally {
         storage_unlock($fp, $path);
     }
@@ -264,6 +341,7 @@ function storage_update(string $path, callable $mutate): array
 function storage_update_many(array $paths, callable $mutate): array
 {
     $paths = array_values(array_unique(array_map('strval', $paths)));
+    if (storage_readonly()) return storage_readonly_update($paths, $mutate);
     usort($paths, static fn(string $a, string $b): int => strcmp(storage_path_key($a), storage_path_key($b)));
     foreach ($paths as $path) {
         if (storage_held_handle($path) !== null) throw new RuntimeException('Vnořený zápis do stejného úložiště (' . basename($path) . ') není dovolen.');
@@ -323,6 +401,7 @@ function storage_list_push(string $path, array $row, int $cap = 0): void
 /** Zápis celého obsahu – jen pro cache, snapshoty a testovací fixtures (NE pro read-modify-write). */
 function storage_write(string $path, array $data): void
 {
+    if (storage_readonly()) return;
     $payload = storage_encode_payload($data);
     $fp = storage_lock_exclusive($path);
     try {
@@ -371,7 +450,10 @@ function storage_merge_changes(array $fresh, array $base, array $new, array $cou
 function storage_changes_empty(array $base, array $new, array $ignore = []): bool
 {
     foreach ($ignore as $k) unset($base[$k], $new[$k]);
-    return $base === $new;
+    if ($base === $new) return true;
+    // v61: stejný uložený tvar = beze změny (0 a 0.0 se po zápisu do JSON neliší).
+    $flags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE;
+    return json_encode($base, $flags) === json_encode($new, $flags);
 }
 
 function storage_is_nonempty_list(array $value): bool
@@ -453,6 +535,7 @@ function storage_append(string $stream, array $record): void
 function storage_append_many(string $stream, array $records, ?string $month = null): int
 {
     if ($records === []) return 0;
+    if (storage_readonly()) return count($records);
     $file = storage_stream_file($stream, $month ?? date('Y-m'));
     $payload = '';
     foreach ($records as $record) {
@@ -587,7 +670,7 @@ function storage_stream_rows(string $stream, ?callable $filter = null, int $limi
 function storage_rows(string $path): array
 {
     $stream = storage_stream_for_path($path);
-    return $stream !== null ? storage_stream_rows($stream) : storage_read($path);
+    return $stream !== null ? storage_stream_rows($stream) : storage_read_request($path);
 }
 
 // ---------------------------------------------------------------- schéma (DAT-07)

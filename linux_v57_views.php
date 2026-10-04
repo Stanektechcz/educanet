@@ -612,14 +612,8 @@ function lab57_render_manual_index(array $module, array $manual): void
             <h2><span aria-hidden="true"><?= e((string)$cat['icon']) ?></span> <?= e((string)$cat['label']) ?></h2>
             <p><?= e((string)$cat['lead']) ?></p>
             <div class="lab57-manual-grid">
-              <?php foreach ($cmds as $name => $cmd): ?>
-                <a class="lab57-manual-card" href="?view=prikazy&amp;c=<?= rawurlencode((string)$name) ?>" data-lab57-manual-item data-name="<?= e((string)$name) ?>" data-summary="<?= e((string)$cmd['summary']) ?>">
-                  <code><?= e((string)$name) ?></code>
-                  <span class="lab57-manual-level"><?= e(tr('úroveň {n}', ['n' => (int)$cmd['level']])) ?></span>
-                  <?php if (empty($cmd['in_lab'])): ?><span class="lab57-manual-badge"><?= e(tr('jen přehled')) ?></span><?php endif; ?>
-                  <p><?= e((string)$cmd['summary']) ?></p>
-                </a>
-              <?php endforeach; ?>
+              <?php // v61: karta na jednom řádku bez odsazení – index má ~170 příkazů, bílé znaky tvořily čtvrtinu HTML.
+              foreach ($cmds as $name => $cmd) { echo '<a class="lab57-manual-card" href="?view=prikazy&amp;c=', rawurlencode((string)$name), '" data-lab57-manual-item><code>', e((string)$name), '</code> <span class="lab57-manual-level">', e(tr('úroveň {n}', ['n' => (int)$cmd['level']])), '</span>', empty($cmd['in_lab']) ? ' <span class="lab57-manual-badge">' . e(tr('jen přehled')) . '</span>' : '', '<p>', e((string)$cmd['summary']), '</p></a>', "\n"; } ?>
             </div>
           </section>
         <?php endforeach; ?>
@@ -631,15 +625,12 @@ function lab57_render_manual_index(array $module, array $manual): void
         <section class="lab57-manual-concepts">
           <h2><?= e(tr('Jak funguje shell')) ?></h2>
           <div class="lab57-manual-grid"<?= edu_content_lang_attr() ?>>
-            <?php foreach ((array)$manual['concepts'] as $key => $c): ?>
-              <article class="lab57-concept">
-                <h3><?= e((string)$c['title']) ?></h3>
-                <p><?= e((string)$c['about']) ?></p>
-                <?php foreach ((array)($c['examples'] ?? []) as [$cmd, $note]): ?>
-                  <div class="lab57-example"><code><?= e((string)$cmd) ?></code><span><?= e((string)$note) ?></span></div>
-                <?php endforeach; ?>
-              </article>
-            <?php endforeach; ?>
+            <?php // v61: kompaktní výpis bez odsazení (úspora HTML).
+            foreach ((array)$manual['concepts'] as $key => $c) {
+                echo '<article class="lab57-concept"><h3>', e((string)$c['title']), '</h3><p>', e((string)$c['about']), '</p>';
+                foreach ((array)($c['examples'] ?? []) as [$cmd, $note]) echo '<div class="lab57-example"><code>', e((string)$cmd), '</code><span>', e((string)$note), '</span></div>';
+                echo "</article>\n";
+            } ?>
           </div>
         </section>
       <?php endif; ?>

@@ -56,9 +56,7 @@ return [
     '{name} odmítl/a' => '{name} declined',
     'zrušeno' => 'cancelled',
     'vypršelo' => 'expired',
-    'Týdenní hádanka – historie' => 'Weekly puzzle – history',
     '{title}: vyřešeno ({len} znaků)' => '{title}: solved ({len} characters)',
-    '{title}: nehráno' => '{title}: not played',
     'soubojů' => 'duels',
     'výher' => 'wins',
     'Vyzvat na souboj' => 'Challenge to a duel',
@@ -69,4 +67,7 @@ return [
     'Nastavení výzev' => 'Challenge settings',
     'Aréna' => 'Arena',
     '{n} nových výzev' => ['one' => '{n} new challenge', 'other' => '{n} new challenges'],
+    'Zatím žádné souboje. Vyzvi spolužáka na stejnou úlohu z Linux Labu.' => 'No duels yet. Challenge a classmate to the same Linux Lab task.',
+    'Týdenní hádanka' => 'Weekly puzzle',
+    'Historie odehraných týdnů ({n})' => 'History of played weeks ({n})',
 ];

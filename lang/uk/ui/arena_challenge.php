@@ -56,9 +56,7 @@ return [
     '{name} odmítl/a' => '{name} відхилив(ла)',
     'zrušeno' => 'скасовано',
     'vypršelo' => 'минув термін',
-    'Týdenní hádanka – historie' => 'Тижнева загадка – історія',
     '{title}: vyřešeno ({len} znaků)' => '{title}: розв’язано ({len} символів)',
-    '{title}: nehráno' => '{title}: не грано',
     'soubojů' => 'дуелей',
     'výher' => 'перемог',
     'Vyzvat na souboj' => 'Викликати на дуель',
@@ -69,4 +67,7 @@ return [
     'Nastavení výzev' => 'Налаштування викликів',
     'Aréna' => 'Арена',
     '{n} nových výzev' => ['one' => '{n} новий виклик', 'few' => '{n} нові виклики', 'many' => '{n} нових викликів', 'other' => '{n} нових викликів'],
+    'Zatím žádné souboje. Vyzvi spolužáka na stejnou úlohu z Linux Labu.' => 'Поки що жодних поєдинків. Виклич однокласника на те саме завдання з Linux Lab.',
+    'Týdenní hádanka' => 'Загадка тижня',
+    'Historie odehraných týdnů ({n})' => 'Історія зіграних тижнів ({n})',
 ];

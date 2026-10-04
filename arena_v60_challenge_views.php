@@ -80,10 +80,15 @@ function arena60_render_profile_tab(string $classId, string $studentKey): void
     $data = arena60_profile_data($classId, $studentKey, arena57_now());
     echo arena60_task($data);
     echo profile60_panel_open(tr('Výzvy spolužákům'), tr('Souboje'));
-    echo profile60_stats([[(string)(int)$data['wins'], tr('výhry'), 'teal'], [(string)(int)$data['losses'], tr('prohry'), 'orange']]);
-    arena60_render_incoming($data['incoming']);
-    arena60_render_outgoing($data['outgoing']);
-    arena60_render_history($data['history'], $studentKey);
+    if ($data['incoming'] === [] && $data['outgoing'] === [] && $data['history'] === []) {
+        // Jeden prázdný stav s výzvou k akci místo tří prázdných sekcí.
+        echo profile60_empty(tr('Zatím žádné souboje. Vyzvi spolužáka na stejnou úlohu z Linux Labu.'), tr('Najít spolužáka'), '?view=community');
+    } else {
+        echo profile60_stats([[(string)(int)$data['wins'], tr('výhry'), 'teal'], [(string)(int)$data['losses'], tr('prohry'), 'orange']]);
+        if ($data['incoming']) arena60_render_incoming($data['incoming']);
+        if ($data['outgoing']) arena60_render_outgoing($data['outgoing']);
+        if ($data['history']) arena60_render_history($data['history'], $studentKey);
+    }
     echo profile60_panel_close();
     echo profile60_panel_open(tr('Nastavení výzev'));
     echo arena60_form_open('arena60_optin_set', '', ['on' => $data['optin'] ? '0' : '1']) . '<div class="arena60-optin"><span class="arena60-optin-state">'
@@ -94,14 +99,16 @@ function arena60_render_profile_tab(string $classId, string $studentKey): void
     if ($data['weekly']) arena60_render_weekly($data['weekly']);
 }
 
+/** Týdenní hádanka: jen odehrané týdny, sbalené v <details>; bez odehraného týdne se panel nevykreslí. */
 function arena60_render_weekly(array $weekly): void
 {
-    echo profile60_panel_open(tr('Týdenní hádanka – historie')) . '<ul class="arena60-list">';
-    foreach ($weekly as $w) {
-        $txt = $w['played'] ? tr('{title}: vyřešeno ({len} znaků)', ['title' => $w['title'], 'len' => (int)$w['len']]) : tr('{title}: nehráno', ['title' => $w['title']]);
-        echo '<li><span>' . e($txt) . '</span></li>';
+    $played = array_values(array_filter($weekly, static fn($w): bool => is_array($w) && !empty($w['played'])));
+    if ($played === []) return;
+    echo profile60_panel_open(tr('Týdenní hádanka')) . '<details class="p60-more"><summary>' . e(tr('Historie odehraných týdnů ({n})', ['n' => count($played)])) . '</summary><ul class="arena60-list">';
+    foreach ($played as $w) {
+        echo '<li><span>' . e(tr('{title}: vyřešeno ({len} znaků)', ['title' => $w['title'], 'len' => (int)$w['len']])) . '</span></li>';
     }
-    echo '</ul>' . profile60_panel_close();
+    echo '</ul></details>' . profile60_panel_close();
 }
 
 /** Cizí profil – tlačítko „Vyzvat“ + souhrnná čísla, žádné detaily jeho soubojů s jinými. */

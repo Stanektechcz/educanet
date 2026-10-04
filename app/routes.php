@@ -101,6 +101,8 @@ return [
     'views_early' => [
         ['match' => ['activate'], 'file' => 'views/activate.php', 'libs' => ['layout', 'intake_views']],
         ['match' => ['join'], 'file' => 'views/join.php', 'libs' => ['layout', 'session_views']],
+        // v61: seznam klíčových assetů pro přednačtení service workerem (JSON, neosobní, bez knihoven).
+        ['match' => ['precache'], 'file' => 'views/precache.php', 'libs' => []],
     ],
     'views_public' => [
         ['match' => ['verify_email', 'reset_password'], 'file' => 'views/auth_links.php', 'libs' => ['layout']],

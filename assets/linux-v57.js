@@ -807,8 +807,11 @@
         var catItems = Array.prototype.slice.call(cat.querySelectorAll('[data-lab57-manual-item]'));
         var visibleInCat = 0;
         catItems.forEach(function (item) {
-          var name = (item.dataset.name || '').toLowerCase();
-          var summary = (item.dataset.summary || '').toLowerCase();
+          // v61: název a popis se čtou z obsahu karty (atributy data-name/data-summary je jen duplikovaly a nafukovaly HTML).
+          var nameEl = item.querySelector('code');
+          var summaryEl = item.querySelector('p');
+          var name = (nameEl ? nameEl.textContent : '').toLowerCase();
+          var summary = (summaryEl ? summaryEl.textContent : '').toLowerCase();
           var show = q === '' || name.indexOf(q) !== -1 || summary.indexOf(q) !== -1;
           item.style.display = show ? '' : 'none';
           if (show) visibleInCat++;

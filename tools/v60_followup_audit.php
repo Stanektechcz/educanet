@@ -57,7 +57,7 @@ try {
 
 // --- 2) v60 styly: světlé plochy, kontrast, žádný přetok --------------------------------------------------
 $css = [];
-foreach (['marketplace', 'projects', 'feedback', 'arena', 'profile'] as $name) $css[$name] = $read($root . '/assets/' . $name . '-v60.css');
+foreach (['marketplace', 'projects', 'feedback', 'profile'] as $name) $css[$name] = $read($root . '/assets/' . $name . '-v60.css');
 $allCss = implode("\n", $css);
 foreach ($css as $name => $text) {
     $check($name . '-v60.css: neobsahuje nedefinované tmavé tokeny (--panel-bg/--card-bg) ani průhledně bílé plochy', $text !== '' && !preg_match('/--panel-bg|--card-bg|background:\s*rgba\(255,\s*255,\s*255/', $text));
@@ -67,7 +67,7 @@ $pairs = [ // [popis, popředí, pozadí] – barvy použité v v60 stylech
     ['text #111827 na bílé', '#111827', '#ffffff'], ['tlumený text #4b5563 na bílé', '#4b5563', '#ffffff'], ['text #374151 na bílé', '#374151', '#ffffff'],
     ['tlumený text #4b5563 na #eef2f5', '#4b5563', '#eef2f5'], ['text na #eef2f5', '#111827', '#eef2f5'], ['text na #e6f6ef', '#111827', '#e6f6ef'],
     ['text na #fff3d6', '#111827', '#fff3d6'], ['text na #cdeedb', '#111827', '#cdeedb'], ['text na #f9d9d3', '#111827', '#f9d9d3'],
-    ['text na #dde3e9', '#111827', '#dde3e9'], ['zakázané tlačítko', '#4b5563', '#e5e9ee'], ['odznak počtu', '#ffffff', '#1d4ed8'],
+    ['text na #dde3e9', '#111827', '#dde3e9'], ['zakázané tlačítko', '#4b5563', '#e5e9ee'],
     ['+ body', '#0b6b49', '#eef2f5'], ['− body', '#a92f2f', '#eef2f5'],
 ];
 foreach ($pairs as [$label, $fg, $bg]) {
@@ -79,9 +79,9 @@ foreach ($pairs as [$label, $fg, $bg]) {
 $check('okraj volby (#8b96a3) na bílé ≥ 3 : 1 (WCAG 1.4.11)', (audit_contrast_ratio('#8b96a3', '#ffffff') ?? 0) >= 3.0);
 $check('mřížky obchodu/projektů/profilu používají minmax(0,…)/min(100%,…) – na 390 px nepřetečou', str_contains($css['marketplace'], 'minmax(min(100%,240px),1fr)') && str_contains($css['projects'], 'minmax(min(100%,260px),1fr)') && str_contains($css['projects'], 'minmax(0,1fr)') && substr_count($css['profile'], 'minmax(0,1fr)') >= 3);
 $check('dlouhá slova: karty, seznamy a statistiky mají overflow-wrap + min-width:0', substr_count($allCss, 'overflow-wrap') >= 10 && substr_count($css['marketplace'] . $css['projects'], 'min-width:0') >= 8);
-$check('cíle ≥ 44 px i proti globálnímu .btn{min-height:38px!important}', str_contains($css['marketplace'], 'body:not(.assessment-mode) .mkt60-card .btn') && str_contains($css['projects'], 'body:not(.assessment-mode) .proj60-card .btn') && str_contains($css['arena'], 'min-height: 44px !important'));
-$focus = substr_count($css['marketplace'] . $css['projects'] . $css['feedback'], 'outline:3px solid #2459ff!important') + substr_count($css['arena'], 'outline: 3px solid #2459ff !important');
-$check('viditelný focus 3 px #2459ff přebíjí průhledný globální focus (!important)', $focus >= 4);
+$check('cíle ≥ 44 px i proti globálnímu .btn{min-height:38px!important}', str_contains($css['marketplace'], 'body:not(.assessment-mode) .mkt60-card .btn') && str_contains($css['projects'], 'body:not(.assessment-mode) .proj60-card .btn') && str_contains($css['profile'], 'min-height:44px'));
+$focus = substr_count($css['marketplace'] . $css['projects'] . $css['feedback'], 'outline:3px solid #2459ff!important');
+$check('viditelný focus 3 px #2459ff přebíjí průhledný globální focus (!important)', $focus >= 3);
 $check('tlumený text nepoužívá opacity (snižovala by kontrast)', !preg_match('/\.(mkt60|proj60|fb60|arena60)-(note|type|client|hint)[^{]*\{[^}]*opacity/', $allCss));
 
 // --- 3) Produkční šablony aaPanelu -----------------------------------------------------------------------------

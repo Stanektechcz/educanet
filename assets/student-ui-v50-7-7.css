@@ -369,7 +369,7 @@ body:not(.assessment-mode){font-size:16px;-webkit-font-smoothing:antialiased;tex
 body:not(.assessment-mode) h1,body:not(.assessment-mode) h2,body:not(.assessment-mode) h3{overflow-wrap:normal;word-break:normal}
 body:not(.assessment-mode) h1{font-weight:780!important} body:not(.assessment-mode) h2{font-weight:760!important} body:not(.assessment-mode) h3{font-weight:740!important}
 body:not(.assessment-mode) p,body:not(.assessment-mode) li{line-height:1.55}
-body:not(.assessment-mode) :focus-visible{outline:3px solid color-mix(in srgb,var(--accent,#6d3df5) 24%,transparent)!important;outline-offset:2px!important}
+body:not(.assessment-mode) :focus-visible{outline:3px solid var(--accent,#2459ff)!important;outline-offset:2px!important}
 
 /* Header: every action is understandable without decoding an icon. */
 body:not(.assessment-mode) .topbar{max-width:var(--edu-max);margin-inline:auto!important}

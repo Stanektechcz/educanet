@@ -120,9 +120,29 @@ function acc53_ensure_account(string $label, string $classId, array $options = [
     return ['email' => $wanted, 'created' => true, 'account' => $account, 'password' => $plain];
 }
 
+/**
+ * v61: účty žáků ze seznamu tříd potřebují jen přihlašovací a aktivační toky (POST, úvod, propojení, ověření
+ * e-mailu, obnova hesla, kód hodiny, změna hesla, dotazníky) a anonymní GET. Už přihlášený žák si při běžném
+ * zobrazení stránky (přehled, profil, lab…) ten účet nezakládá – existuje od přihlášení, a pro nové žáky ho
+ * založí první přihlašovací požadavek. Parametry slouží testům; bez nich se čtou z požadavku.
+ */
+function acc53_request_needs_provisioning(?string $view = null, ?string $method = null, ?bool $signedIn = null): bool
+{
+    $method = $method ?? (string)($_SERVER['REQUEST_METHOD'] ?? 'GET');
+    if ($method !== 'GET') return true;
+    $view = $view ?? (is_string($_GET['view'] ?? null) ? (string)$_GET['view'] : 'home');
+    if (in_array($view, ['home', 'link_account', 'verify_email', 'reset_password', 'activate', 'join', 'change_password', 'privacy', 'intake', 'my_intake', 'my_intake_file'], true)) return true;
+    $signedIn = $signedIn ?? (function_exists('auth_user') && auth_user() !== null);
+    return !$signedIn;
+}
+
 /** Založí účty všem žákům ze seznamu tříd (idempotentně). Hesla nevrací – kartičky tiskne učitel. */
 function acc53_provision_all(array $modules, bool $force = false, string $by = 'system'): array
 {
+    // Webový požadavek přihlášeného žáka na běžnou stránku účty nezakládá (CLI, učitel a nástroje beze změny).
+    if (!$force && PHP_SAPI !== 'cli' && basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === 'index.php' && !acc53_request_needs_provisioning()) {
+        return ['created' => 0, 'ran' => false, 'skipped' => true];
+    }
     $directory = student_directory();
     $signature = count($directory) . ':' . substr(hash('sha256', (string)json_encode(array_map(
         static fn(array $r): string => (string)($r['class_id'] ?? '') . '|' . (string)($r['first_name'] ?? '') . (string)($r['last_name'] ?? ''), $directory

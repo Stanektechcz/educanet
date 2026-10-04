@@ -76,6 +76,7 @@ function lab57_store_update(string $path, callable $mutate): array
 /** Čtení pod sdíleným zámkem jádra úložiště (DAT58-04); bez jádra (izolované audity) prosté čtení. */
 function lab57_store_read(string $path): array
 {
+    if (function_exists('storage_read_request')) return storage_read_request($path, false); // v61: paměť požadavku (N+1)
     if (function_exists('storage_read')) return storage_read($path, false);
     if (!is_file($path)) return [];
     $raw = (string)file_get_contents($path);

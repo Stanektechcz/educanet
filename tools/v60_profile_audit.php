@@ -193,7 +193,7 @@ $check('manifest domén: profile_v60_views.php v doméně hubs', in_array('profi
 // 8) v60.2 · rychlost a velikost: HTML záložek, počet čtených souborů úložiště, sprite, CSS/JS.
 // =============================================================================================
 unset($_GET['student']);
-$limits = ['odznaky' => 50 * 1024];
+$limits = ['odznaky' => 35 * 1024]; // v61: zamčené až na ?zamcene=1, stránka první strany sbírky lehká
 foreach (profile60_tabs() as $tab) {
     $_GET['tab'] = $tab;
     $GLOBALS['educanet_json_request_cache'] = [];
@@ -212,7 +212,7 @@ $badgesPage = audit_capture(static function () use ($classId): void { render_pro
 preg_match_all('~<use href="#(b60s-[a-z0-9-]+)"~', $badgesPage, $uses);
 preg_match_all('~id="(b60s-[a-z0-9-]+)"~', $badgesPage, $ids);
 $check('odznaky: každý <use> odkazuje na symbol definovaný na stránce, id jsou unikátní', array_diff(array_unique($uses[1]), $ids[1]) === [] && count($ids[1]) === count(array_unique($ids[1])));
-$check('odznaky: zamčené jsou sbalené v <details> (bez SVG), aby byla stránka lehká', str_contains($badgesPage, 'data-b60-more') || !str_contains($badgesPage, 'b60-row'));
+$check('odznaky: zamčené se v základní stránce nevykreslují (jen odkaz ?zamcene=1), aby byla stránka lehká', !str_contains($badgesPage, 'b60-row'));
 $_GET['tab'] = 'nastaveni';
 $settingsPage = audit_capture(static function () use ($classId): void { render_profile60_view($classId, []); });
 $check('nastavení: náhled profilu, chybové sloty polí (aria-describedby) a data pro klientskou validaci', str_contains($settingsPage, 'data-p60-preview="headline"') && str_contains($settingsPage, 'id="p60-f-skills-error"') && str_contains($settingsPage, 'data-p60-tags="8"') && str_contains($settingsPage, 'data-msg-tags-many'));
