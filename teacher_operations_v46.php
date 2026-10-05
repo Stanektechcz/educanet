@@ -68,6 +68,8 @@ function teacher_action_permission_exact(): array
         'teacher_bulk_undo'=>'bulk.undo',
         'teacher_review_ack'=>'view','teacher_ops_report_export'=>'analytics.view','teacher_sla_policy_save'=>'roles.manage',
         'v48_orchestrate'=>'content.manage','v50_teacher_growth_control'=>'students.manage',
+        // v66: přepočet cache analýzy = analytika; nastavení návrhu hodnocení = jen administrátor (accounts.manage má jen role admin; navíc politika g66_settings).
+        'a66_recompute'=>'analytics.view','g66_settings'=>'accounts.manage',
     ];
 }
 function teacher_action_permission_prefixes(): array
@@ -101,6 +103,8 @@ function teacher_action_permission_prefixes(): array
         'v64_'=>'students.manage',
         // v65 · projekty: schvalování, rubriky, hodnocení, moderace peer review a přínos týmů = správa projektů (assistant jen čte).
         'proj65_'=>'projects.manage',
+        // v66 · testy a hodnocení: druh testu = správa obsahu, přepočet analýzy = analytika, převzetí návrhu = hodnocení, nastavení návrhu = jen administrátor (viz exact).
+        'a66_'=>'content.manage','g66_'=>'grading.manage',
     ];
 }
 function teacher_action_permission(string $action): ?string

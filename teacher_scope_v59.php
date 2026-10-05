@@ -252,7 +252,9 @@ function teacher59_action_policies(): array
         'arena58_inc_create', 'lab58t_export',
         'comp62_sync', 'p63_assign', 'p63_unassign', 'v64_abs_board',
         // v65 · cyklus projektů: třída formuláře povinná a v rozsahu; handler navíc ověří, že záznam patří do POSTnuté třídy (kontrola po položkách u hromadného schválení)
-        'proj65_t_settings', 'proj65_t_bulk_approve', 'proj65_t_reject', 'proj65_t_peer_open', 'proj65_t_moderate', 'proj65_t_apply_factor', 'proj65_t_rubric_clone', 'proj65_t_grade'] as $action) { // v62 · kompetence: ruční přepočet důkazů třídy – třída v rozsahu povinná; jiné comp62_* akce zůstávají zakázané; v63 · p63_assign/p63_unassign (výukové cesty) – třída povinná, jiné p63_* zakázané
+        'proj65_t_settings', 'proj65_t_bulk_approve', 'proj65_t_reject', 'proj65_t_peer_open', 'proj65_t_moderate', 'proj65_t_apply_factor', 'proj65_t_rubric_clone', 'proj65_t_grade',
+        // v66 · testy a hodnocení: přepočet cache, druh testu, převzetí návrhu a přiřazení cesty jednomu žákovi – třída formuláře povinná a v rozsahu (handler hash žáka hledá jen v soupisu této třídy)
+        'a66_recompute', 'a66_set_kind', 'g66_accept', 'p63_assign_student'] as $action) { // v62 · kompetence: ruční přepočet důkazů třídy – třída v rozsahu povinná; jiné comp62_* akce zůstávají zakázané; v63 · p63_assign/p63_unassign (výukové cesty) – třída povinná, jiné p63_* zakázané
         $table[$action] = $req;
     }
     $table['save_grade'] = $reqEnt('target_id', 'grade_target', false);
@@ -310,6 +312,8 @@ function teacher59_action_policies(): array
     // v61 · přehled třídy: hromadné potvrzení hlášení – třída formuláře povinná a v rozsahu; každé id (ids[]) si handler
     // ověří zvlášť přes teacher59_entity_classes('fb60_report', …) a výsledek vrací po položkách.
     $table['ov61_bulk_confirm'] = $req;
+    // v66 · nastavení návrhu hodnocení (zapnutí po třídách, váhy, hranice) smí jen administrátor; třída povinná a v rozsahu.
+    $table['g66_settings'] = ['class' => 'required', 'admin' => true];
     return $table;
 }
 
@@ -569,6 +573,8 @@ function teacher59_get_policies(): array
         'ucitele|karticka' => ['admin' => true],
         // v61: export přehledu třídy do CSV – třída povinná a v rozsahu (ov61_export_csv ji ověřuje znovu).
         'prehled|export' => ['class' => 'required'],
+        // v66: CSV export položkové analýzy a návrhů hodnocení – třída povinná a v rozsahu (a66t_export_csv ji ověřuje znovu).
+        'hodnoceni66|export' => ['class' => 'required'],
     ];
 }
 

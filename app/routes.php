@@ -57,7 +57,7 @@ return [
         'hands_on_views' => ['hands_on_learning_v50.php', 'independent_growth_v50.php', 'hands_on_learning_views_v50.php', 'independent_growth_views_v50.php'],
         'lesson_kit_views' => ['adaptive_lesson_views_v42.php', 'cognitive_visualization_views_v43.php', 'learning_studio_views_v44.php', 'visual_simulation_views_v45.php'],
         'tutorial_views' => ['tutorial_v52.php', 'points_v53.php', 'tutorial_v52_views.php'],
-        'lesson_path_views' => ['learning_v56.php', 'learning_v56_views.php'],
+        'lesson_path_views' => ['learning_v56.php', 'question_meta_v66.php', 'assessment_v66.php', 'learning_v56_views.php'], // v66: sumativní test lekce (pořadí otázek, bez odměn)
         // v58 · Robotí liga (LAB-01); další herní moduly v58 přidává integrátor po dokončení.
         'robots' => ['robots_v58.php', 'robots_v58_game.php', 'robots_v58_views.php'],
         // v58 · CTF týden a Incidenty (ARN-02, ARN-03).
@@ -80,15 +80,17 @@ return [
         // v60 · projekty podle levelu (?view=projekty).
         'projects' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'projects_v60.php', 'projects_v60_views.php'], // v65: zámek projektu podle kompetencí (m62_student)
         // v62 · záložka Kompetence v profilu (pilot 3.A); kód se spouští jen na záložce kompetence v pilotní třídě (audit routeru vyžaduje celé skupiny).
-        'competency' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'competency_v62_views.php', 'challenges_v64.php', 'projects_v65.php', 'projects_v65_evidence.php'], // v65: adaptér projektů volá proj65_*
+        'competency' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'competency_v62_views.php', 'challenges_v64.php', 'projects_v65.php', 'projects_v65_evidence.php', 'question_meta_v66.php', 'assessment_v66.php', 'grading_v66.php', 'grading_v66_views.php'], // v65: adaptér projektů volá proj65_*; v66: odkaz Moje hodnocení v mapě kompetencí
         // v63 · výukové cesty (?view=cesty, ?view=cesta, akce p63_*); jádro paths_v63.php je lehké, obsah a banka se načítají líně.
         'paths' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'paths_v63_flow.php', 'paths_v63_actions.php', 'paths_v63_views.php'],
         'dashboard' => ['motivation_v61_views.php', 'competencies_v62.php', 'evidence_v62.php', 'competency_v62_views.php', 'challenges_v64.php', 'paths_v63.php', 'paths_v63_flow.php', 'paths_v63_views.php', 'teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'mastery_learning_views_v41.php', 'learning_studio_views_v44.php', 'skill_views.php', 'project_workspace_views.php'],
         // v65 · cyklus projektu, peer review a portfolio (?view=projekt65, ?view=portfolio, akce proj65_s_*).
         'projects65' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'projects_v60.php', 'projects_v65.php', 'projects_v65_rubrics.php', 'projects_v65_peer.php', 'projects_v65_team.php', 'projects_v65_evidence.php', 'portfolio_v65.php', 'projects_v65_views.php', 'projects_v65_detail_views.php', 'portfolio_v65_views.php'],
+        // v66 · Moje hodnocení (?view=hodnoceni): řetězec důkazů a převzatá známka; CSS jen na tomto pohledu.
+        'grading66' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'projects_v65.php', 'assessment_v66.php', 'grading_v66.php', 'competency_v62_views.php', 'grading_v66_views.php'],
         'diagrams' => ['app/views/_diagrams.php'],
         // POST
-        'lesson_path' => ['tutorial_v52.php', 'session_v53.php', 'learning_v56.php'],
+        'lesson_path' => ['tutorial_v52.php', 'session_v53.php', 'learning_v56.php', 'question_meta_v66.php', 'assessment_v66.php'],
         'hodina' => ['tutorial_v52.php', 'session_v53.php', 'student_v55.php'],
         'session' => ['session_v53.php'],
         'points' => ['tutorial_v52.php', 'points_v53.php'],
@@ -136,6 +138,8 @@ return [
         ['match' => ['portfolio', 'portfolio_export'], 'file' => 'views/portfolio.php', 'libs' => ['layout', 'projects65']],
         // v63: výukové cesty žáka (seznam a krok; třída bez cest dostane 404).
         ['match' => ['cesty', 'cesta'], 'file' => 'views/paths.php', 'libs' => ['layout', 'paths']],
+        // v66: Moje hodnocení (návrh hodnocení se zobrazí jen ve třídách, kde ho zapnul administrátor).
+        ['match' => ['hodnoceni'], 'file' => 'views/hodnoceni.php', 'libs' => ['layout', 'grading66']],
         ['match' => ['hlaseni'], 'file' => 'views/feedback.php', 'libs' => ['layout', 'feedback']],
         ['match' => ['hodina'], 'file' => 'views/hodina.php', 'libs' => ['layout', 'tutorial_views', 'lesson_path_views']],
         ['match' => ['course_lesson', 'next_lesson'], 'file' => 'views/tutorial_redirect.php', 'libs' => []],

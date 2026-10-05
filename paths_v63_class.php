@@ -102,6 +102,25 @@ function p63_unassign(string $classId, string $pathId): bool
     return true;
 }
 
+/**
+ * v66: přiřadí cestu JEDNOMU žákovi (vedle třídního p63_assign) – zapíše ji do jeho stavu (assigned), takže se mu nabídne v „Co dál“
+ * stejně jako cesta přiřazená třídě. Cesta musí patřit třídě a žák musí být v jejím soupisu. Oprávnění a rozsah tříd ověřuje volající.
+ */
+function p63_assign_student(string $classId, string $studentKey, string $pathId, string $teacherHash, ?int $now = null): bool
+{
+    $now ??= time();
+    if (p63_path_for_class($classId, $pathId) === null || preg_match('/^[a-f0-9]{16}$/', $teacherHash) !== 1) return false;
+    $sid = p63_student_id($classId, $studentKey);
+    if ($sid === null) return false;
+    storage_update(p63_state_path($sid), static function (array $raw) use ($pathId, $now): array {
+        $state = p63_state_normalize($raw);
+        $state['assigned'][$pathId] = $now;
+        return $state;
+    });
+    p63_memo_reset();
+    return true;
+}
+
 // ---------------------------------------------------------------------------
 // Trychtýř a kalibrace (bez jmen)
 // ---------------------------------------------------------------------------

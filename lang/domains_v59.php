@@ -166,6 +166,11 @@ return [
             'paths_v63_views.php',
             'paths_v63_actions.php',
         ],
+        // v66 · Moje hodnocení (žákovské UI); cockpit assessment_v66_teacher_*.php je vždy česky.
+        'grading_v66' => [
+            'app/views/hodnoceni.php',
+            'grading_v66_views.php',
+        ],
         // v60 · obchod bodů (žákovské UI); učitelský registr marketplace_v60_teacher_views.php je vždy česky.
         'marketplace' => [
             'app/views/marketplace.php',

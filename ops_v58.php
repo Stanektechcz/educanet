@@ -193,6 +193,11 @@ function ops58_retention_policy(): array
         // v63 · stav výukových cest žáka (storage/paths_v63/stu_*.json.php, vč. reflexní věty): stejně jako důkazy se MAŽE 30 dní po
         // stavu left/archived; rozhoduje p63_retention_purge() z tools/v58_retention.php. Přiřazení a trychtýř (bez jmen) se nemažou.
         ['pattern' => 'paths_v63/stu_*.json.php', 'label' => 'Stav výukových cest v63 včetně reflexní věty (maže se 30 dní po odchodu žáka)', 'action' => 'student_left', 'max_age_days' => 30],
+        // v66 · testy a hodnocení: štítky integrity a ranní log se mažou po skončení školního roku, převzaté známky 30 dní po odchodu žáka.
+        // Rozhoduje a66_retention_purge() z tools/v58_retention.php (podle času záznamu / stavu žáka, ne stáří souboru); ops58_apply_retention() tyto akce přeskakuje.
+        ['pattern' => 'assessment_v66/integrity_flags.json.php', 'label' => 'Štítky integrity testů v66 (mažou se po skončení školního roku)', 'action' => 'student_left', 'max_age_days' => 365],
+        ['pattern' => 'assessment_v66/morning_log.json.php', 'label' => 'Log zásahů z ranního přehledu v66 (jen hashe, maže se po skončení školního roku)', 'action' => 'student_left', 'max_age_days' => 365],
+        ['pattern' => 'assessment_v66/grading_accepted.json.php', 'label' => 'Převzaté známky v66 (mažou se 30 dní po odchodu žáka)', 'action' => 'student_left', 'max_age_days' => 30],
         // v64 · deník ekonomiky her (bez jmen, jen sha1) a retrospektivy týmů: deník se archivuje po školním roce, retrospektivy maže tools/v58_retention.php (tg64_retro_purge).
         ['pattern' => 'economy_v64_ledger/*.jsonl.php', 'label' => 'Deník ekonomiky her v64 (měsíční proud) po skončení školního roku', 'action' => 'archive_school_year', 'max_age_days' => null],
         // Záznamy provedených migrací a manifest schémat se nearchivují (potřebné pro tools/migrate.php).

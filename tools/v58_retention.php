@@ -31,6 +31,7 @@ require_once dirname(__DIR__) . '/paths_v63_class.php';
 require_once dirname(__DIR__) . '/teamgames_v64_roles.php';
 require_once dirname(__DIR__) . '/projects_v65.php';
 require_once dirname(__DIR__) . '/projects_v65_evidence.php';
+require_once dirname(__DIR__) . '/assessment_v66_build.php';
 
 function v58r_flag(array $argv, string $name): bool
 {
@@ -55,6 +56,9 @@ if (basename((string)($argv[0] ?? '')) === basename(__FILE__)) {
         // v65: pitch, peer texty, deník, rozdělení bodů a reflexe portfolia odešlých žáků (30 dní po left/archived).
         $proj65 = proj65_retention_purge(!$apply);
         $result['projects_v65_purged'] = $proj65['portfolio'] + $proj65['pitch'] + $proj65['peer'] + $proj65['diary'] + $proj65['splits'];
+        // v66: štítky integrity a ranní log z minulého školního roku, převzaté známky odešlých žáků (30 dní po left/archived).
+        $v66 = a66_retention_purge(!$apply);
+        $result['assessment_v66_purged'] = (int)$v66['integrity'] + (int)$v66['morning_log'] + (int)$v66['accepted'];
     } catch (Throwable $e) {
         fwrite(STDERR, 'V58_RETENTION_FAIL ' . $e->getMessage() . "\n");
         exit(1);
@@ -66,7 +70,7 @@ if (basename((string)($argv[0] ?? '')) === basename(__FILE__)) {
         foreach ($result['actions'] as $a) {
             printf("%s %s — %s\n", strtoupper((string)$a['action']), (string)$a['path'], (string)$a['detail']);
         }
-        echo ($apply ? 'APPLY' : 'DRYRUN') . ' school_year=' . $result['school_year'] . ' actions=' . count($result['actions']) . ' lab_log_purged=' . (int)$result['lab_log_purged'] . ' evidence_v62_purged=' . (int)$result['evidence_v62_purged'] . ' paths_v63_purged=' . (int)$result['paths_v63_purged'] . ' retro_v64_purged=' . (int)$result['retro_v64_purged'] . ' projects_v65_purged=' . (int)$result['projects_v65_purged'] . "\n";
+        echo ($apply ? 'APPLY' : 'DRYRUN') . ' school_year=' . $result['school_year'] . ' actions=' . count($result['actions']) . ' lab_log_purged=' . (int)$result['lab_log_purged'] . ' evidence_v62_purged=' . (int)$result['evidence_v62_purged'] . ' paths_v63_purged=' . (int)$result['paths_v63_purged'] . ' retro_v64_purged=' . (int)$result['retro_v64_purged'] . ' projects_v65_purged=' . (int)$result['projects_v65_purged'] . ' assessment_v66_purged=' . (int)$result['assessment_v66_purged'] . "\n";
     }
     exit(0);
 }

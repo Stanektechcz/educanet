@@ -280,6 +280,22 @@ function v56_mark_theory(string $classId, string $studentKey, int $lessonNo, str
     }
 }
 
+/** v66: je test této lekce označený jako sumativní? (lazy načtení vrstvy v66; bez ní vždy false) */
+function v56_is_summative(string $classId, int $lessonNo): bool
+{
+    $file = __DIR__ . '/assessment_v66.php';
+    if (!is_file($file)) return false;
+    require_once $file;
+    return a66_is_summative($classId, 'v56:l' . $lessonNo);
+}
+
+/** v66: otázky testu lekce; u sumativního testu v náhodném pořadí se seedem (žák a lekce), jinak beze změny. Zobrazení i vyhodnocení musí používat tutéž funkci. */
+function v56_test_questions(string $classId, string $studentKey, int $lessonNo, array $questions): array
+{
+    if (!v56_is_summative($classId, $lessonNo)) return $questions;
+    return q66_seeded_order($questions, $classId . '|' . $studentKey . '|' . $lessonNo);
+}
+
 /** Vyhodnotí test lekce a uloží výsledek. */
 function v56_submit_test(string $classId, string $studentKey, int $lessonNo, array $questions, array $answers): array
 {
@@ -304,7 +320,8 @@ function v56_submit_test(string $classId, string $studentKey, int $lessonNo, arr
         'detail' => $detail, 'at' => date(DATE_ATOM),
     ];
     v56_progress_write($classId, $studentKey, $lessonNo, $row);
-    if ($row['test']['passed']) learning_award_once($classId, 'v56:l' . $lessonNo . ':test', V56_XP['test']);
+    // v66: sumativní test (označuje učitel) nedává žádné odměny; formativní beze změny
+    if ($row['test']['passed'] && !v56_is_summative($classId, $lessonNo)) learning_award_once($classId, 'v56:l' . $lessonNo . ':test', V56_XP['test']);
     return $row['test'];
 }
 

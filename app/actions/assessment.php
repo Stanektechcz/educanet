@@ -86,6 +86,9 @@ if ($action === 'continue_test') {
             'score' => (int)$test['correct'],
             'max_score' => count($module['questions']),
             'answers' => $test['answers'],
+            // v66: doba testu v sekundách a stabilní student_id (jen pro položkovou analýzu a štítky integrity; stávající klíče beze změny)
+            'duration_s' => max(0, (int)(strtotime($finishedAt) - (strtotime((string)$test['started_at']) ?: strtotime($finishedAt)))),
+            'student_id' => function_exists('identity58_current_student_id') ? (string)(identity58_current_student_id() ?? '') : '',
         ];
         storage_append('practice_results', $result);
         learning_award_once($classId, 'test_complete', 25);

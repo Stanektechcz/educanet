@@ -1,0 +1,10 @@
+/* EDUCANET v66 · tisk záložky Testy a hodnocení (PDF z prohlížeče). Načítá se jen s media="print". */
+@media print {
+  .a66-noprint, .a66-form, .a66-more > summary, header, nav, footer, .topbar, .teacher-nav, button { display: none !important; }
+  .a66-section { break-inside: avoid; border: 0; padding: 0 0 12pt; }
+  .a66-scroll { overflow: visible; border: 0; }
+  .a66-table { font-size: 9pt; }
+  .a66-table th, .a66-table td { border-bottom: 1px solid #888; }
+  a { color: inherit; text-decoration: none; }
+  body { background: #fff; color: #000; }
+}

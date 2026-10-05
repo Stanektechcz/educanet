@@ -165,7 +165,7 @@ function v56_render_theory(string $classId, array $bundle, array $state, int $le
 /** 2 · Test – kontrolní otázky k tématům lekce. */
 function v56_render_test(string $classId, array $bundle, array $state, int $lessonNo): void
 {
-    $questions = (array)$bundle['questions'];
+    $questions = v56_test_questions($classId, adaptive_student_key($classId), $lessonNo, (array)$bundle['questions']); // v66: sumativní test v pořadí žáka
     $result = (array)$state['phases']['test']['result'];
     $showResult = !empty($result['at']) && empty($_GET['znovu']);
     ?>
@@ -175,7 +175,8 @@ function v56_render_test(string $classId, array $bundle, array $state, int $less
         <p><?= !empty($result['passed']) ? e(tr('Prošel/prošla jsi. Teorii máš ověřenou, jde se na projekt.')) : e(tr('Na postup potřebuješ {percent} %. Projdi si znovu témata, kde ses spletl/a, a zkus to ještě jednou.', ['percent' => V56_TEST_PASS_PERCENT])) ?></p>
       </div>
       <ol class="v56-review">
-        <?php foreach ($questions as $i => $q): $d = $detail[$i] ?? []; $ok = !empty($d['ok']); ?>
+        <?php $detailById = []; foreach ($detail as $dd) { if (is_array($dd)) $detailById[(string)($dd['id'] ?? '')] = $dd; } // v66: výsledek se páruje podle id otázky (pořadí sumativního testu se liší podle žáka) ?>
+        <?php foreach ($questions as $i => $q): $d = $detailById[(string)($q['id'] ?? $i)] ?? ($detail[$i] ?? []); $ok = !empty($d['ok']); ?>
           <li class="<?= $ok ? 'ok' : 'bad' ?>"<?= edu_content_lang_attr() ?>>
             <strong><?= e((string)$q['question']) ?></strong>
             <span><?= $ok ? '✓ ' . e(tr('správně')) : '✗ ' . e(tr('správná odpověď: {answer}', ['answer' => (string)(($q['options'] ?? [])[$q['correct']] ?? '')])) ?></span>

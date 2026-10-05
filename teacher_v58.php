@@ -181,6 +181,19 @@ function teacher58_modules(): array
             'post' => ['p63_' => 'p63_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { p63_render_teacher_tab($c, $csrf()); },
         ],
+        // v66 · testy a hodnocení: ráno (5 zásahů podle dopadu), položková analýza, druhy testů, návrhy hodnocení a štítky integrity.
+        // GET čte jen cache z cronu. POST a66_recompute / a66_set_kind / g66_settings (jen admin) / g66_accept mají exact politiky v
+        // teacher_scope_v59.php (třída povinná a v rozsahu); GET export=items|proposals má politiku hodnoceni66|export (třída povinná).
+        'hodnoceni66' => [
+            'label' => 'Testy a hodnocení', 'hint' => 'Ráno, položková analýza, návrhy hodnocení', 'group' => 'podpora',
+            'files' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'paths_v63_class.php', 'projects_v65.php', 'assessment_v66_build.php', 'assessment_v66_teacher_views.php', 'assessment_v66_teacher_grading.php'],
+            'css' => ['assets/assessment-v66.css'], 'js' => ['assets/assessment-v66.js'],
+            'post' => ['a66_' => 'a66t_handle_post', 'g66_' => 'a66t_handle_post'],
+            'get' => [
+                'export' => static function (array $m): void { a66t_export_csv((string)($_GET['class'] ?? ''), (string)($_GET['export'] ?? '')); },
+            ],
+            'render' => static function (array $m, string $c) use ($csrf): void { a66t_render_tab($c, $csrf()); },
+        ],
     ];
 }
 

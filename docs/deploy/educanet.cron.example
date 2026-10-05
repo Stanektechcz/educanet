@@ -28,3 +28,9 @@ EDUCANET_LOG=/var/log/educanet
 
 # Roční přechod školního roku (tools/v58_rollover.php) se spouští RUČNĚ, ne cronem
 # – vyžaduje rozhodnutí školy o datu a kontrolu výsledku (viz docs/NASAZENI_PRODUKCE.md).
+
+# v66 · položková analýza testů, štítky integrity a cache návrhů hodnocení (každou noc 01:30; jen čtení zdrojů, zápis do storage/assessment_v66/).
+30 1 * * * cd "$EDUCANET_APP" && (set -a; . "$EDUCANET_ENV"; set +a; php tools/v66_item_analysis.php) >> "$EDUCANET_LOG/v66-items.log" 2>&1
+
+# v66 · ranní přehled „5 minut ráno“ pro cockpit (školní dny v 05:30, před výukou). Cockpit čte jen tuto cache.
+30 5 * * 1-5 cd "$EDUCANET_APP" && (set -a; . "$EDUCANET_ENV"; set +a; php tools/v66_morning_build.php) >> "$EDUCANET_LOG/v66-morning.log" 2>&1

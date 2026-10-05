@@ -118,11 +118,17 @@ function comp62_render_student_tab(string $classId, string $studentKey): void
     }
     $total = count(comp62_competencies($subject));
     $known = substr_count($items['umim'], '<li ');
+    $gradingLink = '';
+    if (is_file(__DIR__ . '/grading_v66_views.php')) { // v66: odkaz na „Moje hodnocení“ jen ve třídách se zapnutým návrhem hodnocení
+        require_once __DIR__ . '/grading_v66_views.php';
+        $gradingLink = g66v_link_html($classId);
+    }
     echo '<div class="c62-wrap"><p class="c62-intro">' . e(tr('Mapa ukazuje, co už umíš podle testů, lekcí a úloh v labu. Hra sama zvládnutí nedá, je to jen trénink. Mapu vidíš jen ty.')) . '</p>'
         . '<ul class="c62-summary"><li>' . e(tr('Umím {n} z {total} kompetencí', ['n' => $known, 'total' => $total])) . '</li></ul>'
         . comp62_render_group('umim', tr('Umím'), $items['umim'])
         . comp62_render_group('ucim', tr('Učím se'), $items['ucim'])
         . comp62_render_group('zatim', tr('Zatím ne'), $items['zatim'])
         . ch64_render_badges($classId, $studentKey)
+        . $gradingLink
         . '</div>';
 }

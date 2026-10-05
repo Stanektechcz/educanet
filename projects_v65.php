@@ -398,3 +398,25 @@ function proj65_peer_open(string $classId, string $projectId, string $by): array
     });
     return $out;
 }
+
+/**
+ * v66: zveřejněná hodnocení projektů žáka jako poměr 0–1 (čtení pro návrh hodnocení). Počítá osobní i týmová hodnocení třídy;
+ * záznam bez maxima se přeskočí. @return list<array{id:string,ratio:float,at:string}>
+ */
+function proj65_published_ratios(string $classId, string $studentKey): array
+{
+    $groups = [];
+    foreach (project_groups() as $g) {
+        if (is_array($g) && in_array($studentKey, array_map('strval', (array)($g['member_keys'] ?? [])), true)) $groups[(string)($g['id'] ?? '')] = true;
+    }
+    $out = [];
+    foreach (project_grade_records_for_class($classId) as $r) {
+        if (!in_array((string)($r['status'] ?? ''), ['published', 'returned'], true)) continue;
+        $mine = ((string)($r['target_type'] ?? '') === 'individual' && (string)($r['target_id'] ?? '') === $studentKey)
+            || ((string)($r['target_type'] ?? '') === 'group' && isset($groups[(string)($r['target_id'] ?? '')]));
+        $max = (float)($r['max_points'] ?? 0);
+        if (!$mine || $max <= 0) continue;
+        $out[] = ['id' => (string)($r['id'] ?? ''), 'ratio' => round(min(1.0, max(0.0, (float)($r['points'] ?? 0) / $max)), 3), 'at' => (string)($r['published_at'] ?? $r['updated_at'] ?? '')];
+    }
+    return $out;
+}

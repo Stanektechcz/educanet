@@ -27,7 +27,7 @@ if (str_starts_with($action, 'v56_')) {
                 $v56Back .= '&tema=' . rawurlencode((string)$v56State['next_topic']);
             }
         } elseif ($action === 'v56_test_submit') {
-            $v56Result = v56_submit_test((string)$v56Class, $v56Key, $v56No, (array)$v56Bundle['questions'], (array)($_POST['answers'] ?? []));
+            $v56Result = v56_submit_test((string)$v56Class, $v56Key, $v56No, v56_test_questions((string)$v56Class, $v56Key, $v56No, (array)$v56Bundle['questions']), (array)($_POST['answers'] ?? []));
             $_SESSION['flash'] = !empty($v56Result['passed'])
                 ? tr('Test máš splněný: {score} / {max}.', ['score' => (int)$v56Result['score'], 'max' => (int)$v56Result['max']])
                 : tr('Zatím to nestačí. Projdi si témata, kde ses spletl/a, a zkus test znovu.');

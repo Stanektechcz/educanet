@@ -558,3 +558,18 @@ Podrobnosti: `docs/PROJEKTY_V65.md`, `CHANGELOG_V65.md`, `BUILD_MANIFEST_V65.md`
   Zámek projektu klienta podle kompetencí se nastavuje ve formuláři projektu (záložka *Projekty*), platí jen v pilotních třídách.
 - **Kontrola po nasazení:** `php tools/v65_projects_audit.php` → `V65_PROJECTS_AUDIT_OK`; celá sada
   `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v66 · Testy, hodnocení a učitelská analytika
+
+Podrobnosti: `docs/HODNOCENI_V66.md`, `CHANGELOG_V66.md`, `BUILD_MANIFEST_V66.md`. Nové PHP rozšíření nevyžaduje; kód běží na PHP 8.1. Migrace není potřeba (soubory `storage/assessment_v66/` se založí samy).
+
+- **Cron (nově):** `php tools/v66_item_analysis.php` denně v noci (položková analýza, štítky integrity, cache návrhů) a `php tools/v66_morning_build.php` ve školní dny ráno
+  (ranní přehled pro cockpit). Vzor: `docs/deploy/educanet.cron.example`; aaPanel: `educanet-cron.sh v66items` a `v66morning` (`docs/deploy/aapanel/educanet-cron.sh.example`).
+  Bez cronu cockpit ukáže „připravuje se“; analýzu a návrhy lze přepočítat tlačítkem v záložce *Testy a hodnocení*.
+- **Návrh hodnocení je výchozí VYPNUTÝ.** Zapíná ho jen administrátor po třídách (cockpit → Podpora → *Testy a hodnocení* → Nastavení návrhu hodnocení): váhy 40/40/20 %, hranice 90/75/50/30 %.
+  V režimu sdíleného klíče musí mít učitel roli admin (`EDUCANET_TEACHER_ROLE=admin`), jinak nastavení nelze změnit.
+- **Retence:** `tools/v58_retention.php --apply` maže štítky integrity a ranní log z minulého školního roku a převzaté známky 30 dní po odchodu žáka (souhrn `assessment_v66_purged=N`).
+- **Rollback:** nasadit předchozí vydání a smazat adresář `storage/assessment_v66/` (jen odvozená data a nastavení hodnocení; výsledky testů, důkazy ani známky projektů se nemění).
+  Pole `duration_s` a `student_id` ve výsledcích startovního testu starší kód ignoruje.
+- **Kontrola po nasazení:** `php tools/v66_assessment_audit.php` → `V66_ASSESSMENT_AUDIT_OK`, `php tools/v66_assessment_http_audit.php` → `V66_ASSESSMENT_HTTP_AUDIT_OK`; celá sada
+  `php tools/run_audits.php --since=all --with-smoke --with-router`.

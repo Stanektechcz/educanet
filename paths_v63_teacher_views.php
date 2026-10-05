@@ -30,15 +30,38 @@ function p63_teacher_handle_post(string $action): void
 {
     $classId = is_string($_POST['class_id'] ?? null) ? (string)$_POST['class_id'] : '';
     $pathId = is_string($_POST['path'] ?? null) ? (string)$_POST['path'] : '';
-    if (!in_array($action, ['p63_assign', 'p63_unassign'], true)) throw new RuntimeException('Neznámá akce cest.');
+    if (!in_array($action, ['p63_assign', 'p63_unassign', 'p63_assign_student'], true)) throw new RuntimeException('Neznámá akce cest.');
     if (!p63_teacher_can_class($classId)) throw new RuntimeException('Třída není v rozsahu nebo nemá výukové cesty.');
     if (p63_path_for_class($classId, $pathId) === null) throw new RuntimeException('Cesta nepatří této třídě.');
-    $ok = $action === 'p63_assign' ? p63_assign($classId, $pathId, p63_teacher_hash()) : p63_unassign($classId, $pathId);
+    $studentHash = is_string($_POST['student_hash'] ?? null) ? (string)$_POST['student_hash'] : '';
+    if ($action === 'p63_assign_student') $ok = p63_assign_student($classId, p63_teacher_student_key($classId, $studentHash), $pathId, p63_teacher_hash());
+    else $ok = $action === 'p63_assign' ? p63_assign($classId, $pathId, p63_teacher_hash()) : p63_unassign($classId, $pathId);
+    p63_teacher_log_morning($action, $ok, $classId, $pathId, $studentHash);
     if (function_exists('teacher_flash')) {
-        teacher_flash($ok ? ($action === 'p63_assign' ? 'Cesta je přiřazená třídě.' : 'Přiřazení cesty je zrušené.') : 'Změnu se nepodařilo uložit.', $ok ? 'ok' : 'error');
+        $done = ['p63_assign' => 'Cesta je přiřazená třídě.', 'p63_unassign' => 'Přiřazení cesty je zrušené.', 'p63_assign_student' => 'Cesta je přiřazená žákovi.'][$action];
+        teacher_flash($ok ? $done : 'Změnu se nepodařilo uložit.', $ok ? 'ok' : 'error');
     }
-    if (function_exists('teacher_redirect')) teacher_redirect(['tab' => 'cesty', 'class' => $classId]);
-    redirect_to('teacher.php?tab=cesty&class=' . rawurlencode($classId));
+    $back = ($_POST['from'] ?? '') === 'morning66' ? 'hodnoceni66' : 'cesty';
+    if (function_exists('teacher_redirect')) teacher_redirect(['tab' => $back, 'class' => $classId]);
+    redirect_to('teacher.php?tab=' . $back . '&class=' . rawurlencode($classId));
+}
+
+/** v66: klíč žáka třídy podle hashe (posledních 24 hex znaků klíče), jinak '' (cesta se pak nepřiřadí). */
+function p63_teacher_student_key(string $classId, string $hash): string
+{
+    if (preg_match('/^[a-f0-9]{24}$/', $hash) !== 1) return '';
+    foreach (array_keys(project_students_for_class($classId)) as $key) {
+        if (str_ends_with((string)$key, ':student:' . $hash)) return (string)$key;
+    }
+    return '';
+}
+
+/** v66: zásah z ranního přehledu se zapíše do logu (jen hash učitele a žáka, žádná jména). */
+function p63_teacher_log_morning(string $action, bool $ok, string $classId, string $pathId, string $studentHash): void
+{
+    if (!$ok || ($_POST['from'] ?? '') !== 'morning66' || !is_file(__DIR__ . '/morning_v66.php')) return;
+    require_once __DIR__ . '/morning_v66.php';
+    m66_log_action($classId, $action === 'p63_assign_student' ? 'assign_student' : 'assign_class', a66_actor_hash(), $action === 'p63_assign_student' ? $studentHash : '', $pathId);
 }
 
 function p63_teacher_assign_form(string $classId, string $pathId, bool $assigned, string $csrf): string
