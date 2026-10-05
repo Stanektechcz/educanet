@@ -47,7 +47,6 @@ return [
     'Projekty' => 'Проєкти',
     'Od návrhu po portfolio: každý krok vidíš na jednom místě.' => 'Від пропозиції до портфоліо: кожен крок видно в одному місці.',
     'Rozjeté projekty' => 'Розпочаті проєкти',
-    'Zatím nemáš žádný projekt. Vyber si z nabídky níže.' => 'У тебе ще немає проєкту. Обери з пропозицій нижче.',
     'Otevřít projekt' => 'Відкрити проєкт',
     'Tvůj návrh: co a jak chceš udělat' => 'Твоя пропозиція: що і як ти хочеш зробити',
     'Poslat návrh' => 'Надіслати пропозицію',
@@ -124,4 +123,8 @@ return [
     'Silné stránky' => 'Сильні сторони',
     'Další krok' => 'Наступний крок',
     'Reflexe' => 'Рефлексія',
+    'Až učitel ohodnotí tvůj projekt, můžeš ho sem zařadit a připsat k němu reflexi.' => 'Коли вчитель оцінить твій проєкт, ти зможеш додати його сюди й написати рефлексію.',
+    'Průběh projektů' => 'Перебіг проєктів',
+    'Zatím nemáš žádný projekt' => 'У тебе ще немає проєкту',
+    'Vyber si z nabídky níže a napiš krátký návrh.' => 'Обери з переліку нижче й напиши короткий задум.',
 ];

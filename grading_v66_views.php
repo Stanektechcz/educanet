@@ -101,7 +101,7 @@ function g66v_render(string $classId, string $studentKey): void
     echo '<p class="a66-note">' . e(tr('Tady vidíš, z čeho se skládá podklad pro hodnocení. Hry, aréna a body do něj nepatří. Rozhoduje učitel.')) . '</p>';
     echo g66v_grade_block($classId, $studentKey) . '<section class="a66-section" aria-labelledby="a66-parts"><h2 id="a66-parts">' . e(tr('Z čeho se skládá')) . '</h2>' . g66v_parts_table($proposal) . '</section>';
     echo '<section class="a66-section" aria-labelledby="a66-chain"><h2 id="a66-chain">' . e(tr('Důkazy')) . '</h2>';
-    if ($proposal['chain'] === []) echo '<p>' . e(tr('Zatím není dost podkladů. Až budeš mít výsledky sumativního testu, ověřené kompetence nebo hodnocený projekt, objeví se tady.')) . '</p>';
+    if ($proposal['chain'] === []) echo ui67_empty_state(tr('Zatím není dost podkladů'), tr('Až budeš mít výsledky sumativního testu, ověřené kompetence nebo hodnocený projekt, objeví se tady.'), '?view=cesty', tr('Otevřít moje cesty'));
     else echo '<ul class="a66-chain">' . implode('', array_map('g66v_chain_li', $proposal['chain'])) . '</ul>';
     echo '</section><p><a class="ui-link" href="?view=dashboard">' . e(tr('Zpět na přehled')) . '</a></p></div>';
 }

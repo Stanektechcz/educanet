@@ -24,7 +24,6 @@ return [
     'Zvládnutí kompetencí' => 'Опанування компетенцій',
     'Projekty' => 'Проєкти',
     'Důkazy' => 'Докази',
-    'Zatím není dost podkladů. Až budeš mít výsledky sumativního testu, ověřené kompetence nebo hodnocený projekt, objeví se tady.' => 'Підстав поки що замало. Коли з’являться результати підсумкового тесту, підтверджені компетенції або оцінений проєкт, вони відобразяться тут.',
     'Test lekce {n}' => 'Тест уроку {n}',
     'Ověření cesty' => 'Перевірка шляху',
     'Hodnocení projektu' => 'Оцінка проєкту',
@@ -34,4 +33,7 @@ return [
     'Zvládnuto jen minimum' => 'Опановано лише мінімум',
     'Zatím nezvládnuto' => 'Ще не опановано',
     'Zpět na přehled' => 'Назад до огляду',
+    'Zatím není dost podkladů' => 'Ще недостатньо підстав',
+    'Otevřít moje cesty' => 'Відкрити мої шляхи',
+    'Až budeš mít výsledky sumativního testu, ověřené kompetence nebo hodnocený projekt, objeví se tady.' => 'Тут з’являться результати підсумкового тесту, підтверджені компетентності або оцінений проєкт.',
 ];

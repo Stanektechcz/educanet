@@ -11,6 +11,7 @@
 #   bash /www/server/educanet/educanet-cron.sh health      (pondělí 06:30; v61: týdenní souhrn selftest + preflight + perf do logu a do cockpitu)
 #   bash /www/server/educanet/educanet-cron.sh v66items    (denně 01:30; v66: položková analýza testů, štítky integrity a cache návrhů hodnocení)
 #   bash /www/server/educanet/educanet-cron.sh v66morning  (po–pá 05:30; v66: ranní přehled „5 minut ráno“ pro cockpit)
+#   bash /www/server/educanet/educanet-cron.sh nightly     (denně 01:30; v67: nejdřív záloha, pak noční přepočet kompetencí, odznaků a časové osy profilu)
 # Úlohy aaPanelu běží jako root – skript proto PHP spouští jako uživatel webu `www`
 # (soubory v storage/ musí dál patřit www). Výstup uvidíš v logu úlohy v panelu.
 # Přechod školního roku (tools/v58_rollover.php) se spouští RUČNĚ, ne cronem.
@@ -21,7 +22,7 @@ ENV_FILE=/www/server/educanet/educanet.env
 PHP=${EDUCANET_PHP:-/www/server/php/83/bin/php}
 
 run() {
-  runuser -u www -- env -i PATH=/usr/bin:/bin HOME=/tmp bash -c \
+  runuser -u www -- env -i PATH=/usr/bin:/bin HOME=/tmp EDUCANET_NIGHTLY_ALLOW="${EDUCANET_NIGHTLY_ALLOW:-}" bash -c \
     'set -a; . "$1"; set +a; cd "$2"; shift 2; exec "$@"' _ "$ENV_FILE" "$SITE" "$PHP" "$@"
 }
 
@@ -35,5 +36,7 @@ case "${1:-}" in
   health)     run tools/v61_weekly_health.php --env-file="$ENV_FILE" ;;  # výsledek: storage/ops_health_v61.json.php + log health-v61.log v EDUCANET_BACKUP_DIR; exit 0 OK, 2 WARN, 1 FAIL
   v66items)   run tools/v66_item_analysis.php ;;   # zapisuje jen storage/assessment_v66/; konec V66_ITEM_ANALYSIS_OK
   v66morning) run tools/v66_morning_build.php ;;   # zapisuje jen storage/assessment_v66/morning_*.json.php; konec V66_MORNING_BUILD_OK
-  *) echo "použití: $0 backup|retention|automation|preflight|perf|health|v66items|v66morning" >&2; exit 2 ;;
+  # v67: noční přepočet zapisuje do storage/ (nerozlišuje ostrá data a kopii), proto se povoluje jen tady a jen po čerstvé záloze (do 1 h).
+  nightly)    run tools/backup_storage.php --keep=14 --with-uploads --encrypt-if-key && EDUCANET_NIGHTLY_ALLOW=1 run tools/v67_nightly_recompute.php ;;   # konec V67_NIGHTLY_OK
+  *) echo "použití: $0 backup|retention|automation|preflight|perf|health|v66items|v66morning|nightly" >&2; exit 2 ;;
 esac

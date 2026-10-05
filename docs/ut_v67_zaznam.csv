@@ -1,0 +1,4 @@
+ucastnik;role;uloha;uspech;cas_s;poznamka
+# Řádky začínající # se ignorují. ucastnik = kód Z1–Z5 / U1–U2 (žádná jména), role = zak|ucitel, uloha = kód úlohy z docs/UZIVATELSKY_TEST_V67.md,
+# uspech = 1 (splnil sám) / 0 (nesplnil nebo potřeboval pomoc), cas_s = čas v sekundách, poznamka = krátce, bez osobních údajů.
+# Z1;zak;Z-01;1;45;příklad

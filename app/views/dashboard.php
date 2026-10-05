@@ -10,14 +10,17 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 
 if ($view === 'dashboard') {
     $dashSimulationMap = is_array($simulations[$classId] ?? null) ? $simulations[$classId] : [];
-    learning_refresh_badges((string)$classId, $module, $dashSimulationMap);
+    // v67: podrobný progres (grafy, odznaky, historie) se počítá a vykresluje jen na ?details=1 – běžné načtení přehledu je levné.
+    $dashDetailsOpen=(string)($_GET['details']??'')==='1';
+    skill67_dashboard_ready((string)$classId); // v67: levná kontrola otisku; přepočet dovedností jen při neshodě (jinak ho dělají akce a noční běh) – před prvním použitím dovedností
+    if($dashDetailsOpen) learning_refresh_badges((string)$classId, $module, $dashSimulationMap); // v67: odznaky se udělují v akcích (progress.php, testy, shutdown háček); GET přehledu je jen kontroluje na ?details=1
     $dashProfile = learning_profile((string)$classId);
     $dashXp = (int)($dashProfile['xp'] ?? 0);
     $dashLevel = learning_level($dashXp);
     $dashTestDone = is_array($completedTestResult);
-    $dashTests = learning_student_rows(STORAGE_DIR . '/practice_results.json.php', (string)$classId, 8);
-    $dashLabs = learning_student_rows(STORAGE_DIR . '/lab_results.json.php', (string)$classId, 8);
-    $dashGraphicsSubmissions = learning_student_rows(STORAGE_DIR . '/graphics_submissions.json.php', (string)$classId, 8);
+    $dashTests = $dashDetailsOpen ? learning_student_rows(STORAGE_DIR . '/practice_results.json.php', (string)$classId, 8) : [];
+    $dashLabs = $dashDetailsOpen ? learning_student_rows(STORAGE_DIR . '/lab_results.json.php', (string)$classId, 8) : [];
+    $dashGraphicsSubmissions = $dashDetailsOpen ? learning_student_rows(STORAGE_DIR . '/graphics_submissions.json.php', (string)$classId, 8) : [];
 
     $dashKbTotal = count((array)($module['knowledgebase'] ?? []));
     $dashKbDone = 0;
@@ -140,6 +143,7 @@ if ($view === 'dashboard') {
             'text'=>($dashSessionSub['status'] ?? '') === 'submitted' ? tr('Práci máš odevzdanou. Můžeš ji ještě doplnit nebo pokračovat v kurzu.') : (string)$dashSession['goal']];
     }
 
+    if($dashDetailsOpen){
     $dashTimeline = learning_xp_timeline($dashProfile, 14);
     $chartW=720; $chartH=210; $padX=28; $padY=24;
     $maxTotal=max(1,max(array_map(static fn(array $r):int=>(int)$r['total'],$dashTimeline)));
@@ -165,8 +169,11 @@ if ($view === 'dashboard') {
     foreach((array)($dashProfile['events']??[]) as $key=>$event){ if(!is_array($event))continue; $dashActivity[]=['key'=>(string)$key,'xp'=>(int)($event['xp']??0),'at'=>(string)($event['at']??'')]; }
     usort($dashActivity,static fn(array $a,array $b):int=>(strtotime($b['at'])?:0)<=>(strtotime($a['at'])?:0));
     $dashActivity=array_slice($dashActivity,0,8);
+    }else{
+        $dashTimeline=[];$chartPoints=[];$badgeDefs=[];$earnedBadges=[];$badgeDisplayIds=[];$achievementDefs=[];$earnedAchievements=[];$achievementProgress=[];$dashActivity=[];
+    }
     $studentName=(string)($_SESSION['student_label']??(auth_user()['name']??'Student'));
-    $dashProjectResults=project_student_results((string)$classId,$studentName);
+    $dashProjectResults=$dashDetailsOpen?project_student_results((string)$classId,$studentName):[];
     $dashTeacherStudentKey=social_current_student_key((string)$classId);
     $dashTeacherTasks=$dashTeacherStudentKey!==''?teacher_tasks_for_student((string)$classId,$dashTeacherStudentKey,false):[];
     $dashTeacherInterventions=$dashTeacherStudentKey!==''?teacher_ops_student_interventions_public((string)$classId,$dashTeacherStudentKey):[];
@@ -185,10 +192,9 @@ if ($view === 'dashboard') {
         if(!is_array($a)||(string)($a['class_id']??'')!==(string)$classId||(string)($a['student_key']??'')!==$adaptiveStudentKey||(string)($a['status']??'')==='complete')continue;
         $adaptivePending[]=$a;
     }
-    skill_sync_existing_learning((string)$classId);
-    $dashSkillBranches=skill_branch_progress_map((string)$classId);
-    $dashSkillDefs=skill_branches();
-    $dashSkillNext=skill_next_recommendation((string)$classId);
+    $dashSkillBranches=$dashDetailsOpen?skill_branch_progress_map((string)$classId):[];
+    $dashSkillDefs=$dashDetailsOpen?skill_branches():[];
+    $dashSkillNext=$dashDetailsOpen?skill_next_recommendation((string)$classId):null;
 
     $dashJourneyAfter=null;
     if(is_array($dashNextRow)){
@@ -199,12 +205,8 @@ if ($view === 'dashboard') {
         }
     }
     $dashAttentionCount=count($dashTeacherTasks)+count($dashTeacherInterventions)+count($adaptivePending)+count($adaptiveReviewQueue);
-    $dashDetailsOpen=(string)($_GET['details']??'')==='1';
     $dashPracticeHref=in_array($classId,['class_1a','class_2a'],true)?'?view=graphics_studio':'?view=practice';
     $dashPracticeLabel=in_array($classId,['class_1a','class_2a'],true)?'Chci něco vytvořit':'Chci si to vyzkoušet v labu';
-    $dashGoal=v504_goal_selected((string)$classId,$adaptiveStudentKey);
-    $dashGoalPlan=is_array($dashGoal)?v504_goal_plan((string)$classId,$adaptiveStudentKey,$dashGoal):[];
-    $dashGoalProgress=is_array($dashGoal)?v504_goal_progress((string)$classId,$adaptiveStudentKey,$dashGoal):0;
 
     render_header(tr('Přehled'), $module);
     ?>
@@ -248,7 +250,8 @@ if ($view === 'dashboard') {
         <?php endif; ?>
       </div>
 
-      <details class="student-dashboard-more" <?= $dashDetailsOpen?'open':'' ?> data-dashboard-more>
+      <?php if($dashDetailsOpen): /* v67: podrobný progres se vykresluje jen na ?details=1 (odkaz „Zobrazit můj progres“ výše) */ ?>
+      <details class="student-dashboard-more" open data-dashboard-more>
         <summary><span class="student-dashboard-more-copy"><strong><?= e(tr('Můj progres')) ?></strong></span><b><?= e(tr('Otevřít')) ?></b></summary>
         <div class="student-dashboard-more-body">
       <div class="dashboard-metrics v5076-core-metrics">
@@ -389,6 +392,7 @@ if ($view === 'dashboard') {
       </div>
         </div>
       </details>
+      <?php endif; ?>
     </section>
 
     <form class="inline-form dashboard-logout" method="post"><input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="logout_class"><span><?= tr_html('Přihlášen/a jako {name}', ['name' => '<strong>' . e($studentName) . '</strong>']) ?></span><button class="link-button" type="submit"><?= e(tr('Odhlásit')) ?></button></form>

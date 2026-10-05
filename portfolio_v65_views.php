@@ -21,7 +21,7 @@ function port65v_render_page(string $classId, string $studentKey, string $flash)
         . '<a class="btn primary" href="?view=portfolio_export">' . e(tr('Stáhnout jako HTML')) . '</a>'
         . '<button type="button" class="btn secondary p65-print" data-p65-print>' . e(tr('Vytisknout nebo uložit jako PDF')) . '</button></p></section>';
     if ($flash !== '') echo '<div class="notice" role="status">' . e($flash) . '</div>';
-    if ($candidates === []) echo '<section class="p65-card"><p>' . e(tr('Zatím nemáš žádnou ohodnocenou práci, kterou by šlo zařadit.')) . '</p></section>';
+    if ($candidates === []) echo ui67_empty_state(tr('Zatím nemáš žádnou ohodnocenou práci, kterou by šlo zařadit.'), tr('Až učitel ohodnotí tvůj projekt, můžeš ho sem zařadit a připsat k němu reflexi.'), '?view=projekt65', tr('Průběh projektů'));
     echo '<section class="p65-grid p65-noprint" aria-label="' . e(tr('Výběr prací')) . '">';
     foreach ($candidates as $c) port65v_render_choice($c, $sel[$c['key']]);
     echo '</section>';

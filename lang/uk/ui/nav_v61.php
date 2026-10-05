@@ -44,4 +44,7 @@ return [
     'Nahlásit chybu' => 'Повідомити про помилку',
     'živě' => 'наживо',
     'Moje cesty' => 'Мої шляхи',
+    'Moje hodnocení' => 'Моє оцінювання',
+    'Průběh projektů' => 'Перебіг проєктів',
+    'Moje portfolio' => 'Моє портфоліо',
 ];

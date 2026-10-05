@@ -1590,4 +1590,5 @@ return [
     'Zobrazit všechny milníky ({n})' => 'Show all milestones ({n})',
     'Zamčené odznaky' => 'Locked badges',
     'Kompetence' => 'Competencies',
+    'Můj růst' => 'My growth',
 ];

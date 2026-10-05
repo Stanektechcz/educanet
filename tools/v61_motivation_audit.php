@@ -339,7 +339,7 @@ function v61m_http(string $ROOT, string $tmp, Closure $check, Closure $keyOf, st
         $csrf = (string)$login['csrf'];
         $dash = (string)$login['response']['body'];
         $check('HTTP: přehled žáka má kartu „Dnešní cíle“ (≤ 3 denní + 2 týdenní ukazatele) bez PHP chyby', (int)$login['response']['status'] === 200 && str_contains($dash, 'Dnešní cíle') && preg_match_all('/<li class="mot61-goal(?: is-done)?">/', $dash) >= 4 && preg_match_all('/<li class="mot61-goal(?: is-done)?">/', $dash) <= 5 && audit_response_clean($login['response']));
-        $profile = $h->request('GET', '/?view=profile');
+        $profile = $h->request('GET', '/?view=profile&tab=prehled');
         $arena = $h->request('GET', '/?view=profile&tab=arena');
         $check('HTTP: profil Přehled ukazuje cíle a záložka Arena tlačítko Odveta u dokončeného souboje', str_contains((string)$profile['body'], 'Dnešní cíle') && str_contains((string)$arena['body'], 'value="arena61_rematch"') && audit_response_clean($arena));
         $odznaky = $h->request('GET', '/?view=profile&tab=odznaky');

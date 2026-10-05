@@ -184,7 +184,7 @@ function v61o_section_health_tool(Closure $check, string $root): void
     $final = trim((string)(preg_split('~\R~', trim($run['out'])) ?: [''])[count(preg_split('~\R~', trim($run['out'])) ?: []) - 1]);
     $store = $st . '/ops_health_v61.json.php';
     $data = is_file($store) ? json_decode((string)substr((string)file_get_contents($store), strpos((string)file_get_contents($store), "\n") + 1), true) : null;
-    $check('F2 nástroj proběhne a končí řádkem WEEKLY_HEALTH_*', preg_match('~^WEEKLY_HEALTH_(OK|WARN|FAIL) checks=3 ~', $final) === 1 && in_array($run['code'], [0, 1, 2], true));
+    $check('F2 nástroj proběhne a končí řádkem WEEKLY_HEALTH_*', preg_match('~^WEEKLY_HEALTH_(OK|WARN|FAIL) checks=4 ~', $final) === 1 && in_array($run['code'], [0, 1, 2], true));
     $check('F2 výsledek zapsán do storage/ops_health_v61.json.php (1 běh, 3 kontroly, SKIP u přeskočených)',
         is_array($data) && count($data['runs'] ?? []) === 1 && ($data['runs'][0]['checks']['preflight']['status'] ?? '') === 'SKIP' && isset($data['runs'][0]['checks']['selftest']['counts']['checks']));
     $json = (string)json_encode($data);
@@ -194,7 +194,7 @@ function v61o_section_health_tool(Closure $check, string $root): void
     $check('F2 --no-record nic nezapíše', count($data2['runs'] ?? []) === 1 && str_contains($run2['out'], 'recorded=0'));
     $logFile = $st . '/health.log';
     v61o_run([PHP_BINARY, $root . '/tools/v61_weekly_health.php', '--skip=preflight,perf,selftest', '--no-record', '--log=' . $logFile], $env, $root);
-    $check('F2 jednořádkový záznam v logu (--log)', is_file($logFile) && preg_match('~^\S+ WEEKLY_HEALTH_(OK|WARN|FAIL) checks=3 ~', (string)file_get_contents($logFile)) === 1);
+    $check('F2 jednořádkový záznam v logu (--log)', is_file($logFile) && preg_match('~^\S+ WEEKLY_HEALTH_(OK|WARN|FAIL) checks=4 ~', (string)file_get_contents($logFile)) === 1);
     $perf = v61o_run([PHP_BINARY, $root . '/tools/v61_weekly_health.php', '--skip=preflight,selftest', '--no-log', '--no-record'], $env, $root);
     $check('F2 perf na prázdném úložišti se vyhodnotí (FAIL s příčinou nebo WARN), nic nespadne', preg_match('~^(FAIL|WARN|PASS) perf~m', $perf['out']) === 1);
 }

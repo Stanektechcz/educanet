@@ -139,6 +139,24 @@ foreach (['intl', 'apcu'] as $ext) {
     pf_check(extension_loaded($ext), "PHP rozšíření $ext (doporučené)", '', true);
 }
 
+// --- v67: duplicitní načtení rozšíření ("Module already loaded") a CLI nastavení APCu -----------------------
+$iniFiles = array_filter(array_merge([(string)php_ini_loaded_file()], array_map('trim', explode(",", (string)php_ini_scanned_files()))));
+$extLoads = [];
+foreach ($iniFiles as $iniFile) {
+    foreach ((is_file($iniFile) ? file($iniFile, FILE_IGNORE_NEW_LINES) : []) ?: [] as $iniLine) {
+        if (preg_match('/^\s*(?:zend_)?extension\s*=\s*"?([A-Za-z0-9_.\/\\:-]+?)"?\s*(?:;.*)?$/', $iniLine, $mm) === 1) {
+            $name = strtolower(preg_replace('/\.(so|dll)$/', '', basename(str_replace(chr(92), '/', $mm[1]))) ?? '');
+            $name = preg_replace('/^php_/', '', $name) ?? $name;
+            $extLoads[$name] = ($extLoads[$name] ?? 0) + 1;
+        }
+    }
+}
+$dupes = array_keys(array_filter($extLoads, static fn(int $n): bool => $n > 1));
+pf_check($dupes === [], 'žádné rozšíření PHP není v ini načtené dvakrát (upozornění "Module already loaded"; zkontroluj php --ini)', $dupes === [] ? '' : implode(', ', $dupes), true);
+if (PHP_SAPI === 'cli' && extension_loaded('apcu')) {
+    pf_check(filter_var(ini_get('apc.enable_cli'), FILTER_VALIDATE_BOOLEAN), 'apc.enable_cli=1 (cron a nástroje v CLI sdílí cache APCu; bez něj jsou jen pomalejší)', '', true);
+}
+
 // --- Zapisovatelné adresáře --------------------------------------------------
 $root = dirname(__DIR__);
 foreach (['storage' => STORAGE_DIR, 'uploads' => UPLOAD_DIR, 'cache/runtime' => $root . '/cache/runtime'] as $label => $dir) {

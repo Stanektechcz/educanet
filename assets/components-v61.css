@@ -1,6 +1,4 @@
-/* EDUCANET v61 · jednotné komponenty žákovské aplikace (.ui-*), drobečková navigace a spodní lišta.
-   Používají jen tokeny z tokens-v61.css (žádné vlastní barvy). Profil v60 generuje stejné třídy vedle .p60-*.
-   Sekce „Starší třídy“ na konci mapuje dosavadní třídy stránek (.dashboard-panel, .btn, .v56-stat …) na stejné komponenty. */
+/* EDUCANET v61 · komponenty .ui-* (jen tokeny z tokens-v61.css); sekce „Starší třídy“ mapuje dosavadní třídy stránek na stejné komponenty. */
 
 /* ---------- Karta a nadpisy ---------- */
 .ui-card { margin: 0; padding: var(--ui-space-5); background: var(--ui-surface); border: 1px solid var(--ui-line); border-radius: var(--ui-radius); box-shadow: var(--ui-shadow-1); min-width: 0; }
@@ -106,3 +104,8 @@
 .v56-menu-panel :is(a, button) { min-height: var(--ui-tap); }
 .ui-page :is(.dashboard-empty, .v56-empty) { border: 1px dashed var(--ui-dashed); border-radius: var(--ui-radius-sm); background: var(--ui-surface-2); color: var(--ui-muted); }
 .ui-page :is(.v56-bar, .lab57-progress-bar) { background: var(--ui-track); border-radius: var(--ui-radius-pill); }
+
+/* v67 */
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+.ui67-empty-title { margin: 0 0 var(--ui-space-2); font-size: 1rem; }
+.ui67-empty-cta { margin-top: var(--ui-space-2); }

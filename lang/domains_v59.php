@@ -286,6 +286,13 @@ return [
         'nav_v61' => [
             'nav_v61.php',
         ],
+        // v67 · profil: Můj růst (cíle, příběh růstu, sdílení) a prázdné stavy/přepínač vzhledu.
+        'growth_v67' => [
+            'growth_v67_views.php',
+            'app/actions/growth_v67.php',
+            'app/actions/ui_v67.php',
+            'ui_v67.php',
+        ],
         // Integrátor – sdílené soubory, dokončí se až po B1–B6 (F2).
         'shared' => [
             'bootstrap.php',

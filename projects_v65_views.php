@@ -80,7 +80,7 @@ function p65v_render_home(string $classId, string $studentKey, string $flash): v
     if ($flash !== '') echo '<div class="notice" role="status">' . e($flash) . '</div>';
     $mine = proj65_for_student($classId, $studentKey);
     echo '<section aria-labelledby="p65-mine"><h2 id="p65-mine">' . e(tr('Rozjeté projekty')) . '</h2>';
-    if ($mine === []) echo '<p>' . e(tr('Zatím nemáš žádný projekt. Vyber si z nabídky níže.')) . '</p>';
+    if ($mine === []) echo ui67_empty_state(tr('Zatím nemáš žádný projekt'), tr('Vyber si z nabídky níže a napiš krátký návrh.'));
     echo '<div class="p65-grid">';
     foreach ($mine as $row) {
         echo '<article class="p65-card"><h3>' . e((string)$row['title']) . '</h3><p><span class="p65-badge">' . e(p65v_state_label((string)$row['state'])) . '</span></p>'

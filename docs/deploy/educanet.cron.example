@@ -34,3 +34,6 @@ EDUCANET_LOG=/var/log/educanet
 
 # v66 · ranní přehled „5 minut ráno“ pro cockpit (školní dny v 05:30, před výukou). Cockpit čte jen tuto cache.
 30 5 * * 1-5 cd "$EDUCANET_APP" && (set -a; . "$EDUCANET_ENV"; set +a; php tools/v66_morning_build.php) >> "$EDUCANET_LOG/v66-morning.log" 2>&1
+
+# v67 · noční přepočet kompetencí, odznaků a časové osy profilu (01:30): nejdřív záloha, pak přepočet; bez čerstvé zálohy (do 1 h) se odmítne.
+30 1 * * * cd "$EDUCANET_APP" && (set -a; . "$EDUCANET_ENV"; set +a; php tools/backup_storage.php --keep=14 --encrypt-if-key && EDUCANET_NIGHTLY_ALLOW=1 php tools/v67_nightly_recompute.php) >> "$EDUCANET_LOG/v67-nightly.log" 2>&1

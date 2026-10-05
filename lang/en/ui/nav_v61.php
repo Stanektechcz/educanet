@@ -44,4 +44,7 @@ return [
     'Nahlásit chybu' => 'Report a bug',
     'živě' => 'live',
     'Moje cesty' => 'My paths',
+    'Moje hodnocení' => 'My assessment',
+    'Průběh projektů' => 'Project progress',
+    'Moje portfolio' => 'My portfolio',
 ];

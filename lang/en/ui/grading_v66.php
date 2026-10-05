@@ -24,7 +24,6 @@ return [
     'Zvládnutí kompetencí' => 'Competency mastery',
     'Projekty' => 'Projects',
     'Důkazy' => 'Evidence',
-    'Zatím není dost podkladů. Až budeš mít výsledky sumativního testu, ověřené kompetence nebo hodnocený projekt, objeví se tady.' => 'There is not enough evidence yet. Once you have a summative test result, verified competencies or a graded project, it will appear here.',
     'Test lekce {n}' => 'Lesson {n} test',
     'Ověření cesty' => 'Path check',
     'Hodnocení projektu' => 'Project assessment',
@@ -34,4 +33,7 @@ return [
     'Zvládnuto jen minimum' => 'Only the minimum mastered',
     'Zatím nezvládnuto' => 'Not mastered yet',
     'Zpět na přehled' => 'Back to overview',
+    'Zatím není dost podkladů' => 'Not enough evidence yet',
+    'Otevřít moje cesty' => 'Open my paths',
+    'Až budeš mít výsledky sumativního testu, ověřené kompetence nebo hodnocený projekt, objeví se tady.' => 'The results of a summative test, verified competencies or a graded project will appear here.',
 ];

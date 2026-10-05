@@ -20,14 +20,15 @@ function profile60_tabs(): array
 }
 
 /**
- * Záložky vlastního profilu pro třídu: v62 přidá „kompetence“ (hned za „pokrok“) jen pilotním třídám.
- * Do profile60_public_tabs() záložka záměrně nepatří – žák vidí jen sebe.
+ * Záložky vlastního profilu pro třídu: pilotní třídy (kompetence v62) mají jako hlavní záložky „kompetence“ (mapa) a hned za ní
+ * „rust“ (Můj růst: cíle, příběh růstu, sdílení – v67). Do profile60_public_tabs() obě záměrně nepatří; cizí profil je dostane
+ * jen přes profile60_public_tabs_for(), a jen když je žák sám sdílí.
  */
 function profile60_tabs_for(?string $classId): array
 {
     $tabs = profile60_tabs();
     if ($classId === null || !function_exists('comp62_enabled_for_class') || !comp62_enabled_for_class($classId)) return $tabs;
-    array_splice($tabs, (int)array_search('pokrok', $tabs, true) + 1, 0, ['kompetence']);
+    array_unshift($tabs, 'kompetence', 'rust');
     return $tabs;
 }
 
@@ -37,6 +38,17 @@ function profile60_public_tabs(): array
     return ['prehled', 'pokrok', 'odznaky', 'arena'];
 }
 
+/**
+ * v67: záložky cizího profilu = základní čtyři + „kompetence" a „rust" podle toho, co žák sdílí (výchozí nic).
+ */
+function profile60_public_tabs_for(?string $classId, ?string $target): array
+{
+    $tabs = profile60_public_tabs();
+    if ($classId === null || $target === null || $target === '' || !function_exists('grow67_public_flags')) return $tabs;
+    $flags = grow67_public_flags($classId, $target);
+    return array_merge($flags['competencies'] ? ['kompetence'] : [], $flags['timeline'] ? ['rust'] : [], $tabs);
+}
+
 /** Popisky záložek (i18n). */
 function profile60_tab_label(string $tab): string
 {
@@ -44,6 +56,7 @@ function profile60_tab_label(string $tab): string
         'prehled' => tr('Přehled'),
         'pokrok' => tr('Pokrok'),
         'kompetence' => tr('Kompetence'),
+        'rust' => tr('Můj růst'),
         'lab' => tr('Linux Lab'),
         'odznaky' => tr('Odznaky'),
         'body' => tr('Body'),
@@ -56,10 +69,11 @@ function profile60_tab_label(string $tab): string
  * Rozhodne aktivní záložku z ?tab= s ohledem na to, jestli jde o vlastní, nebo cizí profil.
  * Cizí profil smí jen prehled/pokrok/odznaky/arena; neplatná nebo nepovolená hodnota → prehled.
  */
-function profile60_current_tab(bool $isMe, ?string $classId = null): string
+function profile60_current_tab(bool $isMe, ?string $classId = null, ?string $target = null): string
 {
     $raw = is_string($_GET['tab'] ?? null) ? (string)$_GET['tab'] : '';
-    $allowed = $isMe ? profile60_tabs_for($classId) : profile60_public_tabs();
+    $allowed = $isMe ? profile60_tabs_for($classId) : profile60_public_tabs_for($classId, $target);
+    if ($raw === '' && $isMe && in_array('kompetence', $allowed, true)) return 'kompetence';   // v67: mapa kompetencí je hlavní záložka pilotních tříd
     return in_array($raw, $allowed, true) ? $raw : 'prehled';
 }
 
@@ -105,6 +119,7 @@ function profile60_data(string $classId, string $target, string $skillKey, bool 
         case 'body': return $isMe ? profile60_data_points($classId, $target) : [];
         case 'arena':
         case 'kompetence':
+        case 'rust':
         case 'nastaveni': return [];
         default: return profile60_data_overview($classId, $target, $skillKey, $isMe);
     }

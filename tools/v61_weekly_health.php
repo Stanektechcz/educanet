@@ -49,6 +49,7 @@ wh_load_env_file(wh_arg($argv, 'env-file'));
 require_once dirname(__DIR__) . '/bootstrap.php';
 require_once dirname(__DIR__) . '/ops_v61.php';
 require_once __DIR__ . '/lib/v61_health_lib.php';
+require_once dirname(__DIR__) . '/ops_v67.php'; // v67: rozšířená kontrola provozu
 
 /** Argumenty podprocesů podle názvu kontroly. @return list<string> */
 function wh_tool_args(string $name, array $argv): array
@@ -79,6 +80,7 @@ function wh_collect(array $argv): array
         $run = h61_run_tool(wh_tool_args($name, $argv));
         $checks[$name] = h61_parse_result($final, $run['output'], $run['exit'], $run['timed_out']);
     }
+    $checks['ops'] = in_array('ops', $skip, true) ? ['status' => 'SKIP', 'summary' => 'přeskočeno', 'counts' => [], 'issues' => []] : ops67_health_check();
     return $checks;
 }
 

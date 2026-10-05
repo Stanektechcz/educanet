@@ -56,13 +56,15 @@ if ($method === 'POST') {
     // (a po vstupu kódem hodiny i seznamovací dotazník – stejně jako u GET výjimek níže).
     if (acc53_must_change_password()) {
         // v59 OPS-02: i nový žák si musí umět přepnout jazyk rozhraní ještě před změnou hesla.
-        $acc53AllowedPost = ['acc53_change_password', 'logout_class', 'edu_set_lang'];
+        $acc53AllowedPost = ['acc53_change_password', 'logout_class', 'edu_set_lang', 'ui67_theme_set'];
         if (!empty($_SESSION['sess53_joined'])) $acc53AllowedPost = array_merge($acc53AllowedPost, ['intake_submit', 'sess53_enter', 'sess53_register']);
         if (!in_array($action, $acc53AllowedPost, true)) {
             $_SESSION['flash'] = tr('Nejdřív si nastav vlastní heslo.');
             redirect_to('?view=change_password');
         }
     }
+    // v67: po akci, která mění výsledek učení, se postup v dovednostech přepočítá po odeslání odpovědi (ne při GET přehledu).
+    perf67_register_post_sync($modules, $action);
     // Akce, které třídu nepotřebují nebo si ji ověřují samy (app/routes.php › actions_pre).
     foreach (app_segments('actions_pre', $action) as $appSegment) require app_segment_file($appSegment);
 

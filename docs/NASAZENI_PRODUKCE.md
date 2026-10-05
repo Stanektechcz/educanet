@@ -254,3 +254,47 @@ ostrým nasazením:
   hostingu.
 - **Verze PHP na produkčním serveru** – 8.1 je podporované minimum, ale novější
   (8.2/8.3/8.4) je rychlejší a má delší podporu; závisí na možnostech hostingu.
+
+## v67 · provozní doplňky
+
+### Upozornění „Module already loaded“ (PHP)
+
+Hláška `PHP Warning: Module "xyz" is already loaded` znamená, že je rozšíření načtené dvakrát. Zjistíš a opravíš to takto:
+
+1. `php --ini` vypíše hlavní `php.ini` a všechny dodatečné `.ini` soubory (adresář `conf.d`/`php.d`).
+2. `php -m | sort | uniq -d` ukáže duplicity; v ini souborech hledej řádky `extension=…` (např. `grep -rn "^extension" $(php --ini | grep -o '/[^ ]*\.ini')`).
+3. Ponech řádek `extension=` jen v jednom souboru, druhý zakomentuj středníkem, a restartuj PHP-FPM.
+4. `php tools/preflight.php` (od v67) hlásí duplicitně načtená rozšíření jako upozornění.
+
+### Nastavení PHP pro produkci a cron
+
+- `display_errors=Off` (chyby jdou jen do logu; preflight ho kontroluje, týdenní health také).
+- `session.use_strict_mode=1` (aplikace ho nastavuje sama; v ini ho nech také zapnuté).
+- `apc.enable_cli=1`, je-li nainstalované rozšíření `apcu`: cron a CLI nástroje pak sdílejí cache s webem. Bez něj aplikace funguje, jen pomaleji.
+- Týdenní health (`educanet-cron.sh health`) od v67 přidává sloupec **Provoz**: stáří a šifrování poslední zálohy, `backup_key`, čekající migrace, poslední noční přepočet, APCu, `session.use_strict_mode`, `display_errors`.
+
+### Klíč šifrovaných záloh bez vypsání
+
+```bash
+php tools/backup_key_init.php                 # náhled (nic nezapíše)
+php tools/backup_key_init.php --apply         # zapíše backup_key do secrets (0600), vypíše jen 8 znaků otisku
+```
+
+Existující klíč se nikdy nepřepíše. Otisk (8 znaků) si zapiš k uložené kopii klíče v trezoru – klíč samotný nástroj nikdy nevypíše. Viz `docs/ZALOHY_V61.md`.
+
+### Noční přepočet kompetencí (cron nightly)
+
+`bash /www/server/educanet/educanet-cron.sh nightly` (01:30): nejdřív záloha, potom `tools/v67_nightly_recompute.php` s `EDUCANET_NIGHTLY_ALLOW=1`. Nástroj odmítne běh bez tohoto povolení, bez zálohy mladší než 1 hodina i při druhém souběžném běhu (`storage/.nightly.lock`). Zapisuje jen přes `storage_update`/`ev62_append`, je idempotentní a vypisuje jen počty. **Nerozlišuje ostrá data a kopii** – spouštěj ho jen na zamýšleném úložišti.
+
+### Migrace s rollbackem
+
+```bash
+php tools/migrate.php --rollback=0003_projects_v65            # migrace s down(): náhled; bez down(): přesný příkaz obnovy ze zálohy před migrací
+php tools/migrate.php --rollback=<id> --apply                 # jen migrace s down(); vyžaduje zálohu mladší než 1 h
+```
+
+Migrace bez funkce `down()` se nevrací automaticky: nástroj vypíše příkaz `php tools/restore_storage.php --from=<záloha před migrací> --apply`. Před každým rollbackem proveď čerstvou zálohu.
+
+### Přechod školního roku a data v62–v67
+
+`php tools/v67_rollover_plan.php --year=RRRR` (jen čte) spočítá, co přechod udělá s důkazy kompetencí, cestami, portfolii, cíli profilu a rozpracovanými projekty. Soubory v62–v67 jsou klíčované stabilním `student_id`, takže žáky do nové třídy doprovodí samy; rozpracované projektové cykly staré třídy je třeba uzavřít u učitele (přechod roku je z bezpečnostních důvodů nemění).

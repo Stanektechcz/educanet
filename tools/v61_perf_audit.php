@@ -40,7 +40,7 @@ require_once __DIR__ . '/lib/v61_perf_fixture.php';
 $state = audit_counter();
 $check = audit_checker($state);
 $TEACHER_KEY = 'audit-v61-teacher-key-0123456789';
-const V61A_RUNS = 5;
+const V61A_RUNS = 11;   // v67: medián z 11 běhů (dřív 5) – stabilnější na hlučném stroji; limity beze změny (schválená změna metodiky, viz BUILD_MANIFEST_V67.md)
 const V61A_MAX_SAME = 12;
 const V61A_MAX_READS = 120;
 

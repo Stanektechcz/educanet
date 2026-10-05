@@ -144,15 +144,18 @@ function nav61_group_today(?array $lesson, string $view, ?string $classId = null
     return ['key' => 'today', 'label' => trm('Dnes'), 'icon' => 'today', 'flag' => (string)($lesson['class'] ?? '') === 'is-today' ? 'today' : '', 'items' => $items];
 }
 
-/** Skupina Učení: materiály, témata, programy, příkazy, výsledky, pomoc. */
-function nav61_group_learn(string $view): array
+/** Skupina Učení: materiály, témata, programy, příkazy, výsledky, moje hodnocení (třídy s kompetencemi), pomoc. */
+function nav61_group_learn(string $view, ?string $classId = null): array
 {
+    $grading = $classId !== null && function_exists('comp62_enabled_for_class') && comp62_enabled_for_class($classId)
+        ? [nav61_entry('?view=hodnoceni', trm('Moje hodnocení'), ['hodnoceni'], $view)] : [];   // v67: podklad hodnocení (v66) je z menu dosažitelný
     return ['key' => 'learn', 'label' => trm('Učení'), 'icon' => 'learn', 'flag' => '', 'items' => [
         nav61_entry('?view=materialy', trm('Materiály'), ['materialy', 'lekce', 'course', 'topics', 'tools', 'knowledgebase', 'kb_lesson', 'tutorial'], $view),
         nav61_entry('?view=materialy&sekce=temata', trm('Témata a vysvětlení'), [], $view),
         nav61_entry('?view=materialy&sekce=programy', trm('Programy a zkratky'), [], $view),
         nav61_entry('?view=prikazy', trm('Linux příkazy'), ['prikazy'], $view),
         nav61_entry('?view=vysledky', trm('Výsledky'), ['vysledky', 'skills'], $view),
+        ...$grading,
         nav61_entry('?view=study_loop', trm('Potřebuju pomoct'), ['study_loop', 'study', 'mistakes'], $view),
     ]];
 }
@@ -183,10 +186,12 @@ function nav61_groups(?string $classId, string $view): array
         $views = (array)($item['views'] ?? []);
         $byKey[in_array('hodina', $views, true) ? 'hodina' : (in_array('lab', $views, true) ? 'lab' : basename((string)$item['href']))] = $item;
     }
-    $groups = [nav61_group_today($byKey['hodina'] ?? null, $view, $classId), nav61_group_learn($view)];
+    $groups = [nav61_group_today($byKey['hodina'] ?? null, $view, $classId), nav61_group_learn($view, $classId)];
     if (isset($byKey['lab'])) $groups[] = nav61_group_play($byKey['lab'], $view);
     $groups[] = ['key' => 'projects', 'label' => trm('Projekty'), 'icon' => 'projects', 'flag' => '', 'items' => [
         nav61_entry('?view=projekty', trm('Moje projekty'), ['projekty'], $view),
+        nav61_entry('?view=projekt65', trm('Průběh projektů'), ['projekt65'], $view),   // v67: cyklus projektu (v65)
+        nav61_entry('?view=portfolio', trm('Moje portfolio'), ['portfolio', 'portfolio_export'], $view),   // v67: portfolio (v65)
         nav61_entry('?view=project_lobbies', trm('Týmy a projekty'), ['project_lobbies', 'project_workspace'], $view),
         nav61_entry('?view=project_results', trm('Výsledky projektů'), ['project_results', 'project_result'], $view),
     ]];

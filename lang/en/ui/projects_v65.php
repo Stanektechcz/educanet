@@ -47,7 +47,6 @@ return [
     'Projekty' => 'Projects',
     'Od návrhu po portfolio: každý krok vidíš na jednom místě.' => 'From proposal to portfolio: you can see every step in one place.',
     'Rozjeté projekty' => 'Projects under way',
-    'Zatím nemáš žádný projekt. Vyber si z nabídky níže.' => 'You do not have a project yet. Pick one from the list below.',
     'Otevřít projekt' => 'Open project',
     'Tvůj návrh: co a jak chceš udělat' => 'Your proposal: what you want to do and how',
     'Poslat návrh' => 'Send proposal',
@@ -124,4 +123,8 @@ return [
     'Silné stránky' => 'Strengths',
     'Další krok' => 'Next step',
     'Reflexe' => 'Reflect',
+    'Až učitel ohodnotí tvůj projekt, můžeš ho sem zařadit a připsat k němu reflexi.' => 'Once your teacher grades a project, you can add it here and write a reflection.',
+    'Průběh projektů' => 'Project progress',
+    'Zatím nemáš žádný projekt' => 'You have no project yet',
+    'Vyber si z nabídky níže a napiš krátký návrh.' => 'Pick one from the list below and write a short proposal.',
 ];

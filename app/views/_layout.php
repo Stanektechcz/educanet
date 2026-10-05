@@ -9,6 +9,7 @@ declare(strict_types=1);
  */
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 require_once dirname(__DIR__, 2) . '/nav_v61.php';   // v61: drobečky a spodní lišta
+require_once dirname(__DIR__, 2) . '/ui_v67.php';    // v67: vzhled (data-theme) a prázdné stavy
 
 function render_header(string $title, ?array $module = null, bool $titleIsContent = false): void
 {
@@ -26,11 +27,11 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
     $GLOBALS['v55_continue_url']=$continueUrl;
     ?>
 <!doctype html>
-<html lang="<?= e(edu_html_lang()) ?>">
+<html lang="<?= e(edu_html_lang()) ?>"<?= ui67_html_theme_attr((string)$view) ?>>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="light">
+    <meta name="color-scheme" content="<?= e(ui67_color_scheme((string)$view)) ?>">
     <meta name="csrf-token" content="<?= e(csrf_token()) ?>">
     <title><?= e($title) ?> · EDUCANET</title>
     <link rel="manifest" href="manifest.webmanifest">
@@ -49,6 +50,8 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
     <link rel="stylesheet" href="<?= e(asset_url('assets/learning-v56.css?v=56.1')) ?>">
     <link rel="stylesheet" href="<?= e(asset_url('assets/components-v61.css?v=61.0')) ?>">
     <link rel="stylesheet" href="<?= e(asset_url('assets/nav-v61.css?v=61.1')) ?>">
+    <?= ui67_assets_html() ?>
+    <?= ui67_dark_link_html((string)$view) /* v67: tmavé tokeny jen pro ověřené pohledy a jen při volbě „tmavý“/„podle systému“ */ ?>
     <?php if ($module !== null): ?><script src="<?= e(asset_url('assets/nav-v61.js?v=61.1')) ?>" defer></script><?php endif; ?>
     <?php if (in_array((string)$view, ['lab', 'prikazy'], true)): ?><link rel="stylesheet" href="<?= e(asset_url('assets/linux-v57.css?v=59.1')) ?>"><link rel="stylesheet" href="<?= e(asset_url('assets/arena-v57.css?v=57.0')) ?>"><?php endif; ?>
     <?php if ($module === null && google_auth_configured()): ?><script src="https://accounts.google.com/gsi/client" async defer></script><?php endif; ?>
@@ -80,6 +83,7 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
                         <div class="v56-menu-panel" id="v56-account-menu" data-v56-menu-panel>
                             <?= nav61_drawer_html($ui61Cid, (string)$view) /* v61: skupiny odkazů jen na úzkém displeji; na širším je nahrazuje horní lišta */ ?>
                             <div class="v56-menu-lang"><?= edu_lang_switcher_html(csrf_token(), '?view=' . (string)$view) ?></div>
+                            <div class="v56-menu-lang"><?= ui67_theme_switch_html(csrf_token(), '?view=' . (string)$view, (string)$view) ?></div>
                             <form method="post"><input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="logout_class"><button type="submit"><?= e(tr('Odhlásit se')) ?></button></form>
                         </div>
                     </div>
@@ -135,6 +139,6 @@ function login63_footer_html(): string
     $year = (string)($GLOBALS['schoolYear']['meta']['school_year'] ?? '');
     $heart = '<span class="login63-heart" aria-hidden="true">❤️</span><span class="login63-sr">' . e(tr('láskou')) . '</span>';
     $credit = tr_html('S {heart} vytvořil {a}stanektech.cz{/a}', ['heart' => $heart, 'a' => '<a href="' . e(safe_url('https://stanektech.cz')) . '" target="_blank" rel="noopener noreferrer">', '/a' => '</a>']);
-    return '<footer class="login63-footer"><p class="login63-credit">' . $credit . '</p><p class="login63-meta">'
+    return '<footer class="login63-footer"><p class="login63-credit">' . $credit . '</p>' . ui67_theme_switch_html(csrf_token(), "?view=home", "home") . '<p class="login63-meta">'
         . ($year !== '' ? e(tr('Školní rok')) . ' ' . e($year) . ' · ' : '') . 'EDUCANET v63 · <a href="?view=privacy">' . e(tr('Soukromí')) . '</a></p></footer>';
 }

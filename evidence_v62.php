@@ -145,7 +145,8 @@ function ev62_delete_locked(string $path): void
 /** Smaže důkazy, cache zvládnutí žáka a cache tříd pilotu (odvoditelné, přepočítají se bez smazaného žáka). */
 function ev62_delete_student_files(string $studentId): void
 {
-    $paths = [ev62_path($studentId), STORAGE_DIR . '/mastery_v62/' . $studentId . '.json.php'];
+    // v67: cíle, sdílení a cache časové osy profilu (growth_v67) se maží se stejnou retencí jako důkazy.
+    $paths = [ev62_path($studentId), STORAGE_DIR . '/mastery_v62/' . $studentId . '.json.php', STORAGE_DIR . '/growth_v67/' . $studentId . '.json.php', STORAGE_DIR . '/growth_v67/tl_' . $studentId . '.json.php'];
     foreach (COMP62_PILOT_CLASSES as $classId) $paths[] = STORAGE_DIR . '/mastery_v62/_class_' . preg_replace('/[^A-Za-z0-9_]/', '', $classId) . '.json.php';
     foreach ($paths as $path) {
         if (is_file($path)) ev62_delete_locked($path);

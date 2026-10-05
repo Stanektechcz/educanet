@@ -1590,4 +1590,5 @@ return [
     'Zobrazit všechny milníky ({n})' => 'Показати всі віхи ({n})',
     'Zamčené odznaky' => 'Заблоковані значки',
     'Kompetence' => 'Компетентності',
+    'Můj růst' => 'Мій розвиток',
 ];

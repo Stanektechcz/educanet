@@ -97,11 +97,11 @@ function ops61_render_health_panel(): void
     <p class="teacher-empty">Zatím neproběhla žádná kontrola. Na serveru: <code>bash /www/server/educanet/educanet-cron.sh health</code>.</p>
   <?php else: ?>
   <table class="ops58-table"><caption class="sr-only">Posledních <?= count($runs) ?> týdenních kontrol</caption>
-    <thead><tr><th scope="col">Kdy</th><th scope="col">Celkem</th><th scope="col">Samotest</th><th scope="col">Preflight</th><th scope="col">Rychlost</th></tr></thead><tbody>
+    <thead><tr><th scope="col">Kdy</th><th scope="col">Celkem</th><th scope="col">Samotest</th><th scope="col">Preflight</th><th scope="col">Rychlost</th><th scope="col">Provoz</th></tr></thead><tbody>
     <?php foreach ($runs as $run):
         $checks = is_array($run['checks'] ?? null) ? $run['checks'] : []; ?>
       <tr><td><?= e((string)($run['at'] ?? '')) ?></td><th scope="row"><?= e(ops61_health_overall($run)) ?></th>
-      <?php foreach (['selftest', 'preflight', 'perf'] as $name): $c = is_array($checks[$name] ?? null) ? $checks[$name] : []; ?>
+      <?php foreach (['selftest', 'preflight', 'perf', 'ops'] as $name): $c = is_array($checks[$name] ?? null) ? $checks[$name] : []; ?>
         <td><?= e((string)($c['status'] ?? '–')) ?><?php if (!empty($c['summary'])): ?> <small><?= e((string)$c['summary']) ?></small><?php endif; ?></td>
       <?php endforeach; ?></tr>
     <?php endforeach; ?>

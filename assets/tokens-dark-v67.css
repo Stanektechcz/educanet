@@ -1,0 +1,33 @@
+/* EDUCANET v67 · tmavé tokeny (jen přepsané proměnné --ui-*; layout.php je linkuje jen pro ověřené pohledy).
+   Při volbě „podle systému“ má odkaz media="(prefers-color-scheme: dark)", při „tmavý“ platí vždy, při „světlý“ se nenačte. */
+:root:not([data-theme="light"]) {
+  --ui-ink: #e9eef2;
+  --ui-muted: #aab7c2;
+  --ui-line: #34424d;
+  --ui-bg: #0f171d;
+  --ui-surface: #17212a;
+  --ui-surface-2: #1e2a34;
+  --ui-accent: #4cc9d8;
+  --ui-accent-ink: #86e3ed;
+  --ui-accent-soft: #123a41;
+  --ui-on-accent: #04252a;
+  --ui-warn-ink: #f4cd74;
+  --ui-warn-soft: #382e12;
+  --ui-hot-ink: #ffa066;
+  --ui-hot-soft: #3a2415;
+  --ui-ok-ink: #62d9a8;
+  --ui-bad-ink: #ff9494;
+  --ui-dashed: #566772;
+  --ui-track: #2b3844;
+  --ui-field-border: #8d9ba7;
+  --ui-bad-soft: #3b1d1f;
+  --ui-shadow-1: 0 1px 3px rgba(0, 0, 0, .45);
+  --ui-shadow-2: 0 12px 36px rgba(0, 0, 0, .5);
+  --ui-shadow-up: 0 -4px 16px rgba(0, 0, 0, .5);
+}
+:root:not([data-theme="light"]) body.accent-graphics {
+  --ui-accent: #f59a5b;
+  --ui-accent-ink: #ffb687;
+  --ui-accent-soft: #3a2415;
+  --ui-on-accent: #2a1204;
+}

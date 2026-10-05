@@ -107,6 +107,7 @@ function comp62_render_student_tab(string $classId, string $studentKey): void
     require_once __DIR__ . '/evidence_v62_adapters.php';
     require_once __DIR__ . '/mastery_v62.php';
     comp62_student_assets();
+    if (function_exists('grow67_assets')) grow67_assets(); // v67: pruhy oblastí (SVG)
     ev62_sync_student($classId, $studentKey, false, true); // GET: jen levné zdroje, plná sync = cron/comp62_sync
     $mastery = m62_student($classId, $studentKey);
     require_once __DIR__ . '/challenges_v64.php';
@@ -125,6 +126,7 @@ function comp62_render_student_tab(string $classId, string $studentKey): void
     }
     echo '<div class="c62-wrap"><p class="c62-intro">' . e(tr('Mapa ukazuje, co už umíš podle testů, lekcí a úloh v labu. Hra sama zvládnutí nedá, je to jen trénink. Mapu vidíš jen ty.')) . '</p>'
         . '<ul class="c62-summary"><li>' . e(tr('Umím {n} z {total} kompetencí', ['n' => $known, 'total' => $total])) . '</li></ul>'
+        . (function_exists('grow67_areas_html') ? grow67_areas_html($subject, (array)$mastery['map']) : '')
         . comp62_render_group('umim', tr('Umím'), $items['umim'])
         . comp62_render_group('ucim', tr('Učím se'), $items['ucim'])
         . comp62_render_group('zatim', tr('Zatím ne'), $items['zatim'])

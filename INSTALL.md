@@ -573,3 +573,16 @@ Podrobnosti: `docs/HODNOCENI_V66.md`, `CHANGELOG_V66.md`, `BUILD_MANIFEST_V66.md
   Pole `duration_s` a `student_id` ve výsledcích startovního testu starší kód ignoruje.
 - **Kontrola po nasazení:** `php tools/v66_assessment_audit.php` → `V66_ASSESSMENT_AUDIT_OK`, `php tools/v66_assessment_http_audit.php` → `V66_ASSESSMENT_HTTP_AUDIT_OK`; celá sada
   `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v67 · UX, výkon, provoz a profil růstu
+
+Podrobnosti: `CHANGELOG_V67.md`, `BUILD_MANIFEST_V67.md`, `docs/NASAZENI_PRODUKCE.md` (oddíl „v67 · provozní doplňky“). Nové PHP rozšíření nevyžaduje (`sodium` jen pro šifrované zálohy, jako dosud); kód běží na PHP 8.1.
+
+- **Cron (nově):** `educanet-cron.sh nightly` denně 01:30 (záloha → `tools/v67_nightly_recompute.php` s `EDUCANET_NIGHTLY_ALLOW=1`); vzor v `docs/deploy/educanet.cron.example` a `docs/deploy/aapanel/educanet-cron.sh.example`. Bez čerstvé zálohy se přepočet odmítne.
+- **Klíč záloh:** `php tools/backup_key_init.php --apply` (jednou; vypíše jen 8 znaků otisku, klíč nikdy).
+- **Migrace:** `php tools/migrate.php --rollback=<id>` (náhled / příkaz obnovy ze zálohy).
+- **Profil:** pilotní třídy (3.A, 1.A) mají mapu kompetencí jako první záložku a záložku *Můj růst* (cíle, příběh růstu, sdílení). Sdílení se spolužáky je výchozí vypnuté; školu lze vypnout `EDUCANET_GROWTH_PUBLIC=0`. Data: `storage/growth_v67/` (maže se s důkazy v62 po 30 dnech od odchodu žáka).
+- **Vzhled:** přepínač světlý/tmavý/podle systému je nasazený jako infrastruktura, ale **pro žádný pohled zapnutý** (viz `ROADMAP_V68.md`, bod 1).
+- **Přehled žáka:** podrobný progres se načítá na `?view=dashboard&details=1`; dovednosti se přepočítávají po akcích a v noci, ne při každém GET.
+- **Rollback:** nasadit předchozí vydání; `storage/growth_v67/` a `storage/skill_sync_v67.json.php` lze smazat (odvozená data a cíle žáků).
+- **Kontrola po nasazení:** `php tools/v67_ux_audit.php`, `v67_perf_audit.php`, `v67_ops_audit.php`, `v67_growth_audit.php` → `V67_*_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
