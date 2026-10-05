@@ -246,7 +246,7 @@ function v60a_storage_diff_is_only_skill_cache(): bool
 {
     $before = $GLOBALS['snapshotBefore'] ?? [];
     $after = v60a_storage_snapshot();
-    $isSkillCache = static fn(string $path): bool => (bool)preg_match('~skill_(branches|progress)\.json\.php(\.lock)?$~', $path) || (bool)preg_match('~arena_v60_challenges\.json\.php(\.lock)?$~', $path);
+    $isSkillCache = static fn(string $path): bool => (bool)preg_match('~skill_(branches|progress)\.json\.php(\.lock)?$~', $path) || (bool)preg_match('~arena_v60_challenges\.json\.php(\.lock)?$~', $path) || (bool)preg_match('~arena_v64_improve\.json\.php(\.lock)?$~', $path);
     foreach ($before as $path => $md5) {
         if ($isSkillCache($path)) continue;
         if (!isset($after[$path]) || $after[$path] !== $md5) return false;

@@ -5,6 +5,8 @@ declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
 if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_once __DIR__ . '/i18n_v59.php'; }
+require_once __DIR__ . '/teamgames_v64_roles.php';
+require_once __DIR__ . '/economy_v64.php';
 
 /**
  * EDUCANET v58 · Týmové hry – úložiště, životní cyklus relace, týmy, soukromí jmen, signály, XP.
@@ -482,7 +484,7 @@ function tg58_send_signal(string $id, string $teamId, string $studentKey, string
         }
         $log[] = ['team_id' => $teamId, 'student_key' => $studentKey, 'kind' => $kind, 'at' => tg58_iso($now)];
         $s['signals'] = array_slice($log, -TG58_SIGNAL_LOG_MAX);
-        return $s;
+        return tg64_actor_note($s, $studentKey, 'signal');
     });
 }
 
@@ -533,7 +535,7 @@ function tg58_claim_xp(string $classId, string $studentKey): int
             if (isset($done[$id]) || tg58_status($session, tg58_now()) !== 'finished' && (string)$session['status'] !== 'finished') continue;
             if (!tg58_took_part($session, $studentKey)) { $done[$id] = 1; continue; }
             $xp = tg58_xp_for($session, $studentKey);
-            if ($xp > 0 && learning_award_once($classId, 'tg58:' . $id, $xp)) $awarded++;
+            if ($xp > 0 && eco64_award($classId, $studentKey, 'tg58', 'tg58:' . $id, $xp)) $awarded++;
             $done[$id] = 1;
         }
     } catch (Throwable $e) {

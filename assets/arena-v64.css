@@ -1,0 +1,22 @@
+/* EDUCANET v64 · ligy, zlepšení, role a retrospektiva týmových her, cockpit Ekonomika */
+.fair64-card,.tg64-card{margin:1rem 0;padding:1rem;border:1px solid #c9d3da;border-radius:12px;background:#fff;color:#12212b}
+.fair64-league{font-size:1.2rem;margin:.25rem 0}
+.fair64-league.fair64-bronze,.fair64-badge.fair64-bronze{color:#5a3a12}
+.fair64-league.fair64-silver,.fair64-badge.fair64-silver{color:#2c3a44}
+.fair64-league.fair64-gold,.fair64-badge.fair64-gold{color:#5a4300}
+.fair64-badge{display:inline-block;margin-left:.4rem;padding:.1rem .5rem;border:1px solid currentColor;border-radius:999px;font-size:.85rem}
+.fair64-list{padding-left:1.2rem}
+.fair64-list li{min-height:44px;display:flex;align-items:center;gap:.4rem}
+.fair64-list a{display:inline-flex;align-items:center;min-height:44px}
+.fair64-note,.tg64-note,.eco64-t-note{color:#44525d;font-size:.9rem}
+.tg64-form{display:grid;gap:.5rem;max-width:40rem}
+.tg64-form textarea{width:100%;min-height:44px;padding:.5rem;font:inherit;border:1px solid #7b8a95;border-radius:8px}
+.tg64-form button,.eco64-t-form button{min-height:44px;min-width:44px;padding:.5rem 1rem}
+.fair64-card a:focus-visible,.tg64-form :focus-visible,.eco64-t-form button:focus-visible{outline:3px solid #0b5fff;outline-offset:2px}
+.eco64-t-table{border-collapse:collapse;width:100%;max-width:48rem}
+.eco64-t-table th,.eco64-t-table td{border:1px solid #c9d3da;padding:.4rem .6rem;text-align:left}
+.eco64-t-list{list-style:none;padding:0}
+.eco64-t-list li{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:.4rem 0}
+.eco64-t-form{display:inline}
+@media (max-width:520px){.fair64-card,.tg64-card{padding:.75rem}}
+@media (prefers-reduced-motion:reduce){.fair64-card,.tg64-card{transition:none}}

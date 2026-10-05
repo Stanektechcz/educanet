@@ -227,6 +227,8 @@ if ($view === 'dashboard') {
 
         <?php if (function_exists('p63_render_next_card')) p63_render_next_card((string)$classId, (string)$adaptiveStudentKey); // v63 (rozhodnutí školy Q6): karta Co dál přímo POD kartou Teď, jen čtení ?>
 
+        <?php if (function_exists('ch64_render_card')) ch64_render_card((string)$classId, (string)$adaptiveStudentKey); // v64: výzva týdne navázaná na Co dál (třídy karty Co dál, bez nového CSS) ?>
+
         <?php if (function_exists('mot61_render_goals_card')) mot61_render_goals_card((string)$classId); // v61: dnešní cíle ?>
 
         <div class="v506-dashboard-quiet-links v5075-dashboard-detail-link">

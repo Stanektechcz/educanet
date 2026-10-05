@@ -88,7 +88,7 @@ function tg58_netadmin_claim(array $session, string $teamId, string $studentKey,
         $node['learn_by'][] = $teamId;
     }
     $session['game']['nodes'][$nodeId] = $node;
-    return $session;
+    return tg64_actor_note($session, $studentKey, 'ok'); // v64: přínos žáka
 }
 
 /** Volá linux_v58_levels_tg.php po vyřešení uzlu v Labu (linie sítě). Level id == node id. */

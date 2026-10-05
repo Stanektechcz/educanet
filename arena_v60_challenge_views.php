@@ -10,6 +10,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  */
 
 require_once __DIR__ . '/profile_v60_ui.php';
+require_once __DIR__ . '/arena_v64_views.php';
 require_once __DIR__ . '/arena_v61_views.php';
 
 /** Skrytá pole POST formuláře výzvy (CSRF + akce + id). */
@@ -94,6 +95,8 @@ function arena60_render_profile_tab(string $classId, string $studentKey): void
     }
     echo profile60_panel_close();
     arena61_render_class_stats($classId, $studentKey);
+    fair64_render_league_panel($classId, $studentKey, array_keys(arena57_roster($classId))); // v64: liga a vyrovnaní soupeři
+    fair64_render_improvement_panel($classId, $studentKey);
     echo profile60_panel_open(tr('Nastavení výzev'));
     echo arena60_form_open('arena60_optin_set', '', ['on' => $data['optin'] ? '0' : '1']) . '<div class="arena60-optin"><span class="arena60-optin-state">'
         . e($data['optin'] ? tr('Přijímám výzvy od spolužáků: zapnuto') : tr('Přijímám výzvy od spolužáků: vypnuto')) . '</span>'

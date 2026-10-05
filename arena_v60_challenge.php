@@ -117,7 +117,8 @@ function arena60_sweep_expired(string $classId, int $now): void
 /** Doplní výsledek (kdo vyhrál) u accepted výzev, pokud už ho lze zjistit z lab57_solved(). Líné, žádný zápis mimo tenhle soubor. */
 function arena60_sweep_results(string $classId, int $now): void
 {
-    arena60_update(static function (array $d) use ($classId, $now): array {
+    $finished = [];
+    arena60_update(static function (array $d) use ($classId, $now, &$finished): array {
         foreach ($d['challenges'] as $i => $row) {
             if ((string)($row['class_id'] ?? '') !== $classId || (string)($row['status'] ?? '') !== 'accepted') continue;
             $winner = arena60_detect_winner($classId, $row);
@@ -125,12 +126,15 @@ function arena60_sweep_results(string $classId, int $now): void
                 $d['challenges'][$i]['status'] = 'done';
                 $d['challenges'][$i]['winner_key'] = $winner;
                 $d['challenges'][$i]['finished_at'] = date(DATE_ATOM, $now);
+                $finished[] = $d['challenges'][$i];
             } elseif ($now > (int)($row['expires_at'] ?? 0)) {
                 $d['challenges'][$i]['status'] = 'expired';
             }
         }
         return $d;
     });
+    // v64: ELO a liga (idempotentně podle id výzvy; mimo zámek souboru výzev). Selhání ratingu nesmí shodit souboj.
+    foreach ($finished as $row) fair64_record_challenge($classId, $row, $now);
 }
 
 /** @return string|null klíč vítěze, nebo null pokud ještě nikdo nevyřešil (po accepted_at). */

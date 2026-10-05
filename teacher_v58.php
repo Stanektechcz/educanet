@@ -153,6 +153,15 @@ function teacher58_modules(): array
             'post' => ['comp62_' => 'comp62_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { comp62_render_teacher_tab($c, $csrf()); },
         ],
+        // v64 · ekonomika her: report inflace XP, absolutní žebříček u akcí, retrospektivy týmových her (bez jmen; asistent je nevidí).
+        // POST v64_abs_board má exact politiku v teacher_scope_v59.php (třída povinná a v rozsahu), oprávnění v64_ = students.manage.
+        'ekonomika' => [
+            'label' => 'Ekonomika', 'hint' => 'Strop XP z her, žebříčky u akcí a retrospektivy týmů', 'group' => 'hry',
+            'files' => ['economy_v64.php', 'arena_v64_fair.php', 'teamgames_v64_roles.php', 'economy_v64_teacher_views.php'],
+            'css' => ['assets/arena-v64.css'],
+            'post' => ['v64_' => 'eco64_teacher_handle_post'],
+            'render' => static function (array $m, string $c) use ($csrf): void { eco64_render_teacher_tab($c, $csrf()); },
+        ],
         // v63 · výukové cesty: přiřazení třídě, trychtýř kroků a průměrná kalibrace (bez jmen a bez reflexních vět). POST p63_assign /
         // p63_unassign mají exact politiky v teacher_scope_v59.php (třída povinná a v rozsahu), oprávnění p63_ = content.manage
         // (asistent jen čte). Žádný zvláštní GET parametr registru.

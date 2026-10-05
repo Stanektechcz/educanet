@@ -42,14 +42,14 @@ $state1 = static fn(array $rows): string => (string)m62_compute($rows, $NOW, ['c
 // --- 1) Katalog -------------------------------------------------------------------------------------------
 $comps = comp62_competencies($subject);
 $tagsOk = true;
-foreach ($comps as $c) foreach ($c['tags'] as $t) if (preg_match('/^(cmd|pack|bank|topic|tg):[a-z0-9\-]+$/', $t) !== 1) $tagsOk = false;
-$check('katalog: 8–12 kompetencí, každá „Umím …“, úroveň 1–4, tagy ve tvaru cmd:/pack:/bank:/topic:/tg:, id platná pro důkaz',
+foreach ($comps as $c) foreach ($c['tags'] as $t) if (preg_match('/^(cmd|pack|bank|topic|tg|robots):[a-z0-9\-]+$/', $t) !== 1) $tagsOk = false;
+$check('katalog: 8–12 kompetencí, každá „Umím …“, úroveň 1–4, tagy ve tvaru cmd:/pack:/bank:/topic:/tg:/robots:, id platná pro důkaz',
     count($comps) >= 8 && count($comps) <= 12 && $tagsOk && array_reduce($comps, static fn(bool $ok, array $c): bool => $ok && str_starts_with($c['label'], 'Umím ') && $c['level'] >= 1 && $c['level'] <= 4 && $c['tags'] !== [] && preg_match(EV62_COMP_RE, $c['id']) === 1, true));
 $check('katalog: pilot 3.A a 1.A (v63), předmět třídy nalezen, 2.A a 4.A mimo katalog i pilot', COMP62_PILOT_CLASSES === ['class_3a', 'class_1a'] && comp62_subject_for_class('class_3a') === $subject && comp62_subject_for_class('class_1a') === 'grafika_web'
     && comp62_subject_for_class('class_2a') === null && comp62_subject_for_class('class_4a') === null && comp62_enabled_for_class('class_1a') && !comp62_enabled_for_class('class_2a'));
 $web = comp62_competencies('grafika_web');
 $check('katalog grafika_web (v63): 8 kompetencí z rozhodnutí školy, každá „Umím …“, tagy topic:/bank: a id platná pro důkaz', array_keys($web) === ['web_html_structure', 'web_css_layout', 'web_a11y', 'web_ux', 'gfx_color_contrast', 'gfx_typography', 'gfx_formats', 'gfx_composition']
-    && array_reduce($web, static fn(bool $ok, array $c): bool => $ok && str_starts_with($c['label'], 'Umím ') && $c['tags'] !== [] && preg_match(EV62_COMP_RE, $c['id']) === 1 && array_filter($c['tags'], static fn(string $t): bool => preg_match('/^(topic|bank):[a-z0-9\-]+$/', $t) !== 1) === [], true));
+    && array_reduce($web, static fn(bool $ok, array $c): bool => $ok && str_starts_with($c['label'], 'Umím ') && $c['tags'] !== [] && preg_match(EV62_COMP_RE, $c['id']) === 1 && array_filter($c['tags'], static fn(string $t): bool => preg_match('/^(topic|bank|tg):[a-z0-9\-]+$/', $t) !== 1) === [], true));
 $check('katalog grafika_web: shoda tagů přiřadí aktivitu z tématu kb a z banky gfx (kontrast → gfx_color_contrast, HTML → web_html_structure), cizí tag nic', comp62_match('grafika_web', ['topic:contrast-color']) === ['gfx_color_contrast'] && comp62_match('grafika_web', ['bank:gfx-html']) === ['web_html_structure'] && comp62_match('grafika_web', ['cmd:ls']) === []);
 $msgids = comp62_label_msgids();
 $en = require $root . '/lang/en/ui/competency.php';
@@ -74,7 +74,7 @@ foreach (ev62_adapters() as $name => $adapter) {
     $adapterHits[$name] = count($got);
     foreach ($got as $cand) $sourcesSeen[(string)$cand['source']] = true;
 }
-$check('adaptéry: každý z 8 adaptérů vrátí pro fixture žáka aspoň jednoho kandidáta (' . json_encode($adapterHits) . ')', count($adapterHits) === 8 && !in_array(0, $adapterHits, true));
+$check('adaptéry: každý z 9 adaptérů vrátí pro fixture žáka aspoň jednoho kandidáta (' . json_encode($adapterHits) . ')', count($adapterHits) === 9 && !in_array(0, $adapterHits, true));
 $check('adaptéry: pokryty všechny typy zdrojů (test, project, lab, game, arena, lesson)', array_diff(EV62_SOURCES, array_keys($sourcesSeen)) === []);
 $incident = array_values(array_filter((array)(ev62_adapters()['arena_v58']['collect'])($ctxGood), static fn(array $c): bool => str_contains((string)$c['ref'], 'incident')));
 $check('adaptéry: incidenty v58 mají typ zdroje lab (rozhodnutí školy), týdenní hádanka a CTF aréna', $incident !== [] && $incident[0]['source'] === 'lab'

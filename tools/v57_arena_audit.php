@@ -95,7 +95,7 @@ try {
     check(arena57_lab_enabled('class_3a') === true, 'lab toggle on again');
 
     // --- Validace -------------------------------------------------------------
-    $base = ['class_id' => 'class_3a', 'preset' => 'custom', 'levels' => ['start-1', 'start-2', 'start-3'], 'duration_min' => '10', 'mode' => 'solo', 'team_size' => '3', 'hints' => '1', 'hint_penalty' => '0.2', 'names' => 'initials', 'class_goal' => '5', 'title' => 'Audit závod'];
+    $base = ['class_id' => 'class_3a', 'preset' => 'custom', 'levels' => ['start-1', 'start-2', 'start-3'], 'duration_min' => '10', 'mode' => 'solo', 'team_size' => '3', 'hints' => '1', 'hint_penalty' => '0.2', 'names' => 'initials', 'class_goal' => '5', 'title' => 'Audit závod', 'rating' => 'zebricek'];
     check(throws(fn() => arena57_create_race(['class_id' => 'class_9z'] + $base, $classes, $T0), 'třída'), 'create rejects unknown class');
     check(throws(fn() => arena57_create_race(['levels' => ['start-1', 'neni-1']] + $base, $classes, $T0), 'neexistuje'), 'create rejects unknown level');
     check(throws(fn() => arena57_create_race(['duration_min' => '3'] + $base, $classes, $T0), 'Délka'), 'create rejects duration < 5');

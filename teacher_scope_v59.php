@@ -250,7 +250,7 @@ function teacher59_action_policies(): array
         'ml_live_start', 'ml_failure_inject', 'teacher_demo_account_create', 'v50_teacher_growth_control', 'intake_t_toggle', 'intake_t_save',
         'sess53_t_open', 'acc58_issue_one', 'acc58_issue_class', 'arena57_create', 'arena57_lab_toggle', 'robots58_create', 'tg58_create',
         'arena58_inc_create', 'lab58t_export',
-        'comp62_sync', 'p63_assign', 'p63_unassign'] as $action) { // v62 · kompetence: ruční přepočet důkazů třídy – třída v rozsahu povinná; jiné comp62_* akce zůstávají zakázané; v63 · p63_assign/p63_unassign (výukové cesty) – třída povinná, jiné p63_* zakázané
+        'comp62_sync', 'p63_assign', 'p63_unassign', 'v64_abs_board'] as $action) { // v62 · kompetence: ruční přepočet důkazů třídy – třída v rozsahu povinná; jiné comp62_* akce zůstávají zakázané; v63 · p63_assign/p63_unassign (výukové cesty) – třída povinná, jiné p63_* zakázané
         $table[$action] = $req;
     }
     $table['save_grade'] = $reqEnt('target_id', 'grade_target', false);
@@ -612,6 +612,7 @@ function teacher59_guard_get_check(string $tab, array $get): ?string
             if (isset($get[$param]) && !isset($policies[$tab . '|' . $param])) return 'unknown_get';
         }
     }
+    if ($tab === 'ekonomika' && isset($get['month']) && (!is_string($get['month']) || preg_match(STORAGE_MONTH_RE, (string)$get['month']) !== 1)) return 'unknown_get'; // v64: month jen YYYY-MM
     if ($admin) return null;
     foreach ($policies as $key => $policy) {
         [$policyTab, $param] = explode('|', $key, 2);

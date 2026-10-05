@@ -1,0 +1,60 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * v64 · katalog msgid domény „games64“ (ukrajinština) – ligy, role týmových her, retrospektiva, výzva týdne, odznaky za kompetence.
+ */
+if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
+
+return [
+    'Zlatá liga' => 'Золота ліга',
+    'Stříbrná liga' => 'Срібна ліга',
+    'Bronzová liga' => 'Бронзова ліга',
+    'Ty' => 'Ти',
+    'Jsi mezi nejlepšími ve třídě. Zkus pomoct spolužákům s úlohou.' => 'Ти серед найкращих у класі. Спробуй допомогти однокласникам із завданням.',
+    'Držíš střed. Každý souboj tě posouvá, výhra i prohra.' => 'Ти посередині. Кожен двобій рухає тебе вперед, і перемога, і поразка.',
+    'Začínáš. Soupeři blízko tvé ligy ti dají nejlepší trénink.' => 'Ти починаєш. Суперники з твоєї ліги дадуть найкраще тренування.',
+    'Moje liga' => 'Моя ліга',
+    'Liga se každé pololetí začíná znovu a nikdy se nepočítá do známek.' => 'Ліга починається заново щосеместру і ніколи не враховується в оцінки.',
+    'Vyrovnaní soupeři' => 'Рівні суперники',
+    'Doporučení je jen rada – vyzvat můžeš kohokoli.' => 'Це лише порада – викликати можна будь-кого.',
+    'Kdo se za 14 dní nejvíc posunul' => 'Хто найбільше покращився за 14 днів',
+    'Zatím tu nikdo není. Vyřeš úlohu nebo si zahraj souboj a zlepšení se ukáže tady.' => 'Тут поки нікого немає. Розв’яжи завдання або зіграй двобій, і покращення з’явиться тут.',
+    'Počítá se jen zlepšení, ne výchozí úroveň.' => 'Враховується лише покращення, а не початковий рівень.',
+    'Navigátor' => 'Навігатор',
+    'Operátor' => 'Оператор',
+    'Kontrolor' => 'Контролер',
+    'Čteš zadání nahlas a navrhuješ postup.' => 'Ти читаєш завдання вголос і пропонуєш хід розв’язання.',
+    'Zadáváš odpovědi a příkazy.' => 'Ти вводиш відповіді та команди.',
+    'Kontroluješ výsledek, než ho odešlete.' => 'Ти перевіряєш результат, перш ніж його надіслати.',
+    'Co nám jako týmu šlo dobře?' => 'Що в нас як у команди вийшло добре?',
+    'Kde jsme ztratili nejvíc času?' => 'Де ми втратили найбільше часу?',
+    'Co uděláme příště jinak?' => 'Що ми зробимо наступного разу інакше?',
+    'Napiš aspoň jednu větu.' => 'Напиши хоча б одне речення.',
+    'Neplatná hra.' => 'Недійсна гра.',
+    'Tvoje role v týmu: {role}' => 'Твоя роль у команді: {role}',
+    'Role se mezi hrami střídá, aby si každý vyzkoušel všechny.' => 'Ролі змінюються між іграми, щоб кожен спробував усі.',
+    'Co si z hry odnášíme' => 'Що ми виносимо з гри',
+    'Díky, retrospektiva je odeslaná. Můžeš ji přepsat.' => 'Дякуємо, ретроспективу надіслано. Ти можеш її переписати.',
+    'Odpovědi uvidí jen učitel, bez jmen. Stačí jedna věta, maximálně {n} znaků.' => 'Відповіді побачить лише вчитель, без імен. Досить одного речення, не більше {n} символів.',
+    'Odeslat' => 'Надіслати',
+    'Nejdřív se přihlas do své třídy.' => 'Спочатку увійди у свій клас.',
+    'Hra nebyla nalezena.' => 'Гру не знайдено.',
+    'Retrospektiva jde odeslat, až hra skončí.' => 'Ретроспективу можна надіслати, коли гра закінчиться.',
+    'Ještě nejsi v žádném týmu.' => 'Ти ще не в жодній команді.',
+    'Díky, retrospektiva je uložená.' => 'Дякуємо, ретроспективу збережено.',
+    'Něco se pokazilo. Zkus to za chvilku znovu.' => 'Щось пішло не так. Спробуй ще раз за хвилину.',
+    'Výzva týdne' => 'Виклик тижня',
+    'Splněno: v téhle kompetenci jsi tento týden prokázal/a, co umíš.' => 'Виконано: у цій компетентності ти цього тижня показав(-ла), що вмієш.',
+    'Vyzkoušej to v Labu nebo v týmové hře. Odměnou je jistota, že to umíš – žádné body.' => 'Спробуй у Лабораторії або в командній грі. Нагорода – впевненість, що ти це вмієш, без балів.',
+    'Série týdnů: {n}' => 'Тижнів підряд: {n}',
+    'Prázdniny sérii nepřeruší.' => 'Канікули серію не перериватимуть.',
+    'Do hry' => 'До гри',
+    'Cesta k téhle kompetenci' => 'Шлях до цієї компетентності',
+    'Upevněno' => 'Закріплено',
+    'Zvládnuto' => 'Засвоєно',
+    'Kompetenci jsi prokázal/a různými způsoby i s odstupem času.' => 'Ти підтвердив(-ла) компетентність різними способами та з перервою в часі.',
+    'Kompetence je ověřená testem, projektem nebo úlohou.' => 'Компетентність підтверджена тестом, проєктом або завданням.',
+    'Odznaky za kompetence' => 'Значки за компетентності',
+];

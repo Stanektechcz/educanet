@@ -109,6 +109,8 @@ function comp62_render_student_tab(string $classId, string $studentKey): void
     comp62_student_assets();
     ev62_sync_student($classId, $studentKey, false, true); // GET: jen levné zdroje, plná sync = cron/comp62_sync
     $mastery = m62_student($classId, $studentKey);
+    require_once __DIR__ . '/challenges_v64.php';
+    if ($mastery['id'] !== null) ch64_award_competency_badges((string)$mastery['id'], (array)$mastery['map'], time()); // v64: odznaky jen za milníky kompetencí
     $items = ['umim' => '', 'ucim' => '', 'zatim' => ''];
     foreach (comp62_competencies($subject) as $id => $c) {
         $info = $mastery['map'][$id] ?? ['state' => 'neovereno', 'n' => 0, 'sources' => []];
@@ -121,5 +123,6 @@ function comp62_render_student_tab(string $classId, string $studentKey): void
         . comp62_render_group('umim', tr('Umím'), $items['umim'])
         . comp62_render_group('ucim', tr('Učím se'), $items['ucim'])
         . comp62_render_group('zatim', tr('Zatím ne'), $items['zatim'])
+        . ch64_render_badges($classId, $studentKey)
         . '</div>';
 }

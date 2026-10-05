@@ -24,6 +24,8 @@ if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_on
  */
 
 require_once __DIR__ . '/linux_v57_lab.php';
+require_once __DIR__ . '/economy_v64.php';
+require_once __DIR__ . '/arena_v64_fair.php';
 // arena57_roster()/arena57_snake_teams()/arena57_public_name() jsou zamčené API (§6 V58_PLAN) – voláme je,
 // ale nikdy je neupravujeme. Načteno defenzivně (stejný vzor jako lab_v57_api.php/teacher.php), aby modul
 // fungoval i ve chvíli, kdy by ho něco natáhlo bez arena_v57.php v cestě (např. izolovaný audit/test).
@@ -576,6 +578,7 @@ function arena58_ctf_board(string $eventId, string $classId, string $studentKey)
     $viewerKey = $event['mode'] === 'teams' ? (arena58_ctf_team_for($event, $classId, $studentKey)['id'] ?? null) : $studentKey;
     // U týmů se v žebříčku srovnávají týmy, takže "moje" hledáme podle team id, ne podle studenta.
     $viewerRowKey = $event['mode'] === 'teams' ? null : $studentKey;
+    $absolute = fair64_absolute_board_enabled('ctf', $classId, $eventId);
     $me = ['rank' => null, 'points' => 0, 'solved' => 0];
     foreach ($calc['students'] as $row) {
         if ($row['key'] === $studentKey) { $me = ['rank' => $row['rank'], 'points' => $row['points'], 'solved' => $row['solved']]; break; }
@@ -586,8 +589,9 @@ function arena58_ctf_board(string $eventId, string $classId, string $studentKey)
     }
     return [
         'event' => ['id' => (string)$event['id'], 'title' => (string)$event['title'], 'status' => $status, 'ends_at' => $event['ends_at'] ?? null, 'mode' => (string)$event['mode'], 'now' => $now, 'frozen' => $frozen],
-        'rows' => arena58_ctf_public_rows($event, $calc['students'], $roster, $viewerRowKey, ARENA58_CTF_BOARD_TOP),
-        'teams' => $event['mode'] === 'teams' ? arena58_ctf_public_teams($calc['teams'], $viewerKey) : [],
+        'rows' => $absolute ? arena58_ctf_public_rows($event, $calc['students'], $roster, $viewerRowKey, ARENA58_CTF_BOARD_TOP) : fair64_only_me(arena58_ctf_public_rows($event, $calc['students'], $roster, $viewerRowKey, PHP_INT_MAX)),
+        'teams' => $event['mode'] === 'teams' ? ($absolute ? arena58_ctf_public_teams($calc['teams'], $viewerKey) : fair64_only_me(arena58_ctf_public_teams($calc['teams'], $viewerKey))) : [],
+        'absolute' => $absolute,
         'me' => $me, 'my_team' => $myTeam,
     ];
 }
@@ -654,7 +658,7 @@ function arena58_ctf_award_finished_xp(string $classId, string $studentKey): voi
                     $hit = $event['mode'] === 'teams' ? in_array($studentKey, $row['members'], true) : $row['key'] === $studentKey;
                     if ($hit) { $rank = $row['rank']; break; }
                 }
-                learning_award_once($classId, 'v58:ctf:' . $eventId, ARENA58_CTF_XP_PARTICIPATION + (ARENA58_CTF_XP_PODIUM[(int)$rank] ?? 0));
+                eco64_award($classId, $studentKey, 'ctf58', 'v58:ctf:' . $eventId, ARENA58_CTF_XP_PARTICIPATION + (ARENA58_CTF_XP_PODIUM[(int)$rank] ?? 0));
             }
             $done[$eventId] = 1;
         }

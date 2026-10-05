@@ -331,6 +331,7 @@ foreach (['pa', 'pb'] as $key) {
     $code = lab57_code($classPr, $key, 'ctf:' . $eventAnon['id'], $levelIdPr);
     lab57_session(v58ci_ctx('ctf:' . $eventAnon['id'], $classPr, $key, $levelIdPr, $now, ['pa', 'pb']), 'run', ['line' => 'submit ' . $code]);
 }
+$GLOBALS['fair64_prefs_override'][$classPr]['ctf:' . $eventAnon['id']] = true; // v64: absolutní žebříček je výchozí vypnutý – učitel ho zapíná u akce
 $boardAnon = arena58_ctf_board((string)$eventAnon['id'], $classPr, 'pa');
 $otherRow = null;
 foreach ($boardAnon['rows'] as $row) if (empty($row['me'])) $otherRow = $row;

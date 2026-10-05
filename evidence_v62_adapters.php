@@ -15,6 +15,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 
 const EV62_SYNC_TTL = 600;
 
+require_once __DIR__ . '/teamgames_v64_roles.php'; // v64: přínos člena týmu pro skóre týmové hry
+
 /** Paměť jednoho požadavku (proudy se čtou jednou na třídu, ne jednou na žáka). */
 function ev62_memo(string $key, callable $compute)
 {
@@ -210,7 +212,62 @@ function ev62_collect_arena_v60(array $ctx): array
         if (!is_array($row) || (string)($row['class_id'] ?? '') !== $ctx['class'] || (string)($row['status'] ?? '') !== 'done') continue;
         if ((string)($row['from_key'] ?? '') !== $ctx['key'] && (string)($row['to_key'] ?? '') !== $ctx['key']) continue;
         $out[] = ['source' => 'arena', 'ref' => 'arena60:' . ev62_safe_ref_part((string)($row['id'] ?? '')), 'tags' => ev62_level_tags((string)($row['level_id'] ?? '')),
-            'score' => (string)($row['winner_key'] ?? '') === $ctx['key'] ? 1.0 : 0.6, 'at' => (string)($row['finished_at'] ?? '')];
+            'score' => (string)($row['winner_key'] ?? '') === $ctx['key'] ? 1.0 : ev62_arena60_loser_score($row, $ctx), 'at' => (string)($row['finished_at'] ?? '')];
+    }
+    return $out;
+}
+
+/** Počet příkazů žáka v dané úrovni mezi dvěma časy (log labu, jen čtení). */
+function ev62_level_cmds(string $class, string $key, string $levelId, int $from, int $to): int
+{
+    $path = STORAGE_DIR . '/linux_v57/' . preg_replace('/[^a-z0-9_]/i', '', $class) . '__' . sha1($key) . '.json.php';
+    $n = 0;
+    foreach ((array)(storage_read($path, false)['log'] ?? []) as $e) {
+        $t = is_array($e) ? strtotime((string)($e['t'] ?? '')) : false;
+        if (is_array($e) && (string)($e['lvl'] ?? '') === $levelId && $t !== false && $t >= $from && $t <= $to) $n++;
+    }
+    return $n;
+}
+
+/** Čistá funkce: poražený dostane 0,4 + 0,2 × (jeho kroky / kroky vítěze, max 1) → 0,4–0,6 (dřív pevně 0,6). */
+function ev62_arena60_loser_score_from(int $loserCmds, int $winnerCmds): float
+{
+    return round(0.4 + 0.2 * min(1.0, $loserCmds / max(1, $winnerCmds)), 3);
+}
+
+/** Skóre poraženého v souboji podle podílu kroků proti vítězi v okně souboje. */
+function ev62_arena60_loser_score(array $row, array $ctx): float
+{
+    $from = (int)strtotime((string)($row['accepted_at'] ?? ''));
+    $to = (int)strtotime((string)($row['finished_at'] ?? '')) + 1;
+    $level = (string)($row['level_id'] ?? '');
+    $winner = (string)($row['winner_key'] ?? '');
+    if ($from <= 0 || $to <= 1 || $level === '' || $winner === '') return 0.4;
+    return ev62_arena60_loser_score_from(ev62_level_cmds((string)$ctx['class'], (string)$ctx['key'], $level, $from, $to), ev62_level_cmds((string)$ctx['class'], $winner, $level, $from, $to));
+}
+
+/** Robotí liga v58: umístění v odehraném zápase → skóre 0,8 (1.) až 0,5 (poslední); tag robots:algo. Hra sama nikdy nedá „upevněno“ (váha hry, m62). */
+function ev62_robots_score(int $place, int $participants): float
+{
+    return round(0.8 - 0.3 * (max(1, $place) - 1) / max(1, $participants - 1), 3);
+}
+
+function ev62_collect_robots_v58(array $ctx): array
+{
+    $out = [];
+    foreach ((array)(storage_read(STORAGE_DIR . '/robots_v58.json.php', false)['matches'] ?? []) as $m) {
+        if (!is_array($m) || (string)($m['class_id'] ?? '') !== $ctx['class'] || empty($m['results']) || (string)($m['ran_at'] ?? '') === '' || preg_match('/^[a-f0-9]{6,32}$/', (string)($m['id'] ?? '')) !== 1) continue;
+        $robots = (array)($m['results']['robots'] ?? []);
+        $mine = null;
+        foreach ($robots as $r) if (is_array($r) && (string)($r['key'] ?? '') === $ctx['key']) { $mine = $r; break; }
+        if ($mine === null) continue;
+        $rank = (int)($mine['rank'] ?? 0);
+        $n = count($robots);
+        if ((string)($m['mode'] ?? '') === 'teams') {
+            foreach ((array)($m['results']['teams'] ?? []) as $t) if (is_array($t) && (string)($t['team'] ?? '') === (string)($mine['team'] ?? '')) { $rank = (int)$t['rank']; $n = count((array)$m['results']['teams']); }
+        }
+        if ($rank < 1) continue;
+        $out[] = ['source' => 'game', 'ref' => 'robots:' . $m['id'], 'tags' => ['robots:algo'], 'score' => ev62_robots_score($rank, $n), 'at' => (string)$m['ran_at']];
     }
     return $out;
 }
@@ -234,7 +291,8 @@ function ev62_teamgame_candidate(array $session, string $studentKey): ?array
     if (!in_array((string)($session['status'] ?? ''), ['finished', 'archived'], true) || (string)($session['finished_at'] ?? '') === '') return null;
     foreach ((array)($session['teams'] ?? []) as $team) {
         if (is_array($team) && in_array($studentKey, array_map('strval', (array)($team['members'] ?? [])), true)) {
-            return ['source' => 'game', 'ref' => 'tg:' . ev62_safe_ref_part((string)$session['id']), 'tags' => ['tg:' . (string)($session['line'] ?? '')], 'score' => 0.6, 'at' => (string)$session['finished_at']];
+            $score = !empty($session['contrib']) && function_exists('tg64_contribution') ? tg64_evidence_score(tg64_contribution($session, (string)$team['id'], $studentKey)) : 0.6; // v64: 0,3 + 0,5 × přínos (max 0,8); starší hry bez záznamu přínosu 0,6
+            return ['source' => 'game', 'ref' => 'tg:' . ev62_safe_ref_part((string)$session['id']), 'tags' => ['tg:' . (string)($session['line'] ?? '')], 'score' => $score, 'at' => (string)$session['finished_at']];
         }
     }
     return null;
@@ -274,6 +332,7 @@ function ev62_adapters(): array
         'arena_v58' => ['source' => 'arena', 'cheap' => true, 'collect' => 'ev62_collect_arena_v58'],
         'arena_v60' => ['source' => 'arena', 'cheap' => false, 'collect' => 'ev62_collect_arena_v60'],
         'teamgames_v58' => ['source' => 'game', 'cheap' => false, 'collect' => 'ev62_collect_teamgames_v58'],
+        'robots_v58' => ['source' => 'game', 'cheap' => false, 'collect' => 'ev62_collect_robots_v58'],
         'projects' => ['source' => 'project', 'cheap' => false, 'collect' => 'ev62_collect_projects'],
     ];
 }

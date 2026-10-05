@@ -97,6 +97,8 @@ function teacher_action_permission_prefixes(): array
         'comp62_'=>'analytics.view',
         // v63 · výukové cesty: přiřazení a zrušení přiřazení cesty třídě = správa obsahu (assistant jen čte).
         'p63_'=>'content.manage',
+        // v64 · ekonomika her: zapnutí/vypnutí absolutního žebříčku u akce = řízení třídy (assistant jen čte).
+        'v64_'=>'students.manage',
     ];
 }
 function teacher_action_permission(string $action): ?string

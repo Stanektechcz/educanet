@@ -76,7 +76,7 @@ function comp62_catalog(): array
                     'lnx_ssh' => ['label' => 'Umím se bezpečně připojit přes SSH a klíče', 'level' => 2,
                         'tags' => ['topic:ssh-sftp', 'topic:ssh-keys-ops', 'topic:ssh-key-operations', 'pack:klice', 'cmd:ssh', 'cmd:ssh-keygen', 'cmd:ssh-copy-id', 'cmd:scp']],
                     'lnx_automation' => ['label' => 'Umím automatizovat úlohy skriptem a cronem', 'level' => 3,
-                        'tags' => ['topic:shell-cron', 'topic:bash-error-handling', 'pack:cron', 'cmd:crontab']],
+                        'tags' => ['topic:shell-cron', 'topic:bash-error-handling', 'pack:cron', 'cmd:crontab', 'robots:algo']],
                 ]],
             ],
         ],
@@ -88,7 +88,7 @@ function comp62_catalog(): array
             'areas' => [
                 'web' => ['label' => 'Web', 'competencies' => [
                     'web_html_structure' => ['label' => 'Umím postavit sémantickou kostru webové stránky', 'level' => 2,
-                        'tags' => ['topic:web-layout-basics-i', 'topic:components-i', 'bank:gfx-html']],
+                        'tags' => ['topic:web-layout-basics-i', 'topic:components-i', 'bank:gfx-html', 'tg:graphics']],
                     'web_css_layout' => ['label' => 'Umím rozmístit prvky pomocí CSS a přizpůsobit stránku úzkému displeji', 'level' => 2,
                         'tags' => ['topic:responsive-layout-i', 'topic:responsive-art-direction', 'topic:responsive-series', 'topic:spacing', 'topic:layout-rhythm-i', 'bank:gfx-css']],
                     'web_a11y' => ['label' => 'Umím posoudit přístupnost webu a opravit běžné chyby', 'level' => 3,
@@ -98,7 +98,7 @@ function comp62_catalog(): array
                 ]],
                 'grafika' => ['label' => 'Grafika', 'competencies' => [
                     'gfx_color_contrast' => ['label' => 'Umím zvolit barvy a ověřit kontrast textu', 'level' => 2,
-                        'tags' => ['topic:contrast-color', 'topic:color', 'topic:color-harmony', 'bank:gfx-color']],
+                        'tags' => ['topic:contrast-color', 'topic:color', 'topic:color-harmony', 'bank:gfx-color', 'tg:graphics']],
                     'gfx_typography' => ['label' => 'Umím zvolit a skloubit písma pro čitelný text', 'level' => 2,
                         'tags' => ['topic:typography', 'topic:editorial-typography-i', 'topic:web-typography-i', 'bank:gfx-type']],
                     'gfx_formats' => ['label' => 'Umím vybrat správný grafický formát a export', 'level' => 2,

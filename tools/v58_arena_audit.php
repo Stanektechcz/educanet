@@ -253,7 +253,7 @@ try {
 
     // --- ARN-06: hodnocení závodu (žebříček/osobní rekord/kategorie), skrytí pořadí ---
     $classes = ['class_1a', 'class_2a', 'class_3a', 'class_4a'];
-    $base = ['class_id' => 'class_3a', 'preset' => 'custom', 'levels' => ['start-1', 'start-2'], 'duration_min' => '10', 'mode' => 'solo', 'hint_penalty' => '0.2', 'names' => 'initials', 'class_goal' => '0', 'title' => 'ARN-06'];
+    $base = ['class_id' => 'class_3a', 'preset' => 'custom', 'levels' => ['start-1', 'start-2'], 'duration_min' => '10', 'mode' => 'solo', 'hint_penalty' => '0.2', 'names' => 'initials', 'class_goal' => '0', 'title' => 'ARN-06', 'rating' => 'zebricek'];
     check(throws(fn() => arena57_parse_create(['rating' => 'kategorie', 'mode' => 'teams'] + $base, $classes), 'jednotlivců'), 'kategorie rejected for team races');
     check(throws(fn() => arena57_parse_create(['rating' => 'neco'] + $base, $classes), 'hodnocení'), 'unknown rating rejected');
 
@@ -334,7 +334,7 @@ foreach (($level["solution"])($world) as $cmd) { $r = lab57_session($ctx, "run",
 
     // --- ARN-05: Záznam závodu ---------------------------------------------------
     at($T + 200000);
-    $rReplay = arena57_start_race(arena57_create_race(['class_id' => 'class_3a', 'preset' => 'custom', 'levels' => ['start-1', 'start-2', 'start-3'], 'duration_min' => '10', 'mode' => 'solo', 'hint_penalty' => '0.2', 'names' => 'initials', 'class_goal' => '2', 'title' => 'Replay'], $classes, $T + 200000)['id'], $T + 200000);
+    $rReplay = arena57_start_race(arena57_create_race(['class_id' => 'class_3a', 'preset' => 'custom', 'levels' => ['start-1', 'start-2', 'start-3'], 'duration_min' => '10', 'mode' => 'solo', 'hint_penalty' => '0.2', 'names' => 'initials', 'class_goal' => '2', 'title' => 'Replay', 'rating' => 'zebricek'], $classes, $T + 200000)['id'], $T + 200000);
     solve_start($keys10[0], 'Žák Číslo1', (string)$rReplay['id'], $T + 200010);
     solve_start($keys10[1], 'Žák Číslo2', (string)$rReplay['id'], $T + 200030);
     $rReplayStopped = arena57_stop_race((string)$rReplay['id'], $T + 200100);

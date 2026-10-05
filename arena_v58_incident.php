@@ -21,6 +21,7 @@ if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_on
  */
 
 require_once __DIR__ . '/linux_v57_lab.php';
+require_once __DIR__ . '/economy_v64.php';
 // arena57_roster()/arena57_snake_teams() jsou zamčené API (§6 V58_PLAN) pro sestavení týmů – načteno
 // defenzivně (stejný vzor jako lab_v57_api.php/teacher.php), ať modul funguje i mimo běžné pořadí načítání.
 if (is_file(__DIR__ . '/arena_v57.php')) require_once __DIR__ . '/arena_v57.php';
@@ -546,7 +547,7 @@ function arena58_inc_award_xp(string $classId, string $studentKey): void
                 $attempt = arena58_inc_attempt($session, $stateKey, $scenarioId);
                 if ($attempt === null || empty($attempt['postmortem'])) continue;
                 $xp = ARENA58_INC_XP_PARTICIPATION + (((int)($attempt['postmortem']['points'] ?? 0)) > 0 ? ARENA58_INC_XP_SOLVED : 0);
-                learning_award_once($classId, 'v58:incident:' . $session['id'] . ':' . $scenarioId, $xp);
+                eco64_award($classId, $studentKey, 'incident58', 'v58:incident:' . $session['id'] . ':' . $scenarioId, $xp);
             }
         }
     } catch (Throwable $e) {

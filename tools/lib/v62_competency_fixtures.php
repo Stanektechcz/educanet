@@ -82,6 +82,8 @@ function v62fx_seed_shared(int $now): void
         'level_id' => 'sit-4', 'status' => 'done', 'winner_key' => v62fx_key('good'), 'finished_at' => $ago(5)]], 'optin' => []]);
     storage_update(STORAGE_DIR . '/teamgames_v58/aabbccdd11.json.php', static fn(array $d): array => ['id' => 'aabbccdd11', 'class_id' => V62FX_CLASS, 'status' => 'finished', 'finished_at' => $ago(9), 'line' => 'networks',
         'teams' => [['id' => 't1', 'members' => [v62fx_key('good'), v62fx_key('player')]]]]);
+    storage_update(STORAGE_DIR . '/robots_v58.json.php', static fn(array $d): array => ['matches' => [['id' => 'aabbccdd22', 'class_id' => V62FX_CLASS, 'mode' => 'solo', 'ran_at' => $ago(6),
+        'results' => ['robots' => [['key' => v62fx_key('good'), 'rank' => 1], ['key' => v62fx_key('player'), 'rank' => 2]], 'teams' => []]]]]);
     storage_update(STORAGE_DIR . '/teamgames_v58_index.json.php', static fn(array $d): array => ['entries' => [['id' => 'aabbccdd11', 'class_id' => V62FX_CLASS, 'type' => 'relay', 'created_at' => $ago(10)]]]);
 }
 

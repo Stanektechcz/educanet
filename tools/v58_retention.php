@@ -28,6 +28,7 @@ require_once dirname(__DIR__) . '/lab_v58_log.php';
 require_once dirname(__DIR__) . '/identity_v58.php';
 require_once dirname(__DIR__) . '/evidence_v62.php';
 require_once dirname(__DIR__) . '/paths_v63_class.php';
+require_once dirname(__DIR__) . '/teamgames_v64_roles.php';
 
 function v58r_flag(array $argv, string $name): bool
 {
@@ -47,6 +48,8 @@ if (basename((string)($argv[0] ?? '')) === basename(__FILE__)) {
         // v63: stav výukových cest (a reflexní věty) odešlých/archivovaných žáků.
         $paths = p63_retention_purge(!$apply);
         $result['paths_v63_purged'] = (int)$paths['purge'];
+        // v64: retrospektivy týmových her starší než školní rok (+ rezerva).
+        $result['retro_v64_purged'] = tg64_retro_purge(time() - 400 * 86400, !$apply);
     } catch (Throwable $e) {
         fwrite(STDERR, 'V58_RETENTION_FAIL ' . $e->getMessage() . "\n");
         exit(1);
@@ -58,7 +61,7 @@ if (basename((string)($argv[0] ?? '')) === basename(__FILE__)) {
         foreach ($result['actions'] as $a) {
             printf("%s %s — %s\n", strtoupper((string)$a['action']), (string)$a['path'], (string)$a['detail']);
         }
-        echo ($apply ? 'APPLY' : 'DRYRUN') . ' school_year=' . $result['school_year'] . ' actions=' . count($result['actions']) . ' lab_log_purged=' . (int)$result['lab_log_purged'] . ' evidence_v62_purged=' . (int)$result['evidence_v62_purged'] . ' paths_v63_purged=' . (int)$result['paths_v63_purged'] . "\n";
+        echo ($apply ? 'APPLY' : 'DRYRUN') . ' school_year=' . $result['school_year'] . ' actions=' . count($result['actions']) . ' lab_log_purged=' . (int)$result['lab_log_purged'] . ' evidence_v62_purged=' . (int)$result['evidence_v62_purged'] . ' paths_v63_purged=' . (int)$result['paths_v63_purged'] . ' retro_v64_purged=' . (int)$result['retro_v64_purged'] . "\n";
     }
     exit(0);
 }

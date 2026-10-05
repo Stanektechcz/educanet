@@ -490,6 +490,10 @@ Vrstva je **pilot jen pro třídu 3.A** (`COMP62_PILOT_CLASSES` v `competencies_
   `--dry-run`, nic nezapisuje, vypíše statistiku), potom `php tools/v62_evidence_backfill.php --apply`. Příkaz `--apply`
   se na ostré `storage/` bez `EDUCANET_STORAGE_DIR` **odmítne** – před ostrým během si zazálohuj `storage/`
   (`tools/backup_storage.php`) a spusť ho jako uživatel webu. Opakované spuštění nic nepřidá (idempotentní).
+  Na produkci se zápis spouští s výslovně nastaveným `EDUCANET_STORAGE_DIR=/www/wwwroot/is.stanektech.cz/storage`
+  (cesta k datům se tak zadává záměrně, nástroj se jí neptá sám). Příkaz jako u update, přes `runuser`:
+  `runuser -u www -- bash -c 'set -a; . /www/server/educanet/educanet.env; set +a; export EDUCANET_STORAGE_DIR=/www/wwwroot/is.stanektech.cz/storage; cd /www/wwwroot/is.stanektech.cz; /www/server/php/83/bin/php tools/v62_evidence_backfill.php --apply'`
+  (stejný příkaz lze použít v cronu).
 - **Retence:** důkazy se drží do konce studia a **30 dní po stavu `left`/`archived`** se mažou. Maže je existující denní cron
   `tools/v58_retention.php --apply` (souhrn `evidence_v62_purged=N`); bez `--apply` jen spočítá. Žák bez data odchodu
   (`archived_at`) se nemaže.
@@ -517,4 +521,24 @@ je od v63 pilot kompetencí v62 **3.A + 1.A** (`COMP62_PILOT_CLASSES`), takže c
 - **Zdrojový obsah:** `paths_v63_content_os.php` (3.A) a `paths_v63_content_gfx.php` (1.A); otázky ověřování a opakování jsou z banky
   týmových her (`teamgames_v58_bank_net*.php`, `teamgames_v58_bank_gfx*.php`).
 - **Kontrola po nasazení:** `php tools/v63_paths_audit.php` → `V63_PATHS_AUDIT_OK`; `php tools/v62_competency_audit.php`; celá sada
+  `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v64 · Hry, týmové hry, arény a férová ekonomika
+
+Podrobnosti: `docs/HRY_V64.md`, `CHANGELOG_V64.md`, `BUILD_MANIFEST_V64.md`. Nic z v64 nevyžaduje nové PHP rozšíření ani migraci.
+
+- **Ekonomika:** hry a arény dávají jen XP, společně nejvýš **60 XP na žáka a den** (`economy_v64.php`). Denní čítač je v
+  `storage/economy_v64/daily.json.php` (jen sha1 + XP, bez jmen), deník transakcí v `storage/economy_v64_ledger/<YYYY-MM>.jsonl.php`
+  (bez jmen a klíčů žáků; archivuje se po školním roce přes `ops58_retention_policy`). **Vypnutí (rollback):** v prostředí
+  `EDUCANET_ECONOMY_V64=0` – hry se vrátí k chování v63 (přímé připsání bez stropu a deníku).
+- **Ligy a ELO:** `storage/arena_v64_ratings.json.php` (start 1000, K=32 do 10 her, pak 16, minimum 600, bronz <950 / stříbro 950–1100 /
+  zlato >1100, reset každé pololetí). ELO ani liga nejdou do známek ani exportů známek; žáci vidí jen ligu.
+- **Absolutní žebříček** je výchozí vypnutý. Učitel ho zapíná v cockpitu → *Ekonomika* u CTF, robotí ligy a týmové hry; u závodu volbou
+  hodnocení „žebříček“ při vytvoření (výchozí je osobní rekord).
+- **Týmové hry:** role navigátor/operátor/kontrolor se mezi hrami střídají, přínos žáka se měří, po hře 3 otázky retrospektivy
+  (`storage/teamgames_v64_retro.json.php`, bez jmen, vidí je jen učitel s rozsahem třídy, ne asistent). Retrospektivy maže
+  `tools/v58_retention.php --apply` po školním roce (souhrn `retro_v64_purged=N`).
+- **Výzva týdne** (karta na přehledu pod „Co dál“, `storage/challenges_v64.json.php`) a odznaky za zvládnutí/upevnění kompetencí (3.A, 1.A).
+- **Metrika fáze:** `EDUCANET_STORAGE_DIR=<kopie storage> php tools/v64_engagement_report.php` (jen čtení, nad ostrou `storage/` se odmítne).
+- **Kontrola po nasazení:** `php tools/v64_games_audit.php` → `V64_GAMES_AUDIT_OK`; celá sada
   `php tools/run_audits.php --since=all --with-smoke --with-router`.

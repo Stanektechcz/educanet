@@ -17,6 +17,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  */
 
 require_once __DIR__ . '/linux_v57_lab.php';
+require_once __DIR__ . '/economy_v64.php'; // v64: společný strop XP z her
 
 const ARENA57_ID_RE = '/^[a-z0-9]{6,32}$/';
 const ARENA57_TEAM_NAMES = ['Tučňáci', 'Pakety', 'Jádra', 'Bajty', 'Routeři', 'Shelláci', 'Démoni', 'Pingři', 'Kořeny', 'Sokety', 'Rouráci', 'Kernelníci'];
@@ -254,7 +255,7 @@ function arena57_parse_create(array $in, array $classIds): array
     if (!is_float($penalty) || $penalty < 0.1 - 1e-9 || $penalty > 0.5 + 1e-9) throw new RuntimeException('Srážka za nápovědu musí být 10–50 %.');
     $names = (string)($in['names'] ?? 'initials');
     if (!in_array($names, ARENA57_NAME_MODES, true)) throw new RuntimeException('Neplatné zobrazení jmen.');
-    $rating = (string)($in['rating'] ?? 'zebricek');
+    $rating = (string)($in['rating'] ?? 'osobni_rekord'); // v64: absolutní žebříček je výchozí vypnutý (učitel zapne volbou „žebříček“)
     if (!in_array($rating, ARENA57_RATING_MODES, true)) throw new RuntimeException('Neplatné hodnocení závodu.');
     if ($rating === 'kategorie' && $mode !== 'solo') throw new RuntimeException('Kategorie fungují jen v režimu jednotlivců (ne týmů).');
     $categoryCount = filter_var($in['category_count'] ?? 3, FILTER_VALIDATE_INT);
@@ -783,7 +784,7 @@ function arena57_award_finished_xp(string $classId, string $studentKey): void
                     $hit = $race['mode'] === 'teams' ? in_array($studentKey, $row['members'], true) : $row['key'] === $studentKey;
                     if ($hit) { $rank = $row['rank']; break; }
                 }
-                learning_award_once($classId, 'v57:race:' . $raceId, ARENA57_XP_PARTICIPATION + (ARENA57_XP_PODIUM[(int)$rank] ?? 0));
+                eco64_award($classId, $studentKey, 'arena57', 'v57:race:' . $raceId, ARENA57_XP_PARTICIPATION + (ARENA57_XP_PODIUM[(int)$rank] ?? 0));
             }
             $done[$raceId] = 1;
         }

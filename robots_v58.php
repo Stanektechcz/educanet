@@ -19,6 +19,8 @@ if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_on
  */
 
 require_once __DIR__ . '/robots_v58_game.php';
+require_once __DIR__ . '/economy_v64.php';
+require_once __DIR__ . '/arena_v64_fair.php';
 
 const ROBOTS58_ID_RE = '/^[a-z0-9]{8,32}$/';
 const ROBOTS58_TEAMS_MIN = 2;
@@ -517,6 +519,7 @@ function robots58_public_league(string $classId, string $semester, ?string $view
         if (!$teacher && count($out) >= 15 && !$me) continue;
         $out[] = ['rank' => (int)$row['rank'], 'name' => robots58_public_name($mode, $row['key'], robots58_label($row['key'], $row['label'], $roster), $viewerKey, $i + 1), 'matches' => $row['matches'], 'league' => $row['league'], 'points' => $row['points'], 'wins' => $row['wins'], 'me' => $me];
     }
+    if (!$teacher && !fair64_absolute_board_enabled('robots', $classId)) $out = fair64_only_me($out); // v64: žák vidí jen sebe a svou ligu
     return ['semester' => $semester, 'label' => robots58_semester_label($semester), 'rows' => $out];
 }
 
@@ -541,7 +544,7 @@ function robots58_claim_xp(string $classId, string $studentKey): int
             $id = (string)$match['id'];
             if (isset($done[$id]) || empty($match['results'])) continue;
             $xp = robots58_xp_for(robots58_place($match, $studentKey));
-            if ($xp > 0 && learning_award_once($classId, 'robots58:' . $id, $xp)) $awarded++;
+            if ($xp > 0 && eco64_award($classId, $studentKey, 'robots58', 'robots58:' . $id, $xp)) $awarded++;
             $done[$id] = 1;
         }
     } catch (Throwable $e) {

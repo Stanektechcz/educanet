@@ -80,10 +80,10 @@ return [
         // v60 · projekty podle levelu (?view=projekty).
         'projects' => ['projects_v60.php', 'projects_v60_views.php'],
         // v62 · záložka Kompetence v profilu (pilot 3.A); kód se spouští jen na záložce kompetence v pilotní třídě (audit routeru vyžaduje celé skupiny).
-        'competency' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'competency_v62_views.php'],
+        'competency' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'competency_v62_views.php', 'challenges_v64.php'],
         // v63 · výukové cesty (?view=cesty, ?view=cesta, akce p63_*); jádro paths_v63.php je lehké, obsah a banka se načítají líně.
         'paths' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'paths_v63_flow.php', 'paths_v63_actions.php', 'paths_v63_views.php'],
-        'dashboard' => ['motivation_v61_views.php', 'paths_v63.php', 'paths_v63_flow.php', 'paths_v63_views.php', 'teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'mastery_learning_views_v41.php', 'learning_studio_views_v44.php', 'skill_views.php', 'project_workspace_views.php'],
+        'dashboard' => ['motivation_v61_views.php', 'competencies_v62.php', 'evidence_v62.php', 'competency_v62_views.php', 'challenges_v64.php', 'paths_v63.php', 'paths_v63_flow.php', 'paths_v63_views.php', 'teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'mastery_learning_views_v41.php', 'learning_studio_views_v44.php', 'skill_views.php', 'project_workspace_views.php'],
         'diagrams' => ['app/views/_diagrams.php'],
         // POST
         'lesson_path' => ['tutorial_v52.php', 'session_v53.php', 'learning_v56.php'],
@@ -183,6 +183,8 @@ return [
         ['match' => ['fb60_submit'], 'file' => 'actions/feedback.php', 'libs' => ['feedback']],
         // v63 · výukové cesty: odevzdání kroku, posun řádku Parsonovy úlohy bez JS, reflexe (identita ze session).
         ['match' => ['p63_*'], 'file' => 'actions/paths.php', 'libs' => ['paths']],
+        // v64 · retrospektiva týmové hry (tři otázky po dohrané hře; identita ze session).
+        ['match' => ['tg64_retro'], 'file' => 'actions/teamgames_v64.php', 'libs' => ['layout', 'teamgames']],
         // v60 · ARN-07 – výzvy spolužákům (opt-in 1v1 souboje z profilu).
         ['match' => ['arena60_challenge_create', 'arena60_challenge_respond', 'arena60_challenge_cancel', 'arena60_optin_set', 'arena61_rematch'], 'file' => 'actions/arena_challenge.php', 'libs' => ['layout', 'student_hubs']],
     ],

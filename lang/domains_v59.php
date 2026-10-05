@@ -150,6 +150,15 @@ return [
         'competency' => [
             'competency_v62_views.php',
         ],
+        // v64 · hry, ligy a férová ekonomika (žákovské UI); učitelský registr economy_v64_teacher_views.php je vždy česky.
+        'games64' => [
+            'arena_v64_fair.php',
+            'arena_v64_views.php',
+            'teamgames_v64_roles.php',
+            'teamgames_v64_views.php',
+            'app/actions/teamgames_v64.php',
+            'challenges_v64.php',
+        ],
         // v63 · výukové cesty (žákovské UI); obsah cest (paths_v63_content_*.php) a cockpit paths_v63_teacher_views.php jsou česky.
         'paths' => [
             'app/views/paths.php',

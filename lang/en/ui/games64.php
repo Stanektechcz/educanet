@@ -1,0 +1,60 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * v64 · katalog msgid domény „games64“ (angličtina) – ligy, role týmových her, retrospektiva, výzva týdne, odznaky za kompetence.
+ */
+if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
+
+return [
+    'Zlatá liga' => 'Gold league',
+    'Stříbrná liga' => 'Silver league',
+    'Bronzová liga' => 'Bronze league',
+    'Ty' => 'You',
+    'Jsi mezi nejlepšími ve třídě. Zkus pomoct spolužákům s úlohou.' => 'You are among the best in the class. Try helping classmates with a task.',
+    'Držíš střed. Každý souboj tě posouvá, výhra i prohra.' => 'You are in the middle. Every duel moves you forward, win or lose.',
+    'Začínáš. Soupeři blízko tvé ligy ti dají nejlepší trénink.' => 'You are starting out. Opponents close to your league give you the best practice.',
+    'Moje liga' => 'My league',
+    'Liga se každé pololetí začíná znovu a nikdy se nepočítá do známek.' => 'The league restarts every semester and never counts towards grades.',
+    'Vyrovnaní soupeři' => 'Evenly matched opponents',
+    'Doporučení je jen rada – vyzvat můžeš kohokoli.' => 'This is only a suggestion – you can challenge anyone.',
+    'Kdo se za 14 dní nejvíc posunul' => 'Who improved the most in 14 days',
+    'Zatím tu nikdo není. Vyřeš úlohu nebo si zahraj souboj a zlepšení se ukáže tady.' => 'Nobody is here yet. Solve a task or play a duel and your progress will show up here.',
+    'Počítá se jen zlepšení, ne výchozí úroveň.' => 'Only improvement counts, not the starting level.',
+    'Navigátor' => 'Navigator',
+    'Operátor' => 'Operator',
+    'Kontrolor' => 'Checker',
+    'Čteš zadání nahlas a navrhuješ postup.' => 'You read the task aloud and suggest the approach.',
+    'Zadáváš odpovědi a příkazy.' => 'You enter the answers and commands.',
+    'Kontroluješ výsledek, než ho odešlete.' => 'You check the result before you submit it.',
+    'Co nám jako týmu šlo dobře?' => 'What went well for us as a team?',
+    'Kde jsme ztratili nejvíc času?' => 'Where did we lose the most time?',
+    'Co uděláme příště jinak?' => 'What will we do differently next time?',
+    'Napiš aspoň jednu větu.' => 'Write at least one sentence.',
+    'Neplatná hra.' => 'Invalid game.',
+    'Tvoje role v týmu: {role}' => 'Your role in the team: {role}',
+    'Role se mezi hrami střídá, aby si každý vyzkoušel všechny.' => 'Roles rotate between games so everyone tries them all.',
+    'Co si z hry odnášíme' => 'What we take away from the game',
+    'Díky, retrospektiva je odeslaná. Můžeš ji přepsat.' => 'Thanks, your retrospective has been sent. You can overwrite it.',
+    'Odpovědi uvidí jen učitel, bez jmen. Stačí jedna věta, maximálně {n} znaků.' => 'Only the teacher sees the answers, without names. One sentence is enough, {n} characters at most.',
+    'Odeslat' => 'Send',
+    'Nejdřív se přihlas do své třídy.' => 'Sign in to your class first.',
+    'Hra nebyla nalezena.' => 'Game not found.',
+    'Retrospektiva jde odeslat, až hra skončí.' => 'You can send the retrospective once the game has ended.',
+    'Ještě nejsi v žádném týmu.' => "You're not on a team yet.",
+    'Díky, retrospektiva je uložená.' => 'Thanks, the retrospective has been saved.',
+    'Něco se pokazilo. Zkus to za chvilku znovu.' => 'Something went wrong. Try again in a moment.',
+    'Výzva týdne' => 'Challenge of the week',
+    'Splněno: v téhle kompetenci jsi tento týden prokázal/a, co umíš.' => 'Done: you showed what you can do in this competency this week.',
+    'Vyzkoušej to v Labu nebo v týmové hře. Odměnou je jistota, že to umíš – žádné body.' => 'Try it in the Lab or in a team game. The reward is knowing you can do it – no points.',
+    'Série týdnů: {n}' => 'Weeks in a row: {n}',
+    'Prázdniny sérii nepřeruší.' => 'Holidays do not break the streak.',
+    'Do hry' => 'To the game',
+    'Cesta k téhle kompetenci' => 'Path to this competency',
+    'Upevněno' => 'Consolidated',
+    'Zvládnuto' => 'Mastered',
+    'Kompetenci jsi prokázal/a různými způsoby i s odstupem času.' => 'You showed this competency in different ways and after some time had passed.',
+    'Kompetence je ověřená testem, projektem nebo úlohou.' => 'The competency has been verified by a test, project or task.',
+    'Odznaky za kompetence' => 'Competency badges',
+];

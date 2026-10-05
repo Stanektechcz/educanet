@@ -24,6 +24,7 @@ require_once __DIR__ . '/teamgames_v58_game_jeopardy.php';
 require_once __DIR__ . '/teamgames_v58_game_tug.php';
 require_once __DIR__ . '/teamgames_v58_game_netadmin.php';
 require_once __DIR__ . '/teamgames_v58_game_escape.php';
+require_once __DIR__ . '/teamgames_v64_views.php';
 
 function tg58_assets(): void
 {
@@ -111,6 +112,7 @@ function tg58_render_game_page(string $classId, array $module, array $session): 
         <section class="tg58-card" role="status"><h2><?= tg58_h(tr('Hra se připravuje')) ?></h2><p><?= tg58_h(tr('Počkej na signál učitele – týmy se sestaví hned při startu.')) ?></p></section>
       <?php else: ?>
         <?php tg58_render_team_panel($view); ?>
+        <?php if ($status === 'finished') tg64_render_retro_form($session, $classId, $studentKey, csrf_token()); else tg64_render_role_panel($session, $studentKey); // v64: role a retrospektiva ?>
         <?php tg58_render_lab_embed($session, $classId, $studentKey, $gameId); ?>
         <section class="tg58-card tg58-game" aria-label="<?= tg58_h(tr('Průběh hry')) ?>" data-tg58-game-panel data-tg58-ssr>
           <?php tg58_render_ssr_fallback($session, $view); ?>

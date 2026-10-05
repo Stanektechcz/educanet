@@ -293,7 +293,7 @@ function tg58_student_action(string $id, string $action, string $studentKey, arr
         $out = tg58_game_call((string)$s['type'], 'student_action', [$action, $s, $ctx, $payload]);
         if (!is_array($out) || !isset($out['session'])) throw new RuntimeException(tr('Akci se nepodařilo zpracovat.'));
         $response = (array)($out['response'] ?? ['ok' => true]);
-        return (array)$out['session'];
+        return tg64_actor_from_response((array)$out['session'], $studentKey, $response); // v64: zápis přínosu žáka (actor_key)
     });
     return (array)$response;
 }

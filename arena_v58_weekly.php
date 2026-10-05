@@ -19,6 +19,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  */
 
 require_once __DIR__ . '/arena_v57.php';
+require_once __DIR__ . '/economy_v64.php';
 
 const ARENA58_WEEKLY_TZ = 'Europe/Prague';
 const ARENA58_WEEKLY_ID_RE = '/^(\d{4})t(\d{2})$/';
@@ -345,7 +346,7 @@ function arena58_weekly_claim_xp(string $classId, string $studentKey): void
                     $ranked = arena58_weekly_scope_rows(arena58_weekly_solves($key, $week['level'], $week['end']), $classId);
                     $rank = null;
                     foreach ($ranked as $r) if ($r['student_key'] === $studentKey) $rank = $r['rank'];
-                    learning_award_once($classId, 'v58:weekly:' . $key, ARENA58_WEEKLY_XP_PARTICIPATION + (ARENA58_WEEKLY_XP_PODIUM[(int)$rank] ?? 0));
+                    eco64_award($classId, $studentKey, 'weekly58', 'v58:weekly:' . $key, ARENA58_WEEKLY_XP_PARTICIPATION + (ARENA58_WEEKLY_XP_PODIUM[(int)$rank] ?? 0));
                 }
                 $done[$key] = 1;
             }
