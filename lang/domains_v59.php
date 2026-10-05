@@ -181,6 +181,15 @@ return [
             'projects_v60.php',
             'projects_v60_views.php',
         ],
+        // v65 · cyklus projektu, peer review, týmové prvky a portfolio (žákovské UI); učitelský registr projects_v65_teacher_*.php je vždy česky.
+        'projects_v65' => [
+            'app/views/projects_v65.php',
+            'app/views/portfolio.php',
+            'app/actions/projects_v65.php',
+            'projects_v65_views.php',
+            'projects_v65_detail_views.php',
+            'portfolio_v65_views.php',
+        ],
         // v60 · nahlášení chyby / návrh vylepšení (žákovské UI); učitelský registr feedback_v60_teacher_views.php je vždy česky.
         'feedback' => [
             'app/views/feedback.php',

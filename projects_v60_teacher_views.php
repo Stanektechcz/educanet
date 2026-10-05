@@ -90,6 +90,7 @@ function proj60_render_item_form(string $id, array $item, array $allowed, string
         . '<label>' . e(tr('Veřejné shrnutí (vidí všichni)')) . ' <textarea name="summary_public">' . e((string)($item['summary_public'] ?? '')) . '</textarea></label>'
         . '<label>' . e(tr('Detail (jen po dosažení levelu)')) . ' <textarea name="detail_private">' . e((string)($item['detail_private'] ?? '')) . '</textarea></label>'
         . '<label>' . e(tr('Dovednosti (oddělené čárkou)')) . ' <input type="text" name="skills" value="' . e(implode(', ', (array)($item['skills'] ?? []))) . '"></label>'
+        . proj60_render_required_fields((array)($item['required_competencies'] ?? []))
         . '<label>' . e(tr('Minimální úroveň')) . ' <input type="number" name="min_level" min="1" required value="' . (int)($item['min_level'] ?? 1) . '"></label>'
         . '<label>' . e(tr('Typ odměny')) . ' <select name="reward_type"><option value="kc">' . e(tr('Peníze (Kč)')) . '</option><option value="portfolio">' . e(tr('Do portfolia')) . '</option><option value="certificate">' . e(tr('Certifikát')) . '</option><option value="other">' . e(tr('Jiné')) . '</option></select></label>'
         . '<label>' . e(tr('Poznámka k odměně (bez konkrétních částek do systému)')) . ' <input type="text" name="reward_note" value="' . e((string)($item['reward_note'] ?? '')) . '"></label>'
@@ -103,6 +104,23 @@ function proj60_render_item_form(string $id, array $item, array $allowed, string
         . '<label class="t-check"><input type="checkbox" name="requires_guardian_consent"' . (!empty($item['requires_guardian_consent']) ? ' checked' : '') . '> ' . e(tr('Vyžaduje souhlas zákonného zástupce (u peněžní odměny je vždy vynuceno)')) . '</label>'
         . '<label>' . e(tr('Stav')) . ' <select name="status"><option value="draft">' . e(tr('Koncept')) . '</option><option value="open">' . e(tr('Otevřený')) . '</option><option value="closed">' . e(tr('Uzavřený')) . '</option><option value="done">' . e(tr('Hotovo')) . '</option></select></label>'
         . '<button class="btn primary" type="submit">' . e(tr('Uložit projekt')) . '</button></form>';
+}
+
+/** Až 3 požadované kompetence (zámek projektu; platí jen v pilotních třídách kompetencí, jinde se ignoruje). */
+function proj60_render_required_fields(array $required): string
+{
+    $known = proj60_known_competencies();
+    $states = ['rozpracovano' => 'rozpracováno', 'zvladnuto' => 'zvládnuto', 'upevneno' => 'upevněno'];
+    $html = '<fieldset><legend>Požadované kompetence (nepovinné, max. ' . PROJ60_COMPETENCY_MAX . ', jen pilotní třídy)</legend>';
+    for ($i = 0; $i < PROJ60_COMPETENCY_MAX; $i++) {
+        $cur = is_array($required[$i] ?? null) ? $required[$i] : ['id' => '', 'min_state' => 'zvladnuto'];
+        $html .= '<label>Kompetence ' . ($i + 1) . ' <select name="rc_id[]"><option value="">– žádná –</option>';
+        foreach ($known as $id => $label) $html .= '<option value="' . e($id) . '"' . ($id === (string)$cur['id'] ? ' selected' : '') . '>' . e($label) . '</option>';
+        $html .= '</select></label><label>Minimální stav <select name="rc_state[]">';
+        foreach ($states as $value => $label) $html .= '<option value="' . e($value) . '"' . ($value === (string)$cur['min_state'] ? ' selected' : '') . '>' . e($label) . '</option>';
+        $html .= '</select></label>';
+    }
+    return $html . '</fieldset>';
 }
 
 function proj60_render_applications(array $allowed, bool $isAdmin, string $csrf): void

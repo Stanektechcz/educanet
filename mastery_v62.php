@@ -42,9 +42,27 @@ function m62_state_label(string $state): string
     return ['neovereno' => 'neověřeno', 'rozpracovano' => 'rozpracováno', 'zvladnuto' => 'zvládnuto', 'upevneno' => 'upevněno'][$state] ?? 'neověřeno';
 }
 
+/**
+ * v65: projekt publikovaný ve více verzích (artefact_ref proj:v65_<hash12>_v<N>) se pro stejný základ a kompetenci počítá jen nejvyšší verzí.
+ * Ostatní řádky (jiné zdroje, starší typy referencí) zůstávají beze změny.
+ * @return list<array<string,mixed>>
+ */
+function m62_latest_versions(array $rows): array
+{
+    $best = [];
+    foreach ($rows as $i => $r) {
+        if (!is_array($r) || preg_match('/^(proj:v65_[0-9a-f]{12})_v(\d+)$/', (string)($r['artefact_ref'] ?? ''), $m) !== 1) continue;
+        $base = $m[1] . '|' . (string)($r['competency'] ?? '');
+        if (!isset($best[$base]) || (int)$m[2] > $best[$base][1]) $best[$base] = [$i, (int)$m[2]];
+    }
+    $keep = array_column($best, 0);
+    return array_values(array_filter($rows, static fn($r, $i): bool => !is_array($r) || preg_match('/^proj:v65_[0-9a-f]{12}_v\d+$/', (string)($r['artefact_ref'] ?? '')) !== 1 || in_array($i, $keep, true), ARRAY_FILTER_USE_BOTH));
+}
+
 /** Posledních M62_LAST_N důkazů (nejnovější první, shoda času rozhodne klíč → deterministické). @return list<array<string,mixed>> */
 function m62_recent(array $rows): array
 {
+    $rows = m62_latest_versions($rows);
     $items = [];
     foreach ($rows as $r) {
         $ts = strtotime((string)($r['at'] ?? ''));

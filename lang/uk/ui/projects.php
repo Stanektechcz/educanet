@@ -38,4 +38,8 @@ return [
     'Přihlášku se nepodařilo odeslat.' => 'Не вдалося надіслати заявку.',
     'Přihláška byla stažena.' => 'Заявку відкликано.',
     'Přihlášku se nepodařilo stáhnout.' => 'Не вдалося відкликати заявку.',
+    'Cyklus projektu a portfolio' => 'Цикл проєкту та портфоліо',
+    'Chybí ti kompetence:' => 'Тобі бракує компетентностей:',
+    'Přihlásit se můžeš, až kompetence zvládneš.' => 'Подати заявку можна, коли опануєш їх.',
+    'Na tenhle projekt ti zatím chybí požadované kompetence.' => 'Для цього проєкту тобі поки бракує потрібних компетентностей.',
 ];

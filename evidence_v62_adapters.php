@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
+// v65: projekty hodnocené rubrikou s kompetencemi dávají důkaz s verzí (proj65_evidence_candidates); funkce musí být k dispozici i z CLI a cockpitu.
+require_once __DIR__ . '/projects_v65.php';
+require_once __DIR__ . '/projects_v65_evidence.php';
 
 /**
  * EDUCANET v62 · adaptéry zdrojů důkazů (jen čtení, zdrojová data se nemění).
@@ -298,7 +301,10 @@ function ev62_teamgame_candidate(array $session, string $studentKey): ?array
     return null;
 }
 
-/** Projekty: zveřejněné hodnocení učitele (body / maximum). V MVP bez tagů → ve statistice „nenamapováno“. */
+/**
+ * Projekty: zveřejněné hodnocení učitele (body / maximum). Hodnocení bez rubriky v65 zůstává bez tagů → „nenamapováno“;
+ * hodnocení řízená v65 (rubrika s kompetencemi) dávají důkaz přímo s kompetencí a verzí (proj65_evidence_candidates).
+ */
 function ev62_collect_projects(array $ctx): array
 {
     $groups = [];
@@ -306,7 +312,10 @@ function ev62_collect_projects(array $ctx): array
         if (is_array($g) && in_array($ctx['key'], array_map('strval', (array)($g['member_keys'] ?? [])), true)) $groups[(string)($g['id'] ?? '')] = true;
     }
     $out = [];
+    $managed = function_exists('proj65_managed_grade_ids') ? proj65_managed_grade_ids((string)$ctx['class']) : [];
+    if (function_exists('proj65_evidence_candidates')) $out = proj65_evidence_candidates($ctx);
     foreach (project_grade_records_for_class((string)$ctx['class']) as $r) {
+        if (isset($managed[(string)($r['id'] ?? '')])) continue; // řízeno v65: důkaz s verzí už vrací proj65_evidence_candidates
         if (!in_array((string)($r['status'] ?? ''), ['published', 'returned'], true)) continue;
         $mine = ((string)($r['target_type'] ?? '') === 'individual' && (string)($r['target_id'] ?? '') === $ctx['key'])
             || ((string)($r['target_type'] ?? '') === 'group' && isset($groups[(string)($r['target_id'] ?? '')]));
@@ -349,6 +358,13 @@ function ev62_candidates_to_rows(string $studentId, string $subject, array $cand
     foreach ($candidates as $c) {
         $ts = strtotime((string)$c['at']);
         if ($ts === false) continue;
+        if (is_array($c['direct'] ?? null)) { // v65: kompetence i skóre určila rubrika učitele (zdroj project, úroveň 4 = „tvoří“)
+            foreach ($c['direct'] as $competency => $score) {
+                if (!isset($competencies[(string)$competency])) { $unmapped++; continue; }
+                $rows[] = ['student_id' => $studentId, 'competency' => (string)$competency, 'level' => 4, 'source' => (string)$c['source'], 'score' => (float)$score, 'at' => date(DATE_ATOM, $ts), 'artefact_ref' => (string)$c['ref']];
+            }
+            continue;
+        }
         $matched = comp62_match($subject, (array)$c['tags'], (string)$c['ref']);
         if ($matched === []) { $unmapped++; continue; }
         foreach ($matched as $competency) {

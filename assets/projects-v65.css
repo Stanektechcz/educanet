@@ -1,0 +1,48 @@
+/* v65 · Cyklus projektů, peer review a portfolio (jen projektové pohledy). Bez CDN, bez blokujícího JS; prefers-reduced-motion. */
+.p65{display:grid;gap:16px;min-width:0;overflow-wrap:anywhere;color:var(--ui-ink,#111827)}
+.p65 h1,.p65 h2,.p65 h3{color:var(--ui-ink,#111827);margin:0}
+.p65 p,.p65 li{color:var(--ui-muted,#374151)}
+.p65-card{padding:16px;border-radius:var(--ui-radius,16px);background:var(--ui-surface,#fff);border:1px solid var(--ui-line,#dde3e8);display:grid;gap:10px;min-width:0}
+.p65-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:14px}
+.p65-badge{display:inline-block;padding:3px 10px;border-radius:999px;background:var(--ui-accent-soft,#e2f6f8);color:var(--ui-accent-ink,#05616c);font-size:.85rem;font-weight:600}
+.p65-badge.warn{background:#fff3d6;color:#6b4a00}
+.p65-steps{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px;counter-reset:p65s}
+.p65-steps li{counter-increment:p65s;display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:10px;background:var(--ui-surface-2,#eef2f5);color:var(--ui-muted,#4b5563);font-size:.9rem}
+.p65-steps li::before{content:counter(p65s);display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid var(--ui-line,#b6c2cb);font-weight:700;font-size:.8rem}
+.p65-steps li[aria-current="step"]{background:var(--ui-accent-soft,#e2f6f8);color:var(--ui-accent-ink,#05616c);font-weight:700}
+.p65-steps li.done{background:#e6f6ef;color:#0b5132}
+.p65-form{display:grid;gap:10px;max-width:640px}
+.p65-form label{display:grid;gap:4px;font-weight:600;color:var(--ui-ink,#111827)}
+.p65-form input[type=text],.p65-form input[type=url],.p65-form input[type=number],.p65-form textarea,.p65-form select{width:100%;min-height:44px;padding:8px 10px;border:1px solid var(--ui-line,#8a99a6);border-radius:10px;font:inherit;background:#fff;color:#111827;box-sizing:border-box}
+.p65-form textarea{min-height:110px;resize:vertical}
+.p65 .btn,.p65 button{min-height:44px;min-width:44px}
+.p65 a:focus-visible,.p65 button:focus-visible,.p65 input:focus-visible,.p65 textarea:focus-visible,.p65 select:focus-visible{outline:3px solid #0b6bcb;outline-offset:2px}
+.p65-count{font-size:.85rem;color:var(--ui-muted,#4b5563);font-weight:400}
+.p65-hint{font-size:.9rem;color:var(--ui-muted,#4b5563)}
+.p65-starters{display:flex;flex-wrap:wrap;gap:6px}
+.p65-starters button{padding:4px 10px;border-radius:999px;border:1px solid var(--ui-line,#8a99a6);background:#fff;color:#111827;font:inherit;font-size:.85rem;cursor:pointer}
+.p65-levels{border:1px solid var(--ui-line,#dde3e8);border-radius:10px;padding:8px 12px}
+.p65-levels legend{font-weight:700;padding:0 6px}
+.p65-levels label{display:flex;align-items:flex-start;gap:8px;font-weight:400;min-height:44px;align-items:center}
+.p65-kanban{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.p65-col{background:var(--ui-surface-2,#eef2f5);border-radius:12px;padding:10px;display:grid;gap:8px;align-content:start;min-width:0}
+.p65-col ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.p65-col li{background:#fff;border:1px solid var(--ui-line,#dde3e8);border-radius:10px;padding:8px;display:grid;gap:6px}
+.p65-inline{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.p65-diary{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.p65-diary li{border-left:3px solid var(--ui-accent-soft,#9fd8de);padding:2px 10px}
+.p65-split{display:grid;gap:8px;max-width:420px}
+.p65-split label{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.p65-split input{width:90px}
+.p65-levelrow{display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px dashed var(--ui-dashed,#c8d2da)}
+.p65-print{display:none}
+.p65-print.on{display:inline-flex}
+.p65-pf-item{page-break-inside:avoid}
+@media (max-width:640px){.p65-kanban{grid-template-columns:1fr}.p65-card{padding:12px}}
+@media (prefers-reduced-motion:reduce){.p65 *{transition:none!important;animation:none!important}}
+@media print{
+  header,nav,footer,.p65-noprint,.nav61,.skip-link,.notice{display:none!important}
+  body{background:#fff!important;color:#000!important}
+  .p65-card{border:1px solid #888;box-shadow:none;break-inside:avoid}
+  .p65 a[href]::after{content:""}
+}

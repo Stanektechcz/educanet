@@ -78,12 +78,14 @@ return [
         // v60 · nahlášení chyby / návrh vylepšení (?view=hlaseni).
         'feedback' => ['points_v53.php', 'feedback_v60.php', 'feedback_v60_views.php'],
         // v60 · projekty podle levelu (?view=projekty).
-        'projects' => ['projects_v60.php', 'projects_v60_views.php'],
+        'projects' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'projects_v60.php', 'projects_v60_views.php'], // v65: zámek projektu podle kompetencí (m62_student)
         // v62 · záložka Kompetence v profilu (pilot 3.A); kód se spouští jen na záložce kompetence v pilotní třídě (audit routeru vyžaduje celé skupiny).
-        'competency' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'competency_v62_views.php', 'challenges_v64.php'],
+        'competency' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'competency_v62_views.php', 'challenges_v64.php', 'projects_v65.php', 'projects_v65_evidence.php'], // v65: adaptér projektů volá proj65_*
         // v63 · výukové cesty (?view=cesty, ?view=cesta, akce p63_*); jádro paths_v63.php je lehké, obsah a banka se načítají líně.
         'paths' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'paths_v63_flow.php', 'paths_v63_actions.php', 'paths_v63_views.php'],
         'dashboard' => ['motivation_v61_views.php', 'competencies_v62.php', 'evidence_v62.php', 'competency_v62_views.php', 'challenges_v64.php', 'paths_v63.php', 'paths_v63_flow.php', 'paths_v63_views.php', 'teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'mastery_learning_views_v41.php', 'learning_studio_views_v44.php', 'skill_views.php', 'project_workspace_views.php'],
+        // v65 · cyklus projektu, peer review a portfolio (?view=projekt65, ?view=portfolio, akce proj65_s_*).
+        'projects65' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'projects_v60.php', 'projects_v65.php', 'projects_v65_rubrics.php', 'projects_v65_peer.php', 'projects_v65_team.php', 'projects_v65_evidence.php', 'portfolio_v65.php', 'projects_v65_views.php', 'projects_v65_detail_views.php', 'portfolio_v65_views.php'],
         'diagrams' => ['app/views/_diagrams.php'],
         // POST
         'lesson_path' => ['tutorial_v52.php', 'session_v53.php', 'learning_v56.php'],
@@ -129,6 +131,9 @@ return [
         ['match' => ['hadanka'], 'file' => 'views/hadanka.php', 'libs' => ['layout', 'linux_lab', 'weekly']],
         ['match' => ['obchod'], 'file' => 'views/marketplace.php', 'libs' => ['layout', 'marketplace']],
         ['match' => ['projekty'], 'file' => 'views/projects.php', 'libs' => ['layout', 'projects']],
+        // v65: cyklus projektu žáka a portfolio (lokální export HTML bez sdílení).
+        ['match' => ['projekt65'], 'file' => 'views/projects_v65.php', 'libs' => ['layout', 'projects65']],
+        ['match' => ['portfolio', 'portfolio_export'], 'file' => 'views/portfolio.php', 'libs' => ['layout', 'projects65']],
         // v63: výukové cesty žáka (seznam a krok; třída bez cest dostane 404).
         ['match' => ['cesty', 'cesta'], 'file' => 'views/paths.php', 'libs' => ['layout', 'paths']],
         ['match' => ['hlaseni'], 'file' => 'views/feedback.php', 'libs' => ['layout', 'feedback']],
@@ -181,6 +186,8 @@ return [
         ['match' => ['mot61_fav_toggle'], 'file' => 'actions/motivation.php', 'libs' => ['marketplace']],
         ['match' => ['proj60_apply', 'proj60_withdraw'], 'file' => 'actions/projects.php', 'libs' => ['projects']],
         ['match' => ['fb60_submit'], 'file' => 'actions/feedback.php', 'libs' => ['feedback']],
+        // v65 · cyklus projektu, recenze spolužáků, týmové milníky/deník/rozdělení bodů a portfolio (identita ze session).
+        ['match' => ['proj65_s_*'], 'file' => 'actions/projects_v65.php', 'libs' => ['layout', 'projects65']],
         // v63 · výukové cesty: odevzdání kroku, posun řádku Parsonovy úlohy bez JS, reflexe (identita ze session).
         ['match' => ['p63_*'], 'file' => 'actions/paths.php', 'libs' => ['paths']],
         // v64 · retrospektiva týmové hry (tři otázky po dohrané hře; identita ze session).

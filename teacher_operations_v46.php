@@ -99,6 +99,8 @@ function teacher_action_permission_prefixes(): array
         'p63_'=>'content.manage',
         // v64 · ekonomika her: zapnutí/vypnutí absolutního žebříčku u akce = řízení třídy (assistant jen čte).
         'v64_'=>'students.manage',
+        // v65 · projekty: schvalování, rubriky, hodnocení, moderace peer review a přínos týmů = správa projektů (assistant jen čte).
+        'proj65_'=>'projects.manage',
     ];
 }
 function teacher_action_permission(string $action): ?string

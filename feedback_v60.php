@@ -42,7 +42,7 @@ function fb60_pages(): array
 {
     return ['dashboard', 'intake', 'my_intake', 'continue', 'one_task', 'visual_lab', 'hands_on', 'goal_nav', 'growth', 'growth_path',
         'skill_passport', 'peer_lab', 'cognitive_lab', 'lesson_kit', 'lesson_slides', 'materialy', 'vysledky', 'lekce', 'lab', 'prikazy',
-        'roboti', 'ctf', 'incident', 'hry', 'hadanka', 'obchod', 'projekty', 'hodina', 'course', 'calendar', 'tutorial', 'topics', 'tools',
+        'roboti', 'ctf', 'incident', 'hry', 'hadanka', 'obchod', 'projekty', 'projekt65', 'portfolio', 'portfolio_export', 'hodina', 'course', 'calendar', 'tutorial', 'topics', 'tools',
         'knowledgebase', 'kb_lesson', 'kb_quiz', 'graphics_studio', 'study', 'mistakes', 'study_loop', 'skills', 'skill_branch',
         'skill_detail', 'mastery_challenge', 'mastery_result', 'profile', 'community', 'project_lobbies', 'project_workspace',
         'prestige_exams', 'project_results', 'project_result', 'review', 'recovery', 'create_challenge', 'case_study', 'test', 'result',

@@ -38,4 +38,8 @@ return [
     'Přihlášku se nepodařilo odeslat.' => 'Could not send the application.',
     'Přihláška byla stažena.' => 'Application was withdrawn.',
     'Přihlášku se nepodařilo stáhnout.' => 'Could not withdraw the application.',
+    'Cyklus projektu a portfolio' => 'Project cycle and portfolio',
+    'Chybí ti kompetence:' => 'You are missing these competencies:',
+    'Přihlásit se můžeš, až kompetence zvládneš.' => 'You can apply once you have mastered them.',
+    'Na tenhle projekt ti zatím chybí požadované kompetence.' => 'You do not have the competencies required for this project yet.',
 ];

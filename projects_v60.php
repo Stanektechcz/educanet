@@ -23,6 +23,65 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 const PROJ60_REWARD_TYPES = ['kc', 'portfolio', 'certificate', 'other'];
 const PROJ60_STATUSES = ['draft', 'open', 'closed', 'done'];
 const PROJ60_MOTIVATION_MAX = 500;
+/** v65 · zámek projektu podle kompetencí (max 3; jen pilotní třídy kompetencí, jinde se ignoruje). */
+const PROJ60_COMPETENCY_MAX = 3;
+const PROJ60_COMPETENCY_STATES = ['rozpracovano' => 1, 'zvladnuto' => 2, 'upevneno' => 3];
+
+/** Id kompetencí ze všech předmětů katalogu comp62 (pro validaci vstupu učitele). @return array<string,string> id → popis */
+function proj60_known_competencies(): array
+{
+    require_once __DIR__ . '/competencies_v62.php';
+    $out = [];
+    foreach (array_keys(comp62_catalog()) as $subject) {
+        foreach (comp62_competencies((string)$subject) as $id => $c) $out[(string)$id] = (string)$c['label'];
+    }
+    return $out;
+}
+
+/**
+ * Požadované kompetence z formuláře: rc_id[] + rc_state[] (nebo hotové pole required_competencies). Vrací null při neplatném vstupu.
+ * @return list<array{id:string,min_state:string}>|null
+ */
+function proj60_parse_required(array $input): ?array
+{
+    $rows = [];
+    if (is_array($input['required_competencies'] ?? null)) {
+        $rows = array_values(array_filter($input['required_competencies'], 'is_array'));
+    } else {
+        $ids = is_array($input['rc_id'] ?? null) ? array_values($input['rc_id']) : [];
+        $states = is_array($input['rc_state'] ?? null) ? array_values($input['rc_state']) : [];
+        foreach ($ids as $i => $id) $rows[] = ['id' => $id, 'min_state' => $states[$i] ?? 'zvladnuto'];
+    }
+    $known = proj60_known_competencies();
+    $out = [];
+    foreach ($rows as $row) {
+        $id = is_string($row['id'] ?? null) ? trim($row['id']) : '';
+        if ($id === '') continue;
+        $state = is_string($row['min_state'] ?? null) ? $row['min_state'] : 'zvladnuto';
+        if (!isset($known[$id]) || !isset(PROJ60_COMPETENCY_STATES[$state])) return null;
+        $out[$id] = ['id' => $id, 'min_state' => $state];
+    }
+    return count($out) > PROJ60_COMPETENCY_MAX ? null : array_values($out);
+}
+
+/**
+ * Chybějící požadované kompetence žáka (jen pilotní třída; jinde vždy prázdné). Nejistá identita = kompetence chybí.
+ * @return list<string> id kompetencí
+ */
+function proj60_missing_competencies(string $classId, string $studentKey, array $project): array
+{
+    $required = array_values(array_filter((array)($project['required_competencies'] ?? []), 'is_array'));
+    if ($required === []) return [];
+    foreach (['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php'] as $lib) require_once __DIR__ . '/' . $lib;
+    if (!comp62_enabled_for_class($classId)) return [];
+    $map = (array)(m62_student($classId, $studentKey)['map'] ?? []);
+    $missing = [];
+    foreach ($required as $r) {
+        $have = PROJ60_COMPETENCY_STATES[(string)($map[(string)$r['id']]['state'] ?? '')] ?? 0;
+        if ($have < (PROJ60_COMPETENCY_STATES[(string)$r['min_state']] ?? 2)) $missing[] = (string)$r['id'];
+    }
+    return $missing;
+}
 
 function proj60_projects_path(): string
 {
@@ -89,6 +148,7 @@ function proj60_public_view(array $item, bool $hasLevel): array
         'deadline' => (string)($item['deadline'] ?? ''),
         'requires_guardian_consent' => !empty($item['requires_guardian_consent']),
         'has_level' => $hasLevel,
+        'required_competencies' => array_values(array_filter((array)($item['required_competencies'] ?? []), 'is_array')),
     ];
     if ($hasLevel) {
         $out['detail_private'] = (string)($item['detail_private'] ?? '');
@@ -112,7 +172,10 @@ function proj60_item_from_input(array $input, array $allowedClasses): ?array
     $deadline = trim((string)($input['deadline'] ?? ''));
     if ($deadline !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $deadline)) return null;
     $skills = array_values(array_filter(array_map('trim', preg_split('/[,;\n]+/u', (string)($input['skills'] ?? '')) ?: []), static fn(string $s): bool => $s !== ''));
+    $required = proj60_parse_required($input);
+    if ($required === null) return null; // neznámá kompetence, neplatný stav nebo víc než PROJ60_COMPETENCY_MAX
     return [
+        'required_competencies' => $required,
         'title' => $title,
         'client_label' => trim((string)($input['client_label'] ?? '')),
         'summary_public' => trim((string)($input['summary_public'] ?? '')),
@@ -210,6 +273,7 @@ function proj60_apply(string $classId, string $studentKey, string $projectId, st
     if ($currentLevel < (int)$project['min_level']) return ['ok' => false, 'error' => 'level_too_low'];
     $deadline = (string)($project['deadline'] ?? '');
     if ($deadline !== '' && $deadline < date('Y-m-d')) return ['ok' => false, 'error' => 'deadline_passed'];
+    if (proj60_missing_competencies($classId, $studentKey, $project) !== []) return ['ok' => false, 'error' => 'competency_missing'];
 
     $outcome = ['ok' => false, 'error' => 'unknown'];
     storage_update(proj60_applications_path(), function (array $apps) use (&$outcome, $classId, $studentKey, $projectId, $motivation, $currentLevel, $project): array {
@@ -217,6 +281,10 @@ function proj60_apply(string $classId, string $studentKey, string $projectId, st
         $fresh = proj60_item($projectId);
         if ($fresh === null || (string)($fresh['status'] ?? '') !== 'open') {
             $outcome = ['ok' => false, 'error' => 'project_unavailable'];
+            return $apps;
+        }
+        if (proj60_missing_competencies($classId, $studentKey, $fresh) !== []) { // zámek znovu nad čerstvým projektem (učitel ho mohl mezitím změnit)
+            $outcome = ['ok' => false, 'error' => 'competency_missing'];
             return $apps;
         }
         $existing = proj60_find_own($apps, $classId, $studentKey, $projectId);

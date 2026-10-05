@@ -162,6 +162,15 @@ function teacher58_modules(): array
             'post' => ['v64_' => 'eco64_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { eco64_render_teacher_tab($c, $csrf()); },
         ],
+        // v65 · cyklus projektů: návrhy (hromadné schválení max. 50), rubriky, hodnocení, moderace peer review a přínos týmů.
+        // POST proj65_t_* mají exact politiky v teacher_scope_v59.php (třída povinná a v rozsahu), oprávnění proj65_ = projects.manage. Žádný zvláštní GET parametr.
+        'projekty65' => [
+            'label' => 'Cyklus projektů', 'hint' => 'Návrhy, rubriky, hodnocení, peer review a týmy', 'group' => 'podpora',
+            'files' => ['competencies_v62.php', 'evidence_v62.php', 'projects_v65.php', 'projects_v65_rubrics.php', 'projects_v65_peer.php', 'projects_v65_team.php', 'projects_v65_evidence.php', 'projects_v65_teacher_actions.php', 'projects_v65_teacher_views.php'],
+            'css' => ['assets/projects-v65.css'],
+            'post' => ['proj65_t_' => 'proj65_teacher_handle_post'],
+            'render' => static function (array $m, string $c) use ($csrf): void { proj65_render_teacher_tab($c, $csrf()); },
+        ],
         // v63 · výukové cesty: přiřazení třídě, trychtýř kroků a průměrná kalibrace (bez jmen a bez reflexních vět). POST p63_assign /
         // p63_unassign mají exact politiky v teacher_scope_v59.php (třída povinná a v rozsahu), oprávnění p63_ = content.manage
         // (asistent jen čte). Žádný zvláštní GET parametr registru.

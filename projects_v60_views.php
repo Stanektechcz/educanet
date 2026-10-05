@@ -39,6 +39,7 @@ function projects60_render(string $classId, string $studentKey, int $level): voi
     echo '<section class="proj60-hero"><div class="eyebrow">' . e(tr('Projekty')) . '</div><h1>' . e(tr('Nabídky skutečné práce podle levelu')) . '</h1>'
         . '<p>' . e(tr('Klienti nabízejí skutečné zakázky. Kontakt s klientem vždy jde přes školu – nikdy mu nedáváme tvoje osobní údaje.')) . '</p></section>';
 
+    echo '<p><a class="btn secondary" href="?view=projekt65">' . e(tr('Cyklus projektu a portfolio')) . '</a></p>';
     $items = proj60_for_class($classId);
     if ($items === []) {
         echo '<section class="dashboard-panel proj60-empty"><p>' . e(tr('Zatím tu není žádná nabídka. Zkontroluj to znovu později.')) . '</p></section>';
@@ -80,6 +81,12 @@ function projects60_render_card(string $id, array $item, string $classId, string
     if ($view['deadline'] !== '') echo '<span>' . e(tr('Termín: {date}', ['date' => $view['deadline']])) . '</span>';
     echo '</div>';
 
+    $missing = proj60_missing_competencies($classId, $studentKey, $item);
+    if ($missing !== []) {
+        $labels = proj60_known_competencies();
+        echo '<p class="proj60-locked">' . e(tr('Chybí ti kompetence:')) . ' <span' . edu_content_lang_attr() . '>' . e(implode('; ', array_map(static fn(string $id): string => (string)($labels[$id] ?? $id), $missing))) . '</span></p>';
+    }
+
     if (!$hasLevel) {
         echo '<p class="proj60-locked">' . e(tr('Potřebuješ úroveň {need} (máš {have}).', ['need' => $minLevel, 'have' => $level])) . '</p>';
         echo '</article>';
@@ -95,6 +102,8 @@ function projects60_render_card(string $id, array $item, string $classId, string
                 . '<input type="hidden" name="action" value="proj60_withdraw"><input type="hidden" name="application_id" value="' . e((string)$own['id']) . '">'
                 . '<button class="btn secondary small" type="submit">' . e(tr('Stáhnout přihlášku')) . '</button></form>';
         }
+    } elseif ($missing !== []) {
+        echo '<p class="proj60-note">' . e(tr('Přihlásit se můžeš, až kompetence zvládneš.')) . '</p>';
     } elseif ($approvedCount >= $capacity) {
         echo '<p class="proj60-note">' . e(tr('Kapacita je naplněná.')) . '</p>';
     } else {

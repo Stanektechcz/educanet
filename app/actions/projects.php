@@ -15,7 +15,7 @@ if ($action === 'proj60_apply') {
     // Level se počítá vždy ze session žáka – nikdy z formuláře.
     $level = (int)learning_level((int)(learning_profile((string)$classId)['xp'] ?? 0))['level'];
     $result = proj60_apply((string)$classId, $studentKey, $projectId, $motivation, $level);
-    $_SESSION['flash'] = $result['ok'] ? tr('Přihláška byla odeslána.') : tr('Přihlášku se nepodařilo odeslat.');
+    $_SESSION['flash'] = $result['ok'] ? tr('Přihláška byla odeslána.') : ($result['error'] === 'competency_missing' ? tr('Na tenhle projekt ti zatím chybí požadované kompetence.') : tr('Přihlášku se nepodařilo odeslat.'));
     redirect_to('?view=projekty');
 }
 

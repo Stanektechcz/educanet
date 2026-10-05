@@ -542,3 +542,19 @@ Podrobnosti: `docs/HRY_V64.md`, `CHANGELOG_V64.md`, `BUILD_MANIFEST_V64.md`. Nic
 - **Metrika fáze:** `EDUCANET_STORAGE_DIR=<kopie storage> php tools/v64_engagement_report.php` (jen čtení, nad ostrou `storage/` se odmítne).
 - **Kontrola po nasazení:** `php tools/v64_games_audit.php` → `V64_GAMES_AUDIT_OK`; celá sada
   `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v65 · Projekty (cyklus, rubriky, peer review, týmy) a portfolio
+
+Podrobnosti: `docs/PROJEKTY_V65.md`, `CHANGELOG_V65.md`, `BUILD_MANIFEST_V65.md`. Nové PHP rozšíření nevyžaduje; kód běží na PHP 8.1.
+
+- **Migrace 0003** (`migrations/0003_projects_v65.php`) jen **vytvoří prázdné sidecary** `projects_v65_{cycle,meta,rubrics,peer,milestones}.json.php`; staré soubory
+  (`project_grades`, `project_workspace_*`, `projects_v60*`) nemění. Je idempotentní. Spuštění: `php tools/migrate.php` (náhled) a po záloze
+  `php tools/migrate.php --apply --backup-now`. Aplikace funguje i bez ní (sidecary se vytvoří při prvním zápisu), migrace jen sjednotí stav a výchozí režim cyklu.
+- **Rollback:** nasadit předchozí vydání a smazat pět sidecarů `storage/projects_v65_*.json.php`, adresář `storage/portfolio_v65/` a proud `storage/projects_v65_diary/`
+  (nic jiného na nich nezávisí; `tools/migrate.php` funkci `down` neumí, proto je to ruční krok). Odznaky a známky v `project_grades` zůstávají.
+- **Retence:** `tools/v58_retention.php --apply` (denní cron) maže pitch, poznámky k odevzdání, peer texty, deník, rozdělení bodů a reflexe portfolia žáků
+  30 dní po stavu left/archived (`COMP62_RETENTION_GRACE_DAYS`); souhrn `projects_v65_purged=N`.
+- **Nastavení:** výchozí režim projektu je malý; plný cyklus, peer review a milníky zapíná učitel v cockpitu → Podpora → *Cyklus projektů*.
+  Zámek projektu klienta podle kompetencí se nastavuje ve formuláři projektu (záložka *Projekty*), platí jen v pilotních třídách.
+- **Kontrola po nasazení:** `php tools/v65_projects_audit.php` → `V65_PROJECTS_AUDIT_OK`; celá sada
+  `php tools/run_audits.php --since=all --with-smoke --with-router`.
