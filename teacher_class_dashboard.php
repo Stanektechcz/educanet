@@ -323,57 +323,6 @@ function teacher_class_export_csv(string $classId,array $studentKeys): never
     fclose($out);exit;
 }
 
-function teacher_render_class_overview(string $classId): void
-{
-    $snapshot = teacher_overview_class_snapshot($classId);
-    $results = teacher_class_results_snapshot($classId);
-    $students = (array)$results['students'];
-    $filterState=teacher_class_filter_state($classId,'class_overview');
-    $filterStatus=(string)$filterState['status'];$filterPriority=(string)$filterState['priority'];$filterTaskStatus=(string)$filterState['task_status'];$filterTaskDue=(string)$filterState['task_due'];
-    $filterRules=(array)($filterState['rules']??[]);$filterRuleMode=(string)($filterState['rule_mode']??'all');$filterPresetId=(string)($filterState['preset_id']??'');
-    $filterActive=$filterStatus!=='all'||$filterPriority!=='all'||$filterTaskStatus!=='all'||$filterTaskDue!=='all'||!empty($filterRules);
-    $attention = $filterActive
-        ? teacher_class_filter_students($students,$filterStatus,$filterPriority,$filterTaskStatus,$filterTaskDue,$filterRules,$filterRuleMode)
-        : array_values(array_filter($students, static fn(array $row): bool => (bool)($row['attention'] ?? false)));
-    $projects = (array)$results['projects'];
-    ?>
-    <section class="teacher-hero teacher-class-hero"><div><div class="eyebrow">Přehled třídy · <?=e((string)$snapshot['class_label'])?></div><h1><?=e((string)$snapshot['subject'])?></h1><p><?=e((string)$snapshot['focus'])?></p></div><div class="teacher-hero-actions"><a class="btn secondary" href="?tab=class_results&class=<?=e($classId)?>&status=<?=e($filterStatus)?>&priority=<?=e($filterPriority)?>&task_status=<?=e($filterTaskStatus)?>&task_due=<?=e($filterTaskDue)?>">Výsledky třídy</a><a class="btn primary" href="?tab=teach&class=<?=e($classId)?>">Spustit hodinu →</a></div></section>
-
-    <?php teacher_render_saved_filters('class_overview',$classId,$filterStatus,$filterPriority,$filterTaskStatus,$filterTaskDue); ?>
-
-    <section class="class-overview-kpis">
-      <article><span>Studenti</span><strong><?= (int)$results['student_count'] ?></strong><small><?= (int)$results['students_with_results'] ?> s publikovaným výsledkem</small></article>
-      <article><span>Průměr projektů</span><strong><?=teacher_class_pct($results['avg_project_pct'],0)?></strong><small>jen publikované výsledky</small></article>
-      <article><span>Průměrná známka</span><strong><?=teacher_class_grade($results['avg_grade'])?></strong><small>publikované projekty</small></article>
-      <article><span>Skill Mastery</span><strong><?=teacher_class_pct($results['avg_mastery'],0)?></strong><small><?= (int)$snapshot['pending_validations'] ?> validací čeká</small></article>
-      <article class="<?=((int)$results['attention_count']>0?'needs-attention':'')?>"><span>K pozornosti</span><strong><?= (int)$results['attention_count'] ?></strong><small>výsledky, vrácení nebo mastery</small></article>
-    </section>
-
-    <div class="class-overview-layout">
-      <section class="teacher-panel class-action-panel"><div class="teacher-panel-head"><div><span>Rychlá navigace</span><h2>Co chcete se třídou udělat?</h2></div></div><div class="class-quick-actions">
-        <a href="?tab=curriculum&class=<?=e($classId)?>"><i>01</i><strong>Připravit výuku</strong><small><?= (int)$snapshot['prepared'] ?> / <?= (int)$snapshot['lessons_total'] ?> lekcí připraveno</small></a>
-        <a href="?tab=class_results&class=<?=e($classId)?>"><i>02</i><strong>Projít výsledky</strong><small><?= (int)$results['published_records'] ?> publikovaných hodnocení</small></a>
-        <a href="<?=e(teacher_class_tab_url('grade',$classId))?>"><i>03</i><strong>Hodnotit projekty</strong><small><?= (int)$results['draft_records'] ?> konceptů</small></a>
-        <a href="?tab=skills&class=<?=e($classId)?>"><i>04</i><strong>Skills & validace</strong><small><?= (int)$snapshot['pending_validations'] ?> čeká na kontrolu</small></a>
-        <a href="<?=e(teacher_class_tab_url('groups',$classId))?>"><i>05</i><strong>Týmy</strong><small><?= (int)$snapshot['groups_total'] ?> aktivních týmů</small></a>
-        <a href="<?=e(teacher_class_tab_url('workspace',$classId))?>"><i>06</i><strong>Projektový workspace</strong><small><?= (int)$snapshot['workspace_high'] + (int)$snapshot['workspace_medium'] ?> signálů</small></a>
-      </div></section>
-
-      <section class="teacher-panel"><div class="teacher-panel-head"><div><span>Stav výuky</span><h2>Příprava a obsah</h2></div><a class="text-link" href="?tab=curriculum&class=<?=e($classId)?>">Detail →</a></div><div class="class-progress-list">
-        <?php $items=[['Lekce připravené',(int)$snapshot['prepared'],(int)$snapshot['lessons_total']],['Obsah kompletní',(int)$snapshot['content_ready'],(int)$snapshot['lessons_total']],['Checklist',(int)$snapshot['checklist_done'],(int)$snapshot['checklist_total']]]; foreach($items as [$label,$value,$max]): $pct=$max>0?(int)round($value/$max*100):0; ?>
-        <div><div><span><?=e($label)?></span><b><?=$value?> / <?=$max?></b></div><progress max="100" value="<?=$pct?>"></progress><small><?=$pct?> %</small></div>
-        <?php endforeach; ?>
-      </div></section>
-    </div>
-
-    <section class="teacher-panel"><div class="teacher-panel-head"><div><span>Studenti</span><h2><?=$filterActive?'Studenti podle aktivního filtru':'Potřebují pozornost'?></h2><?php if($filterActive): ?><p class="teacher-muted"><?=count($attention)?> studentů · <?=e(teacher_saved_filter_status_label($filterStatus))?> · <?=e(teacher_saved_filter_priority_label($filterPriority))?> · <?=e(teacher_saved_filter_task_status_label($filterTaskStatus))?> · <?=e(teacher_saved_filter_task_due_label($filterTaskDue))?></p><?php endif; ?></div><a class="text-link" href="?tab=class_results&class=<?=e($classId)?>&status=<?=e($filterStatus)?>&priority=<?=e($filterPriority)?>&task_status=<?=e($filterTaskStatus)?>&task_due=<?=e($filterTaskDue)?>">Otevřít ve Výsledcích →</a></div>
-      <?php if(!$attention): ?><div class="teacher-empty"><?=$filterActive?'Aktivnímu filtru neodpovídá žádný student.':'Z dostupných výsledků aktuálně nevychází žádný prioritní signál.'?></div><?php else: ?><div class="class-attention-grid"><?php foreach(array_slice($attention,0,12) as $row): ?><article><div class="teacher-avatar"><?=e(strtoupper(u_substr((string)$row['label'],0,1)))?></div><div><strong><?=e((string)$row['label'])?></strong><span><b class="priority-dot priority-<?=e((string)($row['priority']??'normal'))?>"></b><?=e(teacher_student_priority_label((string)($row['priority']??'normal')))?> · <?=e(teacher_student_status_label((string)($row['status_key']??teacher_student_result_status($row))))?> · <?php if((string)($row['marker']??'none')!=='none'): ?><?=e(teacher_student_marker_label((string)$row['marker']))?> · <?php endif; ?>Mastery <?=teacher_class_pct($row['mastery'],0)?></span></div><a href="?tab=skills&class=<?=e($classId)?>&student=<?=e(skill_student_key_for_label($classId,(string)$row['label']))?>">Detail →</a></article><?php endforeach; ?></div><?php if(count($attention)>12): ?><div class="saved-filter-more">+ <?=count($attention)-12?> dalších studentů · <a href="?tab=class_results&class=<?=e($classId)?>&status=<?=e($filterStatus)?>&priority=<?=e($filterPriority)?>&task_status=<?=e($filterTaskStatus)?>&task_due=<?=e($filterTaskDue)?>">zobrazit všechny</a></div><?php endif; ?><?php endif; ?>
-    </section>
-
-    <section class="teacher-panel"><div class="teacher-panel-head"><div><span>Projekty</span><h2>Stav hodnocení</h2></div><a class="text-link" href="?tab=grade&class=<?=e($classId)?>">Hodnotit →</a></div><div class="class-project-status-grid"><?php foreach($projects as $project): ?><article><div><span><?=e((string)$project['type']==='group'?'Týmový projekt':'Individuální projekt')?></span><strong><?=e((string)$project['title'])?></strong></div><div class="class-project-score"><b><?=teacher_class_pct($project['avg_pct'],0)?></b><small>průměr publikovaných</small></div><footer><span><?= (int)$project['published'] ?> publikováno</span><span><?= (int)$project['drafts'] ?> konceptů</span><span><?= (int)$project['returned'] ?> vráceno</span></footer><a href="?tab=grade&class=<?=e($classId)?>&project=<?=e((string)$project['id'])?>">Otevřít hodnocení →</a></article><?php endforeach; ?></div></section>
-    <?php
-}
-
 function teacher_render_class_results(string $classId): void
 {
     $results = teacher_class_results_snapshot($classId);

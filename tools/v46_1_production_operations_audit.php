@@ -60,7 +60,6 @@ foreach([
     'teacher_render_ops_plus_attention'=>'Produkční vrstva není zapojena do Attention Center.',
     'teacher_render_ops_plus_student360'=>'Watchlist/follow-up není zapojen do Student 360°.',
     'teacher_render_ops_plus_interventions'=>'Playbooky nejsou zapojeny do Intervencí.',
-    'teacher_render_ops_class_health_strip'=>'Class Health není zapojen do Přehledu třídy.',
 ] as $needle=>$message) if(!str_contains($teacher,$needle))$errors[]=$message;
 foreach(['data-ops-health','data-ops-followups','data-ops-watchlist','data-ops-undo','data-ops-audit'] as $needle){
     if(!str_contains($views,$needle))$errors[]="Chybí UI marker $needle.";

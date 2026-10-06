@@ -6,3 +6,9 @@
   --edu-ink: #e9eef2; --edu-teal: #4cc9d8; --edu-teal-dark: #4cc9d8; --edu-teal-ink: #86e3ed; --edu-teal-soft: #123a41;
   --edu-orange: #ffa066; --edu-orange-dark: #ffa066; --edu-orange-soft: #3a2415; --edu-yellow: #f4cd74; --edu-yellow-soft: #382e12;
 }
+/* v69: „Režim hodiny“ – model systému (SVG) je tmavá scéna už ve světlém režimu; paleta ji v tmavém režimu převrátila na bílou plochu
+   s nečitelným textem. Uvnitř scény se vrací původní hodnoty tokenů (tmavá scéna, světlý text). */
+:root:not([data-theme="light"]) .v45-system-stage {
+  --k579: #0b1020; --k580: #dbeafe; --k626: #121d32; --k501: #475569; --k135: #e2e8f0; --k348: #94a3b8;
+  --k136: #64748b; --k627: #fb7185; --k628: #281524; --k629: #34d399; --k346: #cbd5e1; --k630: #60a5fa;
+}

@@ -36,7 +36,8 @@ $teacherSource=file_get_contents($root.'/teacher.php')?:'';
 foreach(['teacher_saved_filter_save','teacher_saved_filter_delete'] as $needle)if(!str_contains($teacherSource,$needle))$errors[]="teacher.php missing $needle";
 if(!str_contains($teacherSource,'teacher-admin-v45-5.js')&&!str_contains($teacherSource,'teacher-admin-v45-6.js')&&!str_contains($teacherSource,'teacher-admin-v45-7.js'))$errors[]='teacher.php missing compatible saved-filter admin JS';
 $dashboard=file_get_contents($root.'/teacher_class_dashboard.php')?:'';
-foreach(['teacher_render_saved_filters','data-saved-filter-panel','data-save-filter-form','Studenti podle aktivního filtru'] as $needle)if(!str_contains($dashboard,$needle))$errors[]="teacher_class_dashboard.php missing $needle";
+// v69: souhrn „Studenti podle aktivního filtru“ byl jen v vyřazeném Přehledu třídy (class_overview).
+foreach(['teacher_render_saved_filters','data-saved-filter-panel','data-save-filter-form'] as $needle)if(!str_contains($dashboard,$needle))$errors[]="teacher_class_dashboard.php missing $needle";
 $tasks=file_get_contents($root.'/teacher_tasks.php')?:'';
 foreach(['teacher_saved_filters_path','teacher_saved_filters_for_current_teacher','teacher_saved_filter_save','teacher_saved_filter_delete'] as $needle)if(!str_contains($tasks,$needle))$errors[]="teacher_tasks.php missing $needle";
 $jsFile=is_file($root.'/assets/teacher-admin-v45-7.js')?$root.'/assets/teacher-admin-v45-7.js':(is_file($root.'/assets/teacher-admin-v45-6.js')?$root.'/assets/teacher-admin-v45-6.js':$root.'/assets/teacher-admin-v45-5.js');
@@ -47,6 +48,6 @@ $storageWrites=[];
 foreach($storageBefore as $file=>$before){clearstatcache(true,$file);if(!is_file($file)||hash_file('sha256',$file)!==$before)$storageWrites[]=basename($file);}
 if($storageWrites)$errors[]='Read-only v45.5 audit changed storage: '.implode(', ',$storageWrites);
 
-$result=['ok'=>!$errors,'version'=>'45.5','saved_filter_fields'=>['class','status','priority'],'cross_views'=>['class_overview','class_results'],'storage_writes'=>$storageWrites,'errors'=>$errors];
+$result=['ok'=>!$errors,'version'=>'45.5','saved_filter_fields'=>['class','status','priority'],'cross_views'=>['class_results'],'storage_writes'=>$storageWrites,'errors'=>$errors];
 echo json_encode($result,JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES).PHP_EOL;
 exit($errors?1:0);

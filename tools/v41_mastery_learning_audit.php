@@ -12,7 +12,9 @@ $files=['mastery_learning_v41.php','mastery_learning_views_v41.php','manifest.we
 $index=edu_app_source()?:'';$teacher=file_get_contents($root.'/teacher.php')?:'';$progress=file_get_contents($root.'/progress.php')?:'';$js=file_get_contents($root.'/assets/app.js')?:'';$css=(file_get_contents($root.'/assets/app.css')?:'').(file_get_contents($root.'/assets/mastery.css')?:'');
 foreach(['ml_render_worked_example','ml_render_browser_lab','ml_render_transfer','ml_render_explain_back','ml_render_knowledge_map','ml_render_class_tips','ml_render_error_journal','ml_render_live_student','ml_goal_save','ml_portfolio_narrative_save','create_challenge'] as $n)if(!str_contains($index,$n))$errors[]='index missing '.$n;
 foreach(['ml_record_learning_event','confidence','latency_ms'] as $n)if(!str_contains($progress,$n))$errors[]='progress missing '.$n;
-foreach(['tab===\'mastery\'','tab===\'authoring\'','ml_live_start','ml_scenario_save'] as $n)if(!str_contains($teacher,$n))$errors[]='teacher missing '.$n;
+foreach(['tab===\'authoring\'','ml_scenario_save'] as $n)if(!str_contains($teacher,$n))$errors[]='teacher missing '.$n;
+// v69: živé otázky a Mastery hub z učitelského rozhraní zmizely (záložka mastery vede 302 na Kompetence).
+foreach(['tab===\'mastery\'','ml_live_start','ml_failure_inject'] as $n)if(str_contains($teacher,$n))$errors[]='teacher still has retired '.$n;
 foreach(['data-ml-transfer','data-ml-browser-lab','data-ml-worked','data-ml-before','data-ml-template','serviceWorker','data-confidence'] as $n)if(!str_contains($js,$n))$errors[]='JS missing '.$n;
 foreach(['.ml-worked','.ml-terminal','.ml-transfer','.ml-live-card','.ml-template-row','prefers-reduced-motion'] as $n)if(!str_contains($css,$n))$errors[]='CSS missing '.$n;
 $spec=ml_transfer_spec('class_3a','audit-student','dns-dhcp-operations',['title'=>'DNS','summary'=>'DNS resolver']);if(count($spec['options'])<3)$errors[]='transfer spec invalid';

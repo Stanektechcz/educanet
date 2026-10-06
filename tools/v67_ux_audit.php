@@ -74,7 +74,7 @@ $check('vzhled: pohled mimo ověřený seznam je vždy světlý (data-theme=ligh
 $check('vzhled: ověřený pohled – „tmavý“ načte tokeny vždy, „podle systému“ je přidá jen při (prefers-color-scheme: dark), „světlý“ vůbec', (static function (): bool {
     $dark = ui67_dark_link_html('dashboard', 'dark', ['dashboard']);
     $system = ui67_dark_link_html('dashboard', 'system', ['dashboard']);
-    return str_contains($dark, 'tokens-dark-v67.css') && str_contains($dark, 'student-dark-v68.css') && !str_contains($dark, 'media=') && str_contains($system, 'prefers-color-scheme: dark') && str_contains($system, 'matchMedia')
+    return str_contains($dark, 'tokens-dark-v67.css') && str_contains($dark, 'assets/dark/student-dark-dashboard-v69.css') && !str_contains($dark, 'media=') && str_contains($system, 'prefers-color-scheme: dark') && str_contains($system, 'matchMedia')
         && str_contains($system, 'tokens-dark-v67.css') && !str_contains($system, '<link') && strip_tags($system) !== '' && ui67_dark_link_html('dashboard', 'light', ['dashboard']) === '';
 })());
 $check('vzhled: color-scheme meta: tmavý = dark, podle systému = light dark', ui67_color_scheme('dashboard', 'dark', ['dashboard']) === 'dark' && ui67_color_scheme('dashboard', 'system', ['dashboard']) === 'light dark');

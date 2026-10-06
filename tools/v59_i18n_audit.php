@@ -610,10 +610,16 @@ function v59a_check_domain_coverage(Closure $check, string $root, string $domain
     $check("coverage:$domain:placeholders-match", $placeholderMismatch === 0, $placeholderMismatch > 0);
     $check("coverage:$domain:uk-plural-forms-contain-n", $ukMissingN === 0, $ukMissingN > 0);
 
-    $unused = 0;
-    foreach (array_keys($en) as $key) if (!isset($msgids[$key])) $unused++;
-    foreach (array_keys($uk) as $key) if (!isset($msgids[$key])) $unused++;
-    $check("coverage:$domain:no-unused-catalog-entries", $unused === 0, $unused > 0);
+    $unusedKeys = [];
+    foreach (['en' => $en, 'uk' => $uk] as $loc => $cat) foreach (array_keys($cat) as $key) if (!isset($msgids[$key])) $unusedKeys[] = $loc . ':' . mb_substr((string)$key, 0, 60);
+    $unused = count($unusedKeys);
+    $dumpFile = getenv('V59_I18N_DUMP_UNUSED');   // údržba: V59_I18N_DUMP_UNUSED=<soubor.json> zapíše úplný seznam nepoužitých klíčů (pro lang/*/ui/*.php)
+    if ($unused > 0 && is_string($dumpFile) && $dumpFile !== '') {
+        $all = is_file($dumpFile) ? (array)json_decode((string)file_get_contents($dumpFile), true) : [];
+        foreach (['en' => $en, 'uk' => $uk] as $loc => $cat) foreach (array_keys($cat) as $key) if (!isset($msgids[$key])) $all[$domain][$loc][] = (string)$key;
+        file_put_contents($dumpFile, json_encode($all, JSON_UNESCAPED_UNICODE));
+    }
+    $check("coverage:$domain:no-unused-catalog-entries" . ($unused > 0 ? ' [' . implode(' | ', array_slice($unusedKeys, 0, 12)) . ']' : ''), $unused === 0, $unused > 0);
 }
 
 // =================================================================================================

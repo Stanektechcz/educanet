@@ -6,7 +6,7 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 /**
  * EDUCANET v68 · audit tmavého režimu (cockpit učitele/administrátora a žákovské pohledy přihlášení, přehled, profil).
  *   1) paleta: světlé a tmavé hodnoty mají stejné tokeny, každé var(--kN) v převedených CSS je definované,
- *   2) převedená CSS (cockpit) neobsahují pevné barvy mimo var(); odvozené kopie assets/cx-*.css a overlay assets/student-dark-v68.css jsou aktuální,
+ *   2) převedená CSS (cockpit) neobsahují pevné barvy mimo var(); odvozené kopie assets/cx-*.css a overlay assets/dark/student-dark-*-v69.css jsou aktuální,
  *   3) kontrast AA: dvojice tokenů rámce (text ≥ 4,5 : 1, ohraničení polí ≥ 3 : 1) ve světlém i tmavém režimu; u pravidel s tokeny barvy i pozadí
  *      kontrast v tmavém režimu není nižší než ve světlém a kde ve světlém splňuje AA, splňuje ho i v tmavém; totéž pro pevné dvojice žákovských CSS,
  *   4) žákovský světlý vzhled se nezměnil (SHA-256 zdrojových CSS, rozpočet CSS hlídá v61_design_audit), cockpitová CSS nenarostla o víc než 10 %,
@@ -87,7 +87,7 @@ $check('odvozené kopie assets/cx-*.css (' . count($cxFiles) . '): žádná pevn
 $check('odvozené kopie jsou aktuální vůči originálům (V68_DERIVE_CURRENT): ' . trim($out1), $code1 === 0 && str_contains($out1, 'V68_DERIVE_CURRENT'));
 [$code2, $out2] = $run('v68_dark_overlay.php', ['--check']);
 $check('tmavý overlay žákovské části a Labu je aktuální (V68_OVERLAY_CURRENT): ' . trim($out2), $code2 === 0 && str_contains($out2, 'V68_OVERLAY_CURRENT'));
-$overlay = $read('assets/student-dark-v68.css');
+$overlay = $read('assets/dark/student-dark-home-v69.css') . $read('assets/dark/student-dark-dashboard-v69.css') . $read('assets/dark/student-dark-profile-v69.css');   // v69: tmavá vrstva po pohledech
 $prefix = 'html:not([data-theme="light"])';
 $unprefixed = 0;
 $rules = 0;
@@ -185,8 +185,8 @@ $check('žák: UI67_DARK_VIEWS = přihlášení, přehled, profil; přepínač v
 $sys = ui67_dark_link_html('profile', 'system');
 $check('žák: efektivní motiv jen pro ověřené pohledy (home/dashboard/profile), ostatní světlé; tmavé CSS: „tmavý“ napevno, „podle systému“ skriptem při tmavém systému (bez <link>, bez „<“ ve skriptu), „světlý“ nic',
     ui67_effective_theme('dashboard', 'dark') === 'dark' && ui67_effective_theme('materialy', 'dark') === 'light' && ui67_dark_link_html('dashboard', 'light') === ''
-    && str_contains(ui67_dark_link_html('home', 'dark'), 'student-dark-v68.css') && !str_contains(ui67_dark_link_html('home', 'dark'), 'media=') && ui67_dark_link_html('materialy', 'dark') === ''
-    && str_contains($sys, 'matchMedia("(prefers-color-scheme: dark)")') && str_contains($sys, 'student-dark-v68.css') && !str_contains($sys, '<link') && substr_count(substr($sys, 8, -9), '<') === 0);
+    && str_contains(ui67_dark_link_html('home', 'dark'), 'assets/dark/student-dark-home-v69.css') && !str_contains(ui67_dark_link_html('home', 'dark'), 'media=') && ui67_dark_link_html('materialy', 'dark') === ''
+    && str_contains($sys, 'matchMedia("(prefers-color-scheme: dark)")') && str_contains($sys, 'assets/dark/student-dark-profile-v69.css') && !str_contains($sys, '<link') && substr_count(substr($sys, 8, -9), '<') === 0);
 $check('cockpit: UI68_TEACHER_DARK_TABS pokrývá celou mapu záložek (plán: celý cockpit) a neobsahuje neexistující záložky',
     array_diff(array_keys($map), UI68_TEACHER_DARK_TABS) === [] && array_diff(UI68_TEACHER_DARK_TABS, array_keys($map), ['ucet', 'sekce']) === []);
 $check('cockpit: tmavý motiv jen pro záložky ze seznamu (neznámá → světlá), pref „podle systému“ se zachová',
@@ -195,21 +195,21 @@ $h = Harness::start(['EDUCANET_STORAGE_DIR' => $tmp, 'EDUCANET_LOCAL_AUTH_REQUIR
 try {
     $anon = $h->request('GET', '/?view=home');
     $check('HTTP žák: přihlášení bez cookie = data-theme="system", color-scheme „light dark“, tmavé CSS jen skriptem při tmavém systému (žádný <link> na velkou tmavou vrstvu)', audit_response_clean($anon) && str_contains((string)$anon['body'], 'data-theme="system"')
-        && str_contains((string)$anon['body'], 'content="light dark"') && str_contains((string)$anon['body'], 'matchMedia') && preg_match('~<link[^>]*student-dark-v68\.css~', (string)$anon['body']) !== 1);
+        && str_contains((string)$anon['body'], 'content="light dark"') && str_contains((string)$anon['body'], 'matchMedia') && preg_match('~<link[^>]*student-dark-[a-z]+-v69\.css~', (string)$anon['body']) !== 1);
     $csrf = (string)$h->csrfToken((string)$anon['body']);
     $set = $h->request('POST', '/', ['action' => 'ui67_theme_set', 'theme' => 'dark', 'return' => '?view=home', 'csrf' => $csrf], ['follow_redirects' => false]);
     $home = $h->request('GET', '/?view=home');
     $check('HTTP žák: volba „tmavý“ → cookie, data-theme="dark", color-scheme dark, tmavé CSS bez media dotazu', in_array((int)$set['status'], [302, 303], true) && str_contains((string)$home['body'], 'data-theme="dark"')
-        && str_contains((string)$home['body'], 'content="dark"') && preg_match('~student-dark-v68\.css[^>]*>~', (string)$home['body'], $lm) === 1 && !str_contains($lm[0], 'media='));
+        && str_contains((string)$home['body'], 'content="dark"') && preg_match('~student-dark-home-v69\.css[^>]*>~', (string)$home['body'], $lm) === 1 && !str_contains($lm[0], 'media='));
     audit_login_student($h, 'class_3a', 'Audit Žák');
     $dash = $h->request('GET', '/?view=dashboard');
     $other = $h->request('GET', '/?view=vysledky');
     $check('HTTP žák: přehled je tmavý a nese přepínač, pohled mimo seznam (výsledky) zůstává světlý a bez tmavých CSS',
         audit_response_clean($dash) && str_contains((string)$dash['body'], 'data-theme="dark"') && str_contains((string)$dash['body'], 'ui67-theme') && audit_response_clean($other)
-        && str_contains((string)$other['body'], 'data-theme="light"') && !str_contains((string)$other['body'], 'student-dark-v68.css'));
+        && str_contains((string)$other['body'], 'data-theme="light"') && !str_contains((string)$other['body'], 'assets/dark/student-dark-'));
     $dashLight = $h->request('POST', '/', ['action' => 'ui67_theme_set', 'theme' => 'light', 'return' => '?view=dashboard', 'csrf' => (string)$h->csrfToken((string)$dash['body'])], ['follow_redirects' => false]);
     $dashLightPage = $h->request('GET', '/?view=dashboard');
-    $check('HTTP žák: volba „světlý“ nenačítá tmavé CSS (světlé stránky nic nenavíc nestahují)', in_array((int)$dashLight['status'], [302, 303], true) && str_contains((string)$dashLightPage['body'], 'data-theme="light"') && !str_contains((string)$dashLightPage['body'], 'student-dark-v68.css') && !str_contains((string)$dashLightPage['body'], 'tokens-dark-v67.css'));
+    $check('HTTP žák: volba „světlý“ nenačítá tmavé CSS (světlé stránky nic nenavíc nestahují)', in_array((int)$dashLight['status'], [302, 303], true) && str_contains((string)$dashLightPage['body'], 'data-theme="light"') && !str_contains((string)$dashLightPage['body'], 'assets/dark/student-dark-') && !str_contains((string)$dashLightPage['body'], 'tokens-dark-v67.css'));
 } finally {
     $h->stop();
 }

@@ -58,7 +58,7 @@ $check('tokeny: oranžový akcent grafiky je jen v bloku body.accent-graphics (3
 $redefined = [];
 foreach (glob($ROOT . '/assets/*.css') ?: [] as $file) {
     if (basename($file) === 'tokens-v61.css') continue;
-    if (str_contains(basename($file), '-dark-v')) continue;   // v68: tmavé vrstvy (student-dark-v68, teacher-dark-v68, cockpit-dark-v68, tokens-dark-v67) přepisují --edu-* jen v tmavém režimu; hlídá je v68_theme_audit
+    if (str_contains(basename($file), '-dark-')) continue;   // v68/v69: tmavé vrstvy (assets/dark/student-dark-<pohled>-v69,  teacher-dark-v68, cockpit-dark-v68, tokens-dark-v67) přepisují --edu-* jen v tmavém režimu; hlídá je v68_theme_audit
     foreach (v61d_custom_props((string)file_get_contents($file)) as $d) {
         if (preg_match('/^edu-(yellow|orange|teal|ink)(-dark|-soft|-ink)?$/', $d['name']) === 1) $redefined[] = basename($file) . ' --' . $d['name'];
     }

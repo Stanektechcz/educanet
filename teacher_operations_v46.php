@@ -67,11 +67,10 @@ function teacher_action_permission_exact(): array
     return [
         'save_grade'=>'grading.manage','v55_t_bonus_grade'=>'grading.manage',
         'save_group'=>'projects.manage','delete_group'=>'projects.manage',
-        'teacher_saved_filter_save'=>'filters.manage','teacher_saved_filter_delete'=>'filters.manage','teacher_saved_filter_pin'=>'filters.manage','teacher_saved_filter_default'=>'filters.manage',
-        'teacher_saved_filter_watch'=>'automations.manage',
+        'teacher_saved_filter_save'=>'filters.manage','teacher_saved_filter_delete'=>'filters.manage',
         'teacher_bulk_undo'=>'bulk.undo',
-        'teacher_review_ack'=>'view','teacher_ops_report_export'=>'analytics.view','teacher_sla_policy_save'=>'roles.manage',
-        'v48_orchestrate'=>'content.manage','v50_teacher_growth_control'=>'students.manage',
+        'teacher_ops_report_export'=>'analytics.view',
+        'v48_orchestrate'=>'content.manage',
         // v66: přepočet cache analýzy = analytika; nastavení návrhu hodnocení = jen administrátor (accounts.manage má jen role admin; navíc politika g66_settings).
         'a66_recompute'=>'analytics.view','g66_settings'=>'accounts.manage',
     ];
@@ -80,9 +79,9 @@ function teacher_action_permission_prefixes(): array
 {
     return [
         'project_teacher_'=>'projects.manage','teacher_curriculum_'=>'curriculum.manage','teacher_calendar_'=>'curriculum.manage',
-        'skill_'=>'skills.manage','ml_'=>'content.manage','v42_lesson_resource_'=>'content.manage',
+        'ml_'=>'content.manage','v42_lesson_resource_'=>'content.manage',
         'teacher_demo_account_'=>'students.manage','teacher_bulk_'=>'students.manage','teacher_intervention_'=>'interventions.manage',
-        'teacher_automation_'=>'automations.manage','teacher_notification_'=>'view','teacher_note_'=>'notes.manage',
+        'teacher_note_'=>'notes.manage',
         'teacher_team_member_'=>'roles.manage','teacher_watchlist_'=>'watchlist.manage','teacher_followup_'=>'followups.manage',
         'teacher_message_template_'=>'templates.manage','teacher_template_'=>'templates.manage',
         'intake_t_'=>'students.manage','sess53_t_'=>'students.manage','arena57_'=>'students.manage','acc58_'=>'students.manage',
@@ -480,15 +479,12 @@ function teacher_ops_command_entries(): array
         ['label'=>'Přehled školy','hint'=>'Všechny třídy','url'=>'teacher.php?tab=overview','keywords'=>'dashboard school'],
         ['label'=>'Analytika třídy','hint'=>'Trendy a Lesson Intelligence','url'=>'teacher.php?'.http_build_query(['tab'=>'analytics','class'=>$currentClass]),'keywords'=>'grafy trendy lekce intelligence'],
         ['label'=>'Intervence','hint'=>'Plány podpory studentů','url'=>'teacher.php?'.http_build_query(['tab'=>'interventions','class'=>$currentClass]),'keywords'=>'podpora intervention workflow'],
-        ['label'=>'Automatizace','hint'=>'Watch uložených filtrů','url'=>'teacher.php?tab=automations','keywords'=>'notifikace watch filtry'],
-        ['label'=>'Smart filtry','hint'=>'AND/OR pravidla a presety','url'=>'teacher.php?'.http_build_query(['tab'=>'filters','class'=>$currentClass]),'keywords'=>'uložené filtry saved filters'],
-        ['label'=>'Control Tower','hint'=>'SLA, změny a planner','url'=>'teacher.php?tab=control','keywords'=>'control tower sla eskalace planner změny'],
         ['label'=>'Cross-class report','hint'=>'Srovnání tříd a export','url'=>'teacher.php?tab=reports','keywords'=>'reporty export csv json třídy health'],
         ['label'=>'Komunikační šablony','hint'=>'Drafty pro studenty','url'=>'teacher.php?'.http_build_query(['tab'=>'communications','class'=>$currentClass]),'keywords'=>'komunikace zpráva šablona student'],
         ['label'=>'Kvalita dat','hint'=>'Integrity diagnostika','url'=>'teacher.php?tab=quality','keywords'=>'kvalita data orphan diagnostika integrity'],
         ['label'=>'Tým a role','hint'=>'Oprávnění učitelů','url'=>'teacher.php?tab=team_admin','keywords'=>'role učitel asistent admin permissions'],
         ['label'=>'Audit operací','hint'=>'Změny, bulk akce a zásahy','url'=>'teacher.php?tab=ops_audit','keywords'=>'audit historie undo změny operace'],
     ];
-    foreach(teacher_ops_class_ids() as $cid){$entries[]=['label'=>'Přehled '.teacher_class_label($cid),'hint'=>'Přehled třídy','url'=>'teacher.php?tab=class_overview&class='.$cid,'keywords'=>$cid.' třída'];foreach(project_students_for_class($cid) as $key=>$student)$entries[]=['label'=>(string)$student['label'],'hint'=>teacher_class_label($cid).' · Student 360°','url'=>'teacher.php?'.http_build_query(['tab'=>'student360','class'=>$cid,'student'=>(string)$key]),'keywords'=>'student '.$cid.' '.(string)($student['email']??'')];}
+    foreach(teacher_ops_class_ids() as $cid){$entries[]=['label'=>'Přehled '.teacher_class_label($cid),'hint'=>'Přehled třídy','url'=>'teacher.php?tab=prehled&class='.$cid,'keywords'=>$cid.' třída'];foreach(project_students_for_class($cid) as $key=>$student)$entries[]=['label'=>(string)$student['label'],'hint'=>teacher_class_label($cid).' · Student 360°','url'=>'teacher.php?'.http_build_query(['tab'=>'student360','class'=>$cid,'student'=>(string)$key]),'keywords'=>'student '.$cid.' '.(string)($student['email']??'')];}
     return $entries;
 }

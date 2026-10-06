@@ -8,7 +8,7 @@ declare(strict_types=1);
  *   ?view=v48_state → ?view=dashboard (pohled vyřazen; učitelská projekce má vlastní ?tab=teach&v48_state=1),
  *   ?view=continue  → ?view=dashboard,
  *   ?view=one_task  → ?view=dashboard (výjimka: task=kb s platným názvem tématu míří rovnou na plnou lekci ?view=kb_lesson).
- * Soubor app/views/one_task.php a knihovny One Task zůstávají do v69 (načítá je skupina libs „layout“).
+ * v69: soubory pohledu a knihovny One Task jsou vyřazené (retired/v69/); přesměrování zůstává pro staré záložky a odkazy.
  */
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 

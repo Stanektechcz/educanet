@@ -115,7 +115,7 @@ if ($view === 'dashboard') {
             $coachPlanned=max(1,(int)($coachPlan['planned_minutes']??$coachPlan['minutes']??25));
             $dashNextAction=[
                 'kind'=>'link',
-                'href'=>v505_local_href_to_task((string)($coachFirst['href']??module_url('study',['minutes'=>(int)($coachPlan['minutes']??25),'energy'=>'normal','intent'=>(string)($coachPlan['intent']??'balanced')])), '?view=dashboard'),
+                'href'=>(string)($coachFirst['href']??module_url('study',['minutes'=>(int)($coachPlan['minutes']??25),'energy'=>'normal','intent'=>(string)($coachPlan['intent']??'balanced')])),
                 'label'=>tr('Spustit dnešní plán'),
                 'title'=>tr('Dnes má největší smysl: {title}', ['title' => (string)($coachFirst['title']??tr('osobní studijní plán'))]),
                 'text'=>tr('{reason} · celý plán má asi {minutes} min.', ['reason' => (string)($coachFirst['reason']??tr('Nejdůležitější krok na dnešek')), 'minutes' => $coachPlanned]),
@@ -128,12 +128,7 @@ if ($view === 'dashboard') {
         }
     }
 
-    // v50.5: unfinished One Task draft becomes the next action after mandatory diagnostic.
-    $dashOneTaskDraft=$coachDashboardStudentKey!==''?v505_latest_draft((string)$classId,$coachDashboardStudentKey):null;
-    if($dashTestDone&&!active_test()&&is_array($dashOneTaskDraft)&&!empty($dashOneTaskDraft['task_url'])){
-        $dashNextAction=['kind'=>'link','href'=>(string)$dashOneTaskDraft['task_url'],'label'=>tr('Pokračovat v rozdělaném'),'title'=>(string)($dashOneTaskDraft['task_title']?:tr('Rozdělaný úkol')),'text'=>tr('Pracovní plocha se otevře tam, kde jsi skončil/a. Průběžný draft je uložený automaticky.')];
-    }
-    if(($dashNextAction['kind']??'')==='link')$dashNextAction['href']=v505_local_href_to_task((string)($dashNextAction['href']??''),'?view=dashboard');
+    if(($dashNextAction['kind']??'')==='link')$dashNextAction['href']=(string)($dashNextAction['href']??'');
     // v53: když učitel otevřel hodinu, je dnešní zadání prvním krokem na přehledu.
     $dashSession = sess53_for_class_date((string)$classId, date('Y-m-d'));
     if (is_array($dashSession) && !empty($dashSession['open']) && (string)$dashSession['kind'] === 'work') {

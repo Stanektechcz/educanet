@@ -115,7 +115,7 @@ function render_structured_lesson_page(array $lesson, string $classId, array $mo
     $lessonNo=(int)($lesson['number']??1);
     $oneTaskLessonRef=$stepAction==='next_lesson_step'?'next':$lessonId;
     $oneTaskReturn=$stepAction==='next_lesson_step'?'?view=next_lesson':module_url('course_lesson',['lesson'=>$lessonId]);
-    $oneTaskHref=v505_task_url('course',['lesson'=>$oneTaskLessonRef],$oneTaskReturn);
+    $oneTaskHref=v69_task_url('course',['lesson'=>$oneTaskLessonRef],$oneTaskReturn);
     render_header((string)($lesson['title'] ?? tr('Lekce')), $module);
     ?>
     <section class="hero lesson-course-hero guided-lesson-hero">

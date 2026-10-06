@@ -29,7 +29,7 @@ $tmp = rtrim(str_replace('\\', '/', edu_audit_temp_storage('v61-motivation')), '
 require_once $ROOT . '/bootstrap.php';   // před jakýmkoli výstupem (session_start)
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['app/lib.php', 'app/views/_layout.php', 'student_v55.php', 'student_v55_views.php', 'zero_friction_v50_6.php', 'unified_page_shell_v50_7.php', 'one_task_v50_5.php',
+foreach (['app/lib.php', 'app/views/_layout.php', 'student_v55.php', 'student_v55_views.php', 'zero_friction_v50_6.php', 'unified_page_shell_v50_7.php', 'student_links_v69.php',
     'goal_navigator_v50_4.php', 'hands_on_learning_v50.php', 'independent_growth_v50.php', 'learning_v56.php', 'session_v53.php', 'tutorial_v52.php', 'linux_v57_lab.php',
     'arena_v57.php', 'teacher_operations_v46.php', 'teacher_operations_plus_v46_1.php', 'teacher_operations_control_v46_2.php', 'intake_v51.php', 'accounts_v53.php',
     'runtime_content.php', 'teacher_v58.php', 'robots_v58.php', 'teamgames_v58_teacher_views.php', 'arena_v58_ctf.php', 'arena_v58_incident.php', 'lab_v58_editor.php',

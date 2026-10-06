@@ -10,14 +10,12 @@ function v506_continue_url(string $classId,array $module,array $nextLessons,arra
 {
     if (active_test()) return '?view=test';
     $studentKey=adaptive_student_key($classId);
-    $draft=$studentKey!==''?v505_latest_draft($classId,$studentKey):null;
-    if(is_array($draft)&&!empty($draft['task_url'])) return (string)$draft['task_url'];
 
     if(!learning_primary_block_complete($classId)) return '?view=dashboard';
 
     $lesson2=is_array($nextLessons[$classId]??null)?$nextLessons[$classId]:null;
     if(is_array($lesson2)&&!learning_next_lesson_complete($classId,$lesson2)){
-        return v505_task_url('course',['lesson'=>'next'],'?view=dashboard');
+        return v69_task_url('course',['lesson'=>'next'],'?view=dashboard');
     }
     foreach((array)($extendedLessons[$classId]??[]) as $lesson){
         if(!is_array($lesson))continue;
@@ -25,7 +23,7 @@ function v506_continue_url(string $classId,array $module,array $nextLessons,arra
         if($number<3)continue;
         if(!learning_course_lesson_unlocked($classId,$number,$nextLessons,$extendedLessons))continue;
         if(learning_course_lesson_complete($classId,$lesson))continue;
-        return v505_task_url('course',['lesson'=>(string)($lesson['id']??$number)],'?view=dashboard');
+        return v69_task_url('course',['lesson'=>(string)($lesson['id']??$number)],'?view=dashboard');
     }
 
     if(function_exists('v504_goal_selected')){
@@ -34,14 +32,14 @@ function v506_continue_url(string $classId,array $module,array $nextLessons,arra
             $plan=v504_goal_plan($classId,$studentKey,$goal);
             $first=$plan[0]??null;
             if(is_array($first)&&!empty($first['href'])){
-                return v505_local_href_to_task((string)$first['href'],'?view=goal_nav');
+                return (string)$first['href'];
             }
         }
     }
     if(function_exists('skill_next_recommendation')){
         $next=skill_next_recommendation($classId);
         if(is_array($next)&&is_array($next['skill']??null)&&!empty($next['skill']['slug'])){
-            return v505_task_url('skill',['skill'=>(string)$next['skill']['slug']], '?view=skills');
+            return v69_task_url('skill',['skill'=>(string)$next['skill']['slug']], '?view=skills');
         }
     }
     return '?view=goal_nav';

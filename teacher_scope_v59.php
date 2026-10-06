@@ -245,9 +245,9 @@ function teacher59_action_policies(): array
     foreach (['teacher_saved_filter_save', 'teacher_bulk_mark', 'teacher_bulk_export', 'teacher_bulk_assign_task', 'teacher_note_add',
         'teacher_intervention_create', 'teacher_bulk_task_due', 'teacher_bulk_task_priority', 'teacher_bulk_remind', 'teacher_bulk_note',
         'teacher_bulk_resource', 'teacher_bulk_intervention', 'teacher_watchlist_save', 'teacher_followup_create', 'v48_orchestrate',
-        'skill_teacher_evidence', 'skill_assign', 'teacher_curriculum_toggle', 'teacher_curriculum_lesson_toggle', 'teacher_curriculum_note',
+        'teacher_curriculum_toggle', 'teacher_curriculum_lesson_toggle', 'teacher_curriculum_note',
         'v42_lesson_resource_save', 'v42_lesson_resource_remove', 'teacher_calendar_exception_save', 'teacher_calendar_exception_remove',
-        'ml_live_start', 'ml_failure_inject', 'teacher_demo_account_create', 'v50_teacher_growth_control', 'intake_t_toggle', 'intake_t_save',
+        'teacher_demo_account_create', 'intake_t_toggle', 'intake_t_save',
         'sess53_t_open', 'acc58_issue_one', 'acc58_issue_class', 'arena57_create', 'arena57_lab_toggle', 'robots58_create', 'tg58_create',
         'arena58_inc_create', 'lab58t_export',
         'comp62_sync', 'p63_assign', 'p63_unassign', 'v64_abs_board',
@@ -276,25 +276,20 @@ function teacher59_action_policies(): array
     $table['delete_group'] = $ent('group_id', 'group');
     $table['project_teacher_retro'] = $ent('group_id', 'group');
     $table['project_teacher_peer_moderate'] = $ent('feedback_id', 'peer_feedback');
-    foreach (['teacher_saved_filter_delete', 'teacher_saved_filter_pin', 'teacher_saved_filter_default', 'teacher_saved_filter_watch', 'teacher_automation_save'] as $action) $table[$action] = $ent('filter_id', 'saved_filter');
+    foreach (['teacher_saved_filter_delete'] as $action) $table[$action] = $ent('filter_id', 'saved_filter');
     foreach (['teacher_intervention_step', 'teacher_intervention_status', 'teacher_intervention_note'] as $action) $table[$action] = $ent('intervention_id', 'intervention');
     $table['teacher_watchlist_delete'] = $ent('watchlist_id', 'watchlist');
     $table['teacher_followup_update'] = $ent('followup_id', 'followup');
     $table['teacher_bulk_undo'] = $ent('undo_id', 'undo');
-    $table['skill_validation'] = $ent('evidence_id', 'skill_evidence');
-    $table['skill_unassign'] = $ent('assignment_id', 'skill_assignment');
-    $table['ml_live_phase'] = $ent('live_id', 'ml_live');
     $table['ml_scenario_state'] = $ent('scenario_id', 'ml_scenario');
     $table['ml_tip_state'] = $ent('tip_id', 'ml_tip');
     foreach (['teacher_demo_account_reset', 'teacher_demo_account_delete'] as $action) $table[$action] = $ent('demo_email', 'demo_account');
     foreach (['sess53_t_toggle', 'sess53_t_instructions', 'sess53_t_grade', 'v55_t_bonus_grade'] as $action) $table[$action] = $ent('session', 'sess53');
-    foreach (['teacher_automation_delete', 'teacher_automation_run', 'teacher_notification_read', 'teacher_notification_read_all',
-        'teacher_template_save', 'teacher_template_delete', 'teacher_message_template_save', 'teacher_message_template_delete',
+    foreach (['teacher_template_save', 'teacher_template_delete', 'teacher_message_template_save', 'teacher_message_template_delete',
         'teacher_ops_report_export'] as $action) {
         $table[$action] = $none;
     }
-    $table['teacher_review_ack'] = $none + ['class_all_ok' => true];
-    foreach (['teacher_sla_policy_save', 'intake_t_sync', 'arena58_weekly_override', 'arena58_weekly_reroll', 'arena58_weekly_reveal', 'identity58_plan'] as $action) {
+    foreach (['intake_t_sync', 'arena58_weekly_override', 'arena58_weekly_reroll', 'arena58_weekly_reveal', 'identity58_plan'] as $action) {
         $table[$action] = $admin;
     }
     $table['teacher_team_member_role'] = $none + ['legacy_only' => true];
@@ -395,10 +390,8 @@ function teacher59_entity_resolve(string $type, string $id): ?array
         case 'followup': $row = $rowOf('teacher_followups.json.php'); break;
         case 'undo': $row = $rowOf('teacher_bulk_undo.json.php'); break;
         case 'peer_feedback': $row = $rowOf('project_workspace_peer_feedback.json.php'); break;
-        case 'skill_evidence': $row = $rowOf('skill_evidence.json.php'); break;
-        case 'skill_assignment': $row = $rowOf('skill_assignments.json.php'); break;
-        case 'ml_live': case 'ml_scenario': case 'ml_tip':
-            $name = ['ml_live' => 'ml_live', 'ml_scenario' => 'ml_scenarios', 'ml_tip' => 'ml_class_tips'][$type];
+        case 'ml_scenario': case 'ml_tip':
+            $name = ['ml_scenario' => 'ml_scenarios', 'ml_tip' => 'ml_class_tips'][$type];
             $rows = function_exists('adaptive_store') ? adaptive_store($name) : teacher59_storage_rows('adaptive_' . $name . '.json.php');
             $row = teacher59_find_row($rows, $id);
             break;

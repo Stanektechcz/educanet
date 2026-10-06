@@ -76,7 +76,7 @@ function teacher68_stylesheets_html(string $tab): string
 /** CSS rámce se načítá jako poslední (po starších vrstvách), JS jen v těle stránky. */
 function teacher68_shell_css_html(string $tab): string
 {
-    return teacher68_link_html('assets/teacher-shell-v68.css') . teacher68_dark_html($tab);
+    return teacher68_link_html('assets/teacher-shell-v68.css') . teacher68_link_html('assets/teacher-contrast-v69.css') . teacher68_dark_html($tab);   // v69: kontrast malých popisků (AA)
 }
 
 /** Tři tlačítka vzhledu (POST s CSRF, funguje bez JS, aria-pressed = aktuální volba). */

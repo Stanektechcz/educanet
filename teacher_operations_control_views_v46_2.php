@@ -3,32 +3,6 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-function teacher_ops_delta_badge(mixed $delta,bool $inverse=false): string
-{
-    if($delta===null)return '<span class="ops-delta neutral">—</span>';$d=(float)$delta;if(abs($d)<0.001)return '<span class="ops-delta neutral">0</span>';$good=$inverse?$d<0:$d>0;$cls=$good?'good':'bad';$sign=$d>0?'+':'';return '<span class="ops-delta '.$cls.'">'.e($sign.(string)$d).'</span>';
-}
-function teacher_render_control_tower(?string $classId=null): void
-{
-    $digest=teacher_ops_review_digest($classId);$current=(array)$digest['current'];$d=(array)$digest['deltas'];$policy=teacher_ops_sla_policy();$escalations=teacher_ops_escalations($classId);$planner=teacher_ops_planner(14);$prev=is_array($digest['previous']??null)?$digest['previous']:null;$scope=$classId===null?'all':teacher_ops_valid_class($classId);
-    ?>
-    <section class="teacher-page-head ops-page-head"><div><div class="eyebrow">Control Tower · v46.2</div><h1>Provozní řízení výuky</h1><p>Změny od poslední kontroly, SLA/escalace a 14denní plán na jednom místě.</p></div><div class="ops-head-actions"><a class="btn secondary" href="?tab=reports">Reporty</a><a class="btn secondary" href="?tab=quality">Kvalita dat</a><a class="btn secondary" href="?tab=communications<?= $classId!==null?'&class='.e($classId):'' ?>">Komunikace</a></div></section>
-    <section class="teacher-panel ops-review-panel"><div class="teacher-panel-head"><div><span>Od poslední kontroly</span><h2><?= $prev?'Změny od '.e(date('d.m.Y H:i',strtotime((string)$prev['created_at']))):'První baseline zatím není uložená' ?></h2></div><form method="post"><input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="action" value="teacher_review_ack"><input type="hidden" name="class_id" value="<?=e($scope)?>"><button class="btn primary" type="submit">Označit stav jako zkontrolovaný</button></form></div>
-      <div class="ops-review-grid">
-        <?php foreach([
-          ['critical','Kritické','critical',true],['deadlines','Termíny','deadline',true],['drops','Propady','drop',true],['waiting_teacher','Čeká na mě','teacher',true],['waiting_student','Čeká na studenty','student',true],['resolved_recent','Vyřešeno 7 dní','resolved',false],['followup_overdue','Follow-up po termínu','followup',true],['health_avg','Průměr Health','health',false]
-        ] as [$key,$label,$kind,$inverse]): ?>
-        <article data-kind="<?=e($kind)?>"><span><?=e($label)?></span><strong><?= $current[$key]===null?'—':e((string)$current[$key]) ?></strong><?=teacher_ops_delta_badge($d[$key]??null,(bool)$inverse)?></article>
-        <?php endforeach; ?>
-      </div>
-    </section>
-    <section class="ops-control-grid">
-      <section class="teacher-panel"><div class="teacher-panel-head"><div><span>SLA / eskalace</span><h2><?=count($escalations)?> otevřených signálů</h2></div></div><div class="ops-escalation-list"><?php if(!$escalations): ?><div class="teacher-empty">Žádná SLA eskalace.</div><?php endif; ?><?php foreach(array_slice($escalations,0,18) as $row): ?><a href="<?=e((string)$row['url'])?>" class="<?=e((string)$row['severity'])?>"><div><b><?=e((string)$row['title'])?></b><span><?=e(teacher_class_label((string)$row['class_id']))?> · <?=e((string)$row['student_label'])?></span><small><?=e((string)$row['detail'])?></small></div><i><?=e((string)$row['severity'])?></i></a><?php endforeach; ?></div></section>
-      <section class="teacher-panel"><div class="teacher-panel-head"><div><span>Planner</span><h2>14 dní dopředu + 7 dní po termínu</h2></div></div><div class="ops-planner-list"><?php if(!$planner['events']): ?><div class="teacher-empty">Žádné naplánované události.</div><?php endif; ?><?php foreach(array_slice((array)$planner['events'],0,24) as $event): $past=(string)$event['date']<date('Y-m-d'); ?><a href="<?=e((string)$event['url'])?>" class="<?=$past?'past':''?>"><time><?=e(date('d.m.',strtotime((string)$event['date'])))?></time><div><b><?=e((string)$event['title'])?></b><span><?=e(teacher_class_label((string)$event['class_id']))?> · <?=e((string)$event['detail'])?></span></div></a><?php endforeach; ?></div></section>
-    </section>
-    <section class="teacher-panel ops-sla-policy"><div class="teacher-panel-head"><div><span>SLA politika týmu</span><h2>Prahy eskalací</h2></div><small>Aktuální pravidla: úkol <?= (int)$policy['task_high'] ?>/<?= (int)$policy['task_critical'] ?> dní · watchlist <?= (int)$policy['watchlist_high'] ?>/<?= (int)$policy['watchlist_critical'] ?> dní</small></div><?php if(teacher_permission('roles.manage')): ?><details><summary>Upravit týmové SLA</summary><form method="post" class="ops-sla-form"><input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="action" value="teacher_sla_policy_save"><?php foreach(['task_high'=>'Úkol · vysoká','task_critical'=>'Úkol · kritická','followup_critical'=>'Follow-up · kritická','intervention_stale'=>'Intervence bez změny','watchlist_high'=>'Watchlist · vysoká','watchlist_critical'=>'Watchlist · kritická'] as $key=>$label): ?><label><?=e($label)?><input type="number" min="1" max="60" name="sla_<?=e($key)?>" value="<?= (int)$policy[$key] ?>"><small>dní</small></label><?php endforeach; ?><button class="btn primary" type="submit">Uložit SLA politiku</button></form></details><?php else: ?><p class="ops-readonly">Prahy může měnit Admin nebo Vedoucí učitel.</p><?php endif; ?></section>
-    <?php
-}
-
 function teacher_render_reports(): void
 {
     $rows=teacher_ops_cross_class_report();$escalations=teacher_ops_escalations();$totalStudents=array_sum(array_map(static fn($r)=>(int)$r['students'],$rows));$avgHealth=array_values(array_filter(array_map(static fn($r)=>(string)$r['health_status']==='empty'?null:(float)$r['health'],$rows),static fn($v)=>$v!==null));$avg=$avgHealth?round(array_sum($avgHealth)/count($avgHealth),1):null;

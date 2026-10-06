@@ -85,28 +85,10 @@ function v59sf_build_fixtures(array $modules): array
                 'success_metric' => 'Cíl', 'review_due' => $tomorrow, 'status' => 'active', 'owner_key' => 'audit-owner', 'owner_label' => 'Audit', 'team_key' => teacher_team_key(),
                 'baseline' => [], 'steps' => [], 'timeline' => [], 'created_at' => $iso, 'updated_at' => $iso, 'completed_at' => null]);
         });
-        $slug = '';
-        foreach (skill_all() as $skillSlug => $skill) { if (is_array($skill) && in_array((string)($skill['branch'] ?? ''), skill_relevant_branches($c), true)) { $slug = (string)$skillSlug; break; } }
-        $ids['skill_evidence'][$k] = v59sf_try($errors, 'skill evidence ' . $k, static function () use ($c, $key, $slug, $k): string {
-            $type = (string)array_key_first(skill_evidence_rules((array)skill_find($slug)));
-            return (string)skill_add_evidence($c, $key, $slug, $type, 'mk-src-' . $k, 50, 100, 'pending', ['note' => 'MK' . strtoupper($k)], false)['id'];
-        });
-        $ids['skill_assignment'][$k] = 'skill_assignment_mk' . $k;
-        v59sf_try($errors, 'skill assignment ' . $k, static function () use ($c, $k, $slug, $iso): void {
-            v59sf_push('skill_assignments.json.php', ['id' => 'skill_assignment_mk' . $k, 'class_id' => $c, 'skill' => $slug, 'target_type' => 'class', 'target_key' => 'class',
-                'assignment_type' => 'recommended', 'due_at' => null, 'status' => 'active', 'assigned_by' => 'Audit', 'created_at' => $iso, 'cancelled_at' => null]);
-        });
         $ids['peer_feedback'][$k] = 'peer_feedback_mk' . $k;
         v59sf_try($errors, 'peer feedback ' . $k, static function () use ($c, $k, $key, $mk, $iso): void {
             v59sf_push('project_workspace_peer_feedback.json.php', ['id' => 'peer_feedback_mk' . $k, 'class_id' => $c, 'project_id' => '', 'group_id' => 'grp_mk' . $k, 'author_key' => $key,
                 'target_key' => $key, 'text' => $mk . ' zpětná vazba', 'status' => 'visible', 'created_at' => $iso]);
-        });
-        $ids['ml_live'][$k] = 'ml_live_mk' . $k;
-        v59sf_try($errors, 'ml live ' . $k, static function () use ($c, $k, $mk, $iso): void {
-            ml_store_update('live', static function (array $rows) use ($c, $k, $mk, $iso): array {
-                $rows[] = ['id' => 'ml_live_mk' . $k, 'class_id' => $c, 'question' => $mk . ' otázka', 'options' => ['Ano', 'Ne'], 'correct' => 0, 'status' => 'open', 'phase' => 'individual', 'responses' => [], 'created_at' => $iso];
-                return array_values($rows);
-            });
         });
         $ids['ml_scenario'][$k] = v59sf_try($errors, 'ml scenario ' . $k, static fn() => (string)ml_scenario_save(['class_id' => $c, 'title' => $mk . ' scénář', 'brief' => 'Situace v síti, kterou žák řeší krok za krokem.',
             'choice_0' => 'Zkontrolovat bránu', 'choice_1' => 'Restartovat počítač', 'correct' => 0, 'why' => 'Brána je první bod diagnostiky sítě.', 'student_key' => $key], false)['id']);
@@ -167,8 +149,8 @@ function v59sf_build_fixtures(array $modules): array
     $ids['tg58_bank'] = ['networks' => 'q_mk_networks', 'graphics' => 'q_mk_graphics', 'both' => 'q_mk_both'];
 
     $missing = [];
-    foreach (['race', 'match', 'tg58_game', 'ctf_event', 'inc_session', 'sess53', 'lab58e_level', 'demo_account', 'intervention', 'skill_evidence', 'skill_assignment',
-        'peer_feedback', 'ml_live', 'ml_scenario', 'ml_tip', 'group', 'intake_response', 'intake_activation', 'mkt60_item',
+    foreach (['race', 'match', 'tg58_game', 'ctf_event', 'inc_session', 'sess53', 'lab58e_level', 'demo_account', 'intervention',
+        'peer_feedback', 'ml_scenario', 'ml_tip', 'group', 'intake_response', 'intake_activation', 'mkt60_item',
         'proj60_project', 'proj60_app', 'fb60_report'] as $type) {
         if (($ids[$type]['3a'] ?? null) === null || teacher59_entity_classes($type, (string)$ids[$type]['3a']) !== ['class_3a']) $missing[] = $type;
     }
@@ -304,7 +286,7 @@ function v59sf_owner_note(string $tab, array $leak): string
         'overview' => 'teacher_overview_dashboard.php / teacher.php', 'demo_accounts' => 'teacher_demo_accounts.php', 'filters' => 'teacher_operations_views_v46.php / teacher_tasks.php',
         'ops_audit' => 'teacher_operations_plus_views_v46_1.php', 'control' => 'teacher_operations_control_views_v46_2.php', 'reports' => 'teacher_operations_control_views_v46_2.php',
         'communications' => 'teacher_operations_control_views_v46_2.php', 'attention' => 'teacher_operations_views_v46.php', 'workspace' => 'teacher_project_workspace_views.php',
-        'skills' => 'teacher_skill_views.php', 'mastery' => 'mastery_learning_views_v41.php', 'authoring' => 'mastery_learning_views_v41.php', 'teach' => 'teacher.php (teach)',
+        'authoring' => 'mastery_learning_views_v41.php', 'teach' => 'teacher.php (teach)',
         'identita' => 'identity_v58_views.php', 'provoz' => 'ops_v58_views.php',
     ];
     return ' – ' . implode(', ', $leak) . ' [DÍRA → ' . ($owners[$tab] ?? 'teacher.php') . ']';
@@ -317,7 +299,7 @@ function v59sf_allowed_posts(array $id): array
     return [
         ['b', 'teacher_bulk_mark', $c3 + ['student_keys' => [], 'marker' => 'none']],
         ['b', 'teacher_followup_update', ['followup_id' => $id['followup']['3a'], 'followup_mode' => 'tomorrow']],
-        ['b', 'teacher_saved_filter_pin', ['filter_id' => $id['saved_filter']['3a']]],
+        ['b', 'teacher_saved_filter_delete', ['filter_id' => $id['saved_filter']['3a']]],
         ['b', 'arena57_extend', $c3 + ['race' => $id['race']['3a']]],
         ['b', 'robots58_close', $c3 + ['match' => $id['match']['3a']]],
         ['b', 'tg58_pause', $c3 + ['game' => $id['tg58_game']['3a']]],
@@ -325,7 +307,6 @@ function v59sf_allowed_posts(array $id): array
         ['b', 'arena58_ctf_extend', ['event' => $id['ctf_event']['3a']]],
         ['b', 'sess53_t_instructions', ['session' => $id['sess53']['3a'], 'instructions' => 'Pokyny auditu']],
         ['b', 'teacher_intervention_note', ['intervention_id' => $id['intervention']['3a'], 'intervention_note' => 'Poznámka']],
-        ['b', 'skill_validation', ['evidence_id' => $id['skill_evidence']['3a'], 'decision' => 'approve']],
         ['b', 'ml_tip_state', ['tip_id' => $id['ml_tip']['3a'], 'state' => 'hidden']],
         ['b', 'lab58e_check', ['id' => $id['lab58e_level']['3a']]],
         ['b', 'intake_t_regen', $c3 + ['student_key' => $id['intake_activation']['3a']]],
@@ -335,7 +316,6 @@ function v59sf_allowed_posts(array $id): array
         ['b', 'project_teacher_peer_moderate', ['feedback_id' => $id['peer_feedback']['3a'], 'moderation' => 'hide']],
         ['admin', 'arena58_ctf_extend', ['event' => $id['ctf_event']['mix']]],
         ['admin', 'intake_t_toggle', ['class_id' => 'class_4a']],
-        ['admin', 'teacher_sla_policy_save', ['sla_task_high' => '3']],
         ['admin', 'tg58_bank_delete', ['class_id' => 'class_2a', 'bank_id' => $id['tg58_bank']['both']]],
     ];
 }

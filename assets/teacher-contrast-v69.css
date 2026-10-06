@@ -1,0 +1,45 @@
+/* EDUCANET v69 · cockpit učitele: malé popisky na úroveň WCAG 2.2 AA (1.4.3) ve světlém i tmavém režimu.
+   Změřeno v prohlížeči na záložkách Demo účty, Výsledky třídy a Přehled školy: šedé popisky měly 2,5–4,4 : 1.
+   Selektory jsou stejné jako v původních pravidlech (teacher.css, cx-app.css), soubor se načítá až za nimi;
+   barva je token --ui-muted (světle #4d5b68, tmavě #aab7c2), jehož kontrast hlídá tools/v68_theme_audit.php. Velikosti písma se nemění. */
+
+/* Demo účty */
+.demo-account-table td small,
+.demo-account-steps small,
+.demo-account-form label small,
+.demo-account-head-stat span,
+.demo-account-info span,
+/* Výsledky třídy */
+.class-results-table td > small,
+.result-student-cell small,
+.result-status.neutral,
+.class-overview-kpis span,
+.class-results-kpis span,
+.class-overview-kpis small,
+.class-results-kpis small,
+.class-results-filterbar label > span,
+.class-results-panel-head p,
+.project-result-mini-list span,
+.saved-filter-group > header small,
+.saved-filter-empty,
+.saved-filter-preview,
+.bulk-selection-summary span,
+.bulk-selection-summary small,
+.bulk-action-popover p,
+/* Přehled školy */
+.overview-class-metrics span,
+.overview-class-metrics small,
+.overview-project-status i,
+.overview-global-kpis span,
+.overview-global-kpis small,
+.overview-class-card > header p,
+.overview-capstone > div:first-child span,
+.overview-capstone-state small,
+.overview-section-label span,
+.overview-next-action > span,
+.overview-next-action > small,
+/* společné */
+.teacher-panel-head > div > span,
+.teacher-muted {
+  color: var(--ui-muted);
+}

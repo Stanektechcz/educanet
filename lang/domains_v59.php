@@ -94,20 +94,17 @@ return [
         ],
         // B4 – One Task, Cíle, Hands-on/Independent growth, Kouč/Akcelerátor/Náprava, dovednosti, projekty, grafika.
         'hubs' => [
-            'app/views/one_task.php',
             'app/views/hands_on_growth.php',
             'app/views/student_hubs.php',
             'app/views/graphics_studio.php',
             'app/views/graphics_studio_gate.php',
             'app/views/graphics_guide.php',
-            'app/actions/one_task.php',
             'app/actions/coach.php',
             'app/actions/hands_on_growth.php',
             'app/actions/adaptive.php',
             'app/actions/social.php',
             'app/actions/project_workspace.php',
             'app/actions/skills.php',
-            'one_task_v50_5.php',
             'goal_navigator_v50_4.php',
             'hands_on_learning_v50.php',
             'hands_on_learning_views_v50.php',
@@ -328,7 +325,6 @@ return [
             'assets/visual-labs-3a-v48-1.js',
         ],
         'js_hubs' => [
-            'assets/one-task-v50-5.js',
             'assets/hands-on-v50.js',
         ],
         'js_lab' => [

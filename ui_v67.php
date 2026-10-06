@@ -21,7 +21,8 @@ const UI67_THEMES = ['system', 'light', 'dark'];
 const UI67_THEME_COOKIE = 'edu_theme';
 const UI67_THEME_COOKIE_TTL = 31536000;
 const UI67_DARK_CSS = 'assets/tokens-dark-v67.css';
-const UI68_STUDENT_DARK_CSS = 'assets/student-dark-v68.css';   // v68: generovaná tmavá vrstva starších CSS (tools/v68_dark_overlay.php), jen při tmavém motivu
+/** v69: generovaná tmavá vrstva starších CSS rozdělená podle pohledu (tools/v69_dark_overlay.php); %s = home | dashboard | profile. Jen při tmavém motivu. */
+const UI69_STUDENT_DARK_CSS = 'assets/dark/student-dark-%s-v69.css';
 
 /**
  * Pohledy ověřené pro tmavý režim (stavějí jen na tokenech v61). PRÁZDNÉ záměrně: v prohlížeči (390 a 1280 px) je ověřeno, že přihlášení,
@@ -68,18 +69,24 @@ function ui67_assets_html(string $view = ''): string
     return in_array($view, ui67_dark_views(), true) ? '<link rel="stylesheet" href="' . e(asset_url('assets/ui-v67.css?v=67.0')) . '">' : '';
 }
 
+/** Cesta k tmavé vrstvě starších CSS pro pohled (název pohledu jen malými písmeny/číslicemi, jinak prázdný řetězec); soubor generuje tools/v69_dark_overlay.php pro pohledy z ui67_dark_views(). */
+function ui69_student_dark_css(string $view): string
+{
+    return preg_match('/^[a-z][a-z0-9_]{0,30}$/', $view) === 1 ? sprintf(UI69_STUDENT_DARK_CSS, $view) : '';
+}
+
 /**
  * Tmavé CSS pro pohled: prázdný řetězec pro světlý pohled/motiv.
- * „tmavý“ = obě šablony stylů napevno (tmavé tokeny + generovaná vrstva starších CSS, v68).
+ * „tmavý“ = obě šablony stylů napevno (tmavé tokeny + generovaná vrstva starších CSS pohledu, v69).
  * „podle systému“ = krátký skript v <head> přidá obě šablony jen tehdy, když systém preferuje tmavý vzhled (document.write → blokuje vykreslení,
- * takže stránka nebliká). Tím se velká tmavá vrstva (~400 KB) nestahuje uživatelům se světlým systémem a rozpočet CSS stránky se nezvyšuje;
+ * takže stránka nebliká). Tím se tmavá vrstva (v69: jen pro pohled, ~7–14 KB gzip) nestahuje uživatelům se světlým systémem a rozpočet CSS stránky se nezvyšuje;
  * bez JavaScriptu zůstane „podle systému“ světlé (tmavé tokeny bez tmavé vrstvy by dávaly nečitelnou směs).
  */
 function ui67_dark_link_html(string $view, ?string $pref = null, ?array $darkViews = null): string
 {
     $theme = ui67_effective_theme($view, $pref, $darkViews);
     if ($theme === 'light') return '';
-    $hrefs = [asset_url(UI67_DARK_CSS . '?v=67.0'), asset_url(UI68_STUDENT_DARK_CSS . '?v=68.0')];
+    $hrefs = [asset_url(UI67_DARK_CSS . '?v=67.0'), asset_url(ui69_student_dark_css($view) . '?v=69.0')];
     if ($theme === 'dark') {
         return '<link rel="stylesheet" href="' . e($hrefs[0]) . '"><link rel="stylesheet" href="' . e($hrefs[1]) . '">';
     }

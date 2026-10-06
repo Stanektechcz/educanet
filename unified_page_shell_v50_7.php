@@ -58,7 +58,7 @@ function v507_page_shell_definition(string $classId,string $view,string $title,a
             $base=array_replace($base,[
                 'section'=>trm('Dovednosti'),'instruction'=>trm('Uděláš jeden krok, který přidá skutečný důkaz k této dovednosti.'),
                 'back'=>'?view=skills','back_label'=>trm('Dovednosti'),
-                'primary'=>v505_task_url('skill',['skill'=>$skill],$return),'primary_label'=>trm('Pokračovat v dovednosti'),
+                'primary'=>v69_task_url('skill',['skill'=>$skill],$return),'primary_label'=>trm('Pokračovat v dovednosti'),
             ]); break;
         case 'kb_lesson':
             $topic=(string)($_GET['topic']??'');
@@ -84,7 +84,7 @@ function v507_page_shell_definition(string $classId,string $view,string $title,a
             $base=array_replace($base,[
                 'section'=>trm('Výsledky'),'instruction'=>trm('Přečti si jeden konkrétní další krok z feedbacku. Podrobný rozpis otevři jen pokud ho potřebuješ.'),
                 'back'=>'?view=project_results','back_label'=>trm('Výsledky'),
-                'primary'=>v505_task_url('result',['record'=>$record],$return),'primary_label'=>trm('Projít feedback'),
+                'primary'=>v69_task_url('result',['record'=>$record],$return),'primary_label'=>trm('Projít feedback'),
             ]); break;
         case 'project_workspace':
             $base=array_replace($base,[

@@ -6,7 +6,7 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 /**
  * EDUCANET v68 · tools/v68_dark_overlay.php – tmavá vrstva žákovské části generovaná ze stávajících CSS (originály zůstávají beze změny).
  *
- *   php tools/v68_dark_overlay.php            vygeneruje assets/student-dark-v68.css
+ *   php tools/v68_dark_overlay.php            vygeneruje assets/cockpit-dark-v68.css (v69: žákovská část se generuje po pohledech nástrojem tools/v69_dark_overlay.php)
  *   php tools/v68_dark_overlay.php --check    ověří, že soubor odpovídá aktuálním zdrojům (V68_OVERLAY_CURRENT / V68_OVERLAY_STALE, exit 1)
  *
  * Proč overlay místo úpravy zdrojů: žákovské stránky mají rozpočet CSS (V61D_CSS_BUDGET_BYTES = 28 672 B, nezvyšovat) a světlý vzhled
@@ -21,13 +21,6 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 
 require_once __DIR__ . '/lib/v68_color.php';
 
-/** Zdrojové soubory (cesty v assets/) – vše, co načítají přihlášení, přehled a profil žáka. */
-const DO68_SOURCES = [
-    'app.css', 'mastery.css', 'cognitive-v43.css', 'learning-studio-v44.css', 'visual-simulation-v45.css', 'student-coach-v47.css', 'student-ui-v50-7-7.css',
-    'ui-v51.css', 'tutorial-v52.css', 'session-v53.css', 'brand-v54.css', 'student-v55.css', 'learning-v56.css', 'components-v61.css', 'nav-v61.css',
-    'motivation-v61.css', 'login-v63.css', 'profile-v60.css', 'i18n-v59.css', 'competency-v62.css', 'growth-v67.css', 'paths-card-v63.css', 'paths-v63.css',
-];
-const DO68_OUT = 'assets/student-dark-v68.css';
 /** Cockpit: CSS linkované přímo v šablonách Linux Labu (SHA-256 hlídá tools/lib/v67_lab_hashes.php → šablonu neměnit), proto overlay místo kopie. */
 const DO68_COCKPIT_SOURCES = ['lab-editor-v58.css'];
 const DO68_COCKPIT_OUT = 'assets/cockpit-dark-v68.css';
@@ -146,7 +139,7 @@ html:not([data-theme="light"]) .auth54-hero, html:not([data-theme="light"]) .p60
 CSS;
 
 /** Obsah jednoho výstupního souboru: hlavička, overlay pravidla ze zdrojů a ručně psaný závěr. */
-function do68_build(string $root, array $sources = DO68_SOURCES, string $title = 'žákovské části', ?string $tail = null): string
+function do68_build(string $root, array $sources, string $title, ?string $tail = null): string
 {
     $text = '/* EDUCANET v68 · tmavá vrstva ' . $title . ' – GENEROVÁNO tools/v68_dark_overlay.php ze souborů assets/*.css, ručně neupravovat. Načítá se jen při tmavém motivu. */' . "\n";
     foreach ($sources as $name) {
@@ -160,7 +153,7 @@ function do68_main(array $argv): int
 {
     $root = str_replace(chr(92), '/', dirname(__DIR__));
     $check = in_array('--check', $argv, true);
-    $targets = [DO68_OUT => do68_build($root), DO68_COCKPIT_OUT => do68_build($root, DO68_COCKPIT_SOURCES, 'cockpitu (soubory Labu)', '')];
+    $targets = [DO68_COCKPIT_OUT => do68_build($root, DO68_COCKPIT_SOURCES, 'cockpitu (soubory Labu)', '')];
     $stale = [];
     foreach ($targets as $rel => $text) {
         $target = $root . '/' . $rel;
@@ -171,8 +164,8 @@ function do68_main(array $argv): int
         echo $stale === [] ? "V68_OVERLAY_CURRENT\n" : 'V68_OVERLAY_STALE ' . implode(',', $stale) . "\n";
         return $stale === [] ? 0 : 1;
     }
-    echo 'V68_OVERLAY_OK bytes=' . strlen($targets[DO68_OUT]) . '+' . strlen($targets[DO68_COCKPIT_OUT]) . ' sources=' . (count(DO68_SOURCES) + count(DO68_COCKPIT_SOURCES)) . "\n";
+    echo 'V68_OVERLAY_OK bytes=' . strlen($targets[DO68_COCKPIT_OUT]) . ' sources=' . count(DO68_COCKPIT_SOURCES) . "\n";
     return 0;
 }
 
-exit(do68_main($argv));
+if (basename((string)($argv[0] ?? '')) === basename(__FILE__)) exit(do68_main($argv));   // v69: soubor lze načíst jako knihovnu (tools/v69_dark_overlay.php)

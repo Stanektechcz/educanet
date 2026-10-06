@@ -25,8 +25,8 @@ require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
 foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'ui_v67.php', 'app/redirects_v68.php'] as $lib) { require_once $ROOT . '/' . $lib; }
 
-/** SHA-256 snímku politik teacher59 PŘED v68 (bez teacher68_theme_set a bez GET politik ?student=); změna jiné politiky audit shodí. */
-const V68C_POST_POLICY_SHA = '7ffed496fc31ccac306bf1bf84573f59bb0b6b1e6c40d110e517ad4107b05030';
+/** SHA-256 snímku politik teacher59: stav před v68 bez teacher68_theme_set a GET politik ?student=, od v69 bez POST akcí vyřazených záložek (skill_*, ml_live_*, ml_failure_inject, teacher_automation_*, teacher_notification_read*, teacher_saved_filter_pin/default/watch, teacher_review_ack, teacher_sla_policy_save, v50_teacher_growth_control); změna jiné politiky audit shodí. */
+const V68C_POST_POLICY_SHA = '656e6ab3383dd1f14b02e3ee6799157ff5c9ac50f021808617245eea74afe55c';
 const V68C_GET_POLICY_SHA = 'c27cfc36d68d8d73eaee7bed2a84f6ab478bc6f62ab6f17591982d6763699c2a';
 const V68C_THEME_KEY = 'v68-audit-teacher-key';
 
@@ -99,7 +99,8 @@ ksort($post);
 $get = teacher59_get_policies();
 foreach (['kompetence', 'cesty', 'projekty65', 'hodnoceni66', 'labdata'] as $t) unset($get[$t . '|student']);
 ksort($get);
-$check('politiky teacher59: POST tabulka beze změny (kromě teacher68_theme_set)', hash('sha256', json_encode($post)) === V68C_POST_POLICY_SHA);
+$postSha = hash('sha256', json_encode($post));
+$check('politiky teacher59: POST tabulka = snímek v69 (bez vyřazených akcí; kromě teacher68_theme_set) sha=' . $postSha, $postSha === V68C_POST_POLICY_SHA);
 $check('politiky teacher59: GET tabulka beze změny (kromě čtecích ?student= politik v68)', hash('sha256', json_encode($get)) === V68C_GET_POLICY_SHA);
 $check('nová politika: teacher68_theme_set pro všechny role (view), neznámá teacher68_* akce je zakázaná, GET ?student= vyžaduje třídu v rozsahu',
     teacher59_action_policy('teacher68_theme_set') === ['class' => 'optional'] && teacher59_action_policy('teacher68_other')['deny'] === true
@@ -189,7 +190,7 @@ try {
 $retired = $ROOT . '/retired/v68/app/views/v48_state.php';
 $check('vyřazení: app/views/v48_state.php neexistuje, kopie je v retired/v68 (SHA-256 shodné se zálohou), route neexistuje',
     !is_file($ROOT . '/app/views/v48_state.php') && is_file($retired) && strlen((string)hash_file('sha256', $retired)) === 64 && !str_contains($read('app/routes.php'), "'match' => ['v48_state']") && !str_contains($read('index.php'), 'views/v48_state'));
-$check('vyřazení: one_task.php zůstává (knihovny načítá skupina layout), docs/V68_KANDIDATI_VYRAZENI.md existuje', is_file($ROOT . '/app/views/one_task.php') && is_file($ROOT . '/docs/V68_KANDIDATI_VYRAZENI.md'));
+$check('vyřazení (v69): one_task.php je v retired/v69 (ne v app/views), docs/V68_KANDIDATI_VYRAZENI.md existuje', !is_file($ROOT . '/app/views/one_task.php') && is_file($ROOT . '/retired/v69/app/views/one_task.php') && is_file($ROOT . '/docs/V68_KANDIDATI_VYRAZENI.md'));
 $hashes = require __DIR__ . '/lib/v67_lab_hashes.php';
 $changed = array_keys(array_filter($hashes, static fn(string $sha, string $f): bool => !is_file($ROOT . '/' . $f) || hash_file('sha256', $ROOT . '/' . $f) !== $sha, ARRAY_FILTER_USE_BOTH));
 $check('Linux Lab (v57/v58) beze změny – SHA-256 ' . count($hashes) . ' souborů' . ($changed ? ' [změněno: ' . implode(', ', $changed) . ']' : ''), $changed === [] && count($hashes) > 50);

@@ -5,7 +5,6 @@ declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
 // v59 · SEC59-18: žádná učitelská stránka (jména žáků, hodnocení, jednorázová hesla) se neukládá do cache – před jakýmkoli výstupem.
 if (PHP_SAPI !== 'cli' && !headers_sent()) { header('Cache-Control: no-store, max-age=0'); header('Pragma: no-cache'); }
-require_once __DIR__ . '/one_task_v50_5.php';
 require_once __DIR__ . '/teacher_operations_v46.php';
 require_once __DIR__ . '/teacher_operations_plus_v46_1.php';
 require_once __DIR__ . '/teacher_operations_views_v46.php';
@@ -49,6 +48,7 @@ try { if (function_exists('identity58_ensure')) identity58_ensure(); } catch (Th
 acc58_auto_migrate();
 try { intake_v51_sync_v1($modules); } catch (Throwable $intakeSyncError) { error_log('EDUCANET v51 V1 import: ' . $intakeSyncError->getMessage()); }
 
+// v69: staré názvy záložek (control, class_overview, growth, skills, mastery, filters, automations) zůstávají jen v seznamu povolených kvůli kontrole přístupu a 302 (teacher68_redirect_legacy_tab); jejich pohledy a akce jsou smazané.
 $teacherAllowedTabs=['sekce','session','arena','pristupy','intake','attention','control','reports','communications','quality','overview','class_overview','class_results','analytics','student360','interventions','automations','filters','team_admin','demo_accounts','ops_audit','calendar','curriculum','teach','growth','grade','groups','workspace','skills','mastery','authoring','history','ucet'];
 $teacherAllowedTabs=array_merge($teacherAllowedTabs,teacher58_tabs());
 $teacherRequestTab=(string)($_GET['tab']??'attention');
@@ -133,19 +133,17 @@ function teacher_record_target_label(array $record): string {
 
 function teacher_require_modules(string $tab,string $action=''): void {
     $curriculumActions=['teacher_curriculum_toggle','teacher_curriculum_lesson_toggle','teacher_curriculum_note'];
-    if(in_array($tab,['overview','class_overview','calendar','curriculum','teach'],true)||in_array($action,$curriculumActions,true)) require_once __DIR__.'/teacher_curriculum.php';
-    if(in_array($tab,['overview','class_overview'],true)) require_once __DIR__.'/teacher_overview_dashboard.php';
-    $opsTabs=['attention','control','reports','communications','quality','student360','interventions','analytics','automations','filters','team_admin','ops_audit'];
-    $opsActions=['teacher_note_add','teacher_intervention_create','teacher_intervention_step','teacher_intervention_status','teacher_intervention_note','teacher_bulk_task_due','teacher_bulk_task_priority','teacher_bulk_remind','teacher_bulk_note','teacher_bulk_resource','teacher_bulk_intervention','teacher_saved_filter_pin','teacher_saved_filter_default','teacher_automation_save','teacher_automation_delete','teacher_automation_run','teacher_notification_read','teacher_notification_read_all','teacher_team_member_role','teacher_watchlist_save','teacher_watchlist_delete','teacher_followup_create','teacher_followup_update','teacher_template_save','teacher_template_delete','teacher_bulk_undo','teacher_review_ack','teacher_message_template_save','teacher_message_template_delete','teacher_ops_report_export','teacher_sla_policy_save'];
-    if(in_array($tab,array_merge(['class_overview','class_results'],$opsTabs),true)||in_array($action,$opsActions,true)) require_once __DIR__.'/teacher_class_dashboard.php';
+    if(in_array($tab,['overview','calendar','curriculum','teach'],true)||in_array($action,$curriculumActions,true)) require_once __DIR__.'/teacher_curriculum.php';
+    if($tab==='overview') require_once __DIR__.'/teacher_overview_dashboard.php';
+    $opsTabs=['attention','reports','communications','quality','student360','interventions','analytics','team_admin','ops_audit'];
+    $opsActions=['teacher_note_add','teacher_intervention_create','teacher_intervention_step','teacher_intervention_status','teacher_intervention_note','teacher_bulk_task_due','teacher_bulk_task_priority','teacher_bulk_remind','teacher_bulk_note','teacher_bulk_resource','teacher_bulk_intervention','teacher_team_member_role','teacher_watchlist_save','teacher_watchlist_delete','teacher_followup_create','teacher_followup_update','teacher_template_save','teacher_template_delete','teacher_bulk_undo','teacher_message_template_save','teacher_message_template_delete','teacher_ops_report_export'];
+    if(in_array($tab,array_merge(['class_results'],$opsTabs),true)||in_array($action,$opsActions,true)) require_once __DIR__.'/teacher_class_dashboard.php';
     if(in_array($tab,$opsTabs,true)||in_array($action,$opsActions,true)) require_once __DIR__.'/teacher_operations_views_v46.php';
     if($tab==='calendar') require_once __DIR__.'/teacher_calendar.php';
-    if($tab==='skills') require_once __DIR__.'/teacher_skill_views.php';
     if($tab==='workspace') require_once __DIR__.'/teacher_project_workspace_views.php';
     if($tab==='demo_accounts'||str_starts_with($action,'teacher_demo_account_')) require_once __DIR__.'/teacher_demo_accounts.php';
-    if(in_array($tab,['mastery','authoring'],true)) require_once __DIR__.'/mastery_learning_views_v41.php';
-    $v50Actions=['v50_teacher_growth_control'];
-    if(in_array($tab,['analytics','growth','teach'],true)||in_array($action,$v50Actions,true)){
+    if($tab==='authoring') require_once __DIR__.'/mastery_learning_views_v41.php';
+    if(in_array($tab,['analytics','teach'],true)){
         require_once __DIR__.'/hands_on_learning_v50.php';
         require_once __DIR__.'/independent_growth_v50.php';
         require_once __DIR__.'/hands_on_learning_views_v50.php';
@@ -239,12 +237,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             teacher_flash('Demo účet „'.(string)$row['email'].'“ byl odstraněn. Reálné studentské účty nebyly dotčeny.');
             teacher_redirect(['tab'=>'demo_accounts']);
         }
-        if($action==='v50_teacher_growth_control'){
-            $v50Class=(string)($_POST['class_id']??'');$studentKey=(string)($_POST['student_key']??'');$pathId=(string)($_POST['path_id']??'');
-            if(!isset(project_catalog()[$v50Class])||$studentKey===''||!isset(v50_growth_catalog()[$pathId]))throw new RuntimeException('Neplatný student nebo rozvojová cesta.');
-            v50_growth_control_save($v50Class,$studentKey,$pathId,(string)($_POST['control_mode']??'recommend'),(string)($_POST['note']??''));
-            teacher_flash('Dobrovolné doporučení bylo uloženo. Standardní kurikulum ani klasifikace se nemění.');teacher_redirect(['tab'=>'growth','class'=>$v50Class]);
-        }
         if ($action === 'save_group') {
             $classId=(string)($_POST['class_id']??''); $projectId=(string)($_POST['project_id']??'');
             $project=project_find($classId,$projectId);
@@ -290,7 +282,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $row=teacher_saved_filter_save($_POST);
             teacher_flash((string)$row['scope']==='team'?'Týmový filtr „'.(string)$row['name'].'“ byl sdílen s '.teacher_team_label().'.':'Osobní filtr „'.(string)$row['name'].'“ byl uložen.');
             $returnTab=(string)($_POST['return_tab']??'class_results');
-            if(!in_array($returnTab,['class_overview','class_results','filters'],true))$returnTab='class_results';
+            if(!in_array($returnTab,['class_results'],true))$returnTab='class_results';
             teacher_redirect(['tab'=>$returnTab,'class'=>(string)$row['class_id'],'status'=>(string)$row['status'],'priority'=>(string)$row['priority'],'task_status'=>(string)($row['task_status']??'all'),'task_due'=>(string)($row['task_due']??'all')]);
         }
         if ($action === 'teacher_saved_filter_delete') {
@@ -298,7 +290,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             teacher_saved_filter_delete((string)($_POST['filter_id']??''));
             teacher_flash('Vlastní uložený filtr byl odstraněn.');
             $returnTab=(string)($_POST['return_tab']??'class_results');
-            if(!in_array($returnTab,['class_overview','class_results','filters'],true))$returnTab='class_results';
+            if(!in_array($returnTab,['class_results'],true))$returnTab='class_results';
             teacher_redirect(['tab'=>$returnTab,'class'=>$classId,'status'=>teacher_saved_filter_status((string)($_POST['filter_status']??'all')),'priority'=>teacher_saved_filter_priority((string)($_POST['filter_priority']??'all')),'task_status'=>teacher_saved_filter_task_status((string)($_POST['filter_task_status']??'all')),'task_due'=>teacher_saved_filter_task_due((string)($_POST['filter_task_due']??'all'))]);
         }
 
@@ -349,12 +341,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         if ($action === 'teacher_bulk_intervention') {
             $classId=(string)($_POST['class_id']??'class_2a');$keys=teacher_selected_student_keys($classId,$_POST['student_keys']??[]);$result=teacher_ops_bulk_intervention_with_undo($classId,$keys,$_POST);$row=$result['row'];teacher_flash('Skupinová intervence byla vytvořena. Bezpečné Undo je 15 minut dostupné v Dnes.');teacher_redirect(['tab'=>'interventions','class'=>$classId,'intervention'=>(string)$row['id']]);
         }
-        if ($action === 'teacher_saved_filter_pin') { teacher_saved_filter_set_pin((string)($_POST['filter_id']??''),(string)($_POST['pinned']??'0')==='1'); teacher_flash('Připnutí filtru bylo aktualizováno.'); teacher_redirect(['tab'=>'filters','class'=>(string)($_POST['class_id']??'class_2a')]); }
-        if ($action === 'teacher_saved_filter_default') { teacher_saved_filter_set_default((string)($_POST['filter_id']??''),(string)($_POST['default_for']??'none')); teacher_flash('Výchozí filtr byl aktualizován.'); teacher_redirect(['tab'=>'filters','class'=>(string)($_POST['class_id']??'class_2a')]); }
-        if ($action === 'teacher_automation_save') { $row=teacher_ops_automation_save((string)($_POST['filter_id']??''),(string)($_POST['automation_trigger']??'new_match'),!isset($_POST['automation_enabled'])||(string)$_POST['automation_enabled']==='1'); teacher_flash('Automatizace byla uložena.'); teacher_redirect(['tab'=>'automations']); }
-        if ($action === 'teacher_automation_delete') { teacher_ops_automation_delete((string)($_POST['automation_id']??'')); teacher_flash('Automatizace byla odstraněna.'); teacher_redirect(['tab'=>'automations']); }
-        if ($action === 'teacher_automation_run') { $result=teacher_ops_automation_tick(teacher_saved_filter_owner_key()); teacher_flash('Kontrola dokončena: '.(int)$result['checked'].' pravidel, '.(int)$result['notifications'].' nových upozornění.'); teacher_redirect(['tab'=>'automations']); }
-        if ($action === 'teacher_notification_read' || $action === 'teacher_notification_read_all') { teacher_ops_notification_read((string)($_POST['notification_id']??''),$action==='teacher_notification_read_all'); teacher_redirect(['tab'=>'automations']); }
 
         if ($action === 'teacher_watchlist_save') { $classId=(string)($_POST['class_id']??'class_2a');$studentKey=(string)($_POST['student_key']??'');teacher_ops_watchlist_save($classId,$studentKey,(string)($_POST['watchlist_scope']??'personal'),(string)($_POST['watchlist_reason']??''),(string)($_POST['watchlist_priority']??'normal'));teacher_flash('Watchlist byl aktualizován.');teacher_redirect(['tab'=>'student360','class'=>$classId,'student'=>$studentKey]); }
         if ($action === 'teacher_watchlist_delete') { $classId=(string)($_POST['class_id']??'class_2a');$studentKey=(string)($_POST['student_key']??'');teacher_ops_watchlist_delete((string)($_POST['watchlist_id']??''));teacher_flash('Vlastní watchlist záznam byl odebrán.');teacher_redirect(['tab'=>'student360','class'=>$classId,'student'=>$studentKey]); }
@@ -364,11 +350,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         if ($action === 'teacher_template_delete') { teacher_ops_template_delete((string)($_POST['template_id']??''));teacher_flash('Vlastní intervenční šablona byla odstraněna.');teacher_redirect(['tab'=>'interventions','class'=>(string)($_POST['class_id']??'class_2a')]); }
         if ($action === 'teacher_bulk_undo') { $row=teacher_ops_undo_execute((string)($_POST['undo_id']??''));teacher_flash('Hromadná akce byla bezpečně vrácena.');$rt=(string)($_POST['return_tab']??'attention');teacher_redirect(['tab'=>in_array($rt,['attention','class_results'],true)?$rt:'attention','class'=>(string)($row['class_id']??'class_2a')]); }
 
-        if ($action === 'teacher_review_ack') { $raw=(string)($_POST['class_id']??'all');teacher_ops_review_ack($raw==='all'?null:$raw);teacher_flash('Aktuální provozní stav byl uložen jako nový kontrolní baseline.');teacher_redirect(['tab'=>'control']+($raw==='all'?[]:['class'=>$raw])); }
         if ($action === 'teacher_message_template_save') { teacher_ops_message_template_save($_POST);teacher_flash('Komunikační šablona byla uložena.');teacher_redirect(['tab'=>'communications','class'=>(string)($_POST['class_id']??'class_2a')]); }
         if ($action === 'teacher_message_template_delete') { teacher_ops_message_template_delete((string)($_POST['template_id']??''));teacher_flash('Vlastní komunikační šablona byla odstraněna.');teacher_redirect(['tab'=>'communications','class'=>(string)($_POST['class_id']??'class_2a')]); }
         if ($action === 'teacher_ops_report_export') { teacher_ops_report_export((string)($_POST['report_format']??'csv')); }
-        if ($action === 'teacher_sla_policy_save') { teacher_ops_sla_policy_save($_POST);teacher_flash('Týmová SLA politika byla aktualizována.');teacher_redirect(['tab'=>'control']); }
 
         if ($action === 'teacher_team_member_role') { $member=(string)($_POST['member_owner_key']??'');$role=(string)($_POST['member_role']??'teacher');teacher_ops_team_member_set_role($member,$role);teacher_ops_audit_event('team.role','teacher_actor',$member,'','Role člena učitelského týmu změněna',['role'=>$role]); teacher_flash('Role člena týmu byla aktualizována.'); teacher_redirect(['tab'=>'team_admin']); }
 
@@ -408,42 +392,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $row=project_teacher_save_role_evaluation($classId,$projectId,$groupId,$studentKey,$role,$_POST);
             teacher_flash((string)$row['status']==='published'?'Hodnocení role bylo publikováno a relevantní Skill Evidence přepočítána.':'Koncept hodnocení role byl uložen.');
             teacher_redirect(['tab'=>'workspace','class'=>$classId,'project'=>$projectId,'group'=>$groupId,'student'=>$studentKey,'role'=>$role]);
-        }
-        if ($action === 'skill_validation') {
-            $classId=(string)($_POST['class_id']??'class_2a');
-            $state=(string)($_POST['state']??'rejected');
-            skill_update_evidence_state((string)($_POST['evidence_id']??''),$state,(string)($_POST['reason']??''));
-            teacher_flash($state==='approved'?'Mastery evidence byla schválena.':($state==='revoked'?'Evidence byla revokována.':'Evidence byla vrácena studentovi.'));
-            teacher_redirect(['tab'=>'skills','class'=>$classId]);
-        }
-        if ($action === 'skill_teacher_evidence') {
-            $classId=(string)($_POST['class_id']??'class_2a');$studentKey=(string)($_POST['student_key']??'');$slug=(string)($_POST['skill']??'');
-            skill_teacher_add_evidence($classId,$studentKey,$slug,(string)($_POST['evidence_type']??'lab'),(float)($_POST['score']??100),(string)($_POST['note']??''));
-            teacher_flash('Validovaná Mastery Evidence byla přidána a progress přepočítán.');
-            teacher_redirect(['tab'=>'skills','class'=>$classId,'student'=>$studentKey,'skill'=>$slug]);
-        }
-        if ($action === 'skill_assign') {
-            $classId=(string)($_POST['class_id']??'class_2a');
-            $targetType=(string)($_POST['target_type']??'class');
-            $targetKey=(string)($_POST['target_key']??'');
-            $row=skill_teacher_assign(
-                $classId,
-                (string)($_POST['skill']??''),
-                $targetType,
-                $targetKey,
-                (string)($_POST['assignment_type']??'recommended'),
-                trim((string)($_POST['due_at']??'')) ?: null
-            );
-            teacher_flash(($row['assignment_type']==='required'?'Povinný':'Doporučený').' skill byl zadán '.($targetType==='student'?'studentovi':'celé třídě').'.');
-            $redirect=['tab'=>'skills','class'=>$classId];
-            if($targetType==='student'&&$targetKey!=='')$redirect['student']=$targetKey;
-            teacher_redirect($redirect);
-        }
-        if ($action === 'skill_unassign') {
-            $classId=(string)($_POST['class_id']??'class_2a');
-            skill_teacher_unassign((string)($_POST['assignment_id']??''));
-            teacher_flash('Skill Assignment byl zrušen.');
-            teacher_redirect(['tab'=>'skills','class'=>$classId]);
         }
         if ($action === 'teacher_curriculum_toggle') {
             $classId=(string)($_POST['class_id']??'class_2a');
@@ -489,17 +437,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             teacher_flash('Výjimka byla z kalendáře odebrána.');
             teacher_redirect(['tab'=>'calendar']);
         }
-        if ($action === 'ml_live_start') {
-            $classId=(string)($_POST['class_id']??'class_2a');
-            ml_live_start($classId,(string)($_POST['question']??''),[(string)($_POST['option_0']??''),(string)($_POST['option_1']??''),(string)($_POST['option_2']??'')],(int)($_POST['correct']??-1));
-            teacher_flash('Živá otázka byla spuštěna.');
-            teacher_redirect(['tab'=>'mastery','class'=>$classId]);
-        }
-        if ($action === 'ml_live_phase') {
-            $classId=(string)($_POST['class_id']??'class_2a');
-            ml_live_set_phase((string)($_POST['live_id']??''),(string)($_POST['phase']??'closed'));
-            teacher_redirect(['tab'=>'mastery','class'=>$classId]);
-        }
         if ($action === 'ml_scenario_save') {
             $classId=(string)($_POST['class_id']??'class_2a');
             ml_scenario_save($_POST,true);
@@ -508,9 +445,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         }
         if ($action === 'ml_scenario_state') {
             $classId=(string)($_POST['class_id']??'class_2a'); ml_scenario_set_status((string)($_POST['scenario_id']??''),(string)($_POST['status']??'draft')); teacher_flash('Stav scénáře byl změněn.'); teacher_redirect(['tab'=>'authoring','class'=>$classId]);
-        }
-        if ($action === 'ml_failure_inject') {
-            $classId=(string)($_POST['class_id']??'class_2a'); ml_failure_inject($classId); teacher_flash('Bezpečný náhodný problém byl spuštěn jako živá otázka.'); teacher_redirect(['tab'=>'mastery','class'=>$classId]);
         }
         if ($action === 'ml_tip_state') {
             $classId=(string)($_POST['class_id']??'class_2a'); ml_tip_set_status((string)($_POST['tip_id']??''),(string)($_POST['status']??'pending')); teacher_flash('Mikrotip byl zmoderován.'); teacher_redirect(['tab'=>'authoring','class'=>$classId]);
@@ -590,8 +524,6 @@ if(in_array($tab,['grade','groups','workspace'],true)){
 <?php intake_v51_render_teacher_tab($modules); ?>
 <?php elseif($tab==='attention'): ?>
 <?php teacher_render_attention_center(isset($_GET['class'])?$classId:null); teacher_render_ops_plus_attention(isset($_GET['class'])?$classId:null); ?>
-<?php elseif($tab==='control'): ?>
-<?php teacher_render_control_tower(isset($_GET['class'])?$classId:null); ?>
 <?php elseif($tab==='reports'): ?>
 <?php teacher_render_reports(); ?>
 <?php elseif($tab==='communications'): ?>
@@ -603,13 +535,7 @@ if(in_array($tab,['grade','groups','workspace'],true)){
 <?php elseif($tab==='interventions'): ?>
 <?php teacher_render_interventions($classId); teacher_render_ops_plus_interventions($classId); ?>
 <?php elseif($tab==='analytics'): ?>
-<?php teacher_render_analytics($classId); v50_render_teacher_heatmap($classId); v505_render_teacher_metrics($classId); ?>
-<?php elseif($tab==='growth'): ?>
-<?php v50_render_teacher_growth($classId); ?>
-<?php elseif($tab==='automations'): ?>
-<?php teacher_render_automations(); ?>
-<?php elseif($tab==='filters'): ?>
-<?php teacher_render_filters_manager($classId); ?>
+<?php teacher_render_analytics($classId); v50_render_teacher_heatmap($classId); ?>
 <?php elseif($tab==='team_admin'): ?>
 <?php if(teacher59_mode()!=='legacy') teacher59_render_team_admin_notice(); else teacher_render_team_admin(); ?>
 <?php elseif($tab==='demo_accounts'): ?>
@@ -618,8 +544,6 @@ if(in_array($tab,['grade','groups','workspace'],true)){
 <?php teacher_render_ops_audit(); ?>
 <?php elseif($tab==='overview'): ?>
 <?php teacher_render_global_overview(); teacher_render_adaptive_interventions(); ?>
-<?php elseif($tab==='class_overview'): ?>
-<?php teacher_render_ops_class_health_strip($classId); teacher_render_class_overview($classId); ?>
 <?php elseif($tab==='class_results'): ?>
 <?php teacher_render_class_results($classId); ?>
 <?php elseif($tab==='calendar'): ?>
@@ -667,10 +591,6 @@ $history=$record?project_grade_history((string)$record['id']):[];
 <?php elseif($tab==='workspace'): ?>
 <?php teacher_render_project_workspace($classId,$projectId,(string)($_GET['group']??'')); ?>
 
-<?php elseif($tab==='skills'): ?>
-<?php teacher_render_skills($classId); ?>
-<?php elseif($tab==='mastery'): ?>
-<?php ml_render_teacher_hub($classId); ?>
 <?php elseif($tab==='authoring'): ?>
 <?php ml_render_authoring($classId); ?>
 

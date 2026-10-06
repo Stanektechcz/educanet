@@ -82,7 +82,7 @@ foreach ($handlers as $file => $fn) {
 unset($actions['teacher_login'], $actions['teacher_logout']);
 $denied = array_keys(array_filter($actions, static fn(bool $v, string $a): bool => !empty(teacher59_action_policy($a)['deny']), ARRAY_FILTER_USE_BOTH));
 $check('všechny handlery nalezeny' . ($missingHandlers ? ' – CHYBÍ: ' . implode(', ', $missingHandlers) : ''), $missingHandlers === []);
-$check('politika pro každou POST akci (' . count($actions) . ')' . ($denied ? ' – CHYBÍ: ' . implode(', ', $denied) : ''), count($actions) >= 115 && $denied === []);
+$check('politika pro každou POST akci (' . count($actions) . ')' . ($denied ? ' – CHYBÍ: ' . implode(', ', $denied) : ''), count($actions) >= 100 && $denied === []);
 $check('neznámá akce a akce jen s prefixem v58 jsou zamítnuté', !empty(teacher59_action_policy('neznama_akce_x')['deny']) && !empty(teacher59_action_policy('robots58_hack')['deny']) && !empty(teacher59_action_policy('arena58_')['deny']));
 $prefixless = [];
 foreach (teacher58_modules() as $tab => $mod) {
@@ -99,7 +99,7 @@ foreach (['teach|v48_state', 'pristupy|print', 'arena|arena_poll', 'arena|hadank
     if (!isset(teacher59_get_policies()[$key])) $getMissing[] = $key;
 }
 $check('každý zvláštní GET (registr v58 i teacher.php) má politiku' . ($getMissing ? ' – CHYBÍ: ' . implode(', ', $getMissing) : ''), $getMissing === []);
-$check('admin-only akce: týdenní hádanka, SLA, sync V1, identita, správa účtů', !empty(teacher59_action_policy('arena58_weekly_reroll')['admin']) && !empty(teacher59_action_policy('teacher_sla_policy_save')['admin'])
+$check('admin-only akce: týdenní hádanka, SLA (v69 vyřazeno → zamítnuto), sync V1, identita, správa účtů', !empty(teacher59_action_policy('arena58_weekly_reroll')['admin']) && !empty(teacher59_action_policy('teacher_sla_policy_save')['deny'])
     && !empty(teacher59_action_policy('intake_t_sync')['admin']) && !empty(teacher59_action_policy('identity58_plan')['admin']) && !empty(teacher59_action_policy('teacher59_admin_create')['admin']));
 
 // --- 3. Účty: založení, validace, OTP ---------------------------------------------
@@ -204,16 +204,16 @@ $g = static fn(string $action, array $post): ?string => teacher59_guard_post_che
 $check('POST A: cizí třída 403, chybějící class_id 403, vlastní OK', $g('save_grade', ['class_id' => 'class_3a']) === 'class_out_of_scope' && $g('save_grade', []) === 'missing_class' && $g('teacher_bulk_mark', ['class_id' => 'class_2a']) === null);
 $check('POST A: class_ids[] i classes[] musí být všechny v rozsahu', $g('arena58_ctf_create', ['class_ids' => ['class_2a', 'class_3a']]) === 'class_out_of_scope' && $g('arena58_ctf_create', ['class_ids' => ['class_2a']]) === null
     && $g('lab58e_save', ['class_id' => 'class_2a', 'classes' => ['class_3a']]) === 'class_out_of_scope' && $g('lab58e_save', ['class_id' => 'class_2a']) === 'missing_class' && $g('lab58e_save', ['classes' => ['class_1a', 'class_2a']]) === null);
-$check('POST A: neplatný tvar class_id odmítnut, class_id=all jen u review_ack', $g('teacher_bulk_mark', ['class_id' => ['class_2a']]) === 'bad_class_param' && $g('teacher_review_ack', ['class_id' => 'all']) === null && $g('teacher_bulk_mark', ['class_id' => 'all']) === 'class_out_of_scope');
+$check('POST A: neplatný tvar class_id odmítnut, class_id=all odmítnuto, vyřazená review_ack zamítnuta (v69)', $g('teacher_bulk_mark', ['class_id' => ['class_2a']]) === 'bad_class_param' && $g('teacher_review_ack', ['class_id' => 'all']) === 'unknown_action' && $g('teacher_bulk_mark', ['class_id' => 'all']) === 'class_out_of_scope');
 $check('POST A: admin-only akce, legacy-only role, neznámá akce', $g('arena58_weekly_override', []) === 'admin_only' && $g('identity58_plan', []) === 'admin_only' && $g('teacher59_admin_create', []) === 'admin_only'
     && $g('teacher_team_member_role', []) === 'legacy_only' && $g('neznama_akce', []) === 'unknown_action' && $g('teacher59_self_password', []) === null);
 storage_write(STORAGE_DIR . '/teacher_followups.json.php', [['id' => 'fu_3a', 'class_id' => 'class_3a'], ['id' => 'fu_2a', 'class_id' => 'class_2a'], ['id' => 'fu_none']]);
-storage_write(STORAGE_DIR . '/teacher_saved_filters.json.php', [['id' => 'sf_4a', 'class_id' => 'class_4a'], ['id' => 'sf_1a', 'class_id' => 'class_1a']]);
+storage_write(STORAGE_DIR . '/teacher_saved_filters.json.php', [['id' => 'sf_4a', 'class_id' => 'class_4a'], ['id' => 'sf_1a', 'class_id' => 'class_1a'], ['id' => 'sf_3a', 'class_id' => 'class_3a']]);
 storage_write(STORAGE_DIR . '/skill_evidence.json.php', [['id' => 'ev_3a', 'class_id' => 'class_3a']]);
 $check('POST A: entita cizí třídy / neexistující / bez třídy / chybějící id → 403', $g('teacher_followup_update', ['followup_id' => 'fu_3a']) === 'entity_out_of_scope' && $g('teacher_followup_update', ['followup_id' => 'nic']) === 'entity_not_found'
-    && $g('teacher_followup_update', ['followup_id' => 'fu_none']) === 'entity_out_of_scope' && $g('teacher_followup_update', []) === 'missing_entity' && $g('skill_validation', ['evidence_id' => 'ev_3a']) === 'entity_out_of_scope');
-$check('POST A: entita vlastní třídy OK (i když class_id z formuláře lže, ověří se obojí)', $g('teacher_followup_update', ['followup_id' => 'fu_2a']) === null && $g('teacher_saved_filter_pin', ['filter_id' => 'sf_1a']) === null
-    && $g('teacher_saved_filter_pin', ['filter_id' => 'sf_4a', 'class_id' => 'class_1a']) === 'entity_out_of_scope' && $g('teacher_followup_update', ['followup_id' => 'fu_2a', 'class_id' => 'class_3a']) === 'class_out_of_scope');
+    && $g('teacher_followup_update', ['followup_id' => 'fu_none']) === 'entity_out_of_scope' && $g('teacher_followup_update', []) === 'missing_entity' && $g('teacher_saved_filter_delete', ['filter_id' => 'sf_3a']) === 'entity_out_of_scope' && $g('skill_validation', ['evidence_id' => 'ev_3a']) === 'unknown_action');
+$check('POST A: entita vlastní třídy OK (i když class_id z formuláře lže, ověří se obojí)', $g('teacher_followup_update', ['followup_id' => 'fu_2a']) === null && $g('teacher_saved_filter_delete', ['filter_id' => 'sf_1a']) === null
+    && $g('teacher_saved_filter_delete', ['filter_id' => 'sf_4a', 'class_id' => 'class_1a']) === 'entity_out_of_scope' && $g('teacher_followup_update', ['followup_id' => 'fu_2a', 'class_id' => 'class_3a']) === 'class_out_of_scope');
 $check('POST A: chybí finder modulu → fail closed (závod, hra, dotazník)', $g('arena57_start', ['class_id' => 'class_2a', 'race' => 'r1']) === 'entity_not_found' && $g('intake_t_delete', ['class_id' => 'class_2a', 'response_id' => 'x']) === 'entity_not_found');
 $check('POST A: banka otázek podle předmětu (grafika ano, sítě/obojí ne), mazání bez položky 403', $g('tg58_bank_add', ['class_id' => 'class_2a', 'line' => 'graphics']) === null && $g('tg58_bank_add', ['class_id' => 'class_2a', 'line' => 'networks']) === 'subject_out_of_scope'
     && $g('tg58_bank_add', ['class_id' => 'class_2a', 'line' => 'both']) === 'subject_out_of_scope' && $g('tg58_bank_delete', ['bank_id' => 'q1']) === 'entity_not_found');

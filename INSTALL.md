@@ -598,3 +598,12 @@ Podrobnosti: `CHANGELOG_V68.md`, `BUILD_MANIFEST_V68.md`, `docs/V68_KANDIDATI_VY
 - **Vyřazeno:** pohled `v48_state` (kopie v `retired/v68/`, který se do vydání nebalí), `?view=continue` a `?view=one_task` přesměrují na přehled.
 - **Rollback:** nasadit předchozí vydání (data se nezměnila). Cookie `edu_theme` je neškodná i ve starší verzi.
 - **Kontrola po nasazení:** `php tools/v68_cockpit_audit.php`, `php tools/v68_theme_audit.php` → `V68_*_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v69 · dokončené vyřazení, tmavá vrstva po pohledech, kontrast cockpitu
+
+- **Nové soubory:** `student_links_v69.php` (odkazy na kroky výuky místo One Task), `assets/dark/student-dark-{home,dashboard,profile}-v69.css` (generované), `assets/teacher-contrast-v69.css`, `tools/v69_retire.php`, `tools/v69_dark_overlay.php`, `tools/lib/v69_css_usage.php`, audity `tools/v69_cleanup_audit.php`, `tools/v69_dark_audit.php`.
+- **Nasazení:** nahrát celé vydání (`tools/build_release.php`); `assets/dark/` je nový adresář. Service worker má cache `educanet-v69-ui`. Data se nemění.
+- **Generované soubory:** po změně zdrojových CSS žáka spusť `php tools/v69_dark_overlay.php` (kontrola `--check`, velikosti `--stats`); `assets/cockpit-dark-v68.css` dál generuje `php tools/v68_dark_overlay.php`.
+- **Vyřazeno** (kopie v `retired/v69/`, do vydání se nebalí): `teacher_skill_views.php`, `one_task_v50_5.php`, `app/views/one_task.php`, `app/actions/one_task.php`, `assets/one-task-*`, `assets/student-dark-v68.css`; audit One Task je v `tools/legacy/`. Staré adresy dávají 302.
+- **Rollback:** nasadit předchozí vydání, data se nezměnila.
+- **Kontrola po nasazení:** `php tools/v69_cleanup_audit.php`, `php tools/v69_dark_audit.php` → `V69_*_AUDIT_OK`.

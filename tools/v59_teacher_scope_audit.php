@@ -387,7 +387,7 @@ try {
 
 // --- 12. Statika: pokrytí politik -------------------------------------------------------------------
 $static = v59sf_static_coverage($root);
-$check('statika: každá POST akce z teacher.php a handlerů má ne-deny politiku (' . $static['count'] . ')' . ($static['denied'] ? ' – CHYBÍ: ' . implode(', ', $static['denied']) : ''), $static['denied'] === [] && $static['count'] >= 115, false);
+$check('statika: každá POST akce z teacher.php a handlerů má ne-deny politiku (' . $static['count'] . ')' . ($static['denied'] ? ' – CHYBÍ: ' . implode(', ', $static['denied']) : ''), $static['denied'] === [] && $static['count'] >= 100, false);
 $check('statika: každý GET parametr registru v58 má politiku' . ($static['get_missing'] ? ' – CHYBÍ: ' . implode(', ', $static['get_missing']) : ''), $static['get_missing'] === [], false);
 $check('statika: změněné moduly hlídají rozsah přes function_exists (no-op v legacy/CLI)', $static['guards_missing'] === [], false);
 if ($static['guards_missing']) echo 'INFO  bez guardu: ' . implode(', ', $static['guards_missing']) . PHP_EOL;

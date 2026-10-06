@@ -50,10 +50,9 @@ return [
         'core' => ['accounts_v53.php', 'intake_v51.php', 'perf_v67.php', 'ui_v67.php'],
         // Hlavička a patička žákovských stránek (render_header/render_footer) a vše, co volají.
         // arena_v57.php si při načtení vyžádá linux_v57_lab.php (a ten celý simulátor) – viz INTEGRATION.md.
-        'layout' => ['app/views/_layout.php', 'student_v55.php', 'student_v55_views.php', 'zero_friction_v50_6.php', 'unified_page_shell_v50_7.php', 'one_task_v50_5.php', 'goal_navigator_v50_4.php', 'hands_on_learning_v50.php', 'independent_growth_v50.php', 'learning_v56.php', 'session_v53.php', 'tutorial_v52.php', 'linux_v57_lab.php', 'arena_v57.php', 'paths_v63.php'],
+        'layout' => ['app/views/_layout.php', 'student_v55.php', 'student_v55_views.php', 'zero_friction_v50_6.php', 'unified_page_shell_v50_7.php', 'student_links_v69.php', 'goal_navigator_v50_4.php', 'hands_on_learning_v50.php', 'independent_growth_v50.php', 'learning_v56.php', 'session_v53.php', 'tutorial_v52.php', 'linux_v57_lab.php', 'arena_v57.php', 'paths_v63.php'],
         'intake_views' => ['intake_v51_views.php'],
         'session_views' => ['session_v53.php', 'session_v53_views.php'],
-        'one_task' => ['one_task_v50_5.php', 'goal_navigator_v50_4.php', 'hands_on_learning_v50.php', 'independent_growth_v50.php', 'zero_friction_v50_6.php', 'teacher_operations_v46.php', 'project_workspace_views.php'],
         'visual_lab' => ['visual_simulation_views_v45.php', 'visual_practical_learning_views_v48.php', 'visual_labs_3a_views_v48_1.php'],
         'hands_on_views' => ['hands_on_learning_v50.php', 'independent_growth_v50.php', 'hands_on_learning_views_v50.php', 'independent_growth_views_v50.php'],
         'lesson_kit_views' => ['adaptive_lesson_views_v42.php', 'cognitive_visualization_views_v43.php', 'learning_studio_views_v44.php', 'visual_simulation_views_v45.php'],
@@ -123,7 +122,6 @@ return [
     'views_student' => [
         ['match' => ['intake', 'my_intake', 'my_intake_file'], 'file' => 'views/intake.php', 'libs' => ['layout', 'intake_views']],
         // v68: pohled v48_state vyřazen (app/redirects_v68.php → 302 na přehled), soubor je v retired/v68/.
-        ['match' => ['continue', 'one_task'], 'file' => 'views/one_task.php', 'libs' => ['one_task']],
         ['match' => ['visual_lab'], 'file' => 'views/visual_lab.php', 'libs' => ['layout', 'visual_lab']],
         ['match' => ['hands_on', 'goal_nav', 'growth', 'growth_path', 'skill_passport', 'peer_lab'], 'file' => 'views/hands_on_growth.php', 'libs' => ['layout', 'hands_on_views']],
         ['match' => ['cognitive_lab', 'lesson_kit', 'lesson_slides'], 'file' => 'views/lesson_hub.php', 'libs' => ['layout', 'lesson_kit_views']],
@@ -176,7 +174,6 @@ return [
         ['match' => ['arena58_rank_toggle'], 'file' => 'actions/arena_prefs.php', 'libs' => ['linux_lab']],
         ['match' => ['sess53_*'], 'file' => 'actions/session_join.php', 'libs' => ['session']],
         ['match' => ['pts53_hint', 'tut52_score'], 'file' => 'actions/points.php', 'libs' => ['points']],
-        ['match' => ['v505_*'], 'file' => 'actions/one_task.php', 'libs' => ['one_task']],
         ['match' => ['teacher_task_complete', 'coach_*'], 'file' => 'actions/coach.php', 'libs' => ['coach']],
         ['match' => ['v42_set_lane', 'v481_deep_submit', 'v48_*', 'v45_sim_save', 'cv43_*', 'v44_*'], 'file' => 'actions/visual_labs.php', 'libs' => []],
         ['match' => ['v50_*', 'v504_*'], 'file' => 'actions/hands_on_growth.php', 'libs' => ['hands_on']],

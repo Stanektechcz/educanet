@@ -26,11 +26,12 @@ $after=v46_storage_fingerprint(STORAGE_DIR);$writes=[];foreach(array_unique(arra
 if($writes)$errors[]='Read-only operace změnily storage: '.implode(', ',$writes);
 $teacher=file_get_contents($root.'/teacher.php')?:'';$ops=file_get_contents($root.'/teacher_operations_v46.php')?:'';$views=file_get_contents($root.'/teacher_operations_views_v46.php')?:'';$js=file_get_contents($root.'/assets/teacher-admin-v46.js')?:'';
 foreach([
-    'Attention Center'=>"tab==='attention'",'Student 360'=>"tab==='student360'",'Interventions'=>"tab==='interventions'",'Analytics'=>"tab==='analytics'",'Automations'=>"tab==='automations'",'Smart filters'=>"tab==='filters'",'Roles'=>"tab==='team_admin'"
+    'Attention Center'=>"tab==='attention'",'Student 360'=>"tab==='student360'",'Interventions'=>"tab==='interventions'",'Analytics'=>"tab==='analytics'",'Roles'=>"tab==='team_admin'"
 ] as $label=>$needle)if(!str_contains($teacher,$needle))$errors[]="$label není zapojen v teacher.php.";
 foreach(['teacher_ops_attention_center','teacher_ops_student360','teacher_ops_intervention_create','teacher_ops_class_analytics','teacher_ops_lesson_intelligence','teacher_ops_automation_tick','teacher_ops_bulk_update_tasks','teacher_ops_team_member_set_role'] as $fn)if(!function_exists($fn))$errors[]='Chybí '.$fn.'.';
 if(!str_contains($js,'data-command-backdrop')&&!str_contains($js,'data-command-open'))$errors[]='Command Palette JS marker chybí.';
 if(!is_file($root.'/tools/v46_automation_tick.php'))$errors[]='Chybí CLI automation tick.';
-if(!str_contains($views,'data-smart-filter-builder'))$errors[]='Chybí Smart Filter builder.';
+// v69: Smart filtry a Automatizace (záložky filters, automations) vyřazeny z rozhraní; knihovna (uložené filtry, cron tick) zůstává.
+if(str_contains($teacher,'teacher_render_automations')||str_contains($views,'teacher_render_filters_manager'))$errors[]='Vyřazené pohledy Automatizace / Smart filtry jsou stále v kódu.';
 $result=['ok'=>!$errors,'version'=>'46.0','features'=>['attention_center'=>true,'student_360'=>true,'interventions'=>true,'smart_saved_filters'=>true,'notifications_automations'=>true,'class_analytics'=>true,'lesson_intelligence'=>true,'bulk_actions_2'=>true,'command_palette'=>true,'roles_permissions'=>true],'class_2a_students'=>count($students),'analytics_weeks'=>count((array)($analytics['weeks']??[])),'lesson_intelligence'=>count($lessons),'read_only_storage_writes'=>$writes,'errors'=>$errors];
 echo json_encode($result,JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES).PHP_EOL;exit($errors?1:0);
