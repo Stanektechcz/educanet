@@ -586,3 +586,15 @@ Podrobnosti: `CHANGELOG_V67.md`, `BUILD_MANIFEST_V67.md`, `docs/NASAZENI_PRODUKC
 - **Přehled žáka:** podrobný progres se načítá na `?view=dashboard&details=1`; dovednosti se přepočítávají po akcích a v noci, ne při každém GET.
 - **Rollback:** nasadit předchozí vydání; `storage/growth_v67/` a `storage/skill_sync_v67.json.php` lze smazat (odvozená data a cíle žáků).
 - **Kontrola po nasazení:** `php tools/v67_ux_audit.php`, `v67_perf_audit.php`, `v67_ops_audit.php`, `v67_growth_audit.php` → `V67_*_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v68 · nový cockpit, tmavý režim a vyřazení zastaralých stránek
+
+Podrobnosti: `CHANGELOG_V68.md`, `BUILD_MANIFEST_V68.md`, `docs/V68_KANDIDATI_VYRAZENI.md`. Nové PHP rozšíření nevyžaduje, `storage/` se nemění.
+
+- **Cockpit:** šest sekcí (Dnes / Třída a žáci / Výuka / Hodnocení / Hry a motivace / Správa), boční panel od 1024 px, na mobilu menu pod tlačítkem Menu. Staré adresy `?tab=control|class_overview|growth|skills|mastery|filters|automations` vracejí 302 na novou sekci (záložky jsou v kódu do v69).
+- **Tmavý režim:** učitel i administrátor mají v záhlaví přepínač Systém / Světlý / Tmavý (cookie `edu_theme`, žádná osobní data). Výchozí je „podle systému“. Žáci mají tmavý vzhled u přihlášení, přehledu a profilu.
+- **Generované soubory (po změně zdrojových CSS znovu vygenerovat, jinak audit `v68_theme_audit` ohlásí neaktuálnost):** `php tools/v68_tokenize_css.php --derive` (kopie `assets/cx-*.css` pro cockpit + paleta `tokens-palette*-v68.css`), `php tools/v68_dark_overlay.php` (`assets/student-dark-v68.css`, `assets/cockpit-dark-v68.css`).
+- **Nasazení:** nahrát celé vydání (`tools/build_release.php`), `assets/` včetně nových souborů; po nasazení se service worker sám přepne na cache `educanet-v68-ui`. Server nemusí nic nastavovat.
+- **Vyřazeno:** pohled `v48_state` (kopie v `retired/v68/`, který se do vydání nebalí), `?view=continue` a `?view=one_task` přesměrují na přehled.
+- **Rollback:** nasadit předchozí vydání (data se nezměnila). Cookie `edu_theme` je neškodná i ve starší verzi.
+- **Kontrola po nasazení:** `php tools/v68_cockpit_audit.php`, `php tools/v68_theme_audit.php` → `V68_*_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.

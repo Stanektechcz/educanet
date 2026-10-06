@@ -2,50 +2,50 @@
    Navazuje na teacher.css a brand-v54.css (proměnné --edu-teal / --edu-orange / --u-line). */
 
 .lab58t-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
-.lab58t-tabs a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--u-line, #e3e6eb); background: #fff; color: var(--edu-ink, #1c2733); text-decoration: none; font-weight: 600; font-size: .92rem; }
-.lab58t-tabs a.is-active { background: var(--edu-teal, #00a8b9); border-color: var(--edu-teal, #00a8b9); color: #fff; }
-.lab58t-tabs a:focus-visible { outline: 3px solid var(--edu-orange, #ec6b10); outline-offset: 2px; }
+.lab58t-tabs a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--u-line, var(--k161)); background: var(--k3); color: var(--edu-ink, var(--k162)); text-decoration: none; font-weight: 600; font-size: .92rem; }
+.lab58t-tabs a.is-active { background: var(--edu-teal, var(--k163)); border-color: var(--edu-teal, var(--k163)); color: var(--k3); }
+.lab58t-tabs a:focus-visible { outline: 3px solid var(--edu-orange, var(--k164)); outline-offset: 2px; }
 
-.lab58t-panel { background: #fff; border: 1px solid var(--u-line, #e3e6eb); border-radius: 16px; padding: 18px 20px; margin-bottom: 18px; }
+.lab58t-panel { background: var(--k3); border: 1px solid var(--u-line, var(--k161)); border-radius: 16px; padding: 18px 20px; margin-bottom: 18px; }
 .lab58t-panel-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .lab58t-panel-head h2 { margin: 0 0 4px; font-size: 1.15rem; }
-.lab58t-panel-head p { margin: 0; color: var(--u-muted, #5f6b7a); font-size: .9rem; max-width: 60ch; }
-.lab58t-meta { color: var(--u-muted, #5f6b7a); font-size: .85rem; margin: 0 0 12px; }
-.lab58t-empty { color: var(--u-muted, #5f6b7a); font-style: italic; padding: 10px 0; }
+.lab58t-panel-head p { margin: 0; color: var(--u-muted, var(--k165)); font-size: .9rem; max-width: 60ch; }
+.lab58t-meta { color: var(--u-muted, var(--k165)); font-size: .85rem; margin: 0 0 12px; }
+.lab58t-empty { color: var(--u-muted, var(--k165)); font-style: italic; padding: 10px 0; }
 
-.lab58t-period label, .lab58t-replay-pick label { display: inline-flex; flex-direction: column; gap: 4px; font-size: .82rem; font-weight: 600; color: var(--u-muted, #5f6b7a); margin-right: 10px; }
-.lab58t-period select, .lab58t-replay-pick select, .lab58t-export-form select { min-height: 44px; border-radius: 10px; border: 1px solid var(--u-line, #e3e6eb); padding: 0 10px; font-size: .92rem; }
+.lab58t-period label, .lab58t-replay-pick label { display: inline-flex; flex-direction: column; gap: 4px; font-size: .82rem; font-weight: 600; color: var(--u-muted, var(--k165)); margin-right: 10px; }
+.lab58t-period select, .lab58t-replay-pick select, .lab58t-export-form select { min-height: 44px; border-radius: 10px; border: 1px solid var(--u-line, var(--k161)); padding: 0 10px; font-size: .92rem; }
 .lab58t-replay-pick { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 16px; }
 
 .lab58t-top5 { margin: 0 0 20px; padding-left: 22px; }
 .lab58t-top5 li { margin-bottom: 10px; }
-.lab58t-top5 p { margin: 3px 0 0; color: var(--u-muted, #5f6b7a); font-size: .88rem; }
+.lab58t-top5 p { margin: 3px 0 0; color: var(--u-muted, var(--k165)); font-size: .88rem; }
 
 .lab58t-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
-.lab58t-table th, .lab58t-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--u-line, #eef0f4); }
-.lab58t-table th { color: var(--u-muted, #5f6b7a); font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .02em; }
+.lab58t-table th, .lab58t-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--u-line, var(--k166)); }
+.lab58t-table th { color: var(--u-muted, var(--k165)); font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .02em; }
 
 .lab58t-alerts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.lab58t-alerts li { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; background: var(--edu-orange-soft, #fdeee3); border-left: 4px solid var(--edu-orange, #ec6b10); min-height: 44px; }
-.lab58t-alerts li.lab58t-empty { background: var(--edu-teal-soft, #e2f6f8); border-left-color: var(--edu-teal, #00a8b9); font-style: normal; }
-.lab58t-alerts .lab58t-level { color: var(--u-muted, #5f6b7a); font-size: .85rem; }
+.lab58t-alerts li { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; background: var(--edu-orange-soft, var(--k167)); border-left: 4px solid var(--edu-orange, var(--k164)); min-height: 44px; }
+.lab58t-alerts li.lab58t-empty { background: var(--edu-teal-soft, var(--k168)); border-left-color: var(--edu-teal, var(--k163)); font-style: normal; }
+.lab58t-alerts .lab58t-level { color: var(--u-muted, var(--k165)); font-size: .85rem; }
 .lab58t-alerts .lab58t-reason { font-size: .85rem; font-weight: 600; }
 
-.lab58t-player { border: 1px solid var(--u-line, #e3e6eb); border-radius: 14px; padding: 14px 16px; background: #0f1720; color: #e7ecf1; }
-.lab58t-player h3 { margin: 0 0 10px; font-size: 1rem; color: #fff; }
-.lab58t-player-screen { min-height: 160px; max-height: 320px; overflow: auto; font-family: 'Fira Code', 'Consolas', monospace; font-size: .86rem; white-space: pre-wrap; background: #050b10; border-radius: 10px; padding: 12px; margin-bottom: 12px; }
-.lab58t-player-screen .lab58t-line-cmd { color: #7fe0ff; }
-.lab58t-player-screen .lab58t-line-out { color: #d7dee5; }
-.lab58t-player-screen .lab58t-line-err { color: #ff9a8a; }
+.lab58t-player { border: 1px solid var(--u-line, var(--k161)); border-radius: 14px; padding: 14px 16px; background: var(--k169); color: var(--k170); }
+.lab58t-player h3 { margin: 0 0 10px; font-size: 1rem; color: var(--k3); }
+.lab58t-player-screen { min-height: 160px; max-height: 320px; overflow: auto; font-family: 'Fira Code', 'Consolas', monospace; font-size: .86rem; white-space: pre-wrap; background: var(--k171); border-radius: 10px; padding: 12px; margin-bottom: 12px; }
+.lab58t-player-screen .lab58t-line-cmd { color: var(--k172); }
+.lab58t-player-screen .lab58t-line-out { color: var(--k173); }
+.lab58t-player-screen .lab58t-line-err { color: var(--k174); }
 .lab58t-player-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-.lab58t-player-bar button { min-height: 44px; min-width: 44px; border-radius: 10px; border: 1px solid #33424f; background: #182430; color: #fff; font-weight: 600; padding: 0 16px; cursor: pointer; }
-.lab58t-player-bar button:focus-visible, .lab58t-player-bar select:focus-visible, .lab58t-player-bar input:focus-visible { outline: 3px solid var(--edu-orange, #ec6b10); outline-offset: 2px; }
+.lab58t-player-bar button { min-height: 44px; min-width: 44px; border-radius: 10px; border: 1px solid var(--k175); background: var(--k176); color: var(--k3); font-weight: 600; padding: 0 16px; cursor: pointer; }
+.lab58t-player-bar button:focus-visible, .lab58t-player-bar select:focus-visible, .lab58t-player-bar input:focus-visible { outline: 3px solid var(--edu-orange, var(--k164)); outline-offset: 2px; }
 .lab58t-player-bar input[type="range"] { flex: 1 1 160px; min-height: 44px; }
-.lab58t-player-bar select { min-height: 44px; background: #182430; color: #fff; border: 1px solid #33424f; border-radius: 8px; }
-.lab58t-player-bar span { font-size: .85rem; color: #b7c1cb; min-width: 70px; }
+.lab58t-player-bar select { min-height: 44px; background: var(--k176); color: var(--k3); border: 1px solid var(--k175); border-radius: 8px; }
+.lab58t-player-bar span { font-size: .85rem; color: var(--k177); min-width: 70px; }
 
 .lab58t-export-form { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px; }
-.lab58t-export-form label { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; font-weight: 600; color: var(--u-muted, #5f6b7a); }
+.lab58t-export-form label { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; font-weight: 600; color: var(--u-muted, var(--k165)); }
 
 @media (max-width: 480px) {
   .lab58t-panel { padding: 14px 14px; }

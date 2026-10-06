@@ -208,6 +208,7 @@ $check('globální focus: 3 px plná čára v barvě značky (var(--accent)), ne
 $check('globální focus: !important a odsazení ≥ 2 px (viditelný i na barevném pozadí)', str_contains($globalRule, '!important') && (bool)preg_match('~outline-offset:\s*[2-9]px~', $globalRule));
 $accents = [];
 foreach (glob($ROOT . '/assets/*.css') ?: [] as $cssFile) {
+    if (str_contains(basename($cssFile), '-dark-')) continue;   // v68: tmavé vrstvy se posuzují proti tmavému pozadí (v68_theme_audit), ne proti bílé
     if (preg_match_all('~--accent:\s*(#[0-9a-fA-F]{6})\b~', (string)file_get_contents($cssFile), $am)) foreach ($am[1] as $c) $accents[strtolower($c)] = true;
 }
 $low = [];

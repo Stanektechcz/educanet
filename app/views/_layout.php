@@ -50,7 +50,7 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
     <link rel="stylesheet" href="<?= e(asset_url('assets/learning-v56.css?v=56.1')) ?>">
     <link rel="stylesheet" href="<?= e(asset_url('assets/components-v61.css?v=61.0')) ?>">
     <link rel="stylesheet" href="<?= e(asset_url('assets/nav-v61.css?v=61.1')) ?>">
-    <?= ui67_assets_html() ?>
+    <?= ui67_assets_html((string)$view) ?>
     <?= ui67_dark_link_html((string)$view) /* v67: tmavé tokeny jen pro ověřené pohledy a jen při volbě „tmavý“/„podle systému“ */ ?>
     <?php if ($module !== null): ?><script src="<?= e(asset_url('assets/nav-v61.js?v=61.1')) ?>" defer></script><?php endif; ?>
     <?php if (in_array((string)$view, ['lab', 'prikazy'], true)): ?><link rel="stylesheet" href="<?= e(asset_url('assets/linux-v57.css?v=59.1')) ?>"><link rel="stylesheet" href="<?= e(asset_url('assets/arena-v57.css?v=57.0')) ?>"><?php endif; ?>

@@ -463,7 +463,7 @@ function arena58_inc_render_session_panel(array $session, int $now, string $csrf
 /** v58 · styly a skript CTF týdne a Incidentů (odpočty, polling) – vloží se za hlavičku žákovské stránky. */
 function arena58_events_assets(): void
 {
-    $css = function_exists('asset_url') ? asset_url('assets/arena-events-v58.css') : 'assets/arena-events-v58.css';
+    $css = edu_css_href('assets/arena-events-v58.css', function_exists('asset_url') ? asset_url('assets/arena-events-v58.css') : 'assets/arena-events-v58.css');
     $js = function_exists('asset_url') ? asset_url('assets/arena-events-v58.js') : 'assets/arena-events-v58.js';
     echo '<link rel="stylesheet" href="' . htmlspecialchars($css, ENT_QUOTES) . '"><script src="' . htmlspecialchars($js, ENT_QUOTES) . '" defer></script>';
 }

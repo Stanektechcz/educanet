@@ -21,13 +21,14 @@ const UI67_THEMES = ['system', 'light', 'dark'];
 const UI67_THEME_COOKIE = 'edu_theme';
 const UI67_THEME_COOKIE_TTL = 31536000;
 const UI67_DARK_CSS = 'assets/tokens-dark-v67.css';
+const UI68_STUDENT_DARK_CSS = 'assets/student-dark-v68.css';   // v68: generovaná tmavá vrstva starších CSS (tools/v68_dark_overlay.php), jen při tmavém motivu
 
 /**
  * Pohledy ověřené pro tmavý režim (stavějí jen na tokenech v61). PRÁZDNÉ záměrně: v prohlížeči (390 a 1280 px) je ověřeno, že přihlášení,
  * přehled i profil mají ve starších vrstvách pevné světlé barvy (karta přihlášení, pozadí, štítky navigace) a tokeny samy nestačí.
  * Pohled sem přidej až po převodu jeho CSS na tokeny v61 a po kontrole v prohlížeči.
  */
-const UI67_DARK_VIEWS = [];
+const UI67_DARK_VIEWS = ['home', 'dashboard', 'profile'];
 
 /** @return list<string> */
 function ui67_dark_views(): array
@@ -61,19 +62,31 @@ function ui67_color_scheme(string $view, ?string $pref = null, ?array $darkViews
     return ['light' => 'light', 'dark' => 'dark', 'system' => 'light dark'][ui67_effective_theme($view, $pref, $darkViews)];
 }
 
-/** <link> na CSS přepínače a color-scheme; jen když je tmavý režim pro nějaký pohled zapnutý (jinak nic nenačítáme). */
-function ui67_assets_html(): string
+/** <link> na CSS přepínače vzhledu; jen na pohledech, kde se přepínač vykresluje (home, dashboard, profile) – ostatní stránky žáka nic nenavíc nestahují (rozpočet CSS v61). */
+function ui67_assets_html(string $view = ''): string
 {
-    return ui67_dark_views() === [] ? '' : '<link rel="stylesheet" href="' . e(asset_url('assets/ui-v67.css?v=67.0')) . '">';
+    return in_array($view, ui67_dark_views(), true) ? '<link rel="stylesheet" href="' . e(asset_url('assets/ui-v67.css?v=67.0')) . '">' : '';
 }
 
-/** <link> na tmavé tokeny; prázdný řetězec pro světlý pohled/motiv. */
+/**
+ * Tmavé CSS pro pohled: prázdný řetězec pro světlý pohled/motiv.
+ * „tmavý“ = obě šablony stylů napevno (tmavé tokeny + generovaná vrstva starších CSS, v68).
+ * „podle systému“ = krátký skript v <head> přidá obě šablony jen tehdy, když systém preferuje tmavý vzhled (document.write → blokuje vykreslení,
+ * takže stránka nebliká). Tím se velká tmavá vrstva (~400 KB) nestahuje uživatelům se světlým systémem a rozpočet CSS stránky se nezvyšuje;
+ * bez JavaScriptu zůstane „podle systému“ světlé (tmavé tokeny bez tmavé vrstvy by dávaly nečitelnou směs).
+ */
 function ui67_dark_link_html(string $view, ?string $pref = null, ?array $darkViews = null): string
 {
     $theme = ui67_effective_theme($view, $pref, $darkViews);
     if ($theme === 'light') return '';
-    $media = $theme === 'system' ? ' media="(prefers-color-scheme: dark)"' : '';
-    return '<link rel="stylesheet" href="' . e(asset_url(UI67_DARK_CSS . '?v=67.0')) . '"' . $media . '>';
+    $hrefs = [asset_url(UI67_DARK_CSS . '?v=67.0'), asset_url(UI68_STUDENT_DARK_CSS . '?v=68.0')];
+    if ($theme === 'dark') {
+        return '<link rel="stylesheet" href="' . e($hrefs[0]) . '"><link rel="stylesheet" href="' . e($hrefs[1]) . '">';
+    }
+    $json = json_encode($hrefs, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+    // Ve skriptu záměrně není znak „<“ (String.fromCharCode(60)): jednoduché nástroje (strip_tags v auditech, e-mailové náhledy) by jinak odstranily půl stránky.
+    return '<script>(function(){if(!window.matchMedia||!matchMedia("(prefers-color-scheme: dark)").matches)return;var lt=String.fromCharCode(60);' . $json
+        . '.forEach(function(x){document.write(lt+\'link rel="stylesheet" href="\'+x+\'">\');});})();</script>';
 }
 
 /** Nastaví cookie motivu (jen platná hodnota; vrací, zda se nastavilo). */
@@ -99,7 +112,7 @@ function ui67_return_url(string $raw): string
  */
 function ui67_theme_switch_html(string $csrf, string $returnUrl, string $view): string
 {
-    if (ui67_dark_views() === []) return '';   // žádný pohled zatím tmavý režim nepodporuje – přepínač by klamal
+    if (!in_array($view, ui67_dark_views(), true)) return '';   // přepínač jen tam, kde má tmavý vzhled smysl (home, dashboard, profile); jinde by klamal a stál by CSS navíc
     $current = ui67_theme_pref();
     $labels = ['system' => tr('Podle systému'), 'light' => tr('Světlý'), 'dark' => tr('Tmavý')];
     $html = '<form class="ui67-theme" method="post" action="index.php" role="group" aria-label="' . e(tr('Vzhled')) . '">'
@@ -108,8 +121,7 @@ function ui67_theme_switch_html(string $csrf, string $returnUrl, string $view): 
     foreach ($labels as $value => $label) {
         $html .= '<button type="submit" name="theme" value="' . e($value) . '" aria-pressed="' . ($value === $current ? 'true' : 'false') . '">' . e($label) . '</button>';
     }
-    $note = in_array($view, ui67_dark_views(), true) ? '' : '<small class="ui67-theme-note">' . e(tr('Tmavý vzhled zatím mají jen vybrané stránky.')) . '</small>';
-    return $html . $note . '</form>';
+    return $html . '</form>';
 }
 
 /**

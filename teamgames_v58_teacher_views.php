@@ -71,7 +71,7 @@ function tg58_render_teacher_tab(string $classId, string $csrf): void
     $selected ??= $live ?? ($sessions[0] ?? null);
     ?>
     <div class="t52 tg58 tg58-teacher">
-      <link rel="stylesheet" href="assets/teamgames-v58.css?v=58.0">
+      <link rel="stylesheet" href="<?= e(edu_css_href('assets/teamgames-v58.css', 'assets/teamgames-v58.css?v=58.0')) ?>">
       <header class="t52-page-head"><span class="t52-kicker">Týmové hry</span><h1>Hry třídy</h1><p>Štafeta, bingo, Riskuj!, přetahovaná, správci sítě/webu a úniková místnost. Týmy se sestaví vyrovnaně při startu; jména na projektoru respektují nastavení soukromí.</p></header>
       <nav class="tg58-classes" aria-label="Třída">
         <?php foreach ($classes as $cid): $cid = (string)$cid; ?>

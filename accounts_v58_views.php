@@ -147,6 +147,7 @@ function acc58_render_teacher_accounts(string $classId, string $csrf, array $mod
     $reveal = acc58_take_reveal($classId);
     $printUrl = '?' . http_build_query(['tab' => 'pristupy', 'print' => '1', 'class' => $classId]);
     ?>
+    <link rel="stylesheet" href="assets/tokens-palette-v68.css?v=68.0">
     <link rel="stylesheet" href="assets/accounts-v58.css?v=<?= e(ACC58_ASSET_VERSION) ?>">
     <section class="a58" aria-labelledby="a58-title">
       <header class="a58-head">
@@ -250,7 +251,7 @@ function acc58_render_cards_print(string $classId, array $modules = []): void
     ?><!doctype html>
 <html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
 <title>Kartičky s hesly · <?= e($className) ?></title>
-<link rel="stylesheet" href="assets/accounts-v58.css?v=<?= e(ACC58_ASSET_VERSION) ?>"></head>
+<link rel="stylesheet" href="assets/tokens-palette-v68.css?v=68.0"><link rel="stylesheet" href="assets/accounts-v58.css?v=<?= e(ACC58_ASSET_VERSION) ?>"></head>
 <body class="a58-print-body"><main class="a58-print">
   <header class="a58-print-head">
     <div><h1>Kartičky s jednorázovými hesly · <?= e($className) ?></h1>

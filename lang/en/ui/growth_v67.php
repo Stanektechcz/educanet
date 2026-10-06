@@ -67,5 +67,4 @@ return [
     'Světlý' => 'Light',
     'Tmavý' => 'Dark',
     'Vzhled' => 'Appearance',
-    'Tmavý vzhled zatím mají jen vybrané stránky.' => 'Dark appearance is only available on some pages so far.',
 ];

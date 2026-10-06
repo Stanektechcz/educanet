@@ -122,7 +122,7 @@ return [
     ],
     'views_student' => [
         ['match' => ['intake', 'my_intake', 'my_intake_file'], 'file' => 'views/intake.php', 'libs' => ['layout', 'intake_views']],
-        ['match' => ['v48_state'], 'file' => 'views/v48_state.php', 'libs' => [], 'session' => 'read'],
+        // v68: pohled v48_state vyřazen (app/redirects_v68.php → 302 na přehled), soubor je v retired/v68/.
         ['match' => ['continue', 'one_task'], 'file' => 'views/one_task.php', 'libs' => ['one_task']],
         ['match' => ['visual_lab'], 'file' => 'views/visual_lab.php', 'libs' => ['layout', 'visual_lab']],
         ['match' => ['hands_on', 'goal_nav', 'growth', 'growth_path', 'skill_passport', 'peer_lab'], 'file' => 'views/hands_on_growth.php', 'libs' => ['layout', 'hands_on_views']],

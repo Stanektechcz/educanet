@@ -323,6 +323,8 @@ function teacher58_head_assets(string $tab): void
 {
     if (!teacher58_is_tab($tab)) return;
     foreach ((array)(teacher58_modules()[$tab]['css'] ?? []) as $css) {
+        // v68: sdílené moduly mají tokenizovanou kopii pro cockpit (assets/cx-*.css), jinak originál.
+        if (function_exists('teacher68_css_href')) { echo '<link rel="stylesheet" href="' . e(teacher68_css_href($css)) . '">'; continue; }   // teacher_v58.php běží jen v cockpitu
         $file = __DIR__ . '/' . $css;
         $v = is_file($file) ? (string)filemtime($file) : '58';
         echo '<link rel="stylesheet" href="' . e($css . '?v=' . $v) . '">';

@@ -1,0 +1,8 @@
+/* EDUCANET v68 · tmavý režim cockpitu: úpravy, které paleta (tokens-palette-dark-v68.css) a tokeny --ui-* samy nepokryjí.
+   Načítá se jen při tmavém motivu (nebo s media dotazem při volbě „podle systému“). */
+:root:not([data-theme="light"]) {
+  color-scheme: dark;
+  /* barvy značky ze tokens-v61.css (starší vrstvy je používají napřímo) */
+  --edu-ink: #e9eef2; --edu-teal: #4cc9d8; --edu-teal-dark: #4cc9d8; --edu-teal-ink: #86e3ed; --edu-teal-soft: #123a41;
+  --edu-orange: #ffa066; --edu-orange-dark: #ffa066; --edu-orange-soft: #3a2415; --edu-yellow: #f4cd74; --edu-yellow-soft: #382e12;
+}

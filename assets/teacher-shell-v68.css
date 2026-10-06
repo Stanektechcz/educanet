@@ -1,0 +1,123 @@
+/* EDUCANET v68 · rámec cockpitu: boční panel od 1024 px, na mobilu horní lišta a menu (details). Jen tokeny --ui-*. */
+body.t68 { margin: 0; background: var(--ui-bg); color: var(--ui-ink); }
+/* Historické proměnné starších vrstev (app.css, ui-v51.css) vedou na tokeny --ui-*; v tmavém režimu se tím přepnou samy. */
+body.t68 {
+  --u-bg: var(--ui-bg); --u-surface: var(--ui-surface); --u-soft: var(--ui-surface-2); --u-line: var(--ui-line); --u-line-strong: var(--ui-dashed);
+  --u-text: var(--ui-ink); --u-muted: var(--ui-muted); --u-faint: var(--ui-muted); --u-accent: var(--ui-accent); --u-accent-soft: var(--ui-accent-soft);
+  --u-ok: var(--ui-ok-ink); --u-ok-soft: color-mix(in srgb, var(--ui-ok-ink) 14%, var(--ui-surface)); --u-warn: var(--ui-warn-ink); --u-warn-soft: var(--ui-warn-soft);
+  --u-bad: var(--ui-bad-ink); --u-bad-soft: var(--ui-bad-soft);
+  --bg: var(--ui-bg); --surface: var(--ui-surface); --surface-2: var(--ui-surface-2); --text: var(--ui-ink); --muted: var(--ui-muted); --line: var(--ui-line);
+  --accent: var(--ui-accent); --accent-soft: var(--ui-accent-soft); --ok: var(--ui-ok-ink); --ok-soft: color-mix(in srgb, var(--ui-ok-ink) 14%, var(--ui-surface));
+  --bad: var(--ui-bad-ink); --bad-soft: var(--ui-bad-soft); --panel: var(--ui-surface); --t52-accent: var(--ui-accent); --t52-accent-soft: var(--ui-accent-soft);
+}
+.t68-skip { position: absolute; left: 8px; top: -60px; z-index: 200; padding: 12px 16px; background: var(--ui-accent); color: var(--ui-on-accent); border-radius: var(--ui-radius-sm); font-weight: 700; }
+.t68-skip:focus-visible { top: 8px; outline: 3px solid var(--ui-ink); }
+.t68 :where(a, button, summary, input, select, textarea):focus-visible { outline: 3px solid var(--ui-focus, var(--ui-accent)); outline-offset: 2px; }
+.t68-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 16px; background: var(--ui-surface); border-bottom: 1px solid var(--ui-line); position: sticky; top: 0; z-index: 60; }
+.t68-logo { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; color: var(--ui-ink); }
+.t68-logo i { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--ui-accent); color: var(--ui-on-accent); font-style: normal; font-weight: 800; font-size: .8rem; }
+.t68-logo strong { display: block; font-size: .95rem; letter-spacing: .02em; }
+.t68-logo small { display: block; color: var(--ui-muted); font-size: .75rem; }
+.t68-menu { margin-left: auto; }
+.t68-menu > summary { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 1px solid var(--ui-field-border); border-radius: var(--ui-radius-sm); background: var(--ui-surface); color: var(--ui-ink); font-weight: 700; cursor: pointer; list-style: none; }
+.t68-menu > summary::-webkit-details-marker { display: none; }
+.t68-menu[open] { flex: 1 0 100%; order: 9; margin-left: 0; }
+.t68-menu[open] > summary { background: var(--ui-accent-soft); color: var(--ui-accent-ink); }
+.t68-menu .t68-nav { margin-top: 8px; max-height: 70vh; overflow: auto; }
+.t68-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; order: 3; flex: 1 0 100%; }
+.t68-account { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--ui-muted); font-size: .875rem; }
+.t68-user { color: var(--ui-ink); font-weight: 700; }
+.t68-tools form { margin: 0; }
+.t68-btn, .t68-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 14px; border: 1px solid var(--ui-field-border); border-radius: var(--ui-radius-sm); background: var(--ui-surface); color: var(--ui-ink); font: inherit; font-size: .875rem; font-weight: 700; text-decoration: none; cursor: pointer; }
+.t68-btn:hover, .t68-link:hover { background: var(--ui-surface-2); }
+.t68-theme { display: inline-flex; border: 1px solid var(--ui-field-border); border-radius: var(--ui-radius-sm); overflow: hidden; }
+.t68-theme button { min-height: 44px; min-width: 44px; padding: 0 12px; border: 0; background: var(--ui-surface); color: var(--ui-ink); font: inherit; font-size: .8125rem; font-weight: 600; cursor: pointer; }
+.t68-theme button + button { border-left: 1px solid var(--ui-line); }
+.t68-theme button[aria-pressed="true"] { background: var(--ui-accent); color: var(--ui-on-accent); }
+.t68-collapse { display: none; }
+.t68-side { display: none; }
+.t68-nav { display: grid; gap: 4px; }
+.t68-sec > summary { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 0 12px; border-radius: 10px; color: var(--ui-muted); font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; list-style: none; }
+.t68-sec > summary::-webkit-details-marker { display: none; }
+.t68-sec > summary::after { content: "+"; font-size: 1rem; }
+.t68-sec[open] > summary::after { content: "−"; }
+.t68-sec[open] > summary { color: var(--ui-ink); }
+.t68-sec ul { list-style: none; margin: 0 0 6px; padding: 0; }
+.t68-sec a { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; padding: 0 12px; border-radius: 10px; color: var(--ui-ink); text-decoration: none; font-size: .9rem; font-weight: 600; }
+.t68-sec a:hover { background: var(--ui-surface-2); }
+.t68-sec a[aria-current="page"] { background: var(--ui-accent-soft); color: var(--ui-accent-ink); box-shadow: inset 3px 0 0 var(--ui-accent); font-weight: 800; }
+.t68-badge { min-width: 22px; padding: 1px 7px; border-radius: 999px; background: var(--ui-hot-soft); color: var(--ui-hot-ink); font-size: .75rem; text-align: center; }
+.t68-main { width: 100%; min-width: 0; max-width: 1280px; margin: 0 auto; padding: 16px; box-sizing: border-box; }
+.t68-main:focus { outline: none; }
+.t68-crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; list-style: none; margin: 0 0 8px; padding: 0; font-size: .875rem; color: var(--ui-muted); }
+.t68-crumbs li + li::before { content: "›"; margin-right: 6px; }
+.t68-crumbs a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ui-accent-ink); }
+.t68-crumbs [aria-current] { color: var(--ui-ink); font-weight: 700; }
+.t68-classbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0 0 16px; padding: 8px 12px; border: 1px solid var(--ui-line); border-radius: var(--ui-radius-sm); background: var(--ui-surface); }
+.t68-classbar-label { color: var(--ui-muted); font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.t68-classtabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.t68-classtabs a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--ui-line); color: var(--ui-ink); text-decoration: none; font-size: .875rem; font-weight: 600; }
+.t68-classtabs a[aria-current="page"] { background: var(--ui-accent); border-color: var(--ui-accent); color: var(--ui-on-accent); }
+.t68-next { margin: 24px 0 0; padding: 14px 16px; border-radius: var(--ui-radius-sm); background: var(--ui-accent-soft); color: var(--ui-ink); }
+.t68-next ul { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.t68-next a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: var(--ui-radius-sm); background: var(--ui-surface); color: var(--ui-accent-ink); font-weight: 700; text-decoration: none; border: 1px solid var(--ui-line); }
+.t68-hub { margin-top: 16px; }
+.t68-hub ul { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 0; padding: 0; }
+.t68-cards { list-style: none; margin: 16px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.t68-cards a { display: block; min-height: 44px; padding: 14px 16px; border: 1px solid var(--ui-line); border-radius: var(--ui-radius-sm); background: var(--ui-surface); color: var(--ui-ink); text-decoration: none; }
+.t68-cards a:hover { border-color: var(--ui-accent); }
+.t68-cards small { display: block; margin-top: 4px; color: var(--ui-muted); }
+.teacher-login-title { display: block; font: inherit; font-size: 2rem; line-height: 1.02; letter-spacing: -.05em; margin: 70px 0 12px; max-width: 340px; font-weight: 700; color: inherit; }
+@media (min-width: 1024px) {
+  .t68-menu { display: none; }
+  .t68-tools { flex: 0 0 auto; order: 0; margin-left: auto; }
+  .t68-collapse { display: inline-flex; }
+  .t68-collapse[hidden] { display: none; }
+  .t68-body { display: grid; grid-template-columns: 272px minmax(0, 1fr); align-items: start; }
+  .t68-side { display: block; position: sticky; top: 61px; height: calc(100vh - 61px); overflow: auto; padding: 12px; border-right: 1px solid var(--ui-line); background: var(--ui-surface); box-sizing: border-box; }
+  [data-t68-frame].is-collapsed .t68-body { grid-template-columns: minmax(0, 1fr); }
+  [data-t68-frame].is-collapsed .t68-side { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .t68 * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
+@media print { .t68-top, .t68-side, .t68-classbar, .t68-next, .t68-crumbs { display: none !important; } }
+/* Jednotné ovládací prvky starších pohledů (tlačítka, pole, ukazatele) na tokenech --ui-*. */
+.t68 .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 16px; border: 1px solid var(--ui-field-border); border-radius: var(--ui-radius-sm); background: var(--ui-surface); color: var(--ui-ink); font-weight: 700; text-decoration: none; cursor: pointer; }
+.t68 .btn.small { min-height: 44px; }
+.t68 .btn.primary, .t68 button.primary { background: var(--ui-accent); border-color: var(--ui-accent); color: var(--ui-on-accent); }
+.t68 .btn:hover { filter: brightness(1.06); }
+.t68 :where(input:not([type="checkbox"], [type="radio"], [type="range"]), select, textarea) { background: var(--ui-surface); color: var(--ui-ink); border: 1px solid var(--ui-field-border); border-radius: var(--ui-radius-sm); min-height: 44px; padding: 8px 12px; box-sizing: border-box; font: inherit; }
+.t68 textarea { min-height: 88px; }
+.t68 ::placeholder { color: var(--ui-muted); opacity: 1; }
+.t68 progress { appearance: none; -webkit-appearance: none; height: 10px; border: 0; border-radius: 999px; background: var(--ui-track); overflow: hidden; accent-color: var(--ui-accent); }
+.t68 progress::-webkit-progress-bar { background: var(--ui-track); border-radius: 999px; }
+.t68 progress::-webkit-progress-value { background: var(--ui-accent); border-radius: 999px; }
+.t68 progress::-moz-progress-bar { background: var(--ui-accent); border-radius: 999px; }
+.t68 table { border-collapse: collapse; }
+.t68 th { color: var(--ui-muted); }
+.t68 :where(a:not([class])) { color: var(--ui-accent-ink); }
+.t68 .teacher-empty { color: var(--ui-muted); }
+/* Přebití pevných barev ze starších vrstev (ui-v51.css: !important) tokeny – ve světlém i tmavém režimu stejně. */
+.t68 .btn.primary, .t68 .btn-primary, .t68 .u51-chip input:checked + span, .t68 .u51-seat.selected, .t68 .u51-option input:checked + span b { background: var(--ui-accent) !important; border-color: var(--ui-accent) !important; color: var(--ui-on-accent) !important; }
+.t68 .u51-tabs a.active, .t68 .teacher-class-tabs a.active { background: var(--ui-accent) !important; border-color: var(--ui-accent) !important; color: var(--ui-on-accent) !important; }
+.t68 .u51-tabs a.active b { color: inherit; }
+.t68 .u51-notice.error { background: var(--ui-bad-soft); color: var(--ui-bad-ink); border-color: var(--ui-bad-ink); }
+.t68 .u51-notice.ok { background: color-mix(in srgb, var(--ui-ok-ink) 14%, var(--ui-surface)); color: var(--ui-ok-ink); border-color: var(--ui-ok-ink); }
+.t68 .notice { border-color: var(--ui-warn-ink) !important; color: var(--ui-warn-ink) !important; }
+.t68 .u51-table tr:hover td { background: var(--ui-surface-2); }
+.t68 .u51-wizard-nav, .t68 .teacher-flash { background: var(--ui-surface); color: var(--ui-ink); }
+/* Mobil: logo + Menu v prvním řádku, otevřené menu hned pod nimi, nástroje (vzhled, účet) pod menu. */
+.t68-logo { order: 1; }
+.t68-menu { order: 2; }
+.t68-menu[open] { order: 3; }
+.t68-tools { order: 4; }
+@media (min-width: 1024px) { .t68-logo { order: 0; } .t68-tools { order: 0; } }
+/* Úzké displeje (390 px): starší pohledy nesmí roztáhnout stránku do šířky; široké tabulky se posouvají uvnitř. */
+@media (max-width: 760px) {
+  .t68-main { overflow-x: clip; }
+  .t68-main :where(.teacher-panel, .teacher-page-head, .ops-kpis, .ops-360-grid, .curriculum-main, .curriculum-block-grid, .lesson-mode-hero, .lesson-mode-toolbar, .lesson-mode-actions, .teacher-filter-row, .ops-trend-chart, form) { min-width: 0; max-width: 100%; }
+  .t68-main :where(.ops-360-grid, .curriculum-main, .curriculum-block-grid, .lesson-mode-hero, .lesson-mode-toolbar) { grid-template-columns: minmax(0, 1fr) !important; }
+  .t68-main :where(table) { display: block; max-width: 100%; overflow-x: auto; }
+  .t68-main :where(select, input:not([type="checkbox"], [type="radio"]), textarea) { max-width: 100%; }
+  .t68-main :where(.teacher-filter-row, .lesson-mode-actions) { flex-wrap: wrap; }
+}
+.t68-scope span:not(.t68-classbar-label) { color: var(--ui-ink); font-weight: 700; }

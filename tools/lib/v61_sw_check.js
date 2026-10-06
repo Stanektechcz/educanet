@@ -76,7 +76,7 @@ function dispatch(type, ev) {
 const req = (url, method, extra) => Object.assign({ url: absolute(url), method: method || 'GET', mode: 'cors', headers: { get: () => '' } }, extra || {});
 
 (async () => {
-  ok('sw: cache má verzi v61', /educanet-v61/.test(source));
+  ok('sw: cache má verzi v61 nebo novější (v68)', /educanet-v(61|68)/.test(source));
   await dispatch('install', {});
   const cacheName = Array.from(store.keys())[0];
   const cached = Array.from(store.get(cacheName).keys());

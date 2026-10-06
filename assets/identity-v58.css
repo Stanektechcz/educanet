@@ -26,7 +26,7 @@
   align-items: center;
   gap: 12px;
   padding: 6px 0;
-  border-bottom: 1px solid var(--border, #d0d5dc);
+  border-bottom: 1px solid var(--border, var(--k179));
 }
 
 .idt58-stats li:last-child { border-bottom: none; }
@@ -43,18 +43,18 @@
 .idt58-chips li {
   padding: 4px 10px;
   border-radius: 999px;
-  background: var(--surface-2, #eef1f5);
-  color: var(--text, #1b2330);
+  background: var(--surface-2, var(--k180));
+  color: var(--text, var(--k181));
 }
 
-.idt58-note { color: var(--muted, #4a5563); margin: 12px 0 0; line-height: 1.5; }
+.idt58-note { color: var(--muted, var(--k182)); margin: 12px 0 0; line-height: 1.5; }
 
 .idt58-warn {
   margin: 12px 0 0;
   padding: 8px 12px;
-  border-left: 4px solid #a4260b;
-  background: #fff4ef;
-  color: #5c1604;
+  border-left: 4px solid var(--k183);
+  background: var(--k184);
+  color: var(--k185);
 }
 
 .idt58-code { display: inline-block; margin-right: 8px; white-space: nowrap; }
@@ -64,7 +64,7 @@
 .idt58-table-wrap:focus-visible,
 .idt58-form input:focus-visible,
 .idt58-form button:focus-visible {
-  outline: 3px solid #1a56db;
+  outline: 3px solid var(--k186);
   outline-offset: 2px;
 }
 
@@ -75,11 +75,11 @@
   text-align: left;
   vertical-align: top;
   padding: 8px;
-  border-bottom: 1px solid var(--border, #d0d5dc);
+  border-bottom: 1px solid var(--border, var(--k179));
 }
 
-.idt58-table tr.idt58-high td:first-child { border-left: 4px solid #a4260b; }
-.idt58-table tr.idt58-info td:first-child { border-left: 4px solid #6b7280; }
+.idt58-table tr.idt58-high td:first-child { border-left: 4px solid var(--k183); }
+.idt58-table tr.idt58-info td:first-child { border-left: 4px solid var(--k154); }
 
 .idt58-sr {
   position: absolute;

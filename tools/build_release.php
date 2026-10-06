@@ -61,6 +61,7 @@ function br_rrmdir(string $dir): void
 const BUILD_EXCLUDE_DIRS = [
     'storage', 'uploads', // s výjimkou .htaccess (viz br_should_include)
     '.claude', 'tests', 'V1', 'lab-runtime', 'database',
+    'retired', // v68: kopie vyřazených souborů (tools/v68_retire.php) patří do zálohy, ne do vydání
     'docs/archive', '.git',
 ];
 // SEC59-01/d: V1/ (legacy aplikace, web-nastavitelné první heslo) se do vydání

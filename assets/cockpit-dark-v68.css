@@ -1,0 +1,24 @@
+/* EDUCANET v68 · tmavá vrstva cockpitu (soubory Labu) – GENEROVÁNO tools/v68_dark_overlay.php ze souborů assets/*.css, ručně neupravovat. Načítá se jen při tmavém motivu. */
+/* lab-editor-v58.css (sha256 149b688a2ec9) */
+html:not([data-theme="light"]) .lab58e{--e58-ink:var(--edu-ink, #ffffff);--e58-muted:#ecf5ff;--e58-line:#373a3b;--e58-card:#171717;--e58-soft:#202121;--e58-accent:var(--edu-teal-dark, #00d2e8);--e58-accent-soft:var(--edu-teal-soft, #222626);--e58-ok:#ffffff;--e58-ok-soft:#242725;--e58-bad:#ffeeef;--e58-bad-soft:#2a2626;--e58-warn:#ffe2d6;--e58-warn-soft:#25231e;color:var(--e58-ink)}
+html:not([data-theme="light"]) .lab58e-head p{color:var(--e58-muted)}
+html:not([data-theme="light"]) .lab58e-classes a{border:1px solid var(--e58-line);border-radius:999px;color:var(--e58-ink);background:var(--e58-card)}
+html:not([data-theme="light"]) .lab58e-classes a.active{background:var(--e58-accent);border-color:var(--e58-accent);color:#171717}
+html:not([data-theme="light"]) .lab58e-classes a:focus-visible, html:not([data-theme="light"]) .lab58e a:focus-visible, html:not([data-theme="light"]) .lab58e button:focus-visible, html:not([data-theme="light"]) .lab58e input:focus-visible, html:not([data-theme="light"]) .lab58e select:focus-visible, html:not([data-theme="light"]) .lab58e textarea:focus-visible{outline:3px solid var(--e58-accent);outline-offset:2px}
+html:not([data-theme="light"]) .lab58e-item{border:1px solid var(--e58-line);border-radius:12px;background:var(--e58-card)}
+html:not([data-theme="light"]) .lab58e-item.active{border-color:var(--e58-accent);box-shadow:0 0 0 2px var(--e58-accent-soft)}
+html:not([data-theme="light"]) .lab58e-item-main small{color:var(--e58-muted)}
+html:not([data-theme="light"]) .lab58e-badge{border-radius:999px;background:var(--e58-soft);color:var(--e58-muted)}
+html:not([data-theme="light"]) .lab58e-badge.published{background:var(--e58-ok-soft);color:var(--e58-ok)}
+html:not([data-theme="light"]) .lab58e-badge.draft{background:var(--e58-warn-soft);color:var(--e58-warn)}
+html:not([data-theme="light"]) .lab58e-check-mini.ok{color:var(--e58-ok)}
+html:not([data-theme="light"]) .lab58e-check-mini.warn{color:var(--e58-warn)}
+html:not([data-theme="light"]) .lab58e-form input[type="text"], html:not([data-theme="light"]) .lab58e-form input:not([type]), html:not([data-theme="light"]) .lab58e-form input[type="number"], html:not([data-theme="light"]) .lab58e-form input[type="search"], html:not([data-theme="light"]) .lab58e-form textarea, html:not([data-theme="light"]) .lab58e-form select{border:1px solid var(--e58-line);border-radius:8px}
+html:not([data-theme="light"]) .lab58e-classes-pick, html:not([data-theme="light"]) .lab58e-files, html:not([data-theme="light"]) .lab58e-generators, html:not([data-theme="light"]) .lab58e-checks{border:1px solid var(--e58-line);border-radius:10px}
+html:not([data-theme="light"]) .lab58e-hint{color:var(--e58-muted)}
+html:not([data-theme="light"]) .lab58e-check-panel{border-top:1px dashed var(--e58-line)}
+html:not([data-theme="light"]) .lab58e-check-summary.ok{color:var(--e58-ok)}
+html:not([data-theme="light"]) .lab58e-check-summary.bad{color:var(--e58-bad)}
+html:not([data-theme="light"]) .lab58e-detail li.block{color:var(--e58-bad)}
+html:not([data-theme="light"]) .lab58e-detail li.warn{color:var(--e58-warn)}
+

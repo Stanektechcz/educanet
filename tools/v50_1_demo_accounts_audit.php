@@ -31,7 +31,9 @@ $check(str_contains($module, "empty(\$existing['is_test_account'])"), 'real acco
 $check(str_contains($module, "empty(\$current['is_test_account'])"), 'delete restricted to test accounts');
 $check(str_contains($module, 'local_password_hash($password)'), 'password stored as hash');
 $check(!str_contains($module, "'password' => \$password,\n        'created_at'"), 'plaintext password not stored in account record');
-$check(str_contains($teacher, 'assets/teacher.css?v=50.1'), 'teacher CSS cache key bumped');
+// v68: CSS cockpitu načítá teacher68_stylesheets_html() s verzí podle času změny souboru (filemtime) – cache key se mění sám.
+$shell = (string)file_get_contents($root . '/teacher_shell_v68.php');
+$check(str_contains($shell, "teacher68_link_html('assets/teacher.css')") && str_contains($shell, 'filemtime'), 'teacher CSS cache key bumped (version = filemtime)');
 
 $failed = array_values(array_filter($checks, static fn(array $row): bool => !$row[0]));
 if ($failed) {

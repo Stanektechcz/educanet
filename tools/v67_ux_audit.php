@@ -70,10 +70,12 @@ $_COOKIE[UI67_THEME_COOKIE] = '"><script>alert(1)</script>';
 $check('vzhled: cookie mimo whitelist se ignoruje (výchozí „podle systému“)', ui67_theme_pref() === 'system');
 $check('vzhled: ui67_theme_set odmítne neplatnou hodnotu a přijme jen light|dark|system', !ui67_theme_set('evil') && !ui67_theme_set('') && ui67_theme_set('dark') && ui67_theme_pref() === 'dark');
 $check('vzhled: pohled mimo ověřený seznam je vždy světlý (data-theme=light, color-scheme light, bez tmavého odkazu)', ui67_effective_theme('lab', 'dark', ['dashboard']) === 'light' && ui67_color_scheme('lab', 'dark', ['dashboard']) === 'light' && ui67_dark_link_html('lab', 'dark', ['dashboard']) === '');
-$check('vzhled: ověřený pohled – „tmavý“ načte tokeny vždy, „podle systému“ jen s media (prefers-color-scheme: dark), „světlý“ vůbec', (static function (): bool {
+// v68: „podle systému“ přidá tmavé šablony skriptem jen při tmavém systému (velká tmavá vrstva se nestahuje všem; bez „<“ ve skriptu), „tmavý“ je napevno, „světlý“ nic.
+$check('vzhled: ověřený pohled – „tmavý“ načte tokeny vždy, „podle systému“ je přidá jen při (prefers-color-scheme: dark), „světlý“ vůbec', (static function (): bool {
     $dark = ui67_dark_link_html('dashboard', 'dark', ['dashboard']);
     $system = ui67_dark_link_html('dashboard', 'system', ['dashboard']);
-    return str_contains($dark, 'tokens-dark-v67.css') && !str_contains($dark, 'media=') && str_contains($system, 'media="(prefers-color-scheme: dark)"') && ui67_dark_link_html('dashboard', 'light', ['dashboard']) === '';
+    return str_contains($dark, 'tokens-dark-v67.css') && str_contains($dark, 'student-dark-v68.css') && !str_contains($dark, 'media=') && str_contains($system, 'prefers-color-scheme: dark') && str_contains($system, 'matchMedia')
+        && str_contains($system, 'tokens-dark-v67.css') && !str_contains($system, '<link') && strip_tags($system) !== '' && ui67_dark_link_html('dashboard', 'light', ['dashboard']) === '';
 })());
 $check('vzhled: color-scheme meta: tmavý = dark, podle systému = light dark', ui67_color_scheme('dashboard', 'dark', ['dashboard']) === 'dark' && ui67_color_scheme('dashboard', 'system', ['dashboard']) === 'light dark');
 $check('vzhled: dokud žádný pohled tmavý režim nepodporuje (UI67_DARK_VIEWS prázdné), přepínač se nevykreslí a všechny pohledy jsou světlé', ui67_dark_views() === [] ? (ui67_theme_switch_html('t', '?view=home', 'home') === '' && ui67_effective_theme('dashboard', 'dark') === 'light') : ui67_theme_switch_html('t', '?view=home', 'home') !== '');

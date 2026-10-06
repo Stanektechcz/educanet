@@ -1,0 +1,27 @@
+/* GENEROVÁNO tools/v68_tokenize_css.php --derive ze souboru assets/marketplace-v60.css (sha256 c6d941447fe7718b) – ručně neupravovat. */
+/* v60 · Obchod bodů (žák). Světlé plochy (rozhraní je světlé; tmavé pozadí + globální tmavý text h1–h4/p
+   ze student-ui-v50-7-7.css dával kontrast ~1:1). Bez CDN; respektuje prefers-reduced-motion.
+   Barvy textu: var(--ui-ink,#111827) / var(--ui-muted,#4b5563) na #fff (17,7 : 1 / 7,6 : 1), var(--ui-ink,#111827) na tlumených plochách ≥ 15 : 1. */
+.mkt60-hero{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;padding:20px;border-radius:var(--ui-radius,16px);background:var(--ui-surface,var(--k3));border:1px solid var(--ui-line,var(--k828));margin-bottom:16px;min-width:0;}
+.mkt60-hero>*{min-width:0;}
+.mkt60-hero h1{overflow-wrap:anywhere;}
+.mkt60-balance{display:flex;flex-direction:column;align-items:flex-end;min-width:0;}
+.mkt60-balance strong{font-size:2rem;line-height:1;color:var(--ui-ink,var(--k4));}
+.mkt60-balance span{color:var(--ui-muted,var(--k829));}
+.mkt60-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:14px;margin-bottom:20px;}
+.mkt60-card{display:flex;flex-direction:column;gap:8px;min-width:0;padding:16px;border-radius:var(--ui-radius,16px);background:var(--ui-surface,var(--k3));border:1px solid var(--ui-line,var(--k828));color:var(--ui-ink,var(--k4));overflow-wrap:anywhere;}
+body:not(.assessment-mode) .mkt60-card p{color:var(--ui-muted,var(--k58));margin:0;}
+.mkt60-type{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ui-muted,var(--k829));}
+.mkt60-card-foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:auto;}
+.mkt60-soldout{padding:6px 10px;border-radius:8px;background:var(--ui-surface-2,var(--k41));color:var(--ui-ink,var(--k4));}
+.mkt60-buy-form{min-width:0;}
+.mkt60-buy-form button,.mkt60-inline-form button{min-height:44px;min-width:44px;padding:8px 16px;}
+body:not(.assessment-mode) .mkt60-card .btn,body:not(.assessment-mode) .mkt60-purchase-list .btn{min-height:44px!important;min-width:44px;}
+.mkt60-buy-form button[disabled]{color:var(--ui-muted,var(--k829));background:var(--k830);border-color:var(--k831);cursor:not-allowed;}
+body:not(.assessment-mode) .mkt60-note,.mkt60-note{color:var(--ui-muted,var(--k829));}
+.mkt60-purchase-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
+.mkt60-purchase-list li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;min-width:0;padding:10px 12px;border-radius:var(--ui-radius-sm,12px);background:var(--ui-surface-2,var(--k41));color:var(--ui-ink,var(--k4));overflow-wrap:anywhere;}
+.mkt60-refunded{padding:2px 8px;border-radius:8px;background:var(--k832);color:var(--ui-ink,var(--k4));}
+.mkt60-hero :focus-visible,.mkt60-card :focus-visible,.mkt60-purchase-list :focus-visible{outline:3px solid var(--ui-accent,var(--k12))!important;outline-offset:2px!important;}
+@media (max-width:600px){.mkt60-hero{flex-direction:column;align-items:stretch;}.mkt60-balance{align-items:flex-start;}}
+@media (prefers-reduced-motion: reduce){.mkt60-card{transition:none;}}

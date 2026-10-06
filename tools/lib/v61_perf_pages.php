@@ -58,7 +58,7 @@ function v61_student_pages(): array
 function v61_teacher_pages(string $classId): array
 {
     $pages = [];
-    foreach (['overview', 'class_overview', 'class_results', 'session', 'arena', 'pristupy', 'attention', 'analytics', 'student360', 'reports'] as $tab) {
+    foreach (['overview', 'prehled', 'class_results', 'session', 'arena', 'pristupy', 'attention', 'analytics', 'student360', 'reports'] as $tab) {
         $pages[] = ['id' => 'ucitel-' . $tab, 'query' => ['tab' => $tab, 'class' => $classId]];
     }
     return $pages;

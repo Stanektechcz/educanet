@@ -67,5 +67,4 @@ return [
     'Světlý' => 'Світлий',
     'Tmavý' => 'Темний',
     'Vzhled' => 'Вигляд',
-    'Tmavý vzhled zatím mají jen vybrané stránky.' => 'Темний вигляд поки є лише на деяких сторінках.',
 ];

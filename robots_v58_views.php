@@ -28,7 +28,8 @@ function robots58_json_block(string $attr, array $data): string
 
 function robots58_assets(bool $js = true): void
 {
-    echo '<link rel="stylesheet" href="assets/robots-v58.css?v=' . ROBOTS58_ASSET_V . '">';
+    // v68: v cockpitu učitele tokenizovaná kopie (tmavý režim), jinak originál.
+    echo '<link rel="stylesheet" href="' . htmlspecialchars(function_exists('edu_css_href') ? edu_css_href('assets/robots-v58.css', 'assets/robots-v58.css?v=' . ROBOTS58_ASSET_V) : 'assets/robots-v58.css?v=' . ROBOTS58_ASSET_V, ENT_QUOTES) . '">';
     if ($js) echo '<script src="assets/robots-v58.js?v=' . ROBOTS58_ASSET_V . '" defer></script>';
 }
 

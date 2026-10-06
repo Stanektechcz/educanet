@@ -47,7 +47,7 @@ foreach(range(1,28) as $n){
 foreach(['choice','sequence','multi','matrix','pair','command','number'] as $type)if(!isset($types[$type]))$errors[]='Missing task type '.$type;
 if(count($archetypes)<12)$errors[]='Expected at least 12 interaction archetypes, got '.count($archetypes);
 
-$root=file_get_contents(__DIR__.'/../bootstrap.php')?:'';$index=edu_app_source()?:'';$teacher=file_get_contents(__DIR__.'/../teacher.php')?:'';$lessonMode=file_get_contents(__DIR__.'/../teacher_lesson_mode.php')?:'';$views=file_get_contents(__DIR__.'/../visual_practical_learning_views_v48.php')?:'';$sw=file_get_contents(__DIR__.'/../sw.js')?:'';
+$root=file_get_contents(__DIR__.'/../bootstrap.php')?:'';$index=edu_app_source()?:'';$teacher=(file_get_contents(__DIR__.'/../teacher.php')?:'').(file_get_contents(__DIR__.'/../teacher_shell_v68.php')?:'');/* v68: odkazy na CSS cockpitu jsou v teacher_shell_v68.php */$lessonMode=file_get_contents(__DIR__.'/../teacher_lesson_mode.php')?:'';$views=file_get_contents(__DIR__.'/../visual_practical_learning_views_v48.php')?:'';$sw=file_get_contents(__DIR__.'/../sw.js')?:'';
 foreach(['visual_labs_3a_v48_1.php'] as $needle)if(!str_contains($root,$needle))$errors[]='bootstrap missing '.$needle;
 foreach(['visual_labs_3a_views_v48_1.php','v481_deep_submit','visual-labs-3a-v48-1.css','visual-labs-3a-v48-1.js'] as $needle)if(!str_contains($index,$needle))$errors[]='index missing '.$needle;
 foreach(['visual_labs_3a_views_v48_1.php','visual-labs-3a-v48-1.css','visual-labs-3a-v48-1.js','v481_teacher_summary'] as $needle)if(!str_contains($teacher,$needle))$errors[]='teacher missing '.$needle;

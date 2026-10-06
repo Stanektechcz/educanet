@@ -42,7 +42,8 @@ foreach ($storageBefore as $file => $before) {
 if ($storageWrites) $errors[] = 'Read-only admin snapshots changed storage: ' . implode(', ', $storageWrites);
 
 $teacherSource = file_get_contents($root . '/teacher.php') ?: '';
-foreach (['class_overview','class_results','teacher-nav-groups','teacher-contextbar'] as $needle) if (!str_contains($teacherSource,$needle)) $errors[] = "teacher.php missing $needle";
+// v68: staré menu (teacher-nav-groups, teacher-contextbar) nahradil rámec v68 (teacher_shell_v68.php); kontrola míří na nové vykreslovací funkce.
+foreach (['class_overview','class_results','teacher68_stylesheets_html','teacher68_topbar_html','teacher68_nav_html','teacher68_class_bar_html'] as $needle) if (!str_contains($teacherSource,$needle)) $errors[] = "teacher.php missing $needle";
 // ř. 46-47: teacher-admin-v45-3.js se sám o sobě už nenačítá – čteme JS, který teacher.php skutečně
 // vkládá (konsolidovaný teacher-admin-v[\d-]+.js, dnes v45-7).
 if (!preg_match('~<script src="assets/(teacher-admin-v[\d-]+\.js)\?v=[\d.]+"~', $teacherSource, $adminJsMatch)) {

@@ -84,7 +84,7 @@ try {
     // --- 1. Legacy: sdílený klíč funguje, rozsah = vše ------------------------------------------
     $legacy = $req('legacy', 'GET', '/teacher.php');
     $legacyLogin = $req('legacy', 'POST', '/teacher.php', ['action' => 'teacher_login', 'teacher_key' => $sharedKey, 'teacher_name' => 'Legacy Učitel', 'csrf' => (string)$h->csrfToken($body($legacy))]);
-    $legacy3a = $get('legacy', ['tab' => 'class_overview', 'class' => 'class_3a']);
+    $legacy3a = $get('legacy', ['tab' => 'class_results', 'class' => 'class_3a']);   // v68: class_overview vrací 302 → sonda je class_results
     $check('legacy: sdílený klíč přihlásí, třída 3.A dostupná (guard no-op)', $status($legacyLogin) === 200 && $status($legacy3a) === 200 && !$phpError($body($legacy3a)) && str_contains($body($legacy3a), 'teacher_logout'));
 
     // --- 2. Účty (režim accounts) ---------------------------------------------------------------
@@ -151,7 +151,7 @@ try {
         'groups|edit_group' => ['tab' => 'groups', 'edit_group' => $id['group']['3a']],
         'interventions|intervention' => ['tab' => 'interventions', 'intervention' => $id['intervention']['3a']],
         'student360|student' => ['tab' => 'student360', 'student' => $fx['student_3a'], 'class' => 'class_3a'],
-        'class_overview|class' => ['tab' => 'class_overview', 'class' => 'class_3a'],
+        'class_results|class' => ['tab' => 'class_results', 'class' => 'class_3a'],   // v68: class_overview → 302
         'session|class' => ['tab' => 'session', 'class' => 'class_4a'],
     ];
     $jsonParams = ['arena_poll', 'robots_poll', 'tg_poll', 'dohled_poll', 'v48_state'];
@@ -185,7 +185,7 @@ try {
     $check('SEC59-02: tg58_render_projector() sám kontroluje rozsah (hra 3.A pro A = „nenalezena“, bez značky; 2.A ano)', str_contains($projHtml, 'nebyla nalezena') && !$marker($projHtml) && str_contains($projOwn, 'MK2A'));
     // SEC59-18: učitelské stránky se neukládají do cache (hlavička před jakýmkoli výstupem, i přihlašovací karta).
     $noStore = static fn(array $r): bool => (bool)preg_grep('/^Cache-Control:.*no-store/i', (array)($r['raw_headers'] ?? [])) && (bool)preg_grep('/^Pragma:\s*no-cache/i', (array)($r['raw_headers'] ?? []));
-    $check('SEC59-18: Cache-Control: no-store + Pragma: no-cache na přehledu, záložce třídy i přihlašovací kartě', $noStore($get('a', ['tab' => 'overview'])) && $noStore($get('a', ['tab' => 'class_overview', 'class' => 'class_2a']))
+    $check('SEC59-18: Cache-Control: no-store + Pragma: no-cache na přehledu, záložce třídy i přihlašovací kartě', $noStore($get('a', ['tab' => 'overview'])) && $noStore($get('a', ['tab' => 'class_results', 'class' => 'class_2a']))
         && $noStore($req('anon_cache', 'GET', '/teacher.php')));
     $cardA = $get('a', ['tab' => 'ucitele', 'karticka' => 'x']);
     $check('GET ucitele&karticka: učitel nedostane kartičku ani správu účtů (403 nebo skrytá záložka)', in_array($status($cardA), [200, 403], true) && !str_contains($body($cardA), 'teacher59_admin_'));
@@ -272,7 +272,7 @@ try {
     $before = $snapshot();
     $sGrade = $post('s', 'save_grade', ['class_id' => 'class_3a', 'target_id' => $fx['student_3a'], 'project_id' => 'x', 'grade' => '1']);
     $check('asistent (3.A): save_grade nic nezapíše (oprávnění v46), status ' . $status($sGrade), in_array($status($sGrade), [302, 303, 403], true) && v59sf_same($before, $snapshot()));
-    $check('asistent: 3.A ano, 4.A → 403', $status($get('s', ['tab' => 'class_overview', 'class' => 'class_3a'])) === 200 && $status($get('s', ['tab' => 'class_overview', 'class' => 'class_4a'])) === 403);
+    $check('asistent: 3.A ano, 4.A → 403', $status($get('s', ['tab' => 'class_results', 'class' => 'class_3a'])) === 200 && $status($get('s', ['tab' => 'class_results', 'class' => 'class_4a'])) === 403);
     // v60: nadpis a souhrnná čísla přehledu podle rozsahu účtu (admin/legacy beze změny).
     $ovTitle = static function (array $r) use ($body): string { return preg_match('/Teacher Overview · ([^<]+)<\/div>/u', $body($r), $m) === 1 ? html_entity_decode($m[1]) : ''; };
     $ovLessons = static function (array $r) use ($body): int { return preg_match('/Stav (\d+) strukturovaných/u', $body($r), $m) === 1 ? (int)$m[1] : -1; };
@@ -292,9 +292,9 @@ try {
         ['nt_mk2a', 'class_2a', '', 'MK2A upozornění']] as [$nid, $nclass, $nurl, $ntitle]) {
         v59sf_push('teacher_notifications.json.php', array_filter(['id' => $nid, 'owner_key' => $keyA, 'class_id' => $nclass, 'title' => $ntitle, 'text' => $ntitle, 'url' => $nurl, 'kind' => 'filter', 'created_at' => $isoNow, 'read_at' => null], static fn($v): bool => $v !== null));
     }
+    // v68: záložka Automatizace je vyřazená z menu (302 na rozcestník Správa), upozornění se nevykreslují → žádný únik; ověř přesměrování.
     $autoPage = $get('a', ['tab' => 'automations']);
-    $check('SEC59-06: A vidí jen upozornění svých tříd (2.A ano; 3.A podle class_id ani 4.A podle starého odkazu ne)', $status($autoPage) === 200 && str_contains($body($autoPage), 'MK2A upozornění')
-        && !str_contains($body($autoPage), 'MK3A upozornění') && !str_contains($body($autoPage), 'MK4A staré upozornění'));
+    $check('SEC59-06 (v68): ?tab=automations → 302 na rozcestník Správa, bez značek cizích tříd', $status($autoPage) === 302 && str_contains((string)($autoPage['headers']['Location'] ?? ''), 'tab=sekce') && !$marker($body($autoPage)));
     foreach ([['au_mk3a', 'sf_mk3a_a'], ['au_mk2a', 'sf_mk2a']] as [$aid3, $fid]) {
         v59sf_push('teacher_automations.json.php', ['id' => $aid3, 'owner_key' => $keyA, 'owner_label' => 'Alena Učitelová', 'team_key' => teacher_team_key(), 'filter_id' => $fid, 'filter_name' => 'Audit',
             'trigger' => 'any_change', 'enabled' => true, 'last_student_keys' => ['class_x:student:nikdo'], 'last_count' => 99, 'last_run_at' => null, 'created_at' => $isoNow, 'updated_at' => $isoNow]);
@@ -318,9 +318,9 @@ try {
         && intake_v51_teacher_csv_row(['=1+2', '+x', '-y', '@z', 'ok', 5, "\tTab"]) === ["'=1+2", "'+x", "'-y", "'@z", 'ok', '5', "'\tTab"]);
 
     // --- 9. Agregace a navigace: A nikde nevidí 3.A/4.A ------------------------------------------
-    $tabs = array_values(array_diff(array_merge(['session', 'arena', 'pristupy', 'intake', 'attention', 'control', 'reports', 'communications', 'overview', 'class_overview',
-        'class_results', 'analytics', 'interventions', 'automations', 'filters', 'demo_accounts', 'ops_audit', 'calendar', 'curriculum', 'teach', 'growth', 'grade',
-        'groups', 'workspace', 'skills', 'mastery', 'authoring', 'history', 'ucet', 'team_admin'], teacher58_tabs()), TEACHER59_ADMIN_TABS));
+    $tabs = array_values(array_diff(array_merge(['session', 'arena', 'pristupy', 'intake', 'attention', 'reports', 'communications', 'overview',
+        'class_results', 'analytics', 'interventions', 'demo_accounts', 'ops_audit', 'calendar', 'curriculum', 'teach', 'grade',
+        'groups', 'workspace', 'authoring', 'history', 'ucet', 'team_admin', 'sekce'], teacher58_tabs()), TEACHER59_ADMIN_TABS));
     $label3a = $fx['label_3a_only'];
     foreach ($tabs as $tab) {
         $r = $get('a', ['tab' => $tab]);
@@ -340,12 +340,12 @@ try {
     $check('agregace A · export reportu (JSON): jen 1.A/2.A', $status($report) === 200 && !str_contains($body($report), 'class_3a') && !str_contains($body($report), 'class_4a') && str_contains($body($report), 'class_2a'));
     $reportCsv = $post('a', 'teacher_ops_report_export', ['report_format' => 'csv']);
     $check('agregace A · export reportu (CSV): bez 3.A/4.A', $status($reportCsv) === 200 && !str_contains($body($reportCsv), '3.A') && !str_contains($body($reportCsv), '4.A'));
-    foreach (['arena' => 'MK3A závod', 'editor' => 'MK3A úloha', 'filters' => 'MK3A filtr', 'demo_accounts' => 'MK3A Demo', 'ctf' => 'MK3A CTF', 'incidenty' => 'MK3A incident'] as $tab => $needle) {
+    foreach (['arena' => 'MK3A závod', 'editor' => 'MK3A úloha', 'demo_accounts' => 'MK3A Demo', 'ctf' => 'MK3A CTF', 'incidenty' => 'MK3A incident'] as $tab => $needle) {
         $rb = $get('b', ['tab' => $tab, 'class' => 'class_3a']);
         $check('kontrola značek: B na ' . $tab . ' 3.A vidí „' . $needle . '“', $status($rb) === 200 && str_contains($body($rb), $needle));
     }
     // Kontrola, že agregace vůbec vykreslují seznamy (jinak by absence značek 3.A nic neznamenala): A vidí vlastní 2.A.
-    foreach (['ops_audit' => 'MK2A audit', 'filters' => 'MK2A filtr', 'attention' => 'MK2A follow-up', 'editor' => 'MK2A úloha', 'demo_accounts' => 'MK2A Demo', 'arena' => 'MK2A závod'] as $tab => $needle) {
+    foreach (['ops_audit' => 'MK2A audit', 'attention' => 'MK2A follow-up', 'editor' => 'MK2A úloha', 'demo_accounts' => 'MK2A Demo', 'arena' => 'MK2A závod'] as $tab => $needle) {
         $ra = $get('a', ['tab' => $tab, 'class' => 'class_2a']);
         $check('kontrola značek: A na ' . $tab . ' 2.A vidí vlastní „' . $needle . '“', $status($ra) === 200 && str_contains($body($ra), $needle));
     }
@@ -355,9 +355,9 @@ try {
     v59sf_push('teacher_saved_filters.json.php', ['id' => 'sf_legacy_a', 'owner_key' => teacher59_legacy_owner_key($actorToken, 'Alena Učitelová'), 'owner_version' => 2, 'owner_label' => 'Alena Učitelová',
         'scope' => 'personal', 'team_key' => '', 'name' => 'MK2A starý filtr v2', 'class_id' => 'class_2a', 'status' => 'all', 'priority' => 'all', 'task_status' => 'all', 'task_due' => 'all',
         'rule_mode' => 'all', 'rules' => [], 'pinned' => false, 'default_for' => 'none', 'created_at' => date(DATE_ATOM), 'updated_at' => date(DATE_ATOM)]);
-    $beforeReclaim = $get('a', ['tab' => 'filters', 'class' => 'class_2a']);
+    $beforeReclaim = $get('a', ['tab' => 'class_results', 'class' => 'class_2a']);   // v68: uložené filtry vidí učitel ve Výsledcích třídy
     $reclaim = $post('a', 'teacher59_self_reclaim', ['legacy_name' => 'Alena Učitelová']);
-    $afterReclaim = $get('a', ['tab' => 'filters', 'class' => 'class_2a']);
+    $afterReclaim = $get('a', ['tab' => 'class_results', 'class' => 'class_2a']);
     $rowAfter = array_values(array_filter(storage_read(STORAGE_DIR . '/teacher_saved_filters.json.php', false), static fn($r): bool => is_array($r) && ($r['id'] ?? '') === 'sf_legacy_a'))[0] ?? [];
     $check('převzetí starých dat: filtr v2 není před převzetím vidět, po „Převzít moje stará data“ je vlastní (v3)', $actorToken !== '' && !str_contains($body($beforeReclaim), 'MK2A starý filtr v2')
         && in_array($status($reclaim), [302, 303], true) && str_contains($body($afterReclaim), 'MK2A starý filtr v2') && (int)($rowAfter['owner_version'] ?? 0) === 3
@@ -373,7 +373,7 @@ try {
 
     // --- 11. Deaktivace a odhlášení ---------------------------------------------------------------
     teacher59_account_set_status($acc['id']['b'], 'disabled', $acc['id']['admin']);
-    $afterDisable = $get('b', ['tab' => 'class_overview', 'class' => 'class_3a']);
+    $afterDisable = $get('b', ['tab' => 'class_results', 'class' => 'class_3a']);
     $check('deaktivace B: otevřená relace okamžitě bez přístupu', $status($afterDisable) !== 403 ? !str_contains($body($afterDisable), 'teacher_logout') && !$marker($body($afterDisable)) : true);
     $logout = $post('a', 'teacher_logout');
     $afterLogout = $get('a', ['tab' => 'overview']);

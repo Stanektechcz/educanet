@@ -28,7 +28,7 @@ require_once __DIR__ . '/teamgames_v64_views.php';
 
 function tg58_assets(): void
 {
-    ?><link rel="stylesheet" href="assets/teamgames-v58.css?v=58.0"><script src="assets/teamgames-v58.js?v=58.0" defer></script><?php
+    ?><link rel="stylesheet" href="<?= e(edu_css_href('assets/teamgames-v58.css', 'assets/teamgames-v58.css?v=58.0')) ?>"><script src="assets/teamgames-v58.js?v=58.0" defer></script><?php
 }
 
 function tg58_render_header(string $title, array $module): void

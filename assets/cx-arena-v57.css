@@ -1,0 +1,266 @@
+/* GENEROVÁNO tools/v68_tokenize_css.php --derive ze souboru assets/arena-v57.css (sha256 fc33ef293f498982) – ručně neupravovat. */
+/* EDUCANET v57 · Aréna (třídní závod v Linux Labu). Prefix arena57-. Kontrast AA, respektuje prefers-reduced-motion. */
+
+.arena57 {
+  --a57-ink: var(--edu-ink, var(--k187));
+  --a57-muted: var(--k792);
+  --a57-line: var(--k189);
+  --a57-card: var(--k3);
+  --a57-soft: var(--k436);
+  --a57-accent: var(--edu-teal-dark, var(--k190));
+  --a57-accent-soft: var(--edu-teal-soft, var(--k168));
+  --a57-warn: var(--k696);
+  --a57-warn-soft: var(--k793);
+  --a57-live: var(--k794);
+  --a57-live-soft: var(--k795);
+  --a57-bad: var(--k796);
+  --a57-bad-soft: var(--k145);
+  --a57-me: var(--k797);
+  color: var(--a57-ink);
+}
+
+.arena57-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.arena57-muted { color: var(--a57-muted); }
+.arena57 .small, .arena57-muted.small { font-size: .875rem; }
+
+.arena57-card {
+  background: var(--a57-card);
+  border: 1px solid var(--a57-line);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin: 0 0 16px;
+}
+.arena57-card h2 { font-size: 1.1rem; margin: 0 0 10px; }
+.arena57-card h3 { font-size: 1rem; margin: 14px 0 8px; }
+.arena57-card h3:first-child { margin-top: 0; }
+
+.arena57-badge {
+  display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .8rem; font-weight: 700;
+  background: var(--a57-soft); color: var(--a57-ink); border: 1px solid var(--a57-line);
+}
+.arena57-badge.is-live, .arena57-badge.is-on { background: var(--a57-live-soft); color: var(--a57-live); border-color: var(--k798); }
+.arena57-badge.is-draft { background: var(--a57-warn-soft); color: var(--a57-warn); border-color: var(--k799); }
+.arena57-badge.is-finished { background: var(--k800); color: var(--k801); }
+.arena57-badge.is-off { background: var(--a57-bad-soft); color: var(--a57-bad); border-color: var(--k802); }
+
+.arena57-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.arena57-actions form { margin: 0; }
+
+/* Odpočet */
+.arena57-clock {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-width: 128px; padding: 10px 16px; border-radius: 14px;
+  background: var(--a57-accent); color: var(--k3); text-align: center;
+}
+.arena57-clock-label { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; opacity: .95; }
+.arena57-clock-value { font-size: 2rem; line-height: 1.1; font-variant-numeric: tabular-nums; font-weight: 800; }
+.arena57-clock.is-urgent { background: var(--a57-bad); }
+.arena57-clock.is-stopped { background: var(--k801); }
+
+/* Cíl třídy */
+.arena57-goal { margin: 0 0 16px; }
+.arena57-goal-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; font-size: .95rem; }
+.arena57-bar { height: 14px; border-radius: 999px; background: var(--k803); overflow: hidden; border: 1px solid var(--a57-line); }
+.arena57-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--a57-accent), var(--k163)); transition: width .6s ease; }
+.arena57-goal.is-done .arena57-bar i { background: linear-gradient(90deg, var(--k804), var(--k805)); }
+
+/* Žebříček */
+.arena57-board { list-style: none; margin: 0; padding: 0; }
+.arena57-row {
+  display: grid; grid-template-columns: 2.4em 1fr auto auto; gap: 8px; align-items: baseline;
+  padding: 7px 8px; border-bottom: 1px solid var(--a57-line);
+}
+.arena57-row:last-child { border-bottom: 0; }
+.arena57-row.is-me { background: var(--a57-me); border-radius: 8px; font-weight: 700; }
+.arena57-row.is-empty { display: block; color: var(--a57-muted); }
+.arena57-rank { font-variant-numeric: tabular-nums; }
+.arena57-name { min-width: 0; overflow-wrap: anywhere; }
+.arena57-name small { font-weight: 400; color: var(--a57-muted); }
+.arena57-members { display: block; font-size: .8rem; }
+.arena57-pts { font-weight: 700; font-variant-numeric: tabular-nums; }
+.arena57-solved { color: var(--a57-muted); font-variant-numeric: tabular-nums; }
+
+.arena57-feed { list-style: none; margin: 0; padding: 0; font-size: .92rem; }
+.arena57-feed li { padding: 5px 0; border-bottom: 1px dashed var(--a57-line); }
+.arena57-feed li:last-child { border-bottom: 0; }
+.arena57-feed li.is-me { font-weight: 700; }
+.arena57-feed time { color: var(--a57-muted); font-variant-numeric: tabular-nums; }
+.arena57-feed .is-empty, .arena57-list .is-empty { color: var(--a57-muted); }
+
+.arena57-net { min-height: 1.2em; margin: 6px 0 0; font-size: .9rem; color: var(--a57-warn); }
+.arena57-net a { color: var(--a57-accent); font-weight: 700; }
+
+/* Žák – stránka závodu */
+.arena57-head {
+  display: grid; grid-template-columns: 1fr auto auto; gap: 16px; align-items: center; margin: 0 0 16px;
+}
+.arena57-head h1 { margin: 2px 0 4px; font-size: clamp(1.4rem, 2.6vw, 2rem); }
+.arena57-head p { margin: 0; color: var(--a57-muted); }
+.arena57-me { display: flex; gap: 10px; }
+.arena57-me > div {
+  display: flex; flex-direction: column; align-items: center; min-width: 84px; padding: 8px 12px;
+  background: var(--a57-accent-soft); border-radius: 12px; border: 1px solid var(--k806);
+}
+.arena57-me strong { font-size: 1.5rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.arena57-me small { color: var(--a57-muted); }
+
+/* Stránka závodu si rozšíří hlavní sloupec; rozložení řídí container queries (šířka obsahu, ne okna). */
+body.view-lab main:has(> .arena57-student) { --v5075-content: 1240px; --v5076-content: 1240px; }
+.arena57-student { container-type: inline-size; container-name: arena57; }
+.arena57-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+.arena57-main { min-width: 0; }
+.arena57-side { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; align-items: start; }
+.arena57-side .arena57-card { margin: 0; }
+.arena57-side .arena57-net { grid-column: 1 / -1; }
+@container arena57 (min-width: 1100px) {
+  .arena57-layout { grid-template-columns: minmax(0, 1fr) 280px; }
+  .arena57-side { grid-template-columns: minmax(0, 1fr); }
+}
+.arena57-levels { margin: 0 0 16px; }
+.arena57-levels h2, .arena57-side h2 { font-size: 1rem; margin: 0 0 8px; }
+.arena57-levels ol { list-style: none; margin: 0; padding: 0 0 4px; display: grid; gap: 8px; grid-auto-flow: column; grid-auto-columns: minmax(180px, 1fr); overflow-x: auto; }
+.arena57-level {
+  display: grid; grid-template-columns: 1.8em 1fr 1.4em; gap: 8px; align-items: center;
+  padding: 8px 10px; border-radius: 10px; border: 1px solid var(--a57-line); background: var(--a57-card);
+  color: var(--a57-ink); text-decoration: none;
+}
+.arena57-level:hover, .arena57-level:focus-visible { border-color: var(--a57-accent); }
+.arena57-level:focus-visible { outline: 3px solid var(--a57-accent); outline-offset: 2px; }
+.arena57-level.is-current { border-color: var(--a57-accent); box-shadow: inset 4px 0 0 var(--a57-accent); }
+.arena57-level.is-solved { background: var(--a57-live-soft); border-color: var(--k798); }
+.arena57-level-no {
+  display: inline-flex; align-items: center; justify-content: center; width: 1.8em; height: 1.8em; border-radius: 50%;
+  background: var(--a57-soft); font-weight: 700; font-size: .85rem;
+}
+.arena57-level-text { min-width: 0; }
+.arena57-level-text strong { display: block; font-size: .92rem; overflow-wrap: anywhere; }
+.arena57-level-text small { color: var(--a57-muted); font-size: .78rem; }
+.arena57-level-mark { font-style: normal; font-weight: 800; color: var(--a57-live); text-align: center; }
+
+.arena57-note { padding: 10px 14px; border-radius: 10px; background: var(--a57-warn-soft); color: var(--a57-warn); margin: 0 0 12px; }
+.arena57-waiting { text-align: center; padding: 32px 18px; }
+.arena57-final-lead { font-size: 1.1rem; }
+.arena57-xp { display: inline-block; padding: 6px 12px; border-radius: 999px; background: var(--a57-accent-soft); color: var(--a57-accent); font-weight: 700; }
+.arena57-board.is-final { margin-bottom: 12px; }
+.arena57-foot { margin: 16px 0 0; color: var(--a57-muted); font-size: .9rem; }
+.arena57-foot a { color: var(--a57-accent); }
+
+/* Učitel */
+.arena57-classes { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.arena57-classes a {
+  padding: 6px 14px; border-radius: 999px; border: 1px solid var(--a57-line); background: var(--a57-card);
+  color: var(--a57-ink); text-decoration: none; font-weight: 600;
+}
+.arena57-classes a.active { background: var(--a57-accent); border-color: var(--a57-accent); color: var(--k3); }
+.arena57-classes a:focus-visible { outline: 3px solid var(--a57-accent); outline-offset: 2px; }
+
+.arena57-labswitch { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.arena57-labswitch p { margin: 4px 0 0; }
+
+.arena57-panel.is-live { border-color: var(--k798); box-shadow: 0 0 0 3px var(--a57-live-soft); }
+.arena57-panel-head { display: grid; grid-template-columns: 1fr auto; gap: 12px 16px; align-items: center; margin-bottom: 14px; }
+.arena57-panel-head h2 { margin: 6px 0 2px; font-size: 1.3rem; }
+.arena57-panel-head p { margin: 0; }
+.arena57-panel-head .arena57-actions { grid-column: 1 / -1; }
+.arena57-panel-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.arena57-block { min-width: 0; }
+.arena57-span2 { grid-column: span 2; }
+.arena57-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 8px 0 0; }
+.arena57-chips li { padding: 4px 10px; border-radius: 999px; background: var(--a57-soft); border: 1px solid var(--a57-line); font-size: .88rem; }
+
+.arena57-list { list-style: none; margin: 0 0 8px; padding: 0; font-size: .92rem; }
+.arena57-list li { padding: 6px 0; border-bottom: 1px solid var(--a57-line); }
+.arena57-list li:last-child { border-bottom: 0; }
+.arena57-list code { font-size: .82rem; background: var(--a57-soft); padding: 1px 4px; border-radius: 4px; overflow-wrap: anywhere; }
+.arena57-list.is-alert li:not(.is-empty) { color: var(--a57-bad); }
+.arena57-feed li.is-foreign_code { color: var(--a57-bad); }
+
+.arena57-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.arena57-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.arena57-table th, .arena57-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--a57-line); vertical-align: top; }
+.arena57-table th { font-size: .8rem; text-transform: uppercase; letter-spacing: .03em; color: var(--a57-muted); white-space: nowrap; }
+.arena57-table td { font-variant-numeric: tabular-nums; }
+.arena57-table tr.is-idle td { color: var(--a57-muted); }
+.arena57-table td.is-some { background: var(--a57-accent-soft); }
+.arena57-table td.is-full { background: var(--a57-live-soft); color: var(--a57-live); font-weight: 700; }
+
+.arena57-teacher-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.arena57-form fieldset { border: 0; padding: 0; margin: 0 0 12px; }
+.arena57-form legend { font-weight: 700; margin-bottom: 6px; }
+.arena57-presets { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+.arena57-presets legend { grid-column: 1 / -1; }
+.arena57-preset { display: flex; gap: 8px; align-items: flex-start; padding: 8px 10px; border: 1px solid var(--a57-line); border-radius: 10px; cursor: pointer; }
+.arena57-preset:has(input:checked) { border-color: var(--a57-accent); background: var(--a57-accent-soft); }
+.arena57-preset input { margin-top: 4px; }
+.arena57-preset small { display: block; color: var(--a57-muted); font-size: .8rem; }
+.arena57-custom { margin: 0 0 12px; border: 1px solid var(--a57-line); border-radius: 10px; padding: 8px 12px; }
+.arena57-custom summary { cursor: pointer; font-weight: 600; }
+.arena57-custom fieldset { margin: 10px 0 0; }
+.arena57-check { display: flex; gap: 6px; align-items: baseline; padding: 2px 0; font-weight: 400; }
+.arena57-check small { color: var(--a57-muted); }
+.arena57-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; margin-bottom: 10px; }
+.arena57-fields label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; font-size: .9rem; }
+.arena57-fields input, .arena57-fields select { font: inherit; padding: 6px 8px; border: 1px solid var(--k807); border-radius: 8px; background: var(--k3); color: var(--a57-ink); min-width: 0; }
+.arena57-toggles { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-bottom: 12px; }
+
+.arena57-race-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.arena57-race-list li { display: grid; gap: 8px; padding: 10px; border: 1px solid var(--a57-line); border-radius: 10px; }
+.arena57-race-list li.is-selected { border-color: var(--a57-accent); box-shadow: inset 4px 0 0 var(--a57-accent); }
+.arena57-race-list small { display: block; margin-top: 2px; }
+
+.arena57-log summary { cursor: pointer; font-weight: 600; }
+.arena57-log ol { list-style: none; margin: 6px 0 0; padding: 0; max-height: 260px; overflow: auto; font-size: .85rem; }
+.arena57-log li { padding: 2px 0; }
+.arena57-log li.is-fail code { color: var(--a57-bad); }
+.arena57-log time, .arena57-log small { color: var(--a57-muted); }
+.arena57-log code { background: var(--a57-soft); padding: 0 4px; border-radius: 4px; overflow-wrap: anywhere; }
+
+/* Responzivita */
+@media (max-width: 1100px) {
+  .arena57-panel-grid { grid-template-columns: minmax(0, 1fr); }
+  .arena57-span2 { grid-column: auto; }
+  .arena57-teacher-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 720px) {
+  .arena57-head { grid-template-columns: 1fr; }
+  .arena57-me { flex-wrap: wrap; }
+  .arena57-clock { flex-direction: row; gap: 10px; }
+  .arena57-panel-head { grid-template-columns: 1fr; }
+}
+
+/* Projektor – samostatná stránka, tmavý vysoký kontrast, velké písmo */
+.arena57-projector-body {
+  --a57-ink: var(--k436); --a57-muted: var(--k808); --a57-line: var(--k809); --a57-soft: var(--k810); --a57-me: var(--k811);
+  --a57-accent: var(--k812); --a57-live: var(--k813); --a57-bad: var(--k814); --a57-warn: var(--k815);
+  margin: 0; min-height: 100vh; background: var(--k816); color: var(--k436); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.arena57-projector { padding: clamp(16px, 3vw, 48px); max-width: 1600px; margin: 0 auto; }
+.arena57-projector h1 { font-size: clamp(2rem, 4.5vw, 4rem); margin: 4px 0 0; line-height: 1.05; }
+.arena57-projector h2 { font-size: clamp(1.3rem, 2.4vw, 2.2rem); margin: 0 0 12px; color: var(--k815); }
+.arena57-proj-kicker { font-size: clamp(1rem, 1.6vw, 1.4rem); color: var(--k808); }
+.arena57-proj-head { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; margin-bottom: 24px; }
+.arena57-clock.is-projector { background: var(--k817); border: 3px solid var(--k812); min-width: 220px; }
+.arena57-clock.is-projector .arena57-clock-value { font-size: clamp(3rem, 7vw, 6.5rem); color: var(--k3); }
+.arena57-clock.is-projector .arena57-clock-label { font-size: 1.1rem; color: var(--k818); }
+.arena57-clock.is-projector.is-urgent { background: var(--k819); border-color: var(--k814); }
+.arena57-clock.is-projector.is-stopped { background: var(--k810); border-color: var(--k820); }
+.arena57-goal.is-projector { margin-bottom: 28px; font-size: clamp(1.1rem, 1.8vw, 1.6rem); }
+.arena57-goal.is-projector .arena57-bar { height: 26px; background: var(--k810); border-color: var(--k821); }
+.arena57-goal.is-projector .arena57-bar i { background: linear-gradient(90deg, var(--k812), var(--k815)); }
+.arena57-proj-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(16px, 3vw, 48px); }
+.arena57-board.is-projector .arena57-row { font-size: clamp(1.3rem, 2.4vw, 2.3rem); padding: 10px 12px; border-bottom-color: var(--k809); grid-template-columns: 2.2em 1fr auto auto; }
+.arena57-board.is-projector .arena57-row:nth-child(1) .arena57-rank { color: var(--k815); }
+.arena57-board.is-projector .arena57-solved, .arena57-board.is-projector .arena57-name small { color: var(--k808); }
+.arena57-board.is-projector .arena57-row.is-empty { color: var(--k808); }
+.arena57-feed.is-projector { font-size: clamp(1.1rem, 1.9vw, 1.8rem); }
+.arena57-feed.is-projector li { border-bottom-color: var(--k809); padding: 10px 0; }
+.arena57-feed.is-projector time, .arena57-feed.is-projector .is-empty { color: var(--k808); }
+.arena57-feed.is-projector em { color: var(--k822); font-style: normal; }
+.arena57-projector .arena57-net { color: var(--k815); }
+.arena57-proj-foot { margin-top: 32px; color: var(--k808); font-size: 1rem; }
+@media (max-width: 900px) { .arena57-proj-grid { grid-template-columns: minmax(0, 1fr); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .arena57-bar i { transition: none; }
+  .arena57 *, .arena57-projector * { animation: none !important; scroll-behavior: auto !important; }
+}

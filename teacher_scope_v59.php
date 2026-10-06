@@ -314,6 +314,8 @@ function teacher59_action_policies(): array
     $table['ov61_bulk_confirm'] = $req;
     // v66 · nastavení návrhu hodnocení (zapnutí po třídách, váhy, hranice) smí jen administrátor; třída povinná a v rozsahu.
     $table['g66_settings'] = ['class' => 'required', 'admin' => true];
+    // v68 · přepínač vzhledu cockpitu: žádná data třídy, jen cookie (třída, je-li v požadavku, se ověří jako u ostatních).
+    $table['teacher68_theme_set'] = $none;
     return $table;
 }
 
@@ -575,6 +577,9 @@ function teacher59_get_policies(): array
         'prehled|export' => ['class' => 'required'],
         // v66: CSV export položkové analýzy a návrhů hodnocení – třída povinná a v rozsahu (a66t_export_csv ji ověřuje znovu).
         'hodnoceni66|export' => ['class' => 'required'],
+        // v68: rozcestník žáka (detail žáka → kompetence, cesty, projekty, návrhy hodnocení, lab) – jen čtení, třída povinná a v rozsahu.
+        'kompetence|student' => ['class' => 'required'], 'cesty|student' => ['class' => 'required'], 'projekty65|student' => ['class' => 'required'],
+        'hodnoceni66|student' => ['class' => 'required'], 'labdata|student' => ['class' => 'required'],
     ];
 }
 
@@ -694,7 +699,7 @@ function teacher59_request_class_ids(): array
 function teacher59_page(string $title, string $bodyHtml): string
 {
     return '<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
-        . '<title>' . e($title) . ' · EDUCANET</title><link rel="stylesheet" href="assets/app.css?v=46"><link rel="stylesheet" href="assets/teacher.css?v=50.1">'
+        . '<title>' . e($title) . ' · EDUCANET</title><link rel="stylesheet" href="assets/app.css?v=46"><link rel="stylesheet" href="assets/tokens-palette-v68.css?v=68.0"><link rel="stylesheet" href="assets/teacher.css?v=68.0">'
         . '<link rel="stylesheet" href="assets/teacher-accounts-v59.css?v=59.0"></head><body class="teacher-app"><main class="teacher-shell t59-standalone">'
         . $bodyHtml . '</main></body></html>';
 }

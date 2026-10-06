@@ -22,6 +22,9 @@ try { intake_v51_sync_v1($modules); } catch (Throwable $intakeSyncError) { error
 
 $view = isset($_GET['view']) && is_string($_GET['view']) ? $_GET['view'] : 'home';
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+// v68: vyřazené pohledy (v48_state, continue, one_task) → 302 na přehled (app/redirects_v68.php).
+require_once __DIR__ . '/app/redirects_v68.php';
+routes68_redirect_if_retired($view, (string)$method, $_GET);
 $runtimeClassId = current_class_id($modules);
 $runtimeClasses = [];
 $lightViews = ['home','link_account','verify_email','reset_password','privacy','activate','join','change_password'];

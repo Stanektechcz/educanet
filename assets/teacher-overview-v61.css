@@ -4,30 +4,30 @@
 .ov61-classes{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
 .ov61-classes .btn,.ov61-bulk .btn,.ov61-two .btn,.ov61-head .btn{min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center}
 .ov61-kpis{list-style:none;margin:0 0 14px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px}
-.ov61-kpis li{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid #d5dce3;border-radius:12px;background:#fff;color:#111827}
-.ov61-kpis span,.ov61-kpis small{color:#374151}
-.ov61-kpis strong{font-size:1.75rem;line-height:1.1;color:#111827}
+.ov61-kpis li{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid var(--k151);border-radius:12px;background:var(--k3);color:var(--k4)}
+.ov61-kpis span,.ov61-kpis small{color:var(--k58)}
+.ov61-kpis strong{font-size:1.75rem;line-height:1.1;color:var(--k4)}
 .ov61-panel{margin-bottom:14px;min-width:0}
-.ov61-panel h3{margin:0 0 8px;font-size:1rem;color:#111827}
+.ov61-panel h3{margin:0 0 8px;font-size:1rem;color:var(--k4)}
 .ov61-table-wrap{overflow-x:auto}
-.ov61-table{width:100%;border-collapse:collapse;color:#111827}
-.ov61-table th,.ov61-table td{padding:10px 12px;text-align:left;border-bottom:1px solid #e3e8ee;vertical-align:top;overflow-wrap:anywhere}
-.ov61-table thead th{background:#eef2f6;font-weight:700}
+.ov61-table{width:100%;border-collapse:collapse;color:var(--k4)}
+.ov61-table th,.ov61-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--k152);vertical-align:top;overflow-wrap:anywhere}
+.ov61-table thead th{background:var(--k39);font-weight:700}
 .ov61-list{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:8px}
-.ov61-list li{padding:0;border:1px solid #e3e8ee;border-radius:10px;background:#fff;color:#111827;overflow-wrap:anywhere}
+.ov61-list li{padding:0;border:1px solid var(--k152);border-radius:10px;background:var(--k3);color:var(--k4);overflow-wrap:anywhere}
 .ov61-list li>span{display:block;padding:10px 12px}
 .ov61-check{display:flex;gap:10px;align-items:flex-start;min-height:44px;padding:10px 12px;cursor:pointer}
 .ov61-check input{width:22px;height:22px;flex:0 0 auto;margin-top:2px}
 .ov61-all{margin-bottom:8px;font-weight:700}
-.ov61-list small,.ov61-note{display:block;color:#374151}
+.ov61-list small,.ov61-note{display:block;color:var(--k58)}
 .ov61-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px}
-.ov61-res-confirmed{border-left:4px solid #1a7f37}
-.ov61-res-already,.ov61-res-skipped{border-left:4px solid #6b7280}
-.ov61-res-forbidden,.ov61-res-wrong_class,.ov61-res-missing,.ov61-res-error{border-left:4px solid #b42318}
+.ov61-res-confirmed{border-left:4px solid var(--k153)}
+.ov61-res-already,.ov61-res-skipped{border-left:4px solid var(--k154)}
+.ov61-res-forbidden,.ov61-res-wrong_class,.ov61-res-missing,.ov61-res-error{border-left:4px solid var(--k133)}
 .ov61-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.ov61-panel :focus-visible,.ov61-classes :focus-visible,.ov61-head :focus-visible{outline:3px solid #2459ff;outline-offset:2px}
+.ov61-panel :focus-visible,.ov61-classes :focus-visible,.ov61-head :focus-visible{outline:3px solid var(--k12);outline-offset:2px}
 @media (max-width:600px){.ov61-head{flex-direction:column;align-items:stretch}.ov61-table th,.ov61-table td{padding:8px}}
-.ov61-classes a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;padding:8px 16px;border:1px solid #9aa5b1;border-radius:10px;background:#fff;color:#111827;font-weight:700;text-decoration:none}
-.ov61-classes a[aria-current="page"]{background:#111827;border-color:#111827;color:#fff}
+.ov61-classes a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;padding:8px 16px;border:1px solid var(--k155);border-radius:10px;background:var(--k3);color:var(--k4);font-weight:700;text-decoration:none}
+.ov61-classes a[aria-current="page"]{background:var(--k4);border-color:var(--k4);color:var(--k3)}
 .ov61-table thead th{white-space:nowrap}
 .ov61-table{min-width:540px}.ov61-table tbody th{min-width:9rem}

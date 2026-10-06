@@ -203,8 +203,9 @@ $check('UT souhrn: dodaná šablona CSV je platná a prázdná (EMPTY)', $ue2 ==
 
 // ---------------------------------------------------------------- 6) vyřazování
 $check('vyřazení: seznam RETIRE67_APPROVED je prázdný (soubory se bez souhlasu uživatele nevyřazují)', RETIRE67_APPROVED === []);
-[$rte, , $rterr] = v67o_run($php, [__DIR__ . '/v67_retire.php', '--file=app/views/v48_state.php', '--apply'], [], $ROOT);
-$check('vyřazení: --apply na neschválený soubor skončí REFUSED not_approved a soubor existuje', $rte === 2 && str_contains($rterr, 'not_approved') && is_file($ROOT . '/app/views/v48_state.php'));
+// v68: v48_state.php byl vyřazen (tools/v68_retire.php), jako neschválený soubor slouží přehled.
+[$rte, , $rterr] = v67o_run($php, [__DIR__ . '/v67_retire.php', '--file=app/views/dashboard.php', '--apply'], [], $ROOT);
+$check('vyřazení: --apply na neschválený soubor skončí REFUSED not_approved a soubor existuje', $rte === 2 && str_contains($rterr, 'not_approved') && is_file($ROOT . '/app/views/dashboard.php'));
 $rr = v67o_tmpdir('retire');
 mkdir($rr . '/app/views', 0777, true);
 file_put_contents($rr . '/app/views/stary.php', "<?php // test\n");
@@ -220,7 +221,9 @@ foreach (['../x.php', 'storage/a.json.php', 'retired/v67/a.php', 'tools/lib/a.ph
 $check('vyřazení: zakázané cesty (.., storage/, retired/, tools/lib/, absolutní, zpětné lomítko, prázdná) se odmítnou i když jsou „schválené“' . ($bad ? ' [' . implode(', ', $bad) . ']' : ''), $bad === []);
 [$dce, $dcout] = v67o_run($php, [__DIR__ . '/v67_dead_code_report.php'], [], $ROOT);
 $check('report kandidátů: jen čte, spočítá kandidáty a končí V67_DEAD_CODE_REPORT_OK candidates=N live=M', $dce === 0 && preg_match('/^V67_DEAD_CODE_REPORT_OK candidates=(\d+) live=(\d+)$/m', $dcout, $dm) === 1 && (int)$dm[2] > 50);
-$check('report kandidátů: docs/V67_KANDIDATI_VYRAZENI.md existuje a uvádí stejný počet kandidátů', is_file($ROOT . '/docs/V67_KANDIDATI_VYRAZENI.md') && isset($dm[1]) && str_contains((string)file_get_contents($ROOT . '/docs/V67_KANDIDATI_VYRAZENI.md'), 'kandidátů: ' . $dm[1]));
+// v68: seznam kandidátů vede docs/V68_KANDIDATI_VYRAZENI.md (výsledek reportu v68); historický V67 dokument zůstává beze změny.
+[$dc8e, $dc8out] = v67o_run($php, [__DIR__ . '/v68_dead_code_report.php'], [], $ROOT);
+$check('report kandidátů: docs/V68_KANDIDATI_VYRAZENI.md existuje a uvádí výsledek reportu v68 (candidates=N)', $dc8e === 0 && preg_match('/^V68_DEAD_CODE_REPORT_OK candidates=(\d+)/m', $dc8out, $dm8) === 1 && is_file($ROOT . '/docs/V68_KANDIDATI_VYRAZENI.md') && str_contains((string)file_get_contents($ROOT . '/docs/V68_KANDIDATI_VYRAZENI.md'), 'candidates=' . $dm8[1]));
 
 // ---------------------------------------------------------------- 7) cron, dokumentace, preflight
 $cron = (string)file_get_contents($ROOT . '/docs/deploy/aapanel/educanet-cron.sh.example');

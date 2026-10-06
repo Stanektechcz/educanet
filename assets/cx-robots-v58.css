@@ -1,0 +1,199 @@
+/* GENEROVÁNO tools/v68_tokenize_css.php --derive ze souboru assets/robots-v58.css (sha256 164da1ca39f96af0) – ručně neupravovat. */
+/* EDUCANET v58 · Robotí liga. Prefix rb58-. Kontrast AA, cíle dotyku ≥ 44 px, respektuje prefers-reduced-motion. */
+
+.rb58 {
+  --rb-ink: var(--edu-ink, var(--k187));
+  --rb-muted: var(--k792);
+  --rb-line: var(--k189);
+  --rb-card: var(--k3);
+  --rb-soft: var(--k436);
+  --rb-accent: var(--edu-teal-dark, var(--k190));
+  --rb-accent-ink: var(--k3);
+  --rb-bad: var(--k796);
+  --rb-bad-soft: var(--k145);
+  --rb-warn: var(--k696);
+  --rb-warn-soft: var(--k793);
+  --rb-ok: var(--k794);
+  --rb-ok-soft: var(--k795);
+  --rb-me: var(--k797);
+  --rb-focus: var(--k856);
+  --rb-code-bg: var(--k857);
+  --rb-code-ink: var(--k858);
+  color: var(--rb-ink);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.rb58-body { margin: 0; background: var(--k41); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.rb58-main { padding: 16px; }
+.rb58 *, .rb58 *::before, .rb58 *::after { box-sizing: border-box; }
+.rb58 [hidden], .rb58-projector [hidden] { display: none !important; }
+.rb58-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.rb58-muted { color: var(--rb-muted); }
+.rb58 .small { font-size: .875rem; }
+.rb58 code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: .92em; background: var(--rb-soft); padding: 0 4px; border-radius: 4px; }
+
+.rb58-head { margin: 0 0 16px; }
+.rb58-head h1 { margin: 2px 0 6px; font-size: clamp(1.5rem, 3vw, 2rem); }
+.rb58-head p { margin: 0; max-width: 75ch; line-height: 1.5; }
+.rb58-kicker { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--rb-accent); font-weight: 700; }
+.rb58-notice { padding: 10px 14px; border-radius: 10px; background: var(--rb-warn-soft); color: var(--rb-warn); margin: 0 0 12px; }
+
+.rb58-card { background: var(--rb-card); border: 1px solid var(--rb-line); border-radius: 14px; padding: 16px 18px; margin: 0 0 16px; min-width: 0; }
+.rb58-card h2 { font-size: 1.15rem; margin: 0 0 10px; }
+.rb58-card h3 { font-size: 1rem; margin: 14px 0 8px; }
+
+.rb58-layout { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1100px) { .rb58-layout { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: start; } }
+.rb58-teacher-grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .rb58-teacher-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; } }
+
+/* Tlačítka a formuláře */
+.rb58-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 44px; min-width: 44px; padding: 8px 16px; border-radius: 10px;
+  border: 2px solid var(--rb-accent); background: var(--rb-card); color: var(--rb-accent);
+  font: inherit; font-weight: 700; cursor: pointer; text-decoration: none;
+}
+.rb58-btn:hover { background: var(--k168); }
+.rb58-btn.is-primary { background: var(--rb-accent); color: var(--rb-accent-ink); }
+.rb58-btn.is-primary:hover { background: var(--k859); }
+.rb58-btn.is-ghost { border-color: var(--rb-line); color: var(--rb-ink); }
+.rb58-btn.is-danger { border-color: var(--rb-bad); color: var(--rb-bad); }
+.rb58-btn:disabled { opacity: .55; cursor: progress; }
+.rb58 :focus-visible, .rb58-projector :focus-visible { outline: 3px solid var(--rb-focus); outline-offset: 2px; }
+.rb58-link { background: none; border: 0; padding: 0 2px; min-height: 44px; color: var(--rb-focus); text-decoration: underline; font: inherit; cursor: pointer; }
+.rb58-actions, .rb58-toolbar, .rb58-submit { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0; }
+.rb58-actions form { margin: 0; }
+.rb58 select, .rb58 input[type="text"], .rb58 input:not([type]), .rb58 input[type="datetime-local"] {
+  min-height: 44px; padding: 6px 10px; border: 1px solid var(--k860); border-radius: 8px; font: inherit; background: var(--k3); color: var(--rb-ink); max-width: 100%;
+}
+.rb58-options { border: 1px solid var(--rb-line); border-radius: 10px; padding: 8px 12px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 10px 0; }
+.rb58-options legend { font-weight: 700; padding: 0 4px; }
+.rb58-options label, .rb58-toolbar label, .rb58-submit label { display: inline-flex; align-items: center; gap: 6px; }
+.rb58-check { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+.rb58-check input { width: 20px; height: 20px; }
+.rb58-form { display: grid; gap: 12px; }
+.rb58-form label { display: grid; gap: 4px; font-weight: 600; }
+.rb58-form fieldset { border: 1px solid var(--rb-line); border-radius: 10px; padding: 6px 12px; }
+.rb58-form .rb58-check { display: flex; font-weight: 400; }
+
+/* Editor */
+.rb58-editor { display: flex; border: 1px solid var(--k861); border-radius: 10px; overflow: hidden; background: var(--rb-code-bg); }
+.rb58-editor:focus-within { outline: 3px solid var(--rb-focus); outline-offset: 2px; }
+.rb58-gutter, .rb58-editor textarea { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 15px; line-height: 20px; margin: 0; padding: 10px 8px; }
+.rb58-gutter { color: var(--k862); background: var(--k863); text-align: right; min-width: 3.2em; overflow: hidden; user-select: none; height: 380px; }
+.rb58-editor textarea {
+  flex: 1; min-width: 0; height: 380px; resize: vertical; border: 0; outline: none;
+  background: var(--rb-code-bg); color: var(--rb-code-ink); caret-color: var(--k864); tab-size: 4; white-space: pre; overflow: auto;
+}
+.rb58-editor textarea::selection { background: var(--k865); }
+[data-rb58-bytes].is-bad { color: var(--rb-bad); font-weight: 700; }
+.rb58-out { min-height: 1.5em; margin: 8px 0 4px; font-weight: 600; color: var(--rb-ok); }
+.rb58-out.is-bad { color: var(--rb-bad); }
+.rb58-errors, .rb58-issues { margin: 0; padding-left: 20px; }
+.rb58-errors li, .rb58-issues li { margin: 4px 0; line-height: 1.45; }
+.rb58-errors li.is-bad { color: var(--rb-bad); }
+.rb58-errors li.is-warn { color: var(--rb-warn); }
+.rb58-ok { color: var(--rb-ok); font-weight: 600; }
+
+/* Přehrávač */
+.rb58-panel .rb58-player { max-width: 860px; }
+.rb58-player-title { font-weight: 700; margin: 0 0 8px; }
+.rb58-stage { border-radius: 10px; border: 1px solid var(--rb-line); background: var(--k436); overflow: hidden; }
+.rb58-svg { display: block; width: 100%; height: auto; }
+.rb58-controls { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 10px 0 4px; }
+.rb58-slider-label { display: inline-flex; align-items: center; gap: 6px; flex: 1 1 180px; min-width: 160px; }
+.rb58-slider-label input { flex: 1; min-height: 44px; accent-color: var(--rb-accent); }
+.rb58-turn { font-variant-numeric: tabular-nums; font-weight: 700; min-width: 5.5em; }
+.rb58-speed { display: inline-flex; align-items: center; gap: 6px; }
+.rb58-live { min-height: 1.4em; margin: 6px 0; }
+.rb58-floor { fill: var(--k436); }
+.rb58-wall { fill: var(--k866); }
+.rb58-base { opacity: .3; }
+.rb58-base-t { font: 700 11px system-ui, sans-serif; text-anchor: middle; fill: var(--k187); }
+.rb58-charger { fill: var(--k864); stroke: var(--k867); stroke-width: 1; }
+.rb58-charger-t { font: 800 14px system-ui, sans-serif; text-anchor: middle; fill: var(--k868); }
+.rb58-packet { fill: var(--k869); stroke: var(--k3); stroke-width: 1; }
+.rb58-node polygon { fill: var(--k870); stroke: var(--k3); stroke-width: 1; }
+.rb58-node text { font: 800 9px system-ui, sans-serif; text-anchor: middle; fill: var(--k3); }
+.rb58-robot { transition: transform .16s linear; }
+.rb58-robot circle { stroke: var(--k3); stroke-width: 1.5; }
+.rb58-robot .rb58-me-ring { fill: none; stroke: var(--k160); stroke-width: 2.5; }
+.rb58-robot-t { font: 800 8.5px system-ui, sans-serif; text-anchor: middle; fill: var(--k3); }
+.rb58-me-t { font: 800 7px system-ui, sans-serif; text-anchor: middle; fill: var(--k160); paint-order: stroke; stroke: var(--k3); stroke-width: 2px; }
+.rb58-say { font: 600 7px system-ui, sans-serif; text-anchor: middle; fill: var(--k187); paint-order: stroke; stroke: var(--k3); stroke-width: 2.5px; }
+.rb58-legend { list-style: none; padding: 0; margin: 8px 0; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .875rem; }
+.rb58-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.rb58-key { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 4px; font-style: normal; font-size: 11px; font-weight: 800; }
+.rb58-key.is-wall { background: var(--k866); }
+.rb58-key.is-base { background: var(--k871); color: var(--k187); }
+.rb58-key.is-charger { background: var(--k864); color: var(--k868); border: 1px solid var(--k867); }
+.rb58-key.is-packet { background: var(--k869); width: 10px; height: 10px; border-radius: 2px; }
+.rb58-key.is-node { background: var(--k870); color: var(--k3); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.rb58-key.is-robot { background: var(--k190); color: var(--k3); border-radius: 50%; }
+.rb58-swatch { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+.rb58-log ol { max-height: 320px; overflow: auto; padding-left: 28px; margin: 8px 0 0; }
+.rb58-log li.is-me, .rb58-table tr.is-me { background: var(--rb-me); }
+.rb58-log summary, .rb58-subs summary, .rb58 details > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-weight: 700; }
+.rb58-dl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; margin: 0; }
+.rb58-dl dt { color: var(--rb-muted); }
+.rb58-dl dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+
+/* Tabulky a seznamy */
+.rb58-table-wrap { overflow-x: auto; max-width: 100%; }
+.rb58-score { max-height: 260px; }
+.rb58-player .rb58-table-wrap { max-height: 280px; overflow: auto; }
+.rb58-table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+.rb58-table caption { text-align: left; font-weight: 700; padding: 6px 0; }
+.rb58-table th, .rb58-table td { padding: 6px 8px; border-bottom: 1px solid var(--rb-line); text-align: left; vertical-align: top; }
+.rb58-table thead th { background: var(--rb-soft); font-size: .82rem; text-transform: uppercase; letter-spacing: .03em; }
+.rb58-table tbody th { font-weight: 600; }
+.rb58-code-view { background: var(--rb-code-bg); color: var(--rb-code-ink); padding: 10px; border-radius: 8px; overflow: auto; max-height: 320px; font-size: 13px; }
+.rb58-matches, .rb58-list, .rb58-teams { list-style: none; padding: 0; margin: 0; }
+.rb58-match { border-top: 1px solid var(--rb-line); padding: 12px 0; }
+.rb58-match:first-child { border-top: 0; padding-top: 0; }
+.rb58-match-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.rb58-match-head h2, .rb58-match-head h3 { margin: 0; }
+.rb58-list li { padding: 8px 0; border-bottom: 1px solid var(--rb-line); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.rb58-list li a { min-height: 44px; display: inline-flex; align-items: center; font-weight: 700; color: var(--rb-accent); }
+.rb58-list li.is-current a { color: var(--rb-ink); }
+.rb58-teams li { padding: 4px 0; }
+.rb58-place { font-size: 1.05rem; }
+.rb58-badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .8rem; font-weight: 700; border: 1px solid var(--rb-line); background: var(--rb-soft); }
+.rb58-badge.is-open { background: var(--rb-ok-soft); color: var(--rb-ok); border-color: var(--k798); }
+.rb58-badge.is-closed { background: var(--rb-warn-soft); color: var(--rb-warn); border-color: var(--k799); }
+.rb58-badge.is-finished { background: var(--k800); color: var(--k801); }
+.rb58-classes { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 16px; }
+.rb58-classes a { min-height: 44px; display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--rb-line); color: var(--rb-ink); text-decoration: none; background: var(--rb-card); }
+.rb58-classes a.active { background: var(--rb-accent); color: var(--k3); border-color: var(--rb-accent); }
+
+/* Tahák */
+.rb58-cheat-grid { display: grid; gap: 12px 20px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .rb58-cheat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.rb58-cheat ul { padding-left: 18px; margin: 0; }
+.rb58-cheat li { margin: 4px 0; line-height: 1.45; }
+
+/* Projektor */
+.rb58-projector-body { margin: 0; background: var(--k872); color: var(--k873); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.rb58-projector { padding: 20px 24px; max-width: 1600px; --rb-ink: var(--k873); --rb-muted: var(--k874); --rb-card: var(--k875); --rb-soft: var(--k876); --rb-line: var(--k877); --rb-me: var(--k878); --rb-accent: var(--k879); --rb-accent-ink: var(--k880); --rb-focus: var(--k864); }
+.rb58-projector h1 { font-size: clamp(1.8rem, 3vw, 2.8rem); margin: 4px 0 12px; }
+.rb58-projector .rb58-stage { background: var(--k881); }
+.rb58-projector .rb58-table { font-size: 1.1rem; }
+.rb58-projector .rb58-btn { background: var(--k875); }
+.rb58-projector .rb58-btn.is-primary { background: var(--rb-accent); color: var(--rb-accent-ink); }
+.rb58-projector select { background: var(--k875); color: var(--k873); }
+.rb58-proj-grid { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1100px) { .rb58-proj-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); } }
+.rb58-proj-wait { font-size: 1.4rem; padding: 40px 0; }
+.rb58-proj-foot { margin-top: 20px; color: var(--k874); font-size: .95rem; }
+
+@media (max-width: 480px) {
+  .rb58-card { padding: 12px; border-radius: 12px; }
+  .rb58-gutter, .rb58-editor textarea { height: 300px; font-size: 14px; }
+  .rb58-controls .rb58-btn { padding: 8px 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rb58-robot { transition: none; }
+  .rb58 * { scroll-behavior: auto !important; }
+}

@@ -79,7 +79,7 @@ try {
     $teacherLogin = audit_login_teacher($harness, $teacherKey);
     $check('učitel se přihlásí učitelským klíčem', audit_response_clean($teacherLogin['response']));
     $teachTab = $harness->request('GET', '/teacher.php', ['tab' => 'teach', 'class' => 'class_3a']);
-    $check('režim hodiny (tab=teach) načítá v52 styl (vykreslená stránka)', audit_response_clean($teachTab) && str_contains((string)$teachTab['body'], 'assets/tutorial-v52.css'));
+    $check('režim hodiny (tab=teach) načítá v52 styl (vykreslená stránka)', audit_response_clean($teachTab) && preg_match('~assets/(cx-)?tutorial-v52.css~', (string)$teachTab['body']) === 1);   // v68: cockpit načítá odvozenou kopii cx-tutorial-v52.css
     $teacherGuard = $harness->request('GET', '/tutorial_v52_teacher.php');
     $check('přímý přístup k tutorial_v52_teacher.php je zablokovaný (403)', $teacherGuard['status'] === 403);
 } finally {

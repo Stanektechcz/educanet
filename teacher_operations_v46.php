@@ -31,8 +31,12 @@ const TEACHER_PERMISSION_DENY = '__deny__';
 
 function teacher_permission(string $permission): bool
 {
+    return teacher_permission_for_role(teacher_role(),$permission);
+}
+/** v68: oprávnění pro zadanou roli (čistá funkce; menu cockpitu a audit ji volají bez relace). */
+function teacher_permission_for_role(string $role,string $permission): bool
+{
     if($permission===TEACHER_PERMISSION_DENY)return false;
-    $role=teacher_role();
     $matrix=[
         'admin'=>['*'],
         'lead'=>['view','grading.manage','projects.manage','curriculum.manage','skills.manage','content.manage','students.manage','filters.manage','team_filters.manage','interventions.manage','automations.manage','analytics.view','notes.manage','roles.manage','audit.view','templates.manage','watchlist.manage','followups.manage','bulk.undo'],
@@ -105,6 +109,8 @@ function teacher_action_permission_prefixes(): array
         'proj65_'=>'projects.manage',
         // v66 · testy a hodnocení: druh testu = správa obsahu, přepočet analýzy = analytika, převzetí návrhu = hodnocení, nastavení návrhu = jen administrátor (viz exact).
         'a66_'=>'content.manage','g66_'=>'grading.manage',
+        // v68 · přepínač vzhledu cockpitu (cookie edu_theme, žádná data): smí každá přihlášená role.
+        'teacher68_'=>'view',
     ];
 }
 function teacher_action_permission(string $action): ?string

@@ -1,0 +1,38 @@
+/* GENEROVÁNO tools/v68_tokenize_css.php --derive ze souboru assets/feedback-v60.css (sha256 f2276b72d9b9de6d) – ručně neupravovat. */
+/* v60 · Nahlášení chyby / návrh vylepšení (žák + učitelský registr). Bez CDN, prostý CSS.
+   Světlé plochy – dřív tmavé pozadí z nedefinované proměnné + globální tmavý h1–h4/p ze student-ui-v50-7-7.css ≈ 1:1. */
+.fb60-hero{padding:20px;border-radius:var(--ui-radius,16px);background:var(--ui-surface,var(--k3));border:1px solid var(--ui-line,var(--k828));margin-bottom:16px;min-width:0;overflow-wrap:anywhere;}
+.fb60-panel{margin-bottom:16px;}
+.fb60-form{display:flex;flex-direction:column;gap:10px;max-width:720px;min-width:0;}
+.fb60-form input[type=text],.fb60-form textarea{width:100%;min-height:44px;padding:10px 12px;font:inherit;border:1px solid var(--ui-field-border,var(--k834));border-radius:var(--ui-radius-sm,12px);background:var(--ui-surface,var(--k3));color:var(--ui-ink,var(--k4));}
+.fb60-form textarea{resize:vertical;min-height:140px;}
+.fb60-form input:focus-visible,.fb60-form textarea:focus-visible,.fb60-form button:focus-visible,.fb60-choice:focus-within,.fb60-footer-link:focus-visible,.fb60-t-form :focus-visible{outline:3px solid var(--ui-accent,var(--k12))!important;outline-offset:2px!important;}
+.fb60-types{border:0;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:10px;}
+.fb60-types legend{font-weight:700;margin-bottom:6px;}
+.fb60-choice{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:var(--ui-radius-sm,12px);border:1px solid var(--ui-field-border,var(--k834));cursor:pointer;background:var(--ui-surface,var(--k3));color:var(--ui-ink,var(--k4));}
+.fb60-choice input{width:20px;height:20px;}
+.fb60-field{font-weight:700;}
+.fb60-form button,.fb60-t-actions button{min-height:44px;min-width:44px;padding:8px 16px;}
+body:not(.assessment-mode) .fb60-note,.fb60-note{color:var(--ui-muted,var(--k829));margin:0;}
+.fb60-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
+.fb60-item{padding:12px 14px;border-radius:var(--ui-radius-sm,12px);background:var(--ui-surface-2,var(--k41));color:var(--ui-ink,var(--k4));min-width:0;overflow-wrap:anywhere;}
+.fb60-item-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.fb60-badge{padding:3px 9px;border-radius:999px;font-size:.78rem;background:var(--k835);color:var(--ui-ink,var(--k4));}
+.fb60-confirmed .fb60-status,.fb60-done .fb60-status{background:var(--k836);}
+.fb60-rejected .fb60-status,.fb60-duplicate .fb60-status{background:var(--k837);}
+.fb60-reward{font-weight:700;margin:6px 0 0;}
+.fb60-teacher-note{margin:6px 0 0;}
+.fb60-profile p{margin:0 0 10px;}
+.fb60-footer-link{display:inline-flex;align-items:center;min-height:44px;padding:0 10px;margin-left:8px;}
+.fb60-t-list{display:flex;flex-direction:column;gap:12px;}
+.fb60-t-row{padding:14px;border:1px solid var(--ui-line,var(--k828));border-radius:var(--ui-radius,16px);background:var(--ui-surface,var(--k3));color:var(--ui-ink,var(--k4));min-width:0;}
+.fb60-t-row header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.fb60-t-desc{white-space:normal;overflow-wrap:anywhere;margin:8px 0;}
+.fb60-t-form{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-top:10px;}
+.fb60-t-form label{display:grid;gap:4px;font-size:.8rem;font-weight:700;}
+.fb60-t-form input[type=number],.fb60-t-form select{min-height:44px;width:110px;}
+.fb60-t-note{flex:1 1 min(100%,260px);min-width:0;}
+.fb60-t-note textarea{min-height:44px;width:100%;}
+.fb60-t-actions{display:flex;flex-wrap:wrap;gap:8px;}
+@media (max-width:600px){.fb60-form{max-width:none;}.fb60-t-form{flex-direction:column;align-items:stretch;}.fb60-t-form input[type=number],.fb60-t-form select{width:100%;}}
+@media (prefers-reduced-motion: reduce){.fb60-item,.fb60-t-row{transition:none;}}

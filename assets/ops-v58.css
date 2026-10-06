@@ -29,7 +29,7 @@
   align-items: center;
   gap: 12px;
   padding: 6px 0;
-  border-bottom: 1px solid var(--border, #e2e2e2);
+  border-bottom: 1px solid var(--border, var(--k178));
   font-size: 0.95rem;
 }
 
@@ -39,11 +39,11 @@
 }
 
 .ops58-ext-list li.ok b {
-  color: #1a7f37;
+  color: var(--k153);
 }
 
 .ops58-ext-list li.missing b {
-  color: #b42318;
+  color: var(--k133);
 }
 
 .ops58-table {
@@ -56,7 +56,7 @@
 .ops58-table td {
   text-align: left;
   padding: 8px 10px;
-  border-bottom: 1px solid var(--border, #e2e2e2);
+  border-bottom: 1px solid var(--border, var(--k178));
   font-size: 0.92rem;
 }
 

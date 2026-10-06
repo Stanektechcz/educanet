@@ -182,7 +182,7 @@ try {
     };
     $tab = $tGet('/teacher.php?tab=hodnoceni66&class=class_3a');
     $check('HTTP učitel: záložka hodnoceni66 (200, HTML záložky ' . strlen($fragment($tab['body'])) . ' B < 40 KB, celá stránka ' . strlen($tab['body']) . ' B) obsahuje všechny sekce a načítá CSS i JS (defer) jen na této záložce', $tab['status'] === 200 && $fragment($tab['body']) !== '' && strlen($fragment($tab['body'])) < 40960 && str_contains($tab['body'], 'Ráno: co udělat dnes') && str_contains($tab['body'], 'Položková analýza')
-        && str_contains($tab['body'], 'Druhy testů') && str_contains($tab['body'], 'Návrh hodnocení') && str_contains($tab['body'], 'assets/assessment-v66.css') && preg_match('/<script src="assets\/assessment-v66\.js[^"]*" defer>/', $tab['body']) === 1 && audit_response_clean($tab));
+        && str_contains($tab['body'], 'Druhy testů') && str_contains($tab['body'], 'Návrh hodnocení') && preg_match('~assets/(cx-)?assessment-v66\.css~', $tab['body']) === 1 /* v68: cockpit načítá odvozenou kopii cx-assessment-v66.css */ && preg_match('/<script src="assets\/assessment-v66\.js[^"]*" defer>/', $tab['body']) === 1 && audit_response_clean($tab));
     $other = $tGet('/teacher.php?tab=prehled&class=class_3a');
     $check('HTTP učitel: jiná záložka (Přehled třídy) nenačítá CSS ani JS v66', $other['status'] === 200 && !str_contains($other['body'], 'assessment-v66'));
     $itemsCsv = $tGet('/teacher.php?tab=hodnoceni66&class=class_3a&export=items');

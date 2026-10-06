@@ -1052,6 +1052,16 @@ function verify_csrf(): void
     }
 }
 
+/**
+ * v68: cockpit učitele si zaregistruje funkci (teacher68_css_href → assets/cx-*.css, tokenizované kopie pro tmavý režim); žákovská aplikace ji nemá,
+ * takže pro ni platí $default (původní URL). Sdílené šablony (robots, týmové hry, události Arény) tak nemusí znát cockpit.
+ */
+function edu_css_href(string $path, string $default): string
+{
+    $mapper = $GLOBALS['edu_css_mapper'] ?? null;
+    return is_string($mapper) && is_callable($mapper) ? (string)$mapper($path) : $default;
+}
+
 function redirect_to(string $url): never
 {
     header('Location: ' . $url);
