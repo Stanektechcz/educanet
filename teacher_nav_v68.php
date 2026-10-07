@@ -17,18 +17,18 @@ require_once __DIR__ . '/ui_v67.php';
 
 /** Záložky cockpitu s tmavým režimem (po převodu CSS na tokeny a kontrole kontrastu; ostatní zůstanou světlé). */
 const UI68_TEACHER_DARK_TABS = [
-    'attention', 'prehled', 'hlaseni', 'student360', 'class_results', 'analytics', 'interventions', 'communications', 'intake', 'pristupy', 'groups',
+    'attention', 'hodina', 'prehled', 'hlaseni', 'student360', 'class_results', 'analytics', 'interventions', 'communications', 'intake', 'pristupy', 'groups',
     'cesty', 'curriculum', 'teach', 'session', 'calendar', 'authoring', 'editor', 'labdata',
     'hodnoceni66', 'kompetence', 'projekty65', 'grade', 'projekty', 'workspace', 'history',
     'arena', 'roboti', 'hry', 'ctf', 'incidenty', 'souboje', 'ekonomika', 'obchod',
-    'ucitele', 'identita', 'provoz', 'quality', 'ops_audit', 'team_admin', 'demo_accounts', 'overview', 'reports', 'ucet', 'sekce',
+    'sprava_prehled', 'ucitele', 'identita', 'provoz', 'quality', 'ops_audit', 'team_admin', 'demo_accounts', 'overview', 'reports', 'ucet', 'sekce',
 ];
 
 /** @return array<string, array{label:string, hint:string}> pořadí = pořadí v menu */
 function teacher68_sections(): array
 {
     return [
-        'dnes' => ['label' => 'Dnes', 'hint' => 'Co vyžaduje pozornost a co čeká na schválení'],
+        'dnes' => ['label' => 'Dnes', 'hint' => 'Dnešní hodina, co vyžaduje pozornost a co čeká na schválení'],
         'trida' => ['label' => 'Třída a žáci', 'hint' => 'Výsledky, detail žáka, podpora a přístupy'],
         'vyuka' => ['label' => 'Výuka', 'hint' => 'Cesty, plán, hodina a obsah'],
         'hodnoceni' => ['label' => 'Hodnocení', 'hint' => 'Kompetence, projekty a známky'],
@@ -47,6 +47,7 @@ function teacher68_tab_map(): array
         => ['section' => $section, 'label' => $label, 'hint' => $hint, 'class' => $class, 'perm' => $perm, 'admin' => $admin];
     return [
         'attention' => $t('dnes', 'Co řešit dnes', 'Upozornění, úkoly a nedávné zásahy'),
+        'hodina' => $t('dnes', 'Dnešní hodina', 'Téma, materiály, úkoly a postup žáků'),   // v70
         'prehled' => $t('dnes', 'Přehled třídy', 'Kdo zaostává a co čeká na schválení'),
         'hlaseni' => $t('dnes', 'Hlášení', 'Chyby a návrhy od žáků'),
         'student360' => $t('trida', 'Detail žáka', 'Výsledky, dovednosti, úkoly a časová osa'),
@@ -60,7 +61,7 @@ function teacher68_tab_map(): array
         'cesty' => $t('vyuka', 'Výukové cesty', 'Přiřazení cest, trychtýř kroků a kalibrace'),
         'curriculum' => $t('vyuka', 'Plán a kurikulum', 'Lekce, checklist a příprava'),
         'teach' => $t('vyuka', 'Režim hodiny', 'Projekce, simulace a živá výuka'),
-        'session' => $t('vyuka', 'Hodina', 'Kód hodiny a příchody žáků', false),
+        'session' => $t('vyuka', 'Kód hodiny', 'Kód pro žáky, příchody a odevzdání', false),
         'calendar' => $t('vyuka', 'Kalendář', 'Školní rok, bloky a výjimky', false),
         'authoring' => $t('vyuka', 'Obsah a otázky', 'Autorské nástroje a mikrotipy', true, 'content.manage'),
         'editor' => $t('vyuka', 'Editor úrovní', 'Vlastní úlohy do Linux Labu', true, 'content.manage'),
@@ -80,6 +81,7 @@ function teacher68_tab_map(): array
         'souboje' => $t('hry', 'Souboje', 'Výzvy a souboje žáků'),
         'ekonomika' => $t('hry', 'Ekonomika', 'Strop XP, žebříčky a retrospektivy', true, 'students.manage'),
         'obchod' => $t('hry', 'Obchod', 'Katalog obchodu bodů a nákupy'),
+        'sprava_prehled' => $t('sprava', 'Přehled správy', 'Účty, role, provoz a doporučení', false, 'view', true),   // v70
         'ucitele' => $t('sprava', 'Učitelé', 'Účty, třídy a předměty', false, 'view', true),
         'identita' => $t('sprava', 'Identita a nový rok', 'Stabilní identita žáků a přechod roku', false, 'view', true),
         'provoz' => $t('sprava', 'Provoz', 'Zdraví úložiště a zálohy', false, 'view', true),

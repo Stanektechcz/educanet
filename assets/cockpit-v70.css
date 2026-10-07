@@ -1,0 +1,110 @@
+/* EDUCANET v70 · přehledný cockpit: Dnešní hodina, Přehled správy, souhrny rozcestníků a „Související“.
+   Jen tokeny var(--ui-*) – stejné barvy ve světlém i tmavém režimu (tokens-v61 / tokens-dark-v67 / teacher-dark-v68).
+   Cíle dotyku ≥ 44 px, viditelný fokus, 390 px bez vodorovného posunu stránky. */
+
+.c70-head h1 { overflow-wrap: anywhere; }
+.c70-note { margin: 0 0 var(--ui-space-3); padding: var(--ui-space-2) var(--ui-space-3); border-radius: var(--ui-radius-sm); background: var(--ui-warn-soft); color: var(--ui-warn-ink); }
+.c70-muted { color: var(--ui-muted); }
+.c70-ok { color: var(--ui-ok-ink); font-weight: 700; }
+.c70-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* Výběr třídy a lekce */
+.c70-picker { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--ui-space-2); margin: 0 0 var(--ui-space-4); }
+.c70-picker ul { display: flex; flex-wrap: wrap; gap: var(--ui-space-2); margin: 0; padding: 0; list-style: none; }
+.c70-picker a { display: inline-flex; flex-direction: column; justify-content: center; min-height: 44px; min-width: 44px; padding: var(--ui-space-1) var(--ui-space-3);
+  border: 1px solid var(--ui-line); border-radius: var(--ui-radius-sm); background: var(--ui-surface); color: var(--ui-ink); text-decoration: none; line-height: 1.25; }
+.c70-picker a small { color: var(--ui-muted); font-size: var(--ui-text-xs); }
+.c70-picker a[aria-current="page"] { border-color: var(--ui-accent); background: var(--ui-accent-soft); color: var(--ui-accent-ink); }
+.c70-picker a:hover { border-color: var(--ui-accent); }
+
+/* Ukazatele */
+.c70-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--ui-space-2); margin: 0 0 var(--ui-space-4); }
+.c70-kpi { display: flex; flex-direction: column; gap: 2px; padding: var(--ui-space-3); border: 1px solid var(--ui-line); border-radius: var(--ui-radius-sm); background: var(--ui-surface); color: var(--ui-ink); min-width: 0; }
+.c70-kpi span { color: var(--ui-muted); font-size: var(--ui-text-sm); font-weight: 600; }
+.c70-kpi strong { font-size: var(--ui-text-xl); line-height: 1.15; overflow-wrap: anywhere; }
+.c70-kpi small { color: var(--ui-muted); font-size: var(--ui-text-xs); overflow-wrap: anywhere; }
+.c70-kpi.is-warn { border-color: var(--ui-warn-ink); background: var(--ui-warn-soft); }
+.c70-kpi.is-warn strong, .c70-kpi.is-warn span, .c70-kpi.is-warn small { color: var(--ui-warn-ink); }
+.c70-kpi.is-ok strong { color: var(--ui-ok-ink); }
+
+/* Mřížka a karty */
+.c70-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ui-space-4); }
+.c70-col { display: flex; flex-direction: column; gap: var(--ui-space-4); min-width: 0; }
+@media (min-width: 1100px) { .c70-grid { grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); } }
+.c70-card, .c70-empty { padding: var(--ui-space-4); border: 1px solid var(--ui-line); border-radius: var(--ui-radius); background: var(--ui-surface); color: var(--ui-ink); min-width: 0; }
+.c70-wide { margin-top: var(--ui-space-4); }
+.c70-card h2, .c70-empty h2 { margin: 0 0 var(--ui-space-2); font-size: var(--ui-text-lg); }
+.c70-card h3 { margin: var(--ui-space-3) 0 var(--ui-space-2); font-size: var(--ui-text); }
+.c70-card p { margin: 0 0 var(--ui-space-2); }
+.c70-lead { font-size: var(--ui-text-lg); }
+.c70-empty { margin: 0 0 var(--ui-space-4); border-style: dashed; border-color: var(--ui-dashed); }
+.c70-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-2); margin: 0 0 var(--ui-space-3); }
+.c70-actions .btn, .c70-form .btn { min-height: 44px; }
+
+.c70-chip { display: inline-block; padding: 1px var(--ui-space-2); border-radius: var(--ui-radius-pill); background: var(--ui-surface-2); color: var(--ui-ink); font-size: var(--ui-text-xs); font-weight: 600; white-space: nowrap; }
+.c70-chip-accent { background: var(--ui-accent-soft); color: var(--ui-accent-ink); }
+.c70-chip-ok { background: var(--ui-surface-2); color: var(--ui-ok-ink); }
+.c70-chip-warn { background: var(--ui-warn-soft); color: var(--ui-warn-ink); }
+.c70-chip-bad { background: var(--ui-bad-soft); color: var(--ui-bad-ink); }
+
+.c70-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--ui-accent-ink); font-weight: 700; }
+.c70-link:hover { text-decoration: none; }
+
+/* Seznamy */
+.c70-topics, .c70-materials, .c70-paths, .c70-linklist, .c70-todo, .c70-facts, .c70-hubrows { margin: 0; padding: 0; list-style: none; }
+.c70-topics li, .c70-materials li, .c70-paths li { display: flex; flex-direction: column; gap: 2px; padding: var(--ui-space-2) 0; border-top: 1px solid var(--ui-line); }
+.c70-topics li:first-child, .c70-materials li:first-child, .c70-paths li:first-child { border-top: 0; }
+.c70-topics span, .c70-materials small, .c70-paths small { color: var(--ui-muted); font-size: var(--ui-text-sm); }
+.c70-materials li { flex-direction: row; flex-wrap: wrap; align-items: center; gap: var(--ui-space-2); }
+.c70-materials a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ui-accent-ink); font-weight: 700; overflow-wrap: anywhere; }
+.c70-materials small { flex-basis: 100%; }
+.c70-steps { margin: 0; padding-left: var(--ui-space-5); }
+.c70-steps > li { padding: var(--ui-space-2) 0; }
+.c70-steps ul { margin: var(--ui-space-1) 0 0; padding-left: var(--ui-space-4); color: var(--ui-muted); }
+.c70-linklist li { padding: var(--ui-space-1) 0; }
+.c70-todo li { padding: var(--ui-space-2) 0; border-top: 1px solid var(--ui-line); }
+.c70-todo li:first-child { border-top: 0; }
+.c70-todo code, .c70-linklist code { overflow-wrap: anywhere; }
+.c70-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--ui-space-2); margin-bottom: var(--ui-space-3); }
+.c70-facts li { display: flex; flex-direction: column; padding: var(--ui-space-2); border-radius: var(--ui-radius-sm); background: var(--ui-surface-2); }
+.c70-facts span { color: var(--ui-muted); font-size: var(--ui-text-xs); font-weight: 600; }
+
+/* Hodina s kódem */
+.c70-code { margin: 0 0 var(--ui-space-2); font-size: 2rem; font-weight: 800; letter-spacing: .12em; color: var(--ui-accent-ink); }
+.c70-form { display: flex; flex-direction: column; gap: var(--ui-space-2); }
+.c70-form select { min-height: 44px; padding: 0 var(--ui-space-2); border: 1px solid var(--ui-field-border); border-radius: var(--ui-radius-sm); background: var(--ui-surface); color: var(--ui-ink); }
+
+/* Tabulka žáků: na mobilu karty (data-label) */
+.c70-table { width: 100%; border-collapse: collapse; font-size: var(--ui-text-sm); }
+.c70-table caption { text-align: left; color: var(--ui-muted); padding-bottom: var(--ui-space-2); }
+.c70-table th, .c70-table td { padding: var(--ui-space-2); border-top: 1px solid var(--ui-line); text-align: left; vertical-align: top; }
+.c70-table thead th { color: var(--ui-muted); font-size: var(--ui-text-xs); border-top: 0; }
+.c70-table tbody th a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ui-accent-ink); font-weight: 700; }
+.c70-table tr.is-behind th[scope="row"] { box-shadow: inset 4px 0 0 var(--ui-warn-ink); }
+.c70-bar { display: inline-block; width: 64px; height: 8px; border-radius: var(--ui-radius-pill); background: var(--ui-track); overflow: hidden; vertical-align: middle; }
+.c70-bar i { display: block; height: 100%; background: var(--ui-accent); }
+@media (max-width: 760px) {
+  .c70-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .c70-table, .c70-table tbody, .c70-table tr, .c70-table th, .c70-table td { display: block; width: 100%; }
+  .c70-table tr { padding: var(--ui-space-2) 0; border-top: 1px solid var(--ui-line); }
+  .c70-table th, .c70-table td { border-top: 0; padding: 2px var(--ui-space-2); }
+  .c70-table td::before { content: attr(data-label) ": "; color: var(--ui-muted); font-weight: 600; }
+}
+
+/* Rozcestník: dnešní výuka tříd */
+.c70-hubrows { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--ui-space-2); }
+.c70-hubrows a, .c70-hubrows div { display: flex; flex-direction: column; gap: 2px; min-height: 44px; padding: var(--ui-space-3); border: 1px solid var(--ui-line); border-radius: var(--ui-radius-sm); color: var(--ui-ink); text-decoration: none; }
+.c70-hubrows a:hover { border-color: var(--ui-accent); }
+.c70-hubrows span { color: var(--ui-muted); font-size: var(--ui-text-sm); }
+.c70-hubrows .c70-chip { align-self: flex-start; }
+
+/* Související (křížové odkazy mezi sekcemi) */
+.c70-related { margin: var(--ui-space-4) 0 0; padding: var(--ui-space-3) var(--ui-space-4); border: 1px solid var(--ui-line); border-radius: var(--ui-radius); background: var(--ui-surface-2); color: var(--ui-ink); }
+.c70-related ul { display: flex; flex-wrap: wrap; gap: var(--ui-space-2); margin: var(--ui-space-2) 0 0; padding: 0; list-style: none; }
+.c70-related a { display: flex; flex-direction: column; justify-content: center; min-height: 44px; padding: var(--ui-space-1) var(--ui-space-3); border: 1px solid var(--ui-line); border-radius: var(--ui-radius-sm); background: var(--ui-surface); color: var(--ui-accent-ink); text-decoration: none; font-weight: 700; }
+.c70-related small { color: var(--ui-muted); font-weight: 400; font-size: var(--ui-text-xs); }
+.c70-related a:hover { border-color: var(--ui-accent); }
+
+.c70-picker a:focus-visible, .c70-link:focus-visible, .c70-materials a:focus-visible, .c70-table a:focus-visible, .c70-hubrows a:focus-visible, .c70-related a:focus-visible, .c70-form select:focus-visible {
+  outline: var(--ui-focus, 3px) solid var(--ui-accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .c70-picker a, .c70-related a, .c70-hubrows a { transition: none; } }

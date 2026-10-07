@@ -20,6 +20,21 @@ function teacher58_modules(): array
     if ($mods !== null) return $mods;
     $csrf = static fn(): string => csrf_token();
     return $mods = [
+        // v70 · Dnešní hodina: rozvrh, téma a cíl lekce, materiály, cesty v63, kód hodiny, úkoly a postup žáků na jedné obrazovce.
+        // JEN ČTENÍ (jediný formulář = existující sess53_t_open s návratem sem); žádná nová POST akce ani GET parametr registru.
+        // ?class= hlídá obecná kontrola rozsahu (teacher59_guard_get_check), ?lesson= je jen číslo 1–28 (náhled jiné lekce).
+        'hodina' => [
+            'label' => 'Dnešní hodina', 'hint' => 'Téma, materiály, úkoly a postup žáků v dnešní lekci', 'group' => 'podpora',
+            'files' => ['points_v53.php', 'teacher_class_dashboard.php', 'teacher_overview_v61.php', 'competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php',
+                'paths_v63.php', 'paths_v63_class.php', 'cockpit_v70.php', 'lesson_today_v70.php', 'lesson_today_v70_views.php'],
+            'render' => static function (array $m, string $c): void { lt70_render_tab($m, $c); },
+        ],
+        // v70 · Přehled správy: účty a role, pokrytí tříd, provoz, kvalita dat a doporučení – jen administrátor, jen čtení.
+        'sprava_prehled' => [
+            'label' => 'Přehled správy', 'hint' => 'Účty, role, pokrytí tříd, zálohy a doporučení', 'group' => 'podpora', 'admin' => true,
+            'files' => ['ops_v58.php', 'identity_v58.php', 'cockpit_v70.php', 'admin_overview_v70.php', 'admin_overview_v70_views.php'],
+            'render' => static function (array $m, string $c): void { ad70_render_tab(); },
+        ],
         'roboti' => [
             'label' => 'Robotí liga', 'hint' => 'Programovatelná aréna – zápasy robotů', 'group' => 'hry',
             'files' => ['robots_v58.php', 'robots_v58_views.php'],

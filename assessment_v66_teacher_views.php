@@ -160,7 +160,7 @@ function a66t_section_morning(string $classId, string $csrf, array $labels): str
 {
     $cache = m66_read($classId);
     $html = '<section class="a66-section" aria-labelledby="a66-morning"><h3 id="a66-morning">Ráno: co udělat dnes</h3>';
-    if ($cache === []) return $html . '<p class="a66-note" role="status">Ranní přehled se připravuje. Vytváří ho skript tools/v66_morning_build.php z cronu.</p></section>';
+    if ($cache === []) return $html . '<p class="a66-note" role="status">Ranní přehled se připravuje – pro tuto třídu zatím nebyl sestaven. Sestavíte ho hned tlačítkem „Přepočítat analýzu, integritu a návrhy“ níže; jinak ho každé ráno připraví cron (tools/v66_morning_build.php).</p></section>';
     if (m66_is_stale($cache)) $html .= '<p class="a66-note" role="status">Přehled je starší než ' . M66_STALE_HOURS . ' hodin, zkontrolujte cron.</p>';
     $items = array_values(array_filter((array)$cache['items'], 'is_array'));
     if ($items === []) return $html . '<p>Dnes není co řešit.</p></section>';

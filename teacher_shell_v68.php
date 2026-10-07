@@ -76,7 +76,7 @@ function teacher68_stylesheets_html(string $tab): string
 /** CSS rámce se načítá jako poslední (po starších vrstvách), JS jen v těle stránky. */
 function teacher68_shell_css_html(string $tab): string
 {
-    return teacher68_link_html('assets/teacher-shell-v68.css') . teacher68_link_html('assets/teacher-contrast-v69.css') . teacher68_dark_html($tab);   // v69: kontrast malých popisků (AA)
+    return teacher68_link_html('assets/teacher-shell-v68.css') . teacher68_link_html('assets/teacher-contrast-v69.css') . teacher68_link_html('assets/cockpit-v70.css') . teacher68_dark_html($tab);   // v69: kontrast malých popisků (AA)
 }
 
 /** Tři tlačítka vzhledu (POST s CSRF, funguje bez JS, aria-pressed = aktuální volba). */
@@ -170,7 +170,9 @@ function teacher68_render_section_hub(string $sectionId, array $visibleTabs, str
         echo '<section class="teacher-empty wide">Tato sekce není pro vaši roli dostupná. <a href="teacher.php?tab=attention">Přejít na Dnes</a></section>';
         return;
     }
-    echo '<section class="teacher-page-head"><div><div class="eyebrow">Sekce</div><h1>' . e($sections[$sectionId]['label']) . '</h1><p>' . e($sections[$sectionId]['hint']) . '</p></div></section><ul class="t68-cards">';
+    echo '<section class="teacher-page-head"><div><div class="eyebrow">Sekce</div><h1>' . e($sections[$sectionId]['label']) . '</h1><p>' . e($sections[$sectionId]['hint']) . '</p></div></section>';
+    if (function_exists('c70_hub_html')) echo c70_hub_html($sectionId);   // v70: souhrn sekce (dnešní výuka, třídy, stav správy)
+    echo '<h2 class="c70-sr">Záložky sekce</h2><ul class="t68-cards">';
     foreach ($visible[$sectionId] as $t) {
         echo '<li><a href="' . e(teacher68_tab_url($t, $classId)) . '"><strong>' . e($map[$t]['label']) . '</strong><small>' . e($map[$t]['hint']) . '</small></a></li>';
     }

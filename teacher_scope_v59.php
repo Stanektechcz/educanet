@@ -21,7 +21,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  *   GET entity se seznamem parametrů (např. hry|projektor: game|projektor) ověří KAŽDÝ přítomný parametr (SEC59-02).
  */
 
-const TEACHER59_ADMIN_TABS = ['ucitele', 'identita', 'provoz', 'quality'];
+const TEACHER59_ADMIN_TABS = ['ucitele', 'identita', 'provoz', 'quality', 'sprava_prehled'];   // v70: + Přehled správy
 const TEACHER59_SUBJECT_LABELS = ['graphics' => 'Grafika a webdesign', 'networks' => 'OS a sítě'];
 const TEACHER59_JSON_GET_PARAMS = ['arena_poll', 'hadanka_poll', 'robots_poll', 'tg_poll', 'dohled_poll', 'v48_state'];
 

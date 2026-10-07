@@ -607,3 +607,15 @@ Podrobnosti: `CHANGELOG_V68.md`, `BUILD_MANIFEST_V68.md`, `docs/V68_KANDIDATI_VY
 - **Vyřazeno** (kopie v `retired/v69/`, do vydání se nebalí): `teacher_skill_views.php`, `one_task_v50_5.php`, `app/views/one_task.php`, `app/actions/one_task.php`, `assets/one-task-*`, `assets/student-dark-v68.css`; audit One Task je v `tools/legacy/`. Staré adresy dávají 302.
 - **Rollback:** nasadit předchozí vydání, data se nezměnila.
 - **Kontrola po nasazení:** `php tools/v69_cleanup_audit.php`, `php tools/v69_dark_audit.php` → `V69_*_AUDIT_OK`.
+
+## v70 · přehledný cockpit: Dnešní hodina a Přehled správy
+
+Podrobnosti: `CHANGELOG_V70.md`, `BUILD_MANIFEST_V70.md`. Nové PHP rozšíření ani nastavení serveru nevyžaduje, `storage/` se nemění (žádná migrace).
+
+- **Dnešní hodina** (`?tab=hodina`, sekce Dnes): pro vybranou třídu rozvrh (čas, učebna), lekce podle kalendáře (`school_year.php` + výjimky), téma a cíl, průběh hodiny, materiály k tématům (`learning_resources` + video k lekci z Režimu hodiny), výukové cesty v63, kód hodiny v53 (otevření přímo odsud), zadané úkoly a tabulka žáků (postup v lekci, minulá lekce, kompetence v62, signály v61). `?lesson=1–28` jen přepne náhled jiné lekce.
+- **Přehled správy** (`?tab=sprava_prehled`, jen administrátor): účty a role, pokrytí tříd učiteli, poslední události účtů (bez hesel, OTP a IP), záloha, týdenní kontrola, PHP rozšíření, kvalita dat, registr identit a seznam „Co udělat“ s příkazem nebo odkazem. Jen čtení.
+- **Rozcestníky sekcí** mají souhrn (dnešní výuka tříd, aktuální lekce, stav správy), každá záložka má panel „Související“ s odkazy do jiných sekcí. Režim hodiny bez `?lesson=` otevírá lekci podle kalendáře (dřív vždy lekci 1).
+- **Bezpečnost:** žádná nová POST akce ani GET politika (snímek politik teacher59 se nemění); nová admin záložka je v `TEACHER59_ADMIN_TABS`. Otevření hodiny používá existující akci `sess53_t_open` (CSRF, rozsah tříd, `students.manage`), návrat jen na pevnou hodnotu `return_tab=hodina`.
+- **Nasazení:** nahrát celé vydání (`tools/build_release.php`), nové `assets/cockpit-v70.css`. Doporučení: pravidelná záloha `php tools/backup_storage.php` a týdenní `php tools/v61_weekly_health.php` z plánovače – Přehled správy jinak hlásí „Chybí záloha“ / „Týdenní kontrola neproběhla“.
+- **Rollback:** nasadit předchozí vydání (data se nezměnila).
+- **Kontrola po nasazení:** `php tools/v70_cockpit_audit.php` → `V70_COCKPIT_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.

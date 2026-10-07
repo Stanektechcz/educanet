@@ -41,7 +41,8 @@ function sess53_teacher_handle_post(string $action, array $modules): void
             'instructions' => (string)($_POST['instructions'] ?? ''),
         ]);
         teacher_flash('Hodina je otevřená. Kód pro žáky: ' . (string)$session['code']);
-        teacher_redirect(['tab' => 'session', 'class' => $classId]);
+        // v70: z Dnešní hodiny se učitel vrací zpět na ni (jen pevná hodnota, žádná libovolná adresa).
+        teacher_redirect(['tab' => (string)($_POST['return_tab'] ?? '') === 'hodina' ? 'hodina' : 'session', 'class' => $classId]);
     }
     if ($action === 'sess53_t_toggle') {
         $session = sess53_find((string)($_POST['session'] ?? ''));
