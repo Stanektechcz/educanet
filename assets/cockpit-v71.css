@@ -1,0 +1,37 @@
+/* EDUCANET v71 · Dnešní hodina nad modelem lekce lm71: plán po minutách, odznak úplnosti, karta dne bez lekce.
+   Jen tokeny v61/v68 (žádné pevné barvy) – světlý i tmavý režim cockpitu. Cíle dotyku ≥ 44 px, viditelný fokus. */
+
+/* Plán po minutách (lekce i den bez lekce) */
+.c71-timeline { margin: 0 0 var(--ui-space-3); padding: 0; list-style: none; }
+.c71-timeline li { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: var(--ui-space-2); padding: var(--ui-space-2) 0; border-top: 1px solid var(--ui-line); }
+.c71-timeline li:first-child { border-top: 0; }
+.c71-timeline div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.c71-timeline span:not(.c71-time) { color: var(--ui-muted); font-size: var(--ui-text-sm); overflow-wrap: anywhere; }
+.c71-time { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--ui-accent-ink); white-space: nowrap; }
+
+.c71-list { margin: 0 0 var(--ui-space-3); padding-left: var(--ui-space-5); }
+.c71-list li { padding: 2px 0; overflow-wrap: anywhere; }
+
+/* Odznak úplnosti přípravy */
+.c71-badge { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-2); margin: 0 0 var(--ui-space-2); padding: var(--ui-space-2) var(--ui-space-3);
+  border: 1px solid var(--ui-warn-ink); border-radius: var(--ui-radius-sm); background: var(--ui-warn-soft); color: var(--ui-warn-ink); }
+.c71-badge.is-ok { border-color: var(--ui-ok-ink); background: var(--ui-surface-2); color: var(--ui-ok-ink); }
+.c71-missing { margin: 0 0 var(--ui-space-3); }
+
+/* Rozbalovací části (chybějící pole, kroky žáků) */
+.c71-missing summary, .c71-steps summary { display: list-item; box-sizing: border-box; min-height: 44px; padding: var(--ui-space-2) 0; cursor: pointer; color: var(--ui-accent-ink); font-weight: 700; }
+.c71-steps { margin-top: var(--ui-space-2); }
+
+/* Karta dne bez lekce */
+.c70-card.c71-day { margin: 0 0 var(--ui-space-4); border-color: var(--ui-accent); }
+.c71-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ui-space-4); }
+@media (min-width: 900px) { .c71-cols { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); } }
+.c71-kit { margin-top: var(--ui-space-2); }
+
+.c71-missing summary:focus-visible, .c71-steps summary:focus-visible, .c71-kit a:focus-visible {
+  outline: var(--ui-focus, 3px) solid var(--ui-accent); outline-offset: 2px; border-radius: var(--ui-radius-sm);
+}
+
+@media (max-width: 480px) {
+  .c71-timeline li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}

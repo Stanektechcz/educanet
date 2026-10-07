@@ -26,8 +26,11 @@ function teacher58_modules(): array
         'hodina' => [
             'label' => 'Dnešní hodina', 'hint' => 'Téma, materiály, úkoly a postup žáků v dnešní lekci', 'group' => 'podpora',
             'files' => ['points_v53.php', 'teacher_class_dashboard.php', 'teacher_overview_v61.php', 'competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php',
-                'paths_v63.php', 'paths_v63_class.php', 'cockpit_v70.php', 'lesson_today_v70.php', 'lesson_today_v70_views.php'],
-            'render' => static function (array $m, string $c): void { lt70_render_tab($m, $c); },
+                'paths_v63.php', 'paths_v63_class.php', 'cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'calendar_days_v71.php',
+                'lesson_today_v70.php', 'lesson_today_v70_views.php', 'lesson_today_v71_views.php'],
+            // v71: model lekce lm71 (plán po minutách, poznámky, pracovní list, úplnost) a karty dnů bez lekce; stále jen čtení.
+            'css' => ['assets/cockpit-v71.css'],
+            'render' => static function (array $m, string $c): void { lt71_render_tab($m, $c); },
         ],
         // v70 · Přehled správy: účty a role, pokrytí tříd, provoz, kvalita dat a doporučení – jen administrátor, jen čtení.
         'sprava_prehled' => [

@@ -36,6 +36,9 @@ html:not([data-theme="light"]) .feedback.bad{background:var(--bad-soft);border-c
 html:not([data-theme="light"]) .feedback p, html:not([data-theme="light"]) .feedback small{color:inherit}
 html:not([data-theme="light"]) .score-ring{border-radius:50%;background:var(--accent);color:#171717;box-shadow:var(--shadow)}
 html:not([data-theme="light"]) .topic-links a{background:var(--surface-2);border-radius:12px}
+html:not([data-theme="light"]) .timeline{border-top:1px solid var(--line)}
+html:not([data-theme="light"]) .timeline article{border-bottom:1px solid var(--line)}
+html:not([data-theme="light"]) .timeline time{color:var(--accent)}
 html:not([data-theme="light"]) .footer{border-top:1px solid var(--line);color:var(--muted)}
 @media (prefers-color-scheme: dark){html:not([data-theme="light"]){--bg:#ffffff;--surface:#ffffff;--surface-2:#ffffff;--text:#242526;--muted:#626a74;--line:#ffffff;--shadow:0 18px 50px rgba(0,0,0,0.288);--accent-soft:color-mix(in srgb, var(--accent) 20%, #ffffff)}
 html:not([data-theme="light"]) .notice{background:#ffffff;border-color:#ffffff;color:#443c1d}

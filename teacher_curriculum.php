@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
+require_once __DIR__ . '/lesson_model_v71.php';
+
 function teacher_curriculum_spec(): array
 {
     return [
@@ -98,34 +100,13 @@ function teacher_curriculum_spec(): array
     ];
 }
 
+/**
+ * v71: lekce 1–28 přes jednotný model lm71 (lesson_model_v71.php) – stejné zdroje a precedence jako Dnešní hodina
+ * a Režim hodiny (dřív vlastní loader nad zdrojovými soubory). Tvar řádků je beze změny (L1 = lesson_1_primary).
+ */
 function teacher_curriculum_lessons(string $classId): array
 {
-    global $modules;
-    $rows = [];
-    $module = is_array($modules[$classId] ?? null) ? $modules[$classId] : [];
-    $rows[] = [
-        'id'=>'lesson_1_primary','number'=>1,'title'=>'Lekce 1 · Základní dvouhodinový blok',
-        'goal'=>(string)($module['lesson_note'] ?? 'Úvodní dvouhodinový blok.'),
-        'knowledge'=>array_slice(array_keys((array)($module['knowledgebase'] ?? [])),0,5),
-        'steps'=>[['id'=>'primary','title'=>'Primární blok']],
-        'worksheet'=>[],
-        'teacher_notes'=>[(string)($module['intro'] ?? '')],
-        'source'=>'module',
-    ];
-    $next = require __DIR__ . '/next_lessons.php';
-    if (isset($next[$classId]) && is_array($next[$classId])) { $row=$next[$classId]; $row['number']=2; $row['source']='next'; $rows[]=$row; }
-    $extended = require __DIR__ . '/extended_lessons.php';
-    foreach (['lessons_plus.php','lessons_more.php','lessons_ecosystem.php','lessons_yearpack.php','lessons_v30.php'] as $file) {
-        $extra = require __DIR__ . '/' . $file;
-        if (isset($extra[$classId]) && is_array($extra[$classId])) $extended[$classId]=array_merge($extended[$classId]??[],$extra[$classId]);
-    }
-    foreach ((array)($extended[$classId] ?? []) as $lesson) {
-        if (!is_array($lesson)) continue;
-        $lesson['source']='extended'; $rows[]=$lesson;
-    }
-    usort($rows,static fn($a,$b)=>(int)($a['number']??0)<=>(int)($b['number']??0));
-    $by=[]; foreach($rows as $row){$n=(int)($row['number']??0); if($n>=1&&$n<=28)$by[$n]=$row;}
-    ksort($by); return array_values($by);
+    return lm71_curriculum_rows($classId);
 }
 
 function teacher_curriculum_lesson_readiness(array $lesson): array

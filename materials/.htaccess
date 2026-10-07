@@ -3,11 +3,13 @@
 # teacher_curriculum.php, teacher_lesson_mode.php, teacher_overview_dashboard.php,
 # visual_labs_3a_v48_1.php). Z webu zakázáno úplně – prozrazení odpovědí by
 # poškodilo diagnostiku i soutěže.
+# v71: komentáře jen přes „#“ – Apache nezná v .htaccess komentáře ve stylu HTML
+# (řádek začínající „<“ bere jako direktivu sekce a vrací HTTP 500).
 <IfModule mod_authz_core.c>
     Require all denied
-    <!-- SEC59-01: hlubší <FilesMatch> vyhrává nad kořenovým allowlistem PHP skriptů.
-         materials/school_year/.htaccess je ještě hlubší, takže jeho výjimka pro
-         SCHOOL_YEAR_*.md dál funguje (merguje se až po této sekci). -->
+    # SEC59-01: hlubší <FilesMatch> vyhrává nad kořenovým allowlistem PHP skriptů.
+    # materials/school_year/.htaccess je ještě hlubší, takže jeho výjimka pro
+    # SCHOOL_YEAR_*.md dál funguje (merguje se až po této sekci).
     <FilesMatch ".">
         Require all denied
     </FilesMatch>

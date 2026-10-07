@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
+require_once __DIR__ . '/lesson_model_v71.php';   // v71: lekce i žákovská posloupnost přes jednotný model lm71
+
 function teacher_lesson_mode_find(string $classId, int $number): ?array
 {
-    foreach (teacher_curriculum_lessons($classId) as $lesson) {
+    foreach (lm71_curriculum_rows($classId) as $lesson) {
         if (is_array($lesson) && (int)($lesson['number'] ?? 0) === $number) return $lesson;
     }
     return null;
@@ -60,10 +62,8 @@ function teacher_render_lesson_mode(string $classId, int $number): void
         $article=is_array($modules[$classId]['knowledgebase'][$topic]??null)?$modules[$classId]['knowledgebase'][$topic]:['title'=>$topic,'summary'=>''];
         $realityPrompts[]=reality_demo_spec($classId,$topic,$article);
     }
-    // v56: učitel vidí stejný název a cíl lekce jako žáci.
-    $v56Bundle = function_exists('v56_lesson_bundle')
-        ? v56_lesson_bundle($classId, $modules[$classId], $number, (array)($GLOBALS['nextLessons'] ?? []), (array)($GLOBALS['extendedLessons'] ?? []))
-        : null;
+    // v56: učitel vidí stejný název a cíl lekce jako žáci. v71: přes jednotný model lm71 (stejné zdroje jako Dnešní hodina).
+    $v56Bundle = function_exists('v56_lesson_bundle') ? lm71_bundle($classId, $modules[$classId], $number) : null;
     $v56Title = is_array($v56Bundle) ? (string)$v56Bundle['title'] : (string)($lesson['title'] ?? ('Lekce ' . $number));
     $v56Goal = is_array($v56Bundle) && trim((string)$v56Bundle['goal']) !== '' ? (string)$v56Bundle['goal'] : (string)($lesson['goal'] ?? '');
     ?>
@@ -104,7 +104,7 @@ function teacher_render_lesson_mode(string $classId, int $number): void
       <?php if(function_exists('v481_render_teacher_extension')) v481_render_teacher_extension($classId,$lesson); ?>
       <?php if(function_exists('tut52_render_teacher_lesson')) tut52_render_teacher_lesson($classId,$modules[$classId],$number,$lesson); ?>
 
-      <section class="teacher-panel"><div class="teacher-panel-head"><div><span>Lesson Kit v42</span><h2>Video · prezentace · podklady · prompty · zkouška</h2></div><small><?=count((array)$v42Pack['slides'])?> slidů · <?=count((array)$v42Pack['prompts'])?> promptů</small></div><div class="v42-signal-strip"><span>Více podpory: <strong><?= (int)$v42LaneCounts['guided'] ?></strong></span><span>Standard: <strong><?= (int)$v42LaneCounts['standard'] ?></strong></span><span>Větší výzva: <strong><?= (int)$v42LaneCounts['challenge'] ?></strong></span><span>Bez studentů/dat se automaticky používá standard.</span></div>
+      <section class="teacher-panel" id="lesson-kit"><div class="teacher-panel-head"><div><span>Lesson Kit v42</span><h2>Video · prezentace · podklady · prompty · zkouška</h2></div><small><?=count((array)$v42Pack['slides'])?> slidů · <?=count((array)$v42Pack['prompts'])?> promptů</small></div><div class="v42-signal-strip"><span>Více podpory: <strong><?= (int)$v42LaneCounts['guided'] ?></strong></span><span>Standard: <strong><?= (int)$v42LaneCounts['standard'] ?></strong></span><span>Větší výzva: <strong><?= (int)$v42LaneCounts['challenge'] ?></strong></span><span>Bez studentů/dat se automaticky používá standard.</span></div>
         <div class="teacher-two-col"><div><h3>Doporučené video</h3><?php foreach(array_slice((array)$v42Pack['videos'],0,2) as $v):?><p><a class="text-link" target="_blank" rel="noopener noreferrer" href="<?=e((string)$v['url'])?>"><?=e((string)$v['title'])?> ↗</a><br><small><?=e((string)$v['watch_for'])?></small></p><?php endforeach;?></div><div><h3>Hotové podklady</h3><p><a class="text-link" target="_blank" href="materials/lesson_kits/<?=e($classId)?>/lesson_<?=str_pad((string)$number,2,'0',STR_PAD_LEFT)?>.md">Otevřít kompletní lesson kit ↗</a></p><p><strong>Zkouška:</strong> <?=count((array)$v42Pack['exam']['oral'])?> ústních otázek + praktický scénář.</p></div></div>
         <details><summary><strong>Prezentace · <?=count((array)$v42Pack['slides'])?> slidů</strong></summary><div class="v42-rubric"><?php foreach((array)$v42Pack['slides'] as $i=>$sl):?><div><strong><?=($i+1)?> · <?=e((string)$sl['title'])?></strong><span><?=e((string)$sl['body'])?></span></div><?php endforeach;?></div></details>
         <details class="v42-teacher-resource"><summary><strong>Upravit doporučené video</strong> · volitelné</summary>

@@ -1,0 +1,15 @@
+# EDUCANET v71 · odvozená cache modelu lekce – nikdy přes web.
+<IfModule mod_authz_core.c>
+    Require all denied
+    <FilesMatch ".">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+    <FilesMatch ".">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>

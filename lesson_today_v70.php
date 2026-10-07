@@ -16,6 +16,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * lt70_class_allowed(). Neznámá nebo cizí třída = prázdný výsledek. Texty jsou česky (cockpit je vždy česky).
  */
 
+require_once __DIR__ . '/lesson_model_v71.php';   // v71: obsah lekce jen přes jednotný model lm71 (konec paralelních loaderů)
+
 const LT70_LESSONS_MAX = 28;
 const LT70_RESOURCES_PER_TOPIC = 2;
 const LT70_RESOURCES_MAX = 8;
@@ -105,23 +107,18 @@ function lt70_pick_class(array $classes, string $requested, array $schoolYear, s
     return $classes[0] ?? '';
 }
 
-/** Obsah lekce pro učitele (stejný zdroj jako žák: v56_lesson_bundle). */
+/**
+ * Obsah lekce pro učitele. v71: přes jednotný model lm71_lesson() – žákovská část (téma, cíl, témata, kroky, test) je
+ * dál v56_lesson_bundle nad stejnými zdroji, navíc plán po minutách, poznámky, pracovní list, kritéria a úplnost.
+ */
 function lt70_lesson(string $classId, array $module, int $lessonNo): array
 {
-    $bundle = v56_lesson_bundle($classId, $module, $lessonNo, (array)($GLOBALS['nextLessons'] ?? []), (array)($GLOBALS['extendedLessons'] ?? []));
-    $topics = [];
-    foreach ((array)$bundle['topics'] as $key => $topic) {
-        $topics[] = ['key' => (string)$key, 'title' => (string)($topic['title'] ?? $key), 'summary' => (string)($topic['summary'] ?? '')];
-    }
-    $steps = [];
-    foreach ((array)$bundle['steps'] as $step) {
-        $steps[] = ['title' => (string)($step['title'] ?? ''), 'time' => (string)($step['time'] ?? ''), 'tasks' => array_values(array_map('strval', (array)($step['tasks'] ?? [])))];
-    }
-    $tools = [];
-    foreach ((array)$bundle['tools'] as $tool) if (is_array($tool) && (string)($tool['name'] ?? '') !== '') $tools[] = (string)$tool['name'];
+    $m = lm71_lesson($classId, $lessonNo, $module);
     return [
-        'number' => (int)$bundle['number'], 'title' => (string)$bundle['title'], 'goal' => (string)$bundle['goal'],
-        'topics' => $topics, 'steps' => $steps, 'questions' => count((array)$bundle['questions']), 'tools' => $tools, 'family' => (string)($bundle['family'] ?? ''),
+        'number' => (int)$m['number'], 'title' => (string)$m['title'], 'goal' => (string)$m['goal']['student'],
+        'topics' => $m['topics'], 'steps' => $m['steps'], 'questions' => (int)$m['questions'], 'tools' => $m['tools'], 'family' => (string)$m['family'],
+        'success_criteria' => $m['goal']['success_criteria'], 'timeline' => $m['timeline'], 'teacher_notes' => $m['teacher_notes'], 'worksheet' => $m['worksheet'],
+        'exit_ticket' => $m['exit_ticket'], 'differentiation' => $m['differentiation'], 'completeness' => $m['completeness'], 'meta' => $m['meta'],
     ];
 }
 
@@ -295,7 +292,11 @@ function lt70_students(string $classId, array $module, array $lesson, array $ses
     $topicKeys = array_column($lesson['topics'], 'key');
     $prev = (int)$lesson['number'] > 1 ? lt70_lesson($classId, $module, (int)$lesson['number'] - 1) : null;
     $signals = [];
-    if (function_exists('ov61_students')) foreach (ov61_students($classId, $now) as $row) $signals[(string)$row['hash']] = (array)$row['reasons'];
+    $active = [];
+    if (function_exists('ov61_students')) foreach (ov61_students($classId, $now) as $row) {
+        $signals[(string)$row['hash']] = (array)$row['reasons'];
+        if ((int)($row['last'] ?? 0) > 0) $active[(string)$row['hash']] = true;
+    }
     $mastery = lt70_mastery($classId);
     $rows = [];
     foreach ($students as $key => $student) {
@@ -304,12 +305,15 @@ function lt70_students(string $classId, array $module, array $lesson, array $ses
         $lessonRows = (array)($progress[$hash] ?? []);
         $done = lt70_phases_done((array)($lessonRows[(string)$lesson['number']] ?? []), $topicKeys, count($lesson['steps']));
         $prevPct = $prev === null ? null : (int)round(lt70_phases_done((array)($lessonRows[(string)$prev['number']] ?? []), array_column($prev['topics'], 'key'), count($prev['steps'])) / 4 * 100);
-        $reasons = (array)($signals[$hash] ?? []);
-        if ($prevPct !== null && $prevPct < LT70_PREV_DONE_PERCENT) $reasons[] = 'Minulá lekce hotová na ' . $prevPct . ' %';
+        // v71: „zatím bez aktivity“ ≠ „potřebuje pomoc“ – žák bez jakýchkoli dat (v61 bez aktivity, žádný postup v lekcích,
+        // nepracuje v hodině) nedostane signál zaostávání; učitel ho vidí zvlášť jako „bez dat“.
+        $idle = !isset($active[$hash]) && $lessonRows === [] && (string)($session['status'][$hash] ?? '') === '';
+        $reasons = $idle ? [] : (array)($signals[$hash] ?? []);
+        if (!$idle && $prevPct !== null && $prevPct < LT70_PREV_DONE_PERCENT) $reasons[] = 'Minulá lekce hotová na ' . $prevPct . ' %';
         $studentId = $mastery['enabled'] && function_exists('identity58_id_for_student') ? identity58_id_for_student($classId, $label) : null;
         $rows[] = [
             'key' => (string)$key, 'hash' => $hash, 'label' => $label, 'percent' => (int)round($done / 4 * 100), 'phases' => $done, 'prev' => $prevPct,
-            'reasons' => array_values(array_unique($reasons)), 'behind' => $reasons !== [],
+            'reasons' => array_values(array_unique($reasons)), 'behind' => $reasons !== [], 'idle' => $idle,
             'mastered' => $studentId !== null ? (int)($mastery['by_id'][$studentId] ?? 0) : null, 'mastery_total' => (int)$mastery['total'],
             'tasks' => (int)($tasks['by_hash'][$hash]['active'] ?? 0), 'overdue' => (int)($tasks['by_hash'][$hash]['overdue'] ?? 0),
             'session' => (string)($session['status'][$hash] ?? ''),
@@ -328,6 +332,7 @@ function lt70_kpis(array $students, array $tasks, array $session): array
         'done' => count(array_filter($students, static fn(array $s): bool => (int)$s['phases'] >= 4)),
         'started' => count(array_filter($students, static fn(array $s): bool => (int)$s['phases'] > 0)),
         'behind' => count(array_filter($students, static fn(array $s): bool => (bool)$s['behind'])),
+        'idle' => count(array_filter($students, static fn(array $s): bool => !empty($s['idle']))),
         'avg' => $count > 0 ? (int)round(array_sum(array_column($students, 'percent')) / $count) : 0,
         'tasks' => (int)$tasks['active'], 'overdue' => (int)$tasks['overdue'],
         'joined' => (int)$session['joined'], 'submitted' => (int)$session['submitted'],

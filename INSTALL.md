@@ -619,3 +619,18 @@ Podrobnosti: `CHANGELOG_V70.md`, `BUILD_MANIFEST_V70.md`. Nové PHP rozšířen�
 - **Nasazení:** nahrát celé vydání (`tools/build_release.php`), nové `assets/cockpit-v70.css`. Doporučení: pravidelná záloha `php tools/backup_storage.php` a týdenní `php tools/v61_weekly_health.php` z plánovače – Přehled správy jinak hlásí „Chybí záloha“ / „Týdenní kontrola neproběhla“.
 - **Rollback:** nasadit předchozí vydání (data se nezměnila).
 - **Kontrola po nasazení:** `php tools/v70_cockpit_audit.php` → `V70_COCKPIT_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v71 · jednotný model lekce, plán hodiny a reporty obsahu
+
+Podrobnosti: `CHANGELOG_V71.md`, `BUILD_MANIFEST_V71.md`, návod pro učitele `docs/NAVOD_DNESNI_HODINA_V71.md`. Nové PHP rozšíření ani nastavení serveru nevyžaduje, `storage/` se nemění (žádná migrace).
+
+- **Model lekce `lm71`** (`lesson_model_v71.php`, mapa zdrojů `lesson_model_v71_sources.php`): jediný čtecí normalizátor 112 lekcí (8 zdrojů + overlay obsahové stopy `lesson_content_v7[2-9]_*.php`). Čtou přes něj Dnešní hodina, Režim hodiny i Plán a kurikulum (dřív dva paralelní loadery). Žákovská posloupnost (témata, test, kroky) je beze změny.
+- **Cache modelu:** `cache/lesson_model/<třída>.php` (odvozená, chráněná `.htaccess`). Platí podle podpisu souborů, po git checkoutu podle obsahového SHA-256; jinak se přestaví při prvním čtení. Adresář `cache/` musí patřit uživateli webu (deploy skript ho už chownuje). Zahřátí: `php tools/build_runtime_cache.php` (zapisuje i `_sources_hash` do `cache/runtime/*.php`).
+- **Dnešní hodina:** plán po minutách, kritéria úspěchu, poznámky pro učitele, pracovní list, odkaz na lesson kit (kotva `#lesson-kit` v Režimu hodiny), odznak úplnosti „N/12 polí, chybí: …“; karty 11 výukových dnů bez lekce (`calendar_days_v71.php`); žák bez jakýchkoli dat je „zatím bez aktivity“, ne „potřebuje pomoc“. Nové `assets/cockpit-v71.css` (jen tokeny, světlý i tmavý režim).
+- **Reporty (CLI, jen čtení, nejsou v `run_audits`):**
+  - `php tools/v71_content_report.php --out=<adresář mimo projekt> [--storage=<úložiště>]` – úplnost, duplicity, šablony, anglické titulky, rozložení `correct`, témata bez materiálu, ŠVP, metadata materiálů, šablonové MD, T-14, stav cache.
+  - `php tools/v71_data_report.php --storage=<úložiště> --out=<adresář mimo projekt i úložiště>` – osiřelé záznamy, neplatná čísla lekcí, chybějící `student_id`, zastaralá cache. Úložiště zkopíruje do soukromého dočasného adresáře a ověří SHA před/po; vypisuje jen počty a prefixy hashů.
+- **Oprava:** `materials/.htaccess` má komentáře jen přes `#` (HTML komentář v `.htaccess` dává na Apache HTTP 500).
+- **Bezpečnost:** žádná nová POST akce ani GET politika (snímky politik v68/v70 beze změny).
+- **Rollback:** nasadit předchozí vydání (data se nezměnila); `cache/lesson_model/` lze smazat, nic jiného ji nečte.
+- **Kontrola po nasazení:** `php tools/v71_lesson_model_audit.php` → `V71_LESSON_MODEL_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
