@@ -62,6 +62,7 @@ $check('registr: Dnešní hodina vykresluje v71, načítá model lm71 a karty dn
     && ($hodina['css'] ?? []) === ['assets/cockpit-v71.css'] && str_contains($read('teacher_v58.php'), 'lt71_render_tab($m, $c)') && in_array('hodina', UI68_TEACHER_DARK_TABS, true));
 $post = teacher59_action_policies();
 unset($post['teacher68_theme_set']);
+unset($post['lc72_approve'], $post['lc72_return']);   // v72: nové akce v novém modulu `schvalovani` – vyjmuté ze snímku stejně jako teacher68_theme_set (změna limitu auditu, BUILD_MANIFEST_V72.md)
 ksort($post);
 $get = teacher59_get_policies();
 foreach (['kompetence', 'cesty', 'projekty65', 'hodnoceni66', 'labdata'] as $t) unset($get[$t . '|student']);
@@ -123,8 +124,9 @@ $check('overlay: pozdější soubor vyhrává pole po poli, neznámé pole / ciz
     $ov['lessons']['class_3a'][5]['title'] === 'Nový titulek lekce' && $ov['lessons']['class_3a'][5]['safety'] === ['Jen simulátor.'] && !isset($ov['lessons']['class_3a'][5]['hack'])
     && !isset($ov['lessons']['class_3a'][40]) && !isset($ov['lessons']['bad id']) && $ov['days']['class_3a'][29]['goal'] === 'Cíl dne'
     && $full['title'] === 'Nový titulek lekce' && $full['meta']['status'] === 'navrh' && $full['steps'] === $l5['steps'] && $full['topics'] === $l5['topics']);
-$check('úplnost: plně vyplněný model = 12/12, výchozí L5 není úplná a uvádí, co chybí', $full['completeness']['complete'] && $full['completeness']['score'] === 12
-    && !$l5['completeness']['complete'] && in_array('kritéria úspěchu (2–4)', $l5['completeness']['missing'], true) && $l5['completeness']['total'] === 12);
+$lBase = lm71_lesson('class_3a', 2);   // v72: L5–L16 mají overlay obsahové stopy (úplné) – výchozí stav ukazuje lekce bez overlaye (změna auditu, BUILD_MANIFEST_V72.md)
+$check('úplnost: plně vyplněný model = 12/12, lekce bez overlaye (L2) není úplná a uvádí, co chybí', $full['completeness']['complete'] && $full['completeness']['score'] === 12
+    && !$lBase['completeness']['complete'] && in_array('kritéria úspěchu (2–4)', $lBase['completeness']['missing'], true) && $lBase['completeness']['total'] === 12);
 $check('plán po minutách: souvislý 0–90 platí, mezera / dopočet z kroků / součet ≠ 90 neplatí; L1 je dopočtená z kroků',
     lm71_timeline_ok($full['timeline']) && !lm71_timeline_ok(lm71_timeline([], [], [['time' => '0–10'], ['time' => '20–50'], ['time' => '50–90']]))
     && !lm71_timeline_ok(lm71_timeline([], [], [['time' => '0–10'], ['time' => '10–50'], ['time' => '50–80']])) && !empty(lm71_lesson('class_1a', 1)['timeline'][0]['derived']));
@@ -216,7 +218,7 @@ try {
     $teach = $h->request('GET', '/teacher.php', ['tab' => 'teach', 'class' => 'class_3a', 'lesson' => '12']);
     $cur = $h->request('GET', '/teacher.php', ['tab' => 'curriculum', 'class' => 'class_3a']);
     $check('HTTP: Režim hodiny má kotvu #lesson-kit a název lekce z lm71; Plán a kurikulum ukazuje 28 lekcí', audit_response_clean($teach) && str_contains((string)$teach['body'], 'id="lesson-kit"')
-        && str_contains((string)$teach['body'], e(lm71_lesson('class_3a', 12)['title'])) && audit_response_clean($cur) && str_contains((string)$cur['body'], '28 dvouhodinových bloků'));
+        && str_contains((string)$teach['body'], e((string)lm71_curriculum_rows('class_3a')[11]['title'])) && audit_response_clean($cur) && str_contains((string)$cur['body'], '28 dvouhodinových bloků'));
 } finally {
     $h->stop();
 }

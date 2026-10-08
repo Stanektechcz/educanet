@@ -21,7 +21,7 @@ const LM71_LESSONS = 28;
 const LM71_CLASSES = ['class_1a', 'class_2a', 'class_3a', 'class_4a'];
 const LM71_OVERLAY_GLOB = 'lesson_content_v7[2-9]_*.php';
 /** Verze tvaru cache a modelu – zvýšit při změně struktury (stará cache se tím zneplatní). */
-const LM71_MODEL_VERSION = 1;
+const LM71_MODEL_VERSION = 2;   // v72: overlay nese i `glossary` a `assessment.formative`
 
 /**
  * Zdroje lekcí v pořadí precedence. `shape`: primary = lekce 1 z v56_primary_lesson(), single = jedna lekce na třídu

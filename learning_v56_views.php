@@ -103,6 +103,8 @@ function v56_render_lesson(string $classId, array $module, array $bundle, ?array
         <?php if ($phase === 'submit') v56_render_submit($classId, $bundle, $state, $lessonNo, $session); ?>
       </section>
 
+      <?php if (function_exists('lx72_render_student_block')) lx72_render_student_block($classId, $lessonNo); /* v72: cíl, exit ticket a volitelná domácí příprava – jen schválená lekce */ ?>
+
       <?php if ($state['complete'] && $isToday): ?>
         <?php v55_render_bonus($classId, $module, $session, $window, v55_bonus_get((string)$session['id'], $studentKey), (string)$session['id']); ?>
       <?php elseif ($state['complete']): ?>

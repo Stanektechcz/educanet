@@ -27,10 +27,20 @@ function teacher58_modules(): array
             'label' => 'Dnešní hodina', 'hint' => 'Téma, materiály, úkoly a postup žáků v dnešní lekci', 'group' => 'podpora',
             'files' => ['points_v53.php', 'teacher_class_dashboard.php', 'teacher_overview_v61.php', 'competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php',
                 'paths_v63.php', 'paths_v63_class.php', 'cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'calendar_days_v71.php',
-                'lesson_today_v70.php', 'lesson_today_v70_views.php', 'lesson_today_v71_views.php'],
+                'lesson_today_v70.php', 'lesson_today_v70_views.php', 'lesson_today_v71_views.php',
+                'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php', 'lesson_exit_v72_views.php'],   // v72: stav schválení a souhrn exit ticketu (jen čtení)
             // v71: model lekce lm71 (plán po minutách, poznámky, pracovní list, úplnost) a karty dnů bez lekce; stále jen čtení.
             'css' => ['assets/cockpit-v71.css'],
             'render' => static function (array $m, string $c): void { lt71_render_tab($m, $c); },
+        ],
+        // v72 · Schvalování lekcí: návrh obsahu vlny 1 (L5–L16) – stav, náhled, schválení a vrácení. POST lc72_approve / lc72_return mají exact
+        // politiky v teacher_scope_v59.php (třída povinná a v rozsahu), oprávnění lc72_ = content.manage (asistent jen čte). GET jen ?class= a ?lesson=.
+        'schvalovani' => [
+            'label' => 'Schvalování lekcí', 'hint' => 'Návrhy obsahu lekcí: náhled, schválení a vrácení', 'group' => 'podpora',
+            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php', 'lesson_approval_v72_views.php'],
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v72.css'],
+            'post' => ['lc72_' => 'lc72_teacher_handle_post'],
+            'render' => static function (array $m, string $c) use ($csrf): void { lc72_render_tab($m, $c, $csrf()); },
         ],
         // v70 · Přehled správy: účty a role, pokrytí tříd, provoz, kvalita dat a doporučení – jen administrátor, jen čtení.
         'sprava_prehled' => [
@@ -223,10 +233,12 @@ function teacher58_available(string $tab): bool
     // v59 · AUTHZ58-07: modul účtů jen v režimu účtů, admin moduly jen administrátorovi (v legacy vidí vše jako dosud).
     if (!empty($mod['accounts_only']) && (!function_exists('teacher59_mode') || teacher59_mode() === 'legacy')) return false;
     if (!empty($mod['admin']) && function_exists('teacher59_is_admin') && !teacher59_is_admin()) return false;
-    foreach ((array)($mod['files'] ?? []) as $file) {
-        if (!is_file(__DIR__ . '/' . $file)) return false;
+    static $filesOk = [];   // v72: existence souborů modulu stačí ověřit jednou za požadavek (teacher58_tabs() se volá opakovaně; na Windows/NFS je stat drahý)
+    if (!isset($filesOk[$tab])) {
+        $filesOk[$tab] = true;
+        foreach ((array)($mod['files'] ?? []) as $file) if (!is_file(__DIR__ . '/' . $file)) { $filesOk[$tab] = false; break; }
     }
-    return true;
+    return $filesOk[$tab];
 }
 
 /** v60: záložka jen pro administrátora, kterou aktuální (neadmin) učitel dostat nemá – teacher.php pro ni vrací výslovné 403 místo tichého přehledu. */

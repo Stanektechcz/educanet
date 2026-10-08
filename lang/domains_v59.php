@@ -290,6 +290,11 @@ return [
             'app/actions/ui_v67.php',
             'ui_v67.php',
         ],
+        // v72 · cíl hodiny, exit ticket a volitelná domácí příprava schválené lekce (výukový obsah zůstává česky).
+        'lesson_v72' => [
+            'lesson_exit_v72_views.php',
+            'app/actions/lesson_exit_v72.php',
+        ],
         // Integrátor – sdílené soubory, dokončí se až po B1–B6 (F2).
         'shared' => [
             'bootstrap.php',

@@ -65,6 +65,7 @@ $check('role: učitel i asistent vidí Dnešní hodinu, Přehled správy jen adm
 // ---------------------------------------------------------------- 2) politiky beze změny
 $post = teacher59_action_policies();
 unset($post['teacher68_theme_set']);
+unset($post['lc72_approve'], $post['lc72_return']);   // v72: nové akce v novém modulu `schvalovani` – vyjmuté ze snímku stejně jako teacher68_theme_set (změna limitu auditu, BUILD_MANIFEST_V72.md)
 ksort($post);
 $get = teacher59_get_policies();
 foreach (['kompetence', 'cesty', 'projekty65', 'hodnoceni66', 'labdata'] as $t) unset($get[$t . '|student']);

@@ -72,6 +72,7 @@ function c70_related_rules(): array
         'groups' => [['workspace', 'Workspace týmů'], ['projekty65', 'Cyklus projektů']],
         'cesty' => [['kompetence', 'Mapa kompetencí'], ['hodina', 'Dnešní hodina']],
         'curriculum' => [['hodina', 'Dnešní hodina'], ['teach', 'Promítnout lekci'], ['calendar', 'Kalendář a výjimky']],
+        'schvalovani' => [['hodina', 'Dnešní hodina: stav lekce a exit ticket'], ['curriculum', 'Plán a kurikulum']],   // v72
         'teach' => [['hodina', 'Dnešní hodina: žáci a postup'], ['session', 'Kód hodiny']],
         'session' => [['hodina', 'Dnešní hodina: téma a materiály'], ['teach', 'Promítnout lekci']],
         'calendar' => [['curriculum', 'Plán lekcí'], ['hodina', 'Dnešní hodina']],

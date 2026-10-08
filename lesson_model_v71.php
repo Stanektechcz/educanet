@@ -25,7 +25,8 @@ const LM71_EXIT_VARIANTS_MIN = 3;
 const LM71_LESSON_MINUTES = 90;
 /** Pole, která overlay smí nastavit (cokoli jiného se ignoruje). */
 const LM71_OVERLAY_FIELDS = ['title', 'goal', 'success_criteria', 'curriculum', 'competencies', 'prerequisites', 'timeline', 'materials', 'tools',
-    'differentiation', 'tasks', 'assessment', 'exit_ticket', 'homework', 'safety', 'teacher_notes', 'substitution', 'worksheet', 'status', 'reviewed_at', 'version'];
+    'differentiation', 'tasks', 'assessment', 'exit_ticket', 'homework', 'safety', 'teacher_notes', 'substitution', 'worksheet', 'status', 'reviewed_at', 'version',
+    'glossary'];   // v72: id termínů z lesson_glossary_v72.php
 
 // ---------------------------------------------------------------------------------------------------------------
 // Surová vrstva a cache
@@ -397,7 +398,7 @@ function lm71_completeness(array $m): array
         'materials' => (array)($m['materials'] ?? []) !== [],
         'tasks' => count($concreteTasks) >= 3,
         'differentiation' => trim((string)($diff['support'] ?? '')) !== '' && trim((string)($diff['standard'] ?? '')) !== '' && trim((string)($diff['challenge'] ?? '')) !== '',
-        'assessment' => (array)($m['assessment']['checks'] ?? []) !== [] && count($rubric) >= 3 && count($rubric) <= 5,
+        'assessment' => ((array)($m['assessment']['checks'] ?? []) !== [] || (array)($m['assessment']['formative'] ?? []) !== []) && count($rubric) >= 3 && count($rubric) <= 5,   // v72: kvíz nebo formativní kontrola
         'exit_ticket' => count($exit) >= LM71_EXIT_VARIANTS_MIN && array_intersect(array_map('lm71_norm_text', $exit), $quizQuestions) === [],
         'safety' => (array)($m['safety'] ?? []) !== [],
         'teacher_notes' => (array)($m['teacher_notes'] ?? []) !== [],
@@ -447,10 +448,10 @@ function lm71_lesson(string $classId, int $number, ?array $module = null): array
         'tools' => array_values(array_filter(array_map(static fn($t): string => is_array($t) ? (string)($t['name'] ?? '') : '', (array)$bundle['tools']))),
         'differentiation' => array_filter(['support' => '', 'standard' => '', 'challenge' => $finisher], static fn(string $v): bool => $v !== ''),
         'tasks' => $tasks,
-        'assessment' => ['checks' => lm71_quiz_items($raw), 'rubric' => array_values((array)($raw['rubric'] ?? []))],
+        'assessment' => ['checks' => lm71_quiz_items($raw), 'rubric' => array_values((array)($raw['rubric'] ?? [])), 'formative' => []],
         'exit_ticket' => lm71_exit_ticket($raw, null), 'homework' => lm71_text_list($raw['homework'] ?? []), 'safety' => lm71_text_list($raw['safety'] ?? []),
         'teacher_notes' => $source === 'primary' ? [] : lm71_text_list($raw['teacher_notes'] ?? []), 'substitution' => lm71_text_list($raw['substitution'] ?? []),
-        'worksheet' => lm71_text_list($raw['worksheet'] ?? []),
+        'worksheet' => lm71_text_list($raw['worksheet'] ?? []), 'glossary' => [],
         'topics' => $topics, 'steps' => $steps, 'questions' => count((array)$bundle['questions']), 'family' => (string)($bundle['family'] ?? ''),
         'meta' => ['source' => $source, 'file' => (string)(lm71_sources()[$source]['file'] ?? ''), 'template' => !empty(lm71_sources()[$source]['template']),
             'version' => LM71_MODEL_VERSION, 'status' => 'puvodni', 'reviewed_at' => null, 'overlay' => '', 'content_hash' => ''],
@@ -471,7 +472,9 @@ function lm71_apply_overlay(array $model, array $ov, array $raw = []): array
     if (is_array($ov['timeline'] ?? null)) $model['timeline'] = lm71_timeline($raw, [], $ov['timeline']);
     if (is_array($ov['exit_ticket'] ?? null)) $model['exit_ticket'] = lm71_exit_ticket($raw, $ov['exit_ticket']);
     if (is_array($ov['differentiation'] ?? null)) $model['differentiation'] = array_filter(array_map(static fn($v): string => trim(is_array($v) ? implode(' ', lm71_text_list($v)) : (string)$v), array_intersect_key($ov['differentiation'], array_flip(['support', 'standard', 'challenge']))), static fn(string $v): bool => $v !== '');
-    if (is_array($ov['assessment'] ?? null)) $model['assessment'] = ['checks' => (array)($ov['assessment']['checks'] ?? $model['assessment']['checks']), 'rubric' => array_values((array)($ov['assessment']['rubric'] ?? []))];
+    if (is_array($ov['assessment'] ?? null)) $model['assessment'] = ['checks' => (array)($ov['assessment']['checks'] ?? $model['assessment']['checks']), 'rubric' => array_values((array)($ov['assessment']['rubric'] ?? [])),
+        'formative' => lm71_text_list($ov['assessment']['formative'] ?? [])];   // v72: formativní kontroly (text)
+    if (isset($ov['glossary'])) $model['glossary'] = array_values(array_filter((array)$ov['glossary'], 'is_string'));
     if (is_array($ov['tasks'] ?? null)) {
         $model['tasks'] = [];
         foreach ($ov['tasks'] as $t) {

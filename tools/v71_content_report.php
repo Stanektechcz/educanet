@@ -13,6 +13,8 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  * (videa učitelů v42 – počet a metadata). Výstup: content-report-<čas>.json + .txt do --out, souhrn na stdout.
  * Metriky: úplnost (12 polí modelu), konflikty a duplicity, šablony, anglické titulky, rozložení `correct`,
  * témata bez materiálu, chybějící ŠVP, materiály bez metadat, šablonové MD v materials/, karty dnů, T-14, stav cache.
+ * v72: úplnost vlny 1 (L5–L16), stav schválení (z --storage, jinak vše „návrh“), T-14 podle schválení, exit ticket
+ * (počet odpovědí a % správně po kompetencích – jen souhrnné počty z --storage, žádné hashe ani jména).
  */
 
 error_reporting(E_ALL);
@@ -31,7 +33,7 @@ $_ENV['EDUCANET_STORAGE_DIR'] = $tmp . '/storage';
 putenv('EDUCANET_LM71_CACHE_DIR=' . $tmp . '/lesson_model');
 
 require_once $ROOT . '/bootstrap.php';
-foreach (['tutorial_v52.php', 'learning_v56.php', 'lesson_model_v71.php', 'calendar_days_v71.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['tutorial_v52.php', 'learning_v56.php', 'lesson_model_v71.php', 'calendar_days_v71.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php'] as $lib) require_once $ROOT . '/' . $lib;
 
 $year = require $ROOT . '/school_year.php';
 $lessons = [];
@@ -182,13 +184,49 @@ $dayCards = 0;
 foreach (LM71_CLASSES as $c) foreach ($calendarDays as $row) $dayCards += lm71_day($c, $row)['flow'] !== [] ? 1 : 0;
 $today = date('Y-m-d');
 $horizon = date('Y-m-d', strtotime($today . ' +14 days'));
-$t14 = ['lekci' => 0, 'navrh' => 0];
+// v72: schválení a odpovědi exit ticketu jen z --storage (přímé čtení souborů, bez zápisu); bez --storage je vše „návrh“.
+$readStore = static function (string $file): array {
+    $raw = @file_get_contents($file);
+    if (!is_string($raw) || $raw === '') return [];
+    try { return storage_decode_raw($raw); } catch (Throwable $e) { return []; }
+};
+$storeDir = $storageArg !== null ? rtrim(str_replace(chr(92), '/', $storageArg), '/') : '';
+$approvals = $storageArg !== null ? (array)($readStore($storeDir . '/lesson_approvals_v72.json.php')['lessons'] ?? []) : [];
+$t14 = ['lekci' => 0, 'navrh' => 0, 'schvaleno' => 0];
 foreach (LM71_CLASSES as $c) foreach ((array)$year['calendar'] as $row) {
     $n = (int)($row['lesson_number'] ?? 0);
     if ($n < 1 || (string)$row['date'] < $today || (string)$row['date'] > $horizon) continue;
     $t14['lekci']++;
-    $t14['navrh'] += $lessons[$c][$n]['meta']['status'] === 'navrh' ? 1 : 0;
+    $st = lc72_status($c, $n, $approvals)['status'];
+    $t14['navrh'] += in_array($st, ['navrh', 'vraceno', 'zmeneno'], true) ? 1 : 0;
+    $t14['schvaleno'] += $st === 'schvaleno' ? 1 : 0;
 }
+$wave = ['lekci' => 0, 'uplne' => 0, 'prumer_poli' => 0.0, 'schvaleno' => 0, 'navrh' => 0, 'vraceno' => 0, 'zmeneno' => 0, 'puvodni' => 0];
+$exitStats = ['odpovedi' => 0, 'spravne' => 0, 'lekci_s_odpovedmi' => 0, 'kompetence' => []];
+foreach (LM71_CLASSES as $c) {
+    $answers = $storageArg !== null ? (array)($readStore($storeDir . '/lesson_exit_v72_' . $c . '.json.php')['answers'] ?? []) : [];
+    for ($n = LC72_WAVE1[0]; $n <= LC72_WAVE1[1]; $n++) {
+        $wave['lekci']++;
+        $wave['uplne'] += $lessons[$c][$n]['completeness']['complete'] ? 1 : 0;
+        $wave['prumer_poli'] += $lessons[$c][$n]['completeness']['score'];
+        $wave[lc72_status($c, $n, $approvals)['status']]++;
+    }
+    foreach ($answers as $n => $rows) {
+        $ticket = lx72_normalize(lc72_overlay($c, (int)$n));
+        if ($ticket === null || !is_array($rows) || $rows === []) continue;
+        $label = $c . ' · ' . lx72_competence_label($c, $ticket);
+        $exitStats['lekci_s_odpovedmi']++;
+        foreach ($rows as $r) {
+            $ok = is_array($r) && (int)($r['ok'] ?? 0) === 1 ? 1 : 0;
+            $exitStats['odpovedi']++;
+            $exitStats['spravne'] += $ok;
+            $exitStats['kompetence'][$label]['odpovedi'] = ($exitStats['kompetence'][$label]['odpovedi'] ?? 0) + 1;
+            $exitStats['kompetence'][$label]['spravne'] = ($exitStats['kompetence'][$label]['spravne'] ?? 0) + $ok;
+        }
+    }
+}
+$wave['prumer_poli'] = round($wave['prumer_poli'] / max(1, $wave['lekci']), 2);
+ksort($exitStats['kompetence']);
 $cache = lm71_cache_status($ROOT . '/cache/lesson_model');
 
 // ------------------------------------------------------------------ výstup
@@ -206,6 +244,7 @@ $report = [
     'chybi_svp' => $svpMissing, 'materials_md' => $mdFamilies,
     'dny_bez_lekce' => ['v_kalendari' => count($calendarDays), 'karet' => $dayCards, 'ocekavano' => count($calendarDays) * count(LM71_CLASSES)],
     't14' => $t14, 'cache' => $cache,
+    'v72_vlna1' => $wave, 'v72_exit_ticket' => $exitStats + ['zdroj' => $storageArg !== null ? 'storage' : 'nezjišťováno (bez --storage)'],
 ];
 $lines = [
     'EDUCANET v71 · report obsahu (' . date('j. n. Y H:i') . ')',
@@ -222,7 +261,11 @@ $lines = [
     'Chybí vazba na ŠVP: ' . $svpMissing . ' lekcí',
     'materials/ MD: ' . implode(' · ', array_map(static fn(string $f, array $r): string => $f . ' ' . $r['souboru'] . ' souborů, šablonový podíl ' . $r['sablonovy_podil_radku'] . ' %, AI prompty ' . $r['se_sekci_ai_prompty'] . ', dupl. otázka ' . $r['s_duplicitni_otazkou'], array_keys($mdFamilies), $mdFamilies)),
     'Dny bez lekce: ' . count($calendarDays) . ' v kalendáři, karet ' . $dayCards . ' z ' . count($calendarDays) * count(LM71_CLASSES),
-    'T-14: lekcí v příštích 14 dnech ' . $t14['lekci'] . ', z toho ve stavu návrh ' . $t14['navrh'],
+    'T-14: lekcí v příštích 14 dnech ' . $t14['lekci'] . ', z toho schválené ' . $t14['schvaleno'] . ', ve stavu návrh ' . $t14['navrh'] . ' (žák do schválení vidí původní obsah)',
+    sprintf('Vlna 1 (L5–L16): úplné %d z %d (%s), průměr %.2f polí · schváleno %d, návrh %d, vráceno %d, změněno po schválení %d', $wave['uplne'], $wave['lekci'], rp71_pct($wave['uplne'], $wave['lekci']),
+        $wave['prumer_poli'], $wave['schvaleno'], $wave['navrh'], $wave['vraceno'], $wave['zmeneno']),
+    'Exit ticket: ' . ($storageArg === null ? 'nezjišťováno (bez --storage)' : $exitStats['odpovedi'] . ' odpovědí v ' . $exitStats['lekci_s_odpovedmi'] . ' lekcích, správně ' . rp71_pct($exitStats['spravne'], $exitStats['odpovedi'])
+        . ($exitStats['kompetence'] === [] ? '' : ' · ' . implode(', ', array_map(static fn(string $k, array $v): string => $k . ' ' . rp71_pct($v['spravne'], $v['odpovedi']) . ' (' . $v['odpovedi'] . ')', array_keys($exitStats['kompetence']), $exitStats['kompetence'])))),
     'Cache modelu: ' . implode(', ', array_map(static fn(string $c, string $s): string => $c . '=' . $s, array_keys($cache['model']), $cache['model']))
         . ' · runtime: ' . implode(', ', array_map(static fn(string $c, string $s): string => $c . '=' . $s, array_keys($cache['runtime']), $cache['runtime'])),
 ];

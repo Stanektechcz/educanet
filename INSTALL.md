@@ -634,3 +634,16 @@ Podrobnosti: `CHANGELOG_V71.md`, `BUILD_MANIFEST_V71.md`, návod pro učitele `d
 - **Bezpečnost:** žádná nová POST akce ani GET politika (snímky politik v68/v70 beze změny).
 - **Rollback:** nasadit předchozí vydání (data se nezměnila); `cache/lesson_model/` lze smazat, nic jiného ji nečte.
 - **Kontrola po nasazení:** `php tools/v71_lesson_model_audit.php` → `V71_LESSON_MODEL_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v72 · obsah lekcí 5–16, schvalování a exit ticket
+
+Podrobnosti: `CHANGELOG_V72.md`, `BUILD_MANIFEST_V72.md`, návod pro učitele `docs/NAVOD_SCHVALOVANI_V72.md`. Nové PHP rozšíření ani nastavení serveru nevyžaduje. **Migrace není potřeba** – nová úložiště `storage/lesson_approvals_v72.json.php` a `storage/lesson_exit_v72_<třída>.json.php` vzniknou samy při prvním schválení / odpovědi (zápis přes `storage_update`).
+
+- **Obsah vlny 1:** `lesson_content_v72_{1a,2a,3a,4a}_{a,b}.php` (L5–L16, stav návrh) a glosář `lesson_glossary_v72.php`. Čte je model lm71 (overlay); po nasazení zahřejte cache: `php tools/build_runtime_cache.php` (verze modelu 2 – stará `cache/lesson_model/` se zneplatní a přestaví i sama při prvním čtení).
+- **Schvalování lekcí** (cockpit → Výuka, `?tab=schvalovani`): POST `lc72_approve` / `lc72_return` (CSRF, třída v rozsahu, oprávnění `content.manage`; asistent jen čte). Žák vidí nový obsah (cíl, exit ticket, volitelnou domácí přípravu) až po schválení; po změně obsahu je nutné schválit znovu.
+- **Exit ticket:** akce žáka `lx72_answer`, jedna odpověď na lekci, formativní (nevstupuje do hodnocení), retence 365 dní, v pilotu 1.A/3.A důkaz v62 se zdrojem `lesson`. Učitel vidí souhrn v Dnešní hodině.
+- **Výchozí rozhodnutí školy** (konstanty v `lesson_approval_v72.php`): ŠVP „chybí vazba“, domácí příprava volitelná ≤ 30 min/týden, exit ticket jen formativní, žádné odkazy na „AI prompty“.
+- **Report:** `php tools/v71_content_report.php --storage=<úložiště> --out=<adresář mimo projekt>` nově ukazuje úplnost vlny 1, stav schválení, T-14 podle schválení a exit ticket (počty, % správně po kompetencích).
+- **Změna limitu auditů:** snímky politik v68/v70/v71 vyjímají `lc72_approve` a `lc72_return` (stejně jako `teacher68_theme_set`) – viz manifest.
+- **Rollback:** nasadit předchozí vydání; soubory `storage/lesson_approvals_v72.json.php` a `storage/lesson_exit_v72_*.json.php` starší verze ignoruje (lze je ponechat). `cache/lesson_model/` po návratu smazat nebo přegenerovat `php tools/build_runtime_cache.php`.
+- **Kontrola po nasazení:** `php tools/v72_lesson_content_audit.php` → `V72_LESSON_CONTENT_AUDIT_OK`, `php tools/v72_approval_audit.php` → `V72_APPROVAL_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.

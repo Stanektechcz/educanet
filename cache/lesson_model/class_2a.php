@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 // EDUCANET v71 · odvozená cache modelu lekce (tools/build_runtime_cache.php nebo první čtení). Neupravovat ručně.
 return array (
-  'version' => 1,
+  'version' => 2,
   'class' => 'class_2a',
   'lessons' => 
   array (
@@ -4292,15 +4292,2757 @@ return array (
   array (
     'lessons' => 
     array (
+      5 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 5 · Design systém: mezery, komponenty, stavy',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím převést vizuální cit na opakovatelný systém: škálu mezer, tři komponenty a jejich stavy v jednoduchém rozhraní.',
+          'success_criteria' => 
+          array (
+            0 => 'Používám 4–5 hodnot mezer (spacing) místo náhodných čísel.',
+            1 => 'Tlačítko, karta a štítek sdílí zaoblení, vnitřní okraj a textové role.',
+            2 => 'Rozhraní funguje na šířce 1440 i 390 px.',
+          ),
+        ),
+        'competencies' => 
+        array (
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start',
+            'teacher' => 'Ukáže rozhraní, kde má každá karta jiné mezery.',
+            'student' => 'Najdou pět různých mezer, které měly být stejné.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 22,
+            'phase' => 'Škála mezer',
+            'teacher' => 'Předvede simulaci mezer a výběr 4–5 hodnot.',
+            'student' => 'Zvolí škálu a pojmenují ji (S, M, L…).',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 22,
+            'to' => 38,
+            'phase' => 'Komponenty',
+            'teacher' => 'Vysvětlí komponentu jako pravidlo.',
+            'student' => 'Definují tlačítko, kartu a štítek se společnými pravidly.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 38,
+            'to' => 53,
+            'phase' => 'Stavy',
+            'teacher' => 'Ukáže výchozí, najetí a nedostupný stav.',
+            'student' => 'Navrhnou stavy a ověří kontrast textu.',
+            'form' => 've dvojicích',
+          ),
+          4 => 
+          array (
+            'from' => 53,
+            'to' => 80,
+            'phase' => 'Mini přehled',
+            'teacher' => 'Hlídá, aby se používal jen vlastní systém.',
+            'student' => 'Poskládají záhlaví, 3 karty a akci; otestují 1440 a 390 px.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 80,
+            'to' => 90,
+            'phase' => 'Kontrola systému a exit ticket',
+            'teacher' => 'Spustí hledání „výjimek“ mimo systém.',
+            'student' => 'Soused najde hodnotu mimo škálu; exit ticket.',
+            'form' => 've dvojicích',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Zvol škálu 4–5 hodnot mezer a pojmenuj ji tak, aby ji použil i spolužák.',
+            'output' => 'Tabulka škály mezer.',
+            'time' => '12 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Definuj tlačítko, kartu a štítek se společným zaoblením, vnitřním okrajem a textovými rolemi.',
+            'output' => 'Tři komponenty s pravidly.',
+            'time' => '16 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Navrhni stavy výchozí, najetí (hover) a nedostupné a ověř kontrast textu v každém.',
+            'output' => 'Řádek stavů s poznámkou o kontrastu.',
+            'time' => '15 min',
+          ),
+          3 => 
+          array (
+            'text' => 'Poskládej mini přehled (záhlaví, 3 karty, akce) jen ze svého systému a otestuj ho na 1440 a 390 px.',
+            'output' => 'Dva náhledy rozhraní.',
+            'time' => '27 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane hotovou škálu mezer a kostru přehledu; doplňuje komponenty a stavy.',
+          'standard' => 'Vlastní škála, tři komponenty, stavy a přehled podle zadání.',
+          'challenge' => 'Popíše systém na jedné stránce dokumentace tak, aby podle ní spolužák postavil čtvrtou kartu.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Hon na výjimky: soused hledá mezeru nebo barvu mimo systém.',
+            1 => 'Rychlá otázka: kde v systému změníš zaoblení všech karet najednou?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Škála mezer',
+              'levels' => 
+              array (
+                0 => 'Náhodné mezery.',
+                1 => 'Škála existuje, nedodržuje se.',
+                2 => 'Všechny mezery ze škály.',
+                3 => 'Škálu zdůvodní a zdokumentuje.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Komponenty a stavy',
+              'levels' => 
+              array (
+                0 => 'Každý prvek jiný.',
+                1 => 'Komponenty bez stavů.',
+                2 => 'Tři komponenty se stavy a kontrastem.',
+                3 => 'Stavy čitelné i bez barvy.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Rozhraní na dvou šířkách',
+              'levels' => 
+              array (
+                0 => 'Jedna šířka.',
+                1 => 'Mobil se rozpadá.',
+                2 => 'Funguje na 1440 i 390 px.',
+                3 => 'Systém se na mobilu nemění, jen přeskládá.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => '',
+          'competence_label' => 'Design systém',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Proč používáme omezenou škálu mezer?',
+              'options' => 
+              array (
+                0 => 'Aby rozhraní působilo jednotně a změny šly dělat systémově.',
+                1 => 'Protože jiné mezery prohlížeč nezobrazí.',
+                2 => 'Aby bylo méně práce s exportem.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Škála = méně náhodných rozhodnutí.',
+            ),
+            1 => 
+            array (
+              'question' => 'Tři karty mají různé vnitřní okraje 13, 17 a 22 px. Co uděláš?',
+              'options' => 
+              array (
+                0 => 'Nechám je, každá karta je jiná.',
+                1 => 'Sjednotím je na jednu hodnotu ze škály.',
+                2 => 'Okraje odstraním.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Komponenta má jedno pravidlo pro všechny výskyty.',
+            ),
+            2 => 
+            array (
+              'question' => 'Co musí platit pro nedostupné tlačítko?',
+              'options' => 
+              array (
+                0 => 'Musí vypadat stejně jako aktivní.',
+                1 => 'Stačí ho skrýt.',
+                2 => 'Je rozpoznatelné a uživatel ví, proč akce teď nejde.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Nedostupnost bez vysvětlení mate.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: v jedné aplikaci v telefonu najdi tři místa se stejnou mezerou a jedno, které systém porušuje.',
+            'minutes' => 15,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Obsah rozhraní je vymyšlený; žádná skutečná data uživatelů.',
+          1 => 'Ikony jen s licencí; zdroj zapiš do dokumentace.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: „systém“ = paleta barev. Začni mezerami, jsou nejvíc vidět.',
+          1 => 'Otázka do třídy: Kolik různých mezer najdete na své obrazovce?',
+          2 => 'Tempo: přehled je hlavní výstup – škálu omez na 12 minut.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1–4 podle lekce, výstupem jsou dva náhledy rozhraní.',
+          1 => 'Plán B offline: škála mezer pravítkem, komponenty jako papírové výstřižky.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'spacing',
+          1 => 'hover',
+        ),
+        '_file' => 'lesson_content_v72_2a_a.php',
+      ),
+      6 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 6 · Případová studie do portfolia a mikrointerakce',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím sepsat krátkou případovou studii svého projektu (problém → rozhodnutí → výsledek) a navrhnout mikrointerakci s jasnou funkcí.',
+          'success_criteria' => 
+          array (
+            0 => 'Studie má problém, dvě klíčová rozhodnutí a výsledek s ukázkou před/po.',
+            1 => 'Mikrointerakce má spouštěč, zpětnou vazbu a délku.',
+            2 => 'Stav je pochopitelný i bez animace.',
+          ),
+        ),
+        'competencies' => 
+        array (
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start',
+            'teacher' => 'Ukáže dvě portfolia: galerii obrázků a krátkou studii.',
+            'student' => 'Řeknou, ze kterého víc poznají, jak autor přemýšlí.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Problém → rozhodnutí → výsledek',
+            'teacher' => 'Předvede strukturu případové studie (case study).',
+            'student' => 'Napíšou problém a vyberou dvě rozhodnutí.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 40,
+            'phase' => 'Důkazy procesu',
+            'teacher' => 'Ukáže, jak anotovat před/po a skicu.',
+            'student' => 'Připraví před/po, jednu skicu a krátké popisky.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 40,
+            'to' => 55,
+            'phase' => 'Proč animovat',
+            'teacher' => 'Vysvětlí mikrointerakci: spouštěč → zpětná vazba.',
+            'student' => 'Vyberou jednu akci (najetí, odeslání, načítání).',
+            'form' => 've dvojicích',
+          ),
+          4 => 
+          array (
+            'from' => 55,
+            'to' => 78,
+            'phase' => 'Storyboard a prototyp',
+            'teacher' => 'Hlídá, aby pohyb nesl informaci.',
+            'student' => 'Nakreslí 4 snímky a vytvoří jednoduchý prototyp.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 78,
+            'to' => 90,
+            'phase' => 'Obhajoba a exit ticket',
+            'teacher' => 'Řídí 30sekundové obhajoby ve dvojicích.',
+            'student' => 'Obhájí studii za 30 s a odpoví na exit ticket.',
+            'form' => 've dvojicích',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Napiš problém svého projektu jednou větou a vyber dvě rozhodnutí, která ho řešila.',
+            'output' => 'Problém + 2 rozhodnutí.',
+            'time' => '15 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Připrav ukázku před/po, jednu skicu a ke každé krátkou anotaci.',
+            'output' => 'Tři anotované obrázky.',
+            'time' => '15 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Navrhni mikrointerakci (microinteraction): urči spouštěč, zpětnou vazbu a délku, a nakresli ji ve 4 snímcích.',
+            'output' => 'Storyboard 4 snímků.',
+            'time' => '18 min',
+          ),
+          3 => 
+          array (
+            'text' => 'Vytvoř jednoduchý prototyp nebo GIF a ověř, že stav pozná i ten, kdo animaci nevidí.',
+            'output' => 'Prototyp + statický náhled koncového stavu.',
+            'time' => '20 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane šablonu studie s pěti bloky a vybírá mikrointerakci ze tří připravených.',
+          'standard' => 'Vlastní studie, storyboard a prototyp podle zadání.',
+          'challenge' => 'Přidá do studie jedno měřitelné zjištění (např. kolik spolužáků našlo akci napoprvé).',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Po prvním bloku: soused přečte problém – rozumí mu bez dalšího vysvětlení?',
+            1 => 'Test bez animace: je stav jasný i ze statického snímku?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Struktura studie',
+              'levels' => 
+              array (
+                0 => 'Jen galerie obrázků.',
+                1 => 'Problém bez rozhodnutí.',
+                2 => 'Problém → 2 rozhodnutí → výsledek.',
+                3 => 'Doplněné měřitelné zjištění.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Mikrointerakce',
+              'levels' => 
+              array (
+                0 => 'Pohyb bez funkce.',
+                1 => 'Funkce nejasná.',
+                2 => 'Spouštěč, zpětná vazba a délka.',
+                3 => 'Funguje i bez animace.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Obhajoba',
+              'levels' => 
+              array (
+                0 => 'Nedokončí.',
+                1 => 'Popis bez důvodů.',
+                2 => 'Za 30 s problém a dvě rozhodnutí.',
+                3 => 'Odpoví i na doplňující otázku.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => '',
+          'competence_label' => 'Prezentace práce',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Co do případové studie patří nejvíc?',
+              'options' => 
+              array (
+                0 => 'Co nejvíc obrázků bez textu.',
+                1 => 'Problém, klíčová rozhodnutí a výsledek s důkazem.',
+                2 => 'Seznam programů, které jsem použil.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Studie ukazuje přemýšlení, ne jen výsledek.',
+            ),
+            1 => 
+            array (
+              'question' => 'Kdy má mikrointerakce smysl?',
+              'options' => 
+              array (
+                0 => 'Když dává uživateli zpětnou vazbu o tom, co se stalo.',
+                1 => 'Když je stránka nudná.',
+                2 => 'Vždy, čím víc pohybu, tím lépe.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Pohyb má nést informaci.',
+            ),
+            2 => 
+            array (
+              'question' => 'Uživatel má v systému vypnuté animace. Co se má stát s tvou mikrointerakcí?',
+              'options' => 
+              array (
+                0 => 'Akce přestane fungovat.',
+                1 => 'Animace se přehraje dvakrát rychleji.',
+                2 => 'Stav se ukáže bez pohybu, ale stejně srozumitelně.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Význam nesmí záviset jen na pohybu.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: dopiš do studie jeden odstavec „co bych příště udělal jinak“.',
+            'minutes' => 15,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Do portfolia jen vlastní práce; práce spolužáků jen s jejich souhlasem a uvedením autora.',
+          1 => 'V portfoliu nezveřejňuj osobní údaje (adresa, telefon).',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: studie = popis nástrojů. Ptej se „proč jsi to rozhodl takhle?“.',
+          1 => 'Otázka do třídy: Co by se stalo, kdyby animace chyběla?',
+          2 => 'Tempo: prototyp může být i jednoduchý GIF – nenech žáky utopit se v nástroji.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: žáci píšou studii podle úkolů 1–2 a kreslí storyboard (úkol 3).',
+          1 => 'Plán B offline: studie na papíře, storyboard jako komiks o 4 políčkách.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'case-study',
+          1 => 'microinteraction',
+        ),
+        '_file' => 'lesson_content_v72_2a_a.php',
+      ),
+      7 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 7 · Přístupnost a responzivní rozhraní',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím navrhnout sekci rozhraní, která je čitelná, ovladatelná klávesnicí i dotykem a srozumitelná v chybových stavech.',
+          'success_criteria' => 
+          array (
+            0 => 'Text má dostatečný kontrast a fokus (focus) je viditelný.',
+            1 => 'Cíle dotyku (touch target) mají aspoň 44 × 44 px.',
+            2 => 'Chybový a nedostupný stav nejsou odlišené jen barvou.',
+          ),
+        ),
+        'competencies' => 
+        array (
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start',
+            'teacher' => 'Nechá třídu projít ukázku jen klávesnicí.',
+            'student' => 'Zapíší, kde se ztratili.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Audit přístupnosti',
+            'teacher' => 'Předvede Accessibility Audit Lab.',
+            'student' => 'Ověří kontrast a fokus na ukázce.',
+            'form' => 've dvojicích',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 40,
+            'phase' => 'Čitelnost a mezery',
+            'teacher' => 'Připomene textové role a velikost cílů dotyku.',
+            'student' => 'Nastaví role a mezery, zkontrolují 44 px.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 40,
+            'to' => 57,
+            'phase' => 'Sekce pro počítač',
+            'teacher' => 'Hlídá viditelný fokus.',
+            'student' => 'Navrhnou kartu s akcí a stavem fokus.',
+            'form' => 'jednotlivě',
+          ),
+          4 => 
+          array (
+            'from' => 57,
+            'to' => 78,
+            'phase' => 'Mobil a stavy',
+            'teacher' => 'Ukáže chybu vyjádřenou textem a ikonou.',
+            'student' => 'Převedou sekci na 390 px a navrhnou chybu, nedostupnost a fokus.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 78,
+            'to' => 90,
+            'phase' => 'Kontrola a exit ticket',
+            'teacher' => 'Spustí kontrolu v šedi a na mobilu.',
+            'student' => 'Ověří stavy bez barev a odpoví na exit ticket.',
+            'form' => 've dvojicích',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Proveď audit ukázky: zkontroluj kontrast textu a viditelnost fokusu při ovládání klávesnicí.',
+            'output' => 'Seznam 3 nálezů.',
+            'time' => '15 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Navrhni kartu s akcí pro počítač s viditelným fokusem a dostatečným kontrastem.',
+            'output' => 'Karta pro počítač.',
+            'time' => '17 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Převeď kartu na 390 px, zachovej pořadí čtení a cíle dotyku aspoň 44 × 44 px.',
+            'output' => 'Mobilní verze.',
+            'time' => '13 min',
+          ),
+          3 => 
+          array (
+            'text' => 'Navrhni stavy chyba, nedostupné a fokus tak, aby byly pochopitelné i bez barvy.',
+            'output' => 'Tři stavy + test v šedi.',
+            'time' => '15 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane kontrolní seznam 5 bodů (kontrast, fokus, 44 px, text u chyby, pořadí) a vzorovou kartu.',
+          'standard' => 'Audit, karta, mobilní verze a stavy podle zadání.',
+          'challenge' => 'Popíše pořadí fokusu na celé sekci a najde místo, kde by se uživatel klávesnice zasekl.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Tab průchod: učitel projde jeden návrh „jako klávesnice“.',
+            1 => 'Palec: má každé tlačítko aspoň 44 px?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Kontrast a fokus',
+              'levels' => 
+              array (
+                0 => 'Neověřeno.',
+                1 => 'Ověřen jen kontrast.',
+                2 => 'Kontrast i fokus v pořádku.',
+                3 => 'Vysvětlí, komu které řešení pomáhá.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Mobil a dotyk',
+              'levels' => 
+              array (
+                0 => 'Bez mobilní verze.',
+                1 => 'Malé cíle dotyku.',
+                2 => 'Pořadí čtení zachované, cíle ≥ 44 px.',
+                3 => 'Ověří i otočení displeje.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Stavy bez barvy',
+              'levels' => 
+              array (
+                0 => 'Jen barva.',
+                1 => 'Část stavů s textem.',
+                2 => 'Všechny stavy čitelné v šedi.',
+                3 => 'Stavy zdokumentuje pro předání.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => '',
+          'competence_label' => 'Přístupnost rozhraní',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Jak velký má být cíl dotyku tlačítka na mobilu?',
+              'options' => 
+              array (
+                0 => 'Aspoň zhruba 44 × 44 px, aby se dal pohodlně trefit.',
+                1 => 'Stačí 10 × 10 px, když je vidět.',
+                2 => 'Na velikosti nezáleží.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Malé cíle se špatně trefují prstem.',
+            ),
+            1 => 
+            array (
+              'question' => 'Uživatel ovládá web jen klávesnicí. Co potřebuje nejvíc?',
+              'options' => 
+              array (
+                0 => 'Animace při najetí myší.',
+                1 => 'Tmavý režim.',
+                2 => 'Viditelný fokus a logické pořadí prvků.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Fokus je „kurzor“ klávesnice.',
+            ),
+            2 => 
+            array (
+              'question' => 'Jak správně ukázat chybu v poli formuláře?',
+              'options' => 
+              array (
+                0 => 'Jen červeným rámečkem.',
+                1 => 'Textem u pole, ikonou a návodem, jak chybu opravit.',
+                2 => 'Vyskakovacím oknem bez textu.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Chyba musí být pochopitelná i bez barvy.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: projdi jeden web jen klávesou Tab a zapiš, kde nebylo vidět, kde jsi.',
+            'minutes' => 10,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Weby se jen prohlížejí; žádné přihlašování ani odesílání formulářů.',
+          1 => 'Ukázkový obsah je vymyšlený.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: přístupnost = až na konec. Zařaď kontrolu do každé fáze.',
+          1 => 'Otázka do třídy: Kdo všechno používá klávesnici místo myši?',
+          2 => 'Tempo: audit lab nepřetahuj – 15 minut stačí.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: Tab průchod ukázkou, pak úkoly 2–4 podle lekce.',
+          1 => 'Plán B offline: audit vytištěné obrazovky podle kontrolního seznamu, stavy kreslené.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'focus',
+          1 => 'touch-target',
+        ),
+        '_file' => 'lesson_content_v72_2a_a.php',
+      ),
+      8 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 8 · Typografie II a návrhové tokeny',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím převést typografii, mezery a barvy do návrhových tokenů a napojit je na varianty komponent tak, aby změna tokenu prošla celým systémem.',
+          'success_criteria' => 
+          array (
+            0 => 'Textové role mají hodnoty pro mobil i počítač a nadpis se láme čitelně.',
+            1 => 'Odliším základní tokeny (např. modrá-600) od významových (např. barva-akce).',
+            2 => 'Varianty tlačítka používají jen tokeny a mají stavy najetí, fokus, nedostupné.',
+          ),
+        ),
+        'competencies' => 
+        array (
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start',
+            'teacher' => 'Změní jednu barvu ve dvou souborech – v jednom se propíše, v druhém ne.',
+            'student' => 'Odhadnou, v čem je rozdíl.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Responzivní typografie',
+            'teacher' => 'Předvede Responsive Type Lab.',
+            'student' => 'Definují role pro mobil a počítač a ověří zalomení nadpisu.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 40,
+            'phase' => 'Kontrola šířek',
+            'teacher' => 'Ukáže nečitelný stav na 768 px.',
+            'student' => 'Ověří 390 / 768 / 1440 px a opraví jeden problém.',
+            'form' => 've dvojicích',
+          ),
+          3 => 
+          array (
+            'from' => 40,
+            'to' => 55,
+            'phase' => 'Významové tokeny',
+            'teacher' => 'Předvede Semantic Token Lab.',
+            'student' => 'Oddělí základní a významové tokeny a pojmenují je.',
+            'form' => 'jednotlivě',
+          ),
+          4 => 
+          array (
+            'from' => 55,
+            'to' => 80,
+            'phase' => 'Varianty komponent',
+            'teacher' => 'Hlídá, aby komponenty neměly ruční hodnoty.',
+            'student' => 'Vytvoří varianty tlačítka napojené na tokeny se stavy.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 80,
+            'to' => 90,
+            'phase' => 'Test změny a exit ticket',
+            'teacher' => 'Vyzve ke změně jednoho tokenu.',
+            'student' => 'Změní barvu akce a sledují, co se propsalo; exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Definuj textové role pro mobil a počítač a ověř, že se nadpis láme čitelně na 390 px.',
+            'output' => 'Tabulka rolí pro dvě šířky.',
+            'time' => '15 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Zkontroluj návrh na 390, 768 a 1440 px a oprav jeden nečitelný stav (řádkování nebo šířka).',
+            'output' => 'Před/po opravy.',
+            'time' => '13 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Odděl základní a významové návrhové tokeny (design tokens) a pojmenuj tokeny mezer a barev.',
+            'output' => 'Seznam tokenů ve dvou vrstvách.',
+            'time' => '15 min',
+          ),
+          3 => 
+          array (
+            'text' => 'Vytvoř varianty tlačítka (hlavní, vedlejší) jen z tokenů a se stavy najetí, fokus a nedostupné.',
+            'output' => 'Varianty tlačítka.',
+            'time' => '22 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane hotovou vrstvu základních tokenů; vytváří jen významové tokeny a jedno tlačítko.',
+          'standard' => 'Role, kontrola šířek, tokeny a varianty podle zadání.',
+          'challenge' => 'Přidá tmavý motiv jen záměnou významových tokenů a ověří kontrast.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Test změny: změna jednoho tokenu se propíše – kolik komponent se změnilo?',
+            1 => 'Pojmenování: soused podle názvu tokenu odhadne, kde se používá.',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Responzivní typografie',
+              'levels' => 
+              array (
+                0 => 'Jedna sada velikostí.',
+                1 => 'Dvě sady, nadpis se láme špatně.',
+                2 => 'Role pro obě šířky, čitelné zalomení.',
+                3 => 'Ověřeno i na 768 px s opravou.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Tokeny',
+              'levels' => 
+              array (
+                0 => 'Ruční hodnoty.',
+                1 => 'Tokeny bez vrstev.',
+                2 => 'Základní a významové tokeny odděleně.',
+                3 => 'Tmavý motiv jen záměnou tokenů.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Varianty komponent',
+              'levels' => 
+              array (
+                0 => 'Jedna verze.',
+                1 => 'Varianty s ručními hodnotami.',
+                2 => 'Varianty z tokenů se stavy.',
+                3 => 'Změna tokenu se propíše bez ruční opravy.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => '',
+          'competence_label' => 'Design systém',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Který název tokenu je významový?',
+              'options' => 
+              array (
+                0 => 'modra-600',
+                1 => 'barva-akce-hlavni',
+                2 => '#1a73e8',
+              ),
+              'correct' => 1,
+              'explanation' => 'Významový token říká k čemu, ne jakou barvou.',
+            ),
+            1 => 
+            array (
+              'question' => 'Proč komponenty používají významové tokeny, a ne přímo základní?',
+              'options' => 
+              array (
+                0 => 'Aby šlo změnit význam (např. barvu akce) na jednom místě.',
+                1 => 'Protože základní tokeny nejdou exportovat.',
+                2 => 'Je to jedno.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Vrstva významu umožní motivy a změny bez přepisování.',
+            ),
+            2 => 
+            array (
+              'question' => 'Nadpis se na 768 px láme na 4 krátké řádky. Co je nejlepší oprava?',
+              'options' => 
+              array (
+                0 => 'Smazat polovinu nadpisu.',
+                1 => 'Zvětšit písmo.',
+                2 => 'Upravit velikost role pro tuto šířku nebo šířku bloku.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Opravujeme pravidlo role, ne jednotlivý výskyt.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: vymysli názvy pěti významových tokenů pro školní web (barvy a mezery).',
+            'minutes' => 10,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Pracuje se s vlastním návrhem; žádná data uživatelů.',
+          1 => 'Písma jen s licencí pro web.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: token pojmenovaný podle barvy („modrá“) použitý jako význam.',
+          1 => 'Otázka do třídy: Co se stane, až škola změní barvu loga?',
+          2 => 'Tempo: Semantic Token Lab je klíčový – kontrolu šířek klidně zkrať.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1–4 podle lekce, výstupem je obrázek variant a seznam tokenů.',
+          1 => 'Plán B offline: tokeny jako tabulka na papíře, tlačítka kreslená.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'design-token',
+        ),
+        '_file' => 'lesson_content_v72_2a_a.php',
+      ),
+      9 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 9 · Interakce II a profesionální předání návrhu',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím popsat úplný stavový model interakce, přidat pohyb jen jako zpětnou vazbu a předat komponentu vývojáři se všemi stavy.',
+          'success_criteria' => 
+          array (
+            0 => 'Stavový model obsahuje výchozí, načítání, úspěch, chybu, fokus a nedostupné.',
+            1 => 'Varianta bez pohybu zachová význam každého stavu.',
+            2 => 'Předávací list (handoff) obsahuje stavy, tokeny, chování a poznámky k přístupnosti.',
+          ),
+        ),
+        'competencies' => 
+        array (
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start',
+            'teacher' => 'Ukáže tlačítko, které po kliknutí nic nedělá 3 sekundy.',
+            'student' => 'Popíšou, co si uživatel myslí.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Stavový model',
+            'teacher' => 'Předvede State & Motion Lab.',
+            'student' => 'Sepíšou stavy komponenty a přechody mezi nimi.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 40,
+            'phase' => 'Pohyb jako zpětná vazba',
+            'teacher' => 'Ukáže krátký pohyb, který něco sděluje, a zbytečný pohyb.',
+            'student' => 'Navrhnou pohyb jen tam, kde nese informaci.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 40,
+            'to' => 57,
+            'phase' => 'Prototyp',
+            'teacher' => 'Pomáhá propojit větve úspěch a chyba.',
+            'student' => 'Propojí stavy v prototypu a otestují obě větve.',
+            'form' => 'jednotlivě',
+          ),
+          4 => 
+          array (
+            'from' => 57,
+            'to' => 72,
+            'phase' => 'Bez pohybu',
+            'teacher' => 'Vysvětlí nastavení „omezit pohyb“ (reduced motion).',
+            'student' => 'Vytvoří variantu bez pohybu a ověří fokus.',
+            'form' => 've dvojicích',
+          ),
+          5 => 
+          array (
+            'from' => 72,
+            'to' => 90,
+            'phase' => 'Předání a exit ticket',
+            'teacher' => 'Ukáže vzor předávacího listu.',
+            'student' => 'Sepíšou handoff a odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Sepiš stavový model tlačítka „Odeslat“: výchozí, načítání, úspěch, chyba, fokus, nedostupné a přechody mezi nimi.',
+            'output' => 'Diagram stavů.',
+            'time' => '15 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Navrhni krátkou zpětnou vazbu pohybem jen u stavů, kde nese informaci, a zbytečný pohyb odstraň.',
+            'output' => 'Seznam pohybů s funkcí a délkou.',
+            'time' => '15 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Propoj stavy v prototypu a otestuj větev úspěch i chyba; vytvoř variantu bez pohybu (reduced motion).',
+            'output' => 'Prototyp se dvěma větvemi a variantou bez pohybu.',
+            'time' => '32 min',
+          ),
+          3 => 
+          array (
+            'text' => 'Sepiš předávací list (handoff): stavy, tokeny, chování a poznámky k přístupnosti.',
+            'output' => 'Předávací list na 1 stranu.',
+            'time' => '18 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane šablonu stavového diagramu a předávacího listu s nadpisy kapitol.',
+          'standard' => 'Stavový model, prototyp, varianta bez pohybu a handoff podle zadání.',
+          'challenge' => 'Přidá do handoffu stav „offline“ a popíše, jak se komponenta zotaví po obnovení připojení.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Po stavovém modelu: soused najde chybějící přechod (např. z chyby zpět).',
+            1 => 'Test bez pohybu: je stav jasný i ze statického snímku?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Stavový model',
+              'levels' => 
+              array (
+                0 => 'Jen výchozí stav.',
+                1 => 'Stavy bez přechodů.',
+                2 => 'Šest stavů a přechody.',
+                3 => 'Doplněný stav offline a zotavení.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Pohyb',
+              'levels' => 
+              array (
+                0 => 'Pohyb bez funkce.',
+                1 => 'Funkční, ale dlouhý nebo rušivý.',
+                2 => 'Krátký pohyb jen se zpětnou vazbou.',
+                3 => 'Varianta bez pohybu zachová význam.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Předání',
+              'levels' => 
+              array (
+                0 => 'Jen snímek obrazovky.',
+                1 => 'Chybí stavy nebo tokeny.',
+                2 => 'Stavy, tokeny, chování, přístupnost.',
+                3 => 'Spolužák podle listu popíše implementaci.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => '',
+          'competence_label' => 'Interakce a předání',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Uživatel má zapnuté „omezit pohyb“. Co uděláš se svou animací načítání?',
+              'options' => 
+              array (
+                0 => 'Nahradím ji statickým ukazatelem s textem „Načítám…“.',
+                1 => 'Nechám ji, je krátká.',
+                2 => 'Načítání úplně skryji.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Význam zůstane, pohyb zmizí.',
+            ),
+            1 => 
+            array (
+              'question' => 'Co nejvíc chybí v předání, které obsahuje jen obrázek výchozího stavu?',
+              'options' => 
+              array (
+                0 => 'Jméno autora.',
+                1 => 'Ostatní stavy, chování a pravidla rozměrů.',
+                2 => 'Vyšší rozlišení obrázku.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Vývojář musí vědět, jak se komponenta chová.',
+            ),
+            2 => 
+            array (
+              'question' => 'Kdy má pohyb v rozhraní smysl?',
+              'options' => 
+              array (
+                0 => 'Když je na stránce málo barev.',
+                1 => 'Vždy, když to nástroj umí.',
+                2 => 'Když uživateli říká, co se stalo nebo kam se něco přesunulo.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Pohyb je zpětná vazba, ne ozdoba.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: v jedné aplikaci najdi animaci, která ti něco sděluje, a jednu, která je jen ozdoba.',
+            'minutes' => 10,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Prototypy nesbírají skutečná data; vzorové údaje jsou vymyšlené.',
+          1 => 'Při sdílení prototypu nastav přístup jen pro třídu.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: chybí cesta zpět z chyby. Ptej se „co uživatel udělá teď?“.',
+          1 => 'Otázka do třídy: Komu může pohyb na webu vadit?',
+          2 => 'Tempo: prototyp je nejdelší část – předávací list může mít jednodušší podobu.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: stavový model a handoff jdou na papíře (úkoly 1 a 4), prototyp podle učebny.',
+          1 => 'Plán B offline: stavy jako komiks, přechody šipkami.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'handoff',
+          1 => 'reduced-motion',
+        ),
+        '_file' => 'lesson_content_v72_2a_a.php',
+      ),
+      10 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 10 · Informační architektura a cesta uživatele',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím uspořádat obsah malého webu podle úkolů uživatele, nakreslit mapu webu a jednu cestu uživatele a ověřit je jednoduchým testem.',
+          'success_criteria' => 
+          array (
+            0 => 'Obsah je ve skupinách pojmenovaných srozumitelně pro uživatele.',
+            1 => 'Mapa webu má 5–8 stránek bez zbytečných úrovní.',
+            2 => 'Po testu se spolužákem upravím jednu část struktury.',
+          ),
+        ),
+        'competencies' => 
+        array (
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start',
+            'teacher' => 'Zadá: najdi na školním webu jídelníček – kolik kliků?',
+            'student' => 'Popíšou cestu a kde váhali.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Obsah do skupin',
+            'teacher' => 'Ukáže třídění kartiček podle cíle uživatele.',
+            'student' => 'Roztřídí obsah do skupin a pojmenují je.',
+            'form' => 've dvojicích',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 40,
+            'phase' => 'Mapa webu',
+            'teacher' => 'Připomene: méně úrovní, jasné názvy.',
+            'student' => 'Nakreslí mapu webu (sitemap) s 5–8 stránkami.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 40,
+            'to' => 55,
+            'phase' => 'Cesta uživatele',
+            'teacher' => 'Ukáže diagram cesty od vstupu k cíli.',
+            'student' => 'Nakreslí jednu cestu uživatele (user flow).',
+            'form' => 'jednotlivě',
+          ),
+          4 => 
+          array (
+            'from' => 55,
+            'to' => 75,
+            'phase' => 'Test stromu',
+            'teacher' => 'Vysvětlí test bez designu: jen názvy.',
+            'student' => 'Dají spolužákovi 3 úkoly a zapíší, kde váhal.',
+            'form' => 've dvojicích',
+          ),
+          5 => 
+          array (
+            'from' => 75,
+            'to' => 90,
+            'phase' => 'Úprava a exit ticket',
+            'teacher' => 'Vyzve k jedné změně podle pozorování.',
+            'student' => 'Upraví strukturu, zapíší před/po a odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Roztřiď obsah vymyšleného webu kroužku do skupin podle toho, co uživatel chce udělat, a skupiny pojmenuj.',
+            'output' => 'Skupiny obsahu s názvy.',
+            'time' => '15 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Nakresli mapu webu (sitemap) s 5–8 stránkami a co nejméně úrovněmi.',
+            'output' => 'Mapa webu.',
+            'time' => '15 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Nakresli cestu uživatele (user flow) od vstupu na web k přihlášce do kroužku.',
+            'output' => 'Diagram cesty.',
+            'time' => '15 min',
+          ),
+          3 => 
+          array (
+            'text' => 'Dej spolužákovi 3 úkoly nad názvy stránek (bez designu), zapiš, kde váhal, a uprav jednu část struktury.',
+            'output' => 'Záznam testu + před/po úpravy.',
+            'time' => '30 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane kartičky obsahu a vzor mapy webu; třídí a doplňuje názvy.',
+          'standard' => 'Skupiny, mapa webu, cesta uživatele a test podle zadání.',
+          'challenge' => 'Navrhne druhou variantu mapy s jinými názvy skupin a porovná výsledky testu.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Po pojmenování skupin: soused podle názvu odhadne obsah skupiny.',
+            1 => 'Test: kolik úkolů spolužák splnil napoprvé?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Skupiny a názvy',
+              'levels' => 
+              array (
+                0 => 'Obsah netříděný.',
+                1 => 'Skupiny s interními názvy.',
+                2 => 'Skupiny podle cíle uživatele, srozumitelné názvy.',
+                3 => 'Názvy ověřené testem.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Mapa a cesta',
+              'levels' => 
+              array (
+                0 => 'Chybí.',
+                1 => 'Moc úrovní, nejasná cesta.',
+                2 => '5–8 stránek a jasná cesta k cíli.',
+                3 => 'Cesta má jen nutné rozhodovací body.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Test a úprava',
+              'levels' => 
+              array (
+                0 => 'Bez testu.',
+                1 => 'Test bez záznamu.',
+                2 => 'Zapsané váhání a jedna úprava.',
+                3 => 'Úprava zdůvodněná pozorováním.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => '',
+          'competence_label' => 'Informační architektura',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Proč se test stromu dělá bez grafického návrhu?',
+              'options' => 
+              array (
+                0 => 'Aby vzhled nezakryl problém ve struktuře a názvech.',
+                1 => 'Protože design ještě nikdo neumí.',
+                2 => 'Aby byl test rychlejší.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Test ověřuje strukturu, ne vzhled.',
+            ),
+            1 => 
+            array (
+              'question' => 'Co je mapa webu (sitemap)?',
+              'options' => 
+              array (
+                0 => 'Seznam obrázků na webu.',
+                1 => 'Přehled stránek webu a jejich vztahů.',
+                2 => 'Návod k instalaci webu.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Mapa ukazuje strukturu stránek.',
+            ),
+            2 => 
+            array (
+              'question' => 'Spolužák při testu hledal „Přihlášku“ ve skupině „Aktuality“. Co z toho plyne?',
+              'options' => 
+              array (
+                0 => 'Spolužák je nepozorný.',
+                1 => 'Je potřeba přidat víc stránek.',
+                2 => 'Název nebo umístění přihlášky neodpovídá očekávání – uprav strukturu.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Váhání je důkaz problému ve struktuře.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: zkus na jednom webu najít konkrétní informaci a zapiš počet kliků a kde jsi váhal.',
+            'minutes' => 10,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Web kroužku je vymyšlený; test probíhá jen ve třídě a bez nahrávání.',
+          1 => 'Do záznamu testu nepiš jméno testujícího – stačí „spolužák A“.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Testujte strukturu bez vizuálu – vzhled maskuje problémy architektury.',
+          1 => 'Otázka do třídy: Jak by tuhle skupinu pojmenoval někdo, kdo web nezná?',
+          2 => 'Tempo: test je klíčový – kartičky omez na 15 minut.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: kartičky obsahu, mapa a cesta na papíře, test ve dvojicích.',
+          1 => 'Plán B offline: celá hodina s papírovými kartičkami.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'sitemap',
+          1 => 'user-flow',
+        ),
+        '_file' => 'lesson_content_v72_2a_a.php',
+      ),
+      11 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 11 · Formuláře: validace, chyby a stavy',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím navrhnout formulář jako stavový systém – od nápovědy přes odesílání až po chybu a zotavení bez ztráty vyplněných dat.',
+          'success_criteria' => 
+          array (
+            0 => 'Mám tabulku stavů pole i celého formuláře (výchozí, fokus, vyplněno, chyba, nedostupné, odesílám, úspěch).',
+            1 => 'Chybové hlášky jsou konkrétní a říkají, jak chybu opravit.',
+            2 => 'Po chybě zůstanou správně vyplněná pole zachovaná a pozornost se přesune k problému.',
+          ),
+        ),
+        'competencies' => 
+        array (
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start',
+            'teacher' => 'Ukáže formulář, který po chybě smaže všechna pole.',
+            'student' => 'Popíšou, jak by se cítili jako uživatelé.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Soupis stavů',
+            'teacher' => 'Rozliší stavy pole a stavy celého formuláře.',
+            'student' => 'Sepíšou tabulku stavů.',
+            'form' => 've dvojicích',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 40,
+            'phase' => 'Validace (validation)',
+            'teacher' => 'Ukáže nápovědu předem vs. chybu po odeslání.',
+            'student' => 'Napíšou nápovědy a chybové hlášky pro 3 pole.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 40,
+            'to' => 55,
+            'phase' => 'Odesílání',
+            'teacher' => 'Vysvětlí riziko dvojího odeslání.',
+            'student' => 'Navrhnou průběh po kliknutí na Odeslat.',
+            'form' => 'jednotlivě',
+          ),
+          4 => 
+          array (
+            'from' => 55,
+            'to' => 78,
+            'phase' => 'Zotavení a prototyp',
+            'teacher' => 'Hlídá zachování vyplněných dat.',
+            'student' => 'Propojí větev úspěch i chyba v prototypu a projdou ho klávesnicí.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 78,
+            'to' => 90,
+            'phase' => 'Kontrola a exit ticket',
+            'teacher' => 'Vybere dva prototypy k ukázce chybové větve.',
+            'student' => 'Ověří chybovou větev a odpoví na exit ticket.',
+            'form' => 'frontálně',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Sepiš tabulku stavů: které patří jednomu poli a které celému formuláři.',
+            'output' => 'Tabulka stavů.',
+            'time' => '15 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Pro pole jméno, e-mail a heslo napiš nápovědu předem a konkrétní chybovou hlášku.',
+            'output' => 'Šest textů (3 nápovědy, 3 chyby).',
+            'time' => '15 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Navrhni stav „odesílám“, který zabrání nejasnému dvojímu odeslání.',
+            'output' => 'Stav tlačítka a formuláře při odesílání.',
+            'time' => '15 min',
+          ),
+          3 => 
+          array (
+            'text' => 'Propoj v prototypu větev úspěch i chyba, zachovej správně vyplněná data a projdi prototyp klávesnicí.',
+            'output' => 'Prototyp se dvěma větvemi.',
+            'time' => '23 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane vzorovou tabulku stavů s polovinou vyplněnou a vzor chybové hlášky.',
+          'standard' => 'Tabulka, texty, odesílání a prototyp podle zadání.',
+          'challenge' => 'Přidá souhrn chyb nahoře formuláře s odkazy na pole a popíše, kam se přesune fokus.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Hláška nahlas: třída řekne, zda ví, co přesně opravit.',
+            1 => 'Kontrola zotavení: zůstalo po chybě vyplněné jméno?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Stavový model',
+              'levels' => 
+              array (
+                0 => 'Jen výchozí stav.',
+                1 => 'Stavy bez rozlišení pole/formulář.',
+                2 => 'Úplná tabulka stavů.',
+                3 => 'Doplněné přechody mezi stavy.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Texty validace',
+              'levels' => 
+              array (
+                0 => '„Chyba.“',
+                1 => 'Obecné hlášky.',
+                2 => 'Konkrétní hlášky s návodem.',
+                3 => 'Nápověda předchází chybám.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Zotavení',
+              'levels' => 
+              array (
+                0 => 'Data se ztratí.',
+                1 => 'Data zůstanou, fokus ne.',
+                2 => 'Data zůstanou a fokus jde na chybu.',
+                3 => 'Souhrn chyb s odkazy na pole.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => '',
+          'competence_label' => 'Formuláře a stavy',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Uživatel odeslal formulář s chybou v e-mailu. Co se má stát s ostatními vyplněnými poli?',
+              'options' => 
+              array (
+                0 => 'Zůstanou vyplněná, opraví jen e-mail.',
+                1 => 'Vymažou se, ať začne znovu.',
+                2 => 'Zablokují se.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Zotavení po chybě nesmí trestat uživatele.',
+            ),
+            1 => 
+            array (
+              'question' => 'Jaký je rozdíl mezi nápovědou a chybovou hláškou?',
+              'options' => 
+              array (
+                0 => 'Žádný, jsou to synonyma.',
+                1 => 'Nápověda je vždy červená.',
+                2 => 'Nápověda radí předem, chyba popisuje problém po kontrole.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Dobrá nápověda předchází chybám.',
+            ),
+            2 => 
+            array (
+              'question' => 'Proč tlačítko během odesílání ukáže „Odesílám…“ a je dočasně nedostupné?',
+              'options' => 
+              array (
+                0 => 'Aby vypadalo moderně.',
+                1 => 'Aby uživatel věděl, že se něco děje, a neodeslal formulář dvakrát.',
+                2 => 'Aby uživatel počkal na reklamu.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Jasný stav brání dvojímu odeslání.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: najdi jeden registrační formulář a zapiš, jak hlásí chybu hesla.',
+            'minutes' => 10,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Do skutečných formulářů nic neodesíláme; testovací údaje jsou vymyšlené.',
+          1 => 'Nikdy nepoužívej svá skutečná hesla v prototypu.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Hodnoť zotavení po chybě, ne jen krásný výchozí stav.',
+          1 => 'Otázka do třídy: Kdy je nedostupné tlačítko bez vysvětlení problém?',
+          2 => 'Tempo: prototyp zabere nejvíc času – texty lze dopsat doma.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1–3 na papíře, prototyp podle učebny.',
+          1 => 'Plán B offline: stavy formuláře kreslené jako komiks.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'validation',
+        ),
+        '_file' => 'lesson_content_v72_2a_b.php',
+      ),
+      12 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 12 · Auto Layout, varianty a responzivní komponenty',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím postavit komponentu s automatickým rozvržením (Auto Layout) a variantami tak, aby vydržela dlouhý text i úzký displej bez ručních výjimek.',
+          'success_criteria' => 
+          array (
+            0 => 'Rozliším chování „přizpůsobit obsahu“, „vyplnit“ a „pevně“ a vysvětlím rozdíl vnitřního okraje a mezery.',
+            1 => 'Tlačítko vydrží delší text, karta má variantu kompaktní a výchozí.',
+            2 => 'Při zátěžovém testu najdu a opravím dva problémy.',
+          ),
+        ),
+        'competencies' => 
+        array (
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start',
+            'teacher' => 'Vloží do tlačítka dlouhé slovo a tlačítko se rozpadne.',
+            'student' => 'Odhadnou, proč se to stalo.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 22,
+            'phase' => 'Mentální model',
+            'teacher' => 'Vysvětlí hug / fill / fixed a padding vs. gap.',
+            'student' => 'Na ukázce určí chování každého prvku.',
+            'form' => 've dvojicích',
+          ),
+          2 => 
+          array (
+            'from' => 22,
+            'to' => 37,
+            'phase' => 'Odolné tlačítko',
+            'teacher' => 'Ukáže tlačítko s automatickým rozvržením.',
+            'student' => 'Postaví tlačítko, které unese delší text.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 37,
+            'to' => 55,
+            'phase' => 'Varianty karty',
+            'teacher' => 'Připomene pojmenování variant podle významu.',
+            'student' => 'Vytvoří kartu kompaktní a výchozí se stejnými tokeny.',
+            'form' => 'jednotlivě',
+          ),
+          4 => 
+          array (
+            'from' => 55,
+            'to' => 75,
+            'phase' => 'Vnořené rozvržení',
+            'teacher' => 'Hlídá, aby se nepoužívalo absolutní umístění.',
+            'student' => 'Složí kartu z menších komponent.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 75,
+            'to' => 90,
+            'phase' => 'Zátěžový test a exit ticket',
+            'teacher' => 'Rozdá extrémní vstupy: dlouhý text, malý displej, chybějící obrázek.',
+            'student' => 'Otestují komponentu, zapíší 2 opravy a odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Na ukázce urči u každého prvku chování hug, fill nebo fixed a vysvětli rozdíl mezi vnitřním okrajem (padding) a mezerou (gap).',
+            'output' => 'Popsaná ukázka.',
+            'time' => '12 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Postav tlačítko s automatickým rozvržením (Auto Layout), které unese i dvakrát delší text.',
+            'output' => 'Tlačítko + test s dlouhým textem.',
+            'time' => '15 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Vytvoř kartu ve variantě kompaktní a výchozí se stejnými tokeny a skládej ji z menších komponent.',
+            'output' => 'Dvě varianty karty.',
+            'time' => '38 min',
+          ),
+          3 => 
+          array (
+            'text' => 'Proveď zátěžový test (dlouhý text, šířka 320 px, chybějící obrázek) a zapiš dvě opravy.',
+            'output' => 'Záznam testu a dvou oprav.',
+            'time' => '12 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane hotové tlačítko s Auto Layoutem jako vzor; staví jen kartu.',
+          'standard' => 'Tlačítko, dvě varianty karty a zátěžový test podle zadání.',
+          'challenge' => 'Přidá variantu karty pro tmavý motiv jen přes tokeny a otestuje ji stejnými vstupy.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Rychlé určení: učitel ukáže prvek, žáci řeknou hug, fill nebo fixed.',
+            1 => 'Zátěžový test: rozpadne se něco při 320 px?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Model rozvržení',
+              'levels' => 
+              array (
+                0 => 'Nerozliší chování.',
+                1 => 'Rozliší s chybami.',
+                2 => 'Správně určí a vysvětlí padding vs. gap.',
+                3 => 'Vysvětlí to spolužákovi na vlastní komponentě.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Odolnost komponent',
+              'levels' => 
+              array (
+                0 => 'Rozpadá se.',
+                1 => 'Unese delší text, ne úzký displej.',
+                2 => 'Vydrží všechny tři vstupy.',
+                3 => 'Bez jediné ruční výjimky.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Varianty',
+              'levels' => 
+              array (
+                0 => 'Jedna verze.',
+                1 => 'Varianty s nejasnými názvy.',
+                2 => 'Varianty pojmenované podle významu.',
+                3 => 'Tmavý motiv přes tokeny.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => '',
+          'competence_label' => 'Komponenty a rozvržení',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Co znamená, že prvek „vyplňuje“ (fill) dostupný prostor?',
+              'options' => 
+              array (
+                0 => 'Má pevnou šířku.',
+                1 => 'Roztáhne se do šířky rodiče.',
+                2 => 'Je tak velký jako jeho text.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Fill = přizpůsobí se rodiči.',
+            ),
+            1 => 
+            array (
+              'question' => 'Jaký je rozdíl mezi vnitřním okrajem (padding) a mezerou (gap)?',
+              'options' => 
+              array (
+                0 => 'Padding je uvnitř kolem obsahu, gap je mezi prvky.',
+                1 => 'Jsou to dvě jména pro totéž.',
+                2 => 'Gap je jen na mobilu.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Padding obaluje, gap rozestupuje.',
+            ),
+            2 => 
+            array (
+              'question' => 'V deseti kartách ručně posouváš nadpis o 4 px. Co to znamená?',
+              'options' => 
+              array (
+                0 => 'Je to běžná práce, nic neměním.',
+                1 => 'Mám malý monitor.',
+                2 => 'Pravidlo komponenty je špatně – opravím ho v hlavní komponentě.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Opakovaná výjimka patří do pravidla.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: v jedné aplikaci najdi tlačítko a zkus odhadnout, zda se přizpůsobuje textu, nebo má pevnou šířku.',
+            'minutes' => 10,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Pracuje se v návrhovém nástroji se školním účtem; sdílení jen se třídou.',
+          1 => 'Obsah karet je vymyšlený.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Neomezuj výuku na mechaniku nástroje – žák má vysvětlit pravidlo rozvržení.',
+          1 => 'Otázka do třídy: Co se stane s komponentou, když do ní dáme text v němčině?',
+          2 => 'Tempo: vnořené rozvržení je těžké – slabší žáci mohou skončit u jedné varianty.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1 a 4 jdou i na papíře, úkoly 2–3 v nástroji podle návodu v lekci.',
+          1 => 'Plán B offline: komponenty z papírových proužků, které se „roztahují“.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'auto-layout',
+          1 => 'padding',
+          2 => 'gap',
+        ),
+        '_file' => 'lesson_content_v72_2a_b.php',
+      ),
+      13 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 13 · Audit přístupnosti webového návrhu',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím provést strukturovaný audit přístupnosti návrhu (kontrast, fokus, pořadí, cíle dotyku, texty, stavy), seřadit nálezy podle závažnosti a opravit dva nejdůležitější.',
+          'success_criteria' => 
+          array (
+            0 => 'Projdu audit v osmi bodech a zapíšu nálezy.',
+            1 => 'Nálezy seřadím na vysoké, střední a nízké.',
+            2 => 'Dvě největší bariéry opravím a doložím před/po.',
+          ),
+        ),
+        'competencies' => 
+        array (
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start',
+            'teacher' => 'Pustí ukázku čtečky obrazovky (screen reader) nad špatně popsaným tlačítkem.',
+            'student' => 'Popíšou, co uživatel uslyšel.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Kontrolní seznam',
+            'teacher' => 'Projde 8 bodů auditu.',
+            'student' => 'Zkontrolují vlastní prototyp podle seznamu.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 40,
+            'phase' => 'Klávesnice',
+            'teacher' => 'Ukáže očekávané pořadí fokusu.',
+            'student' => 'Seřadí pořadí fokusu a ověří, že fokus není zakrytý.',
+            'form' => 've dvojicích',
+          ),
+          3 => 
+          array (
+            'from' => 40,
+            'to' => 55,
+            'phase' => 'Zvětšení a přeskládání',
+            'teacher' => 'Zvětší text na 200 % a zúží okno.',
+            'student' => 'Najdou oříznutý obsah nebo vodorovné posouvání.',
+            'form' => 'jednotlivě',
+          ),
+          4 => 
+          array (
+            'from' => 55,
+            'to' => 78,
+            'phase' => 'Priorita a oprava',
+            'teacher' => 'Vysvětlí závažnost = dopad × četnost.',
+            'student' => 'Seřadí nálezy a opraví dvě největší bariéry.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 78,
+            'to' => 90,
+            'phase' => 'Sdílení a exit ticket',
+            'teacher' => 'Vybere dvě opravy k ukázce před/po.',
+            'student' => 'Ukážou opravu a odpoví na exit ticket.',
+            'form' => 'frontálně',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Projdi svůj prototyp podle 8 bodů auditu (kontrast, fokus, pořadí, cíle dotyku, popisky, chyby, zvětšení, ne jen barva).',
+            'output' => 'Vyplněný kontrolní seznam s nálezy.',
+            'time' => '15 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Zapiš očekávané pořadí fokusu (focus order) na stránce a ověř, že fokus nikde není zakrytý.',
+            'output' => 'Číslované pořadí fokusu.',
+            'time' => '15 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Ověř zvětšení textu na 200 % a úzké okno; zapiš oříznutí nebo vodorovné posouvání.',
+            'output' => 'Seznam problémů se zvětšením.',
+            'time' => '15 min',
+          ),
+          3 => 
+          array (
+            'text' => 'Seřaď nálezy na vysoké / střední / nízké a oprav dva nejzávažnější; ulož před/po.',
+            'output' => 'Seřazený seznam + 2 opravy před/po.',
+            'time' => '23 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane kontrolní seznam s příklady chyb ke každému bodu a audituje připravenou ukázku.',
+          'standard' => 'Audit vlastního prototypu, priorita a dvě opravy.',
+          'challenge' => 'Napíše krátkou zprávu pro tým: tři nejčastější chyby a jak jim předcházet už při návrhu komponent.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Po kontrolním seznamu: každý řekne jeden nález a jeho dopad.',
+            1 => 'Priorita: proč je tenhle nález „vysoký“?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Systematičnost auditu',
+              'levels' => 
+              array (
+                0 => 'Náhodné nálezy.',
+                1 => 'Část bodů.',
+                2 => 'Všech 8 bodů s nálezy.',
+                3 => 'Nálezy s dopadem na konkrétní uživatele.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Prioritizace',
+              'levels' => 
+              array (
+                0 => 'Bez pořadí.',
+                1 => 'Pořadí bez důvodu.',
+                2 => 'Vysoké / střední / nízké podle dopadu.',
+                3 => 'Zdůvodní dopad × četnost.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Opravy',
+              'levels' => 
+              array (
+                0 => 'Žádná.',
+                1 => 'Oprava méně závažného.',
+                2 => 'Dvě největší bariéry opravené.',
+                3 => 'Doložené před/po a prevence do komponent.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => '',
+          'competence_label' => 'Přístupnost rozhraní',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Při zvětšení textu na 200 % musíš stránku posouvat do stran. Co to je?',
+              'options' => 
+              array (
+                0 => 'Problém přeskládání obsahu, který je potřeba opravit.',
+                1 => 'Normální chování, za to návrh nemůže.',
+                2 => 'Chyba prohlížeče.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Obsah se má přeskládat, ne utéct do strany.',
+            ),
+            1 => 
+            array (
+              'question' => 'Jak určíš, která chyba přístupnosti má přednost?',
+              'options' => 
+              array (
+                0 => 'Podle toho, kterou je nejsnazší opravit.',
+                1 => 'Podle abecedy.',
+                2 => 'Podle dopadu na uživatele a toho, jak často nastává.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Závažnost = dopad × četnost.',
+            ),
+            2 => 
+            array (
+              'question' => 'Kdy je nejlepší řešit přístupnost?',
+              'options' => 
+              array (
+                0 => 'Až po exportu hotového webu.',
+                1 => 'Už při návrhu komponent a průchodů.',
+                2 => 'Jen když si někdo stěžuje.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Pozdní opravy jsou dražší.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: zvětši na jednom webu text na 200 % (Ctrl a +) a zapiš, co se rozbilo.',
+            'minutes' => 10,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Audituje se vlastní prototyp nebo připravená ukázka; cizí weby se nemění.',
+          1 => 'Nálezy se nesdílejí veřejně ani s autory cizích webů bez souhlasu učitele.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Nehodnoť zapamatování čísel – důležitý je systematický audit a oprava.',
+          1 => 'Otázka do třídy: Komu konkrétně tahle chyba vadí?',
+          2 => 'Tempo: používej reálné prototypy žáků, ušetří to čas na přípravu ukázky.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: audit podle tištěného seznamu, úkoly 1–4 podle lekce.',
+          1 => 'Plán B offline: audit vytištěných obrazovek.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'focus',
+          1 => 'screen-reader',
+        ),
+        '_file' => 'lesson_content_v72_2a_b.php',
+      ),
+      14 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 14 · Od návrhu k HTML a CSS: předání, které jde postavit',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím převést návrh na specifikaci pro vývojáře: strukturu stránky, tokeny, komponenty, pravidla responzivity a tabulku stavů.',
+          'success_criteria' => 
+          array (
+            0 => 'Obrazovku rozdělím na záhlaví, hlavní obsah, sekce a zápatí a komponenty pojmenuji podle funkce.',
+            1 => 'Tokeny barev, mezer a písma nahradí seznam náhodných pixelů.',
+            2 => 'Spolužák podle mé specifikace popíše implementaci a já opravím dvě nejasnosti.',
+          ),
+        ),
+        'competencies' => 
+        array (
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start',
+            'teacher' => 'Ukáže předání „jeden obrázek“ a zeptá se, co vývojáři chybí.',
+            'student' => 'Vyjmenují chybějící informace.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Struktura stránky',
+            'teacher' => 'Ukáže vztah návrhu a struktury HTML (header, main, section, footer).',
+            'student' => 'Rozdělí obrazovku a pojmenují komponenty podle funkce.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 40,
+            'phase' => 'Tokeny',
+            'teacher' => 'Ukáže seznam tokenů místo 40 náhodných hodnot.',
+            'student' => 'Zapíší tokeny barev, mezer a písma.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 40,
+            'to' => 55,
+            'phase' => 'Pravidla responzivity',
+            'teacher' => 'Vysvětlí maximální šířku a chování obrázků.',
+            'student' => 'Popíšou, kdy se rozvržení skládá pod sebe.',
+            'form' => 'jednotlivě',
+          ),
+          4 => 
+          array (
+            'from' => 55,
+            'to' => 70,
+            'phase' => 'Stavy',
+            'teacher' => 'Připomene tabulku stavů a klávesnici.',
+            'student' => 'Sepíšou stavy komponent a poznámky ke klávesnici.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 70,
+            'to' => 90,
+            'phase' => 'Kontrola „vývojářem“ a exit ticket',
+            'teacher' => 'Spáruje žáky do rolí návrhář a vývojář.',
+            'student' => 'Spolužák popíše implementaci, autor opraví 2 nejasnosti; exit ticket.',
+            'form' => 've dvojicích',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Rozděl svou obrazovku na záhlaví, hlavní obsah, sekce a zápatí a pojmenuj komponenty podle funkce.',
+            'output' => 'Popsaná struktura obrazovky.',
+            'time' => '15 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Zapiš tokeny barev, mezer a písma, které návrh používá.',
+            'output' => 'Tabulka tokenů.',
+            'time' => '15 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Popiš pravidla responzivity: maximální šířka obsahu, kdy se sloupce skládají pod sebe, jak se chovají obrázky.',
+            'output' => '3–5 pravidel.',
+            'time' => '15 min',
+          ),
+          3 => 
+          array (
+            'text' => 'Doplň tabulku stavů komponent a nech spolužáka podle celé specifikace (handoff) popsat implementaci; oprav 2 nejasnosti.',
+            'output' => 'Tabulka stavů + 2 opravy.',
+            'time' => '30 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane šablonu specifikace s nadpisy a vzorem jednoho vyplněného řádku.',
+          'standard' => 'Úplná specifikace na 1 stranu a kontrola spolužákem.',
+          'challenge' => 'Postaví jednu sekci v HTML a CSS podle vlastní specifikace a porovná výsledek s návrhem.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Po struktuře: soused podle názvů komponent odhadne jejich funkci.',
+            1 => 'Kontrola vývojářem: kolik otázek musel položit?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Struktura a názvy',
+              'levels' => 
+              array (
+                0 => 'Bez struktury.',
+                1 => 'Struktura, názvy podle vzhledu.',
+                2 => 'Struktura a názvy podle funkce.',
+                3 => 'Odpovídá sémantickým prvkům HTML.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Tokeny a pravidla',
+              'levels' => 
+              array (
+                0 => 'Náhodné pixely.',
+                1 => 'Tokeny bez responzivity.',
+                2 => 'Tokeny i pravidla responzivity.',
+                3 => 'Pravidla ověřená na třech šířkách.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Srozumitelnost předání',
+              'levels' => 
+              array (
+                0 => 'Jen obrázek.',
+                1 => 'Hodně nejasností.',
+                2 => 'Spolužák popíše implementaci.',
+                3 => 'Mini implementace odpovídá návrhu.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => '',
+          'competence_label' => 'Interakce a předání',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Proč komponenty pojmenováváme podle funkce (např. „karta-akce“), a ne podle vzhledu („modrá-krabice“)?',
+              'options' => 
+              array (
+                0 => 'Vzhled se může změnit, funkce zůstává.',
+                1 => 'Názvy podle barev jsou zakázané.',
+                2 => 'Kvůli délce názvu.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Funkční název přežije redesign.',
+            ),
+            1 => 
+            array (
+              'question' => 'Co je v předání nejužitečnější místo 40 různých hodnot v pixelech?',
+              'options' => 
+              array (
+                0 => 'Snímek obrazovky ve vyšším rozlišení.',
+                1 => 'Malý soubor pojmenovaných tokenů.',
+                2 => 'Video z návrhového nástroje.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Tokeny jsou opakovatelná pravidla.',
+            ),
+            2 => 
+            array (
+              'question' => 'Který prvek HTML odpovídá hlavnímu obsahu stránky?',
+              'options' => 
+              array (
+                0 => 'footer',
+                1 => 'header',
+                2 => 'main',
+              ),
+              'correct' => 2,
+              'explanation' => 'main obaluje hlavní obsah stránky.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: v prohlížeči otevři nástroje vývojáře na jednom webu a najdi prvky header, main a footer.',
+            'minutes' => 15,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Nástroje vývojáře používáme jen ke čtení – produkční weby neměníme.',
+          1 => 'Specifikace neobsahuje skutečná data uživatelů.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Nemusí se psát celý kód – cílem je spojit návrh a implementační myšlení.',
+          1 => 'Otázka do třídy: Co by se vývojář musel zeptat, kdyby měl jen obrázek?',
+          2 => 'Tempo: kontrola ve dvojicích je jádro hodiny, začni ji nejpozději v 70. minutě.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1–4 jako papírová specifikace, kontrola ve dvojicích.',
+          1 => 'Plán B offline: celá specifikace ručně na A4.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'handoff',
+        ),
+        '_file' => 'lesson_content_v72_2a_b.php',
+      ),
+      15 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 15 · Rozvržení v CSS: Flexbox, Grid a responzivní pravidla',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím rozhodnout, kdy rozvržení postavit jako Flexbox (jedna osa) a kdy jako Grid (dvě osy), a popsat, jak se mřížka karet mění 3 → 2 → 1 sloupec.',
+          'success_criteria' => 
+          array (
+            0 => 'U tří částí stránky zdůvodním volbu Flexbox, nebo Grid.',
+            1 => 'Mřížka karet se mění 3 → 2 → 1 bez pevné šířky, která přetéká.',
+            2 => 'U existující stránky najdu kontejner, mezeru, maximální šířku a směr rozvržení.',
+          ),
+        ),
+        'competencies' => 
+        array (
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start',
+            'teacher' => 'Ukáže web, kde karty na mobilu přetékají ven z obrazovky.',
+            'student' => 'Odhadnou příčinu (pevná šířka).',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Flex vs. Grid',
+            'teacher' => 'Vysvětlí jednu osu vs. dvě osy na příkladech.',
+            'student' => 'Zařadí 5 příkladů rozvržení.',
+            'form' => 've dvojicích',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 40,
+            'phase' => 'Úvodní sekce jako pravidlo',
+            'teacher' => 'Ukáže dva sloupce na počítači a jeden na mobilu.',
+            'student' => 'Popíšou pravidlo úvodní sekce.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 40,
+            'to' => 58,
+            'phase' => 'Mřížka karet',
+            'teacher' => 'Ukáže mřížku 3 → 2 → 1 bez pevných šířek.',
+            'student' => 'Navrhnou mřížku karet a zapíší pravidlo.',
+            'form' => 'jednotlivě',
+          ),
+          4 => 
+          array (
+            'from' => 58,
+            'to' => 75,
+            'phase' => 'Prohlížení existující stránky',
+            'teacher' => 'Předvede nástroje vývojáře jen pro čtení.',
+            'student' => 'Najdou kontejner, mezeru, maximální šířku a směr.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 75,
+            'to' => 90,
+            'phase' => 'Poznámky k implementaci a exit ticket',
+            'teacher' => 'Zadá poznámky ke třem komponentám.',
+            'student' => 'Napíšou model rozvržení a chování a odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Zařaď pět příkladů rozvržení (menu, karty, formulář, galerie, zápatí) jako Flexbox, nebo Grid a zdůvodni.',
+            'output' => 'Pět rozhodnutí s důvodem.',
+            'time' => '15 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Popiš pravidlo úvodní sekce: dva sloupce na počítači, jeden na mobilu.',
+            'output' => 'Pravidlo v jedné až dvou větách.',
+            'time' => '15 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Navrhni mřížku karet, která se mění 3 → 2 → 1 sloupec a nikde nemá pevnou šířku, která přetéká.',
+            'output' => 'Náčrt tří stavů mřížky + pravidlo.',
+            'time' => '18 min',
+          ),
+          3 => 
+          array (
+            'text' => 'V nástrojích vývojáře (jen ke čtení) najdi na existující stránce kontejner, mezeru (gap), maximální šířku a směr rozvržení.',
+            'output' => 'Čtyři zjištěné hodnoty.',
+            'time' => '17 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane kartičky s obrázky rozvržení a nápovědu „řada nebo tabulka?“.',
+          'standard' => 'Rozhodnutí, pravidla a prohlížení podle zadání.',
+          'challenge' => 'Napíše mřížku karet v CSS (grid-template-columns s auto-fit) a ověří ji na třech šířkách.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Ukaž rukou: jedna ruka = jedna osa (Flex), dvě ruce = dvě osy (Grid).',
+            1 => 'Kontrola mřížky: kde by karta přetekla?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Volba modelu',
+              'levels' => 
+              array (
+                0 => 'Náhodná.',
+                1 => 'Správně bez důvodu.',
+                2 => 'Správně se zdůvodněním.',
+                3 => 'Ukáže hranici, kdy se volba mění.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Responzivní pravidla',
+              'levels' => 
+              array (
+                0 => 'Jen popis vzhledu.',
+                1 => 'Pevné šířky.',
+                2 => 'Mřížka 3 → 2 → 1 bez přetečení.',
+                3 => 'Ověřeno nebo napsané v CSS.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Čtení existující stránky',
+              'levels' => 
+              array (
+                0 => 'Nenajde nic.',
+                1 => 'Jedna hodnota.',
+                2 => 'Všechny čtyři hodnoty.',
+                3 => 'Vysvětlí, proč autor zvolil daný model.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => '',
+          'competence_label' => 'Komponenty a rozvržení',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Navigační lišta s položkami v jedné řadě – který model je nejpřirozenější?',
+              'options' => 
+              array (
+                0 => 'Grid se dvěma osami.',
+                1 => 'Flexbox v jedné ose.',
+                2 => 'Absolutní umístění.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Jedna řada = jedna osa.',
+            ),
+            1 => 
+            array (
+              'question' => 'Galerie fotek v řádcích i sloupcích, které se mají zarovnat – co použiješ?',
+              'options' => 
+              array (
+                0 => 'Grid.',
+                1 => 'Jen vnitřní okraje.',
+                2 => 'Tabulku s pevnými šířkami.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Dvě osy zarovnání = Grid.',
+            ),
+            2 => 
+            array (
+              'question' => 'Proč karty na mobilu přetékají ven z obrazovky?',
+              'options' => 
+              array (
+                0 => 'Protože mobil neumí CSS.',
+                1 => 'Protože je moc barev.',
+                2 => 'Často kvůli pevné šířce, která je větší než displej.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Pevná šířka nebere ohled na displej.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: na jednom webu zmenšuj okno prohlížeče a zapiš, při jaké šířce se karty přeskládají.',
+            'minutes' => 10,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Nástroje vývojáře jen ke čtení; na produkčních webech nic neměníme ani neukládáme.',
+          1 => 'Při zkoušení CSS pracujeme ve vlastním souboru.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Výklad může být bez programování; důležitý je převod vztahů do modelu rozvržení.',
+          1 => 'Otázka do třídy: Je tohle řada, nebo tabulka?',
+          2 => 'Tempo: kdo umí HTML a CSS, ať si zkusí mini implementaci (výzva).',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1–3 na papíře, úkol 4 ukáže vyučující zástupu na projektoru.',
+          1 => 'Plán B offline: rozvržení ze čtverečků papíru, které se přeskládají.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'flexbox',
+          1 => 'grid',
+          2 => 'gap',
+        ),
+        '_file' => 'lesson_content_v72_2a_b.php',
+      ),
+      16 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 16 · Test použitelnosti: pozorování místo dojmů',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím připravit a vést krátký test použitelnosti bez navádění, zapsat pozorování odděleně od výkladu a seřadit problémy podle dopadu.',
+          'success_criteria' => 
+          array (
+            0 => 'Připravím tři realistické úkoly, které neprozrazují cestu.',
+            1 => 'Zapisuji, co účastník dělal, ne co si o tom myslím.',
+            2 => 'Vyberu nejvýš tři problémy podle četnosti × dopadu a navrhnu změnu.',
+          ),
+        ),
+        'competencies' => 
+        array (
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start',
+            'teacher' => 'Zahraje test s navádějícími otázkami a pak bez nich.',
+            'student' => 'Řeknou, který test dal víc informací.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Plán testu',
+            'teacher' => 'Ukáže rozdíl úkolu „najdi přihlášku“ a „klikni na Přihlásit“.',
+            'student' => 'Napíšou tři úkoly bez prozrazení cesty.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 40,
+            'phase' => 'Moderování',
+            'teacher' => 'Nacvičí věty „Co byste teď udělali?“ a ticho.',
+            'student' => 'Vyzkouší si roli moderátora ve dvojici.',
+            'form' => 've dvojicích',
+          ),
+          3 => 
+          array (
+            'from' => 40,
+            'to' => 60,
+            'phase' => 'Test a záznam',
+            'teacher' => 'Hlídá oddělení pozorování od výkladu.',
+            'student' => 'Otestují prototyp se 1–2 spolužáky a zapisují pozorování.',
+            'form' => 've skupinách',
+          ),
+          4 => 
+          array (
+            'from' => 60,
+            'to' => 75,
+            'phase' => 'Priorita',
+            'teacher' => 'Vysvětlí četnost × dopad.',
+            'student' => 'Seřadí problémy a vyberou nejvýš tři.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 75,
+            'to' => 90,
+            'phase' => 'Změna a exit ticket',
+            'teacher' => 'Zadá formát problém → důkaz → změna.',
+            'student' => 'Navrhnou 1–3 změny a odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Napiš tři realistické úkoly pro test použitelnosti (usability test), které neprozrazují cestu ani názvy tlačítek.',
+            'output' => 'Plán testu se 3 úkoly.',
+            'time' => '15 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Otestuj prototyp s 1–2 spolužáky a zapisuj pozorování (co dělal) odděleně od výkladu (co si myslím).',
+            'output' => 'Záznam pozorování ve dvou sloupcích.',
+            'time' => '20 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Ohodnoť problémy podle četnosti a dopadu a vyber nejvýš tři k úpravě.',
+            'output' => 'Seřazený seznam problémů.',
+            'time' => '15 min',
+          ),
+          3 => 
+          array (
+            'text' => 'Navrhni 1–3 změny ve tvaru problém → důkaz → změna.',
+            'output' => 'Návrh změn s důkazem.',
+            'time' => '15 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane vzorový plán testu a záznamový arch se dvěma sloupci.',
+          'standard' => 'Vlastní plán, test, priorita a změny podle zadání.',
+          'challenge' => 'Porovná výsledky dvou účastníků a odliší náhodný problém od opakovaného.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Po plánu: soused hledá úkol, který prozrazuje cestu.',
+            1 => 'Záznam: učitel namátkou přečte řádek – je to pozorování, nebo výklad?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Plán testu',
+              'levels' => 
+              array (
+                0 => 'Úkoly chybí.',
+                1 => 'Úkoly navádějí.',
+                2 => 'Tři realistické úkoly bez nápovědy.',
+                3 => 'Úkoly pokrývají hlavní cíl webu.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Záznam',
+              'levels' => 
+              array (
+                0 => 'Jen dojmy.',
+                1 => 'Pozorování smíchané s výkladem.',
+                2 => 'Oddělené pozorování a výklad.',
+                3 => 'Přesné citace a časy.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Priorita a změna',
+              'levels' => 
+              array (
+                0 => 'Bez priority.',
+                1 => 'Všechno je „důležité“.',
+                2 => 'Nejvýš 3 problémy s důkazem.',
+                3 => 'Změna přímo vychází z důkazu.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => '',
+          'competence_label' => 'Výzkum a test',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Který zápis je pozorování (ne výklad)?',
+              'options' => 
+              array (
+                0 => 'Navigace je špatná.',
+                1 => 'Účastník třikrát klikl na Zpět a pak hledal v zápatí.',
+                2 => 'Uživatel je zmatený, protože web je ošklivý.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Pozorování popisuje chování.',
+            ),
+            1 => 
+            array (
+              'question' => 'Účastník se při testu zasekne. Co uděláš jako moderátor?',
+              'options' => 
+              array (
+                0 => 'Hned mu ukážu správné tlačítko.',
+                1 => 'Ukončím test.',
+                2 => 'Chvíli počkám a zeptám se: „Co byste teď udělali?“',
+              ),
+              'correct' => 2,
+              'explanation' => 'Brzká nápověda zakryje problém.',
+            ),
+            2 => 
+            array (
+              'question' => 'Kolik účastníků stačí na nácvik metody ve třídě?',
+              'options' => 
+              array (
+                0 => '1–3 účastníci, cílem je naučit se metodu.',
+                1 => 'Nejméně 100.',
+                2 => 'Žádný, stačí vlastní názor.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Ve třídě jde o nácvik, ne o reprezentativní výzkum.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: požádej někoho doma o jeden úkol v aplikaci a zapiš jen to, co dělal (bez hodnocení).',
+            'minutes' => 15,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Test bez nahrávání a bez jmen účastníků v záznamu (účastník A, B).',
+          1 => 'Účast je dobrovolná; kdo nechce být testován, je zapisovatel.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Stačí 1–3 testující – jde o nácvik metody, ne o reprezentativní výzkum.',
+          1 => 'Otázka do třídy: Je tohle, co viděl, nebo co si myslí?',
+          2 => 'Tempo: test ve skupinách pohlídej časovačem – 20 minut.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: test na papírovém prototypu podle úkolů 1–4.',
+          1 => 'Plán B offline: papírový prototyp, moderátor „hraje počítač“.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'usability-test',
+        ),
+        '_file' => 'lesson_content_v72_2a_b.php',
+      ),
     ),
     'days' => 
     array (
     ),
     'files' => 
     array (
+      0 => 'lesson_content_v72_1a_a.php',
+      1 => 'lesson_content_v72_1a_b.php',
+      2 => 'lesson_content_v72_2a_a.php',
+      3 => 'lesson_content_v72_2a_b.php',
+      4 => 'lesson_content_v72_3a_a.php',
+      5 => 'lesson_content_v72_3a_b.php',
+      6 => 'lesson_content_v72_4a_a.php',
+      7 => 'lesson_content_v72_4a_b.php',
     ),
   ),
-  'sig' => 'ac09530107d415acebf614c00c70b5113c87b14e',
-  'hash' => '283715346b3baf7ca6021ab840773f1a0cb7c4b7b862c1e248e99979b28273e3',
-  'built_at' => '2026-10-07T22:52:57+02:00',
+  'sig' => 'a91d3ceb5c7f0a2bf8dc3e13dec665db2f11bca6',
+  'hash' => '5f5c1e10c2f18275fc1e2539d421c0d23a117e3049c3b66059d0e748d74a418b',
+  'built_at' => '2026-10-08T07:14:26+02:00',
 );

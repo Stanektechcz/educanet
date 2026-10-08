@@ -311,6 +311,8 @@ function teacher59_action_policies(): array
     $table['g66_settings'] = ['class' => 'required', 'admin' => true];
     // v68 · přepínač vzhledu cockpitu: žádná data třídy, jen cookie (třída, je-li v požadavku, se ověří jako u ostatních).
     $table['teacher68_theme_set'] = $none;
+    // v72 · schvalování obsahu lekcí: třída formuláře povinná a v rozsahu (handler ji ověří znovu); jiné lc72_* akce zůstávají zakázané.
+    foreach (['lc72_approve', 'lc72_return'] as $action) $table[$action] = $req;
     return $table;
 }
 

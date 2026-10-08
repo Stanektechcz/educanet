@@ -21,6 +21,8 @@ function lt71_model(array $modules, string $requestedClass, int $lessonParam, ?i
     $row = $lessonParam === 0 ? cd71_next_day_row(adaptive_school_year_rows(lt70_school_year(), $m['class']), $m['today']) : null;
     $m['day'] = $row !== null ? lm71_day($m['class'], $row) + ['is_today' => (bool)$row['is_today']] : null;
     $n = (int)$m['lesson']['number'];
+    // v72: stav návrhu podle schválení učitelem (schváleno / vráceno / změněno po schválení), jen čtení.
+    if (function_exists('lc72_status') && (string)($m['lesson']['meta']['status'] ?? '') !== 'puvodni') $m['lesson']['meta']['status'] = lc72_status($m['class'], $n)['status'];
     $m['kit'] = ['exists' => is_file(__DIR__ . '/materials/lesson_kits/' . $m['class'] . '/lesson_' . str_pad((string)$n, 2, '0', STR_PAD_LEFT) . '.md')];
     return $m;
 }
@@ -46,7 +48,7 @@ function lt71_render_tab(array $modules, string $classId, ?int $now = null): voi
     echo lt70_picker_html($m, $modules);
     echo lt71_kpis_html($m);
     echo '<div class="c70-grid"><div class="c70-col">' . lt71_topic_html($m) . lt71_plan_html($m) . lt71_notes_html($m) . lt71_materials_html($m) . lt70_paths_html($m) . '</div>'
-        . '<div class="c70-col c70-side">' . lt70_session_html($m) . lt70_actions_html($m) . lt70_tasks_html($m) . '</div></div>';
+        . '<div class="c70-col c70-side">' . lt70_session_html($m) . (function_exists('lx72_teacher_card_html') ? lx72_teacher_card_html($m) : '') . lt70_actions_html($m) . lt70_tasks_html($m) . '</div></div>';
     echo lt71_students_html($m);
 }
 
@@ -121,7 +123,7 @@ function lt71_kpis_html(array $m): string
 function lt71_badge_html(array $lesson): string
 {
     $c = $lesson['completeness'];
-    $status = ['puvodni' => 'původní obsah', 'navrh' => 'návrh (neschváleno)', 'schvaleno' => 'schváleno'][(string)$lesson['meta']['status']] ?? 'původní obsah';
+    $status = ['puvodni' => 'původní obsah', 'navrh' => 'návrh (neschváleno)', 'schvaleno' => 'schváleno', 'vraceno' => 'vráceno k úpravě', 'zmeneno' => 'změněno po schválení'][(string)$lesson['meta']['status']] ?? 'původní obsah';   // v72: + vráceno, změněno
     $html = '<div class="c71-badge' . ($c['complete'] ? ' is-ok' : '') . '"><strong>Úplnost přípravy: ' . (int)$c['score'] . '/' . (int)$c['total'] . ' polí</strong>'
         . '<span class="c70-chip">' . e($status) . '</span>' . (!empty($lesson['meta']['template']) ? '<span class="c70-chip c70-chip-warn">šablonový obsah</span>' : '') . '</div>';
     if ($c['missing'] !== []) $html .= '<details class="c71-missing"><summary>Chybí: ' . e(implode(', ', array_slice($c['missing'], 0, 3))) . (count($c['missing']) > 3 ? ' a další' : '') . '</summary>' . lt71_list($c['missing']) . '</details>';
@@ -183,6 +185,7 @@ function lt71_notes_html(array $m): string
     $html .= $l['teacher_notes'] !== [] ? lt71_list($l['teacher_notes']) : '<p class="c70-muted">Lekce zatím nemá poznámky pro učitele (časté omyly, otázky do třídy). Doplní je obsahová stopa.</p>';
     $html .= '<h3>Pracovní list · výstupy žáka</h3>';
     $html .= $l['worksheet'] !== [] ? lt71_list($l['worksheet']) : '<p class="c70-muted">Lekce nemá pracovní list. Výstupem je odevzdání v lekci (fáze 4).</p>';
+    if (!empty($l['differentiation']['support'])) $html .= '<h3>Podpora pro pomalejší</h3><p>' . e((string)$l['differentiation']['support']) . '</p>';   // v72: diferenciace z obsahové stopy
     if (!empty($l['differentiation']['challenge'])) $html .= '<h3>Výzva pro rychlejší</h3><p>' . e((string)$l['differentiation']['challenge']) . '</p>';
     return $html . '</section>';
 }

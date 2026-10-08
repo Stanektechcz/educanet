@@ -57,7 +57,7 @@ return [
         'hands_on_views' => ['hands_on_learning_v50.php', 'independent_growth_v50.php', 'hands_on_learning_views_v50.php', 'independent_growth_views_v50.php'],
         'lesson_kit_views' => ['adaptive_lesson_views_v42.php', 'cognitive_visualization_views_v43.php', 'learning_studio_views_v44.php', 'visual_simulation_views_v45.php'],
         'tutorial_views' => ['tutorial_v52.php', 'points_v53.php', 'tutorial_v52_views.php'],
-        'lesson_path_views' => ['learning_v56.php', 'question_meta_v66.php', 'assessment_v66.php', 'learning_v56_views.php'], // v66: sumativní test lekce (pořadí otázek, bez odměn)
+        'lesson_path_views' => ['learning_v56.php', 'question_meta_v66.php', 'assessment_v66.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php', 'lesson_exit_v72_views.php', 'learning_v56_views.php'], // v66: sumativní test lekce (pořadí otázek, bez odměn)
         // v58 · Robotí liga (LAB-01); další herní moduly v58 přidává integrátor po dokončení.
         'robots' => ['robots_v58.php', 'robots_v58_game.php', 'robots_v58_views.php'],
         // v58 · CTF týden a Incidenty (ARN-02, ARN-03).
@@ -102,6 +102,8 @@ return [
         'mastery' => ['teacher_operations_v46.php', 'reality_demos.php', 'assessment_visuals.php'],
         'project_workspace' => ['teacher_operations_v46.php', 'project_workspace_views.php'],
         'auth' => ['session_v53.php', 'student_v55.php'],
+        // v72 · exit ticket schválené lekce (akce lx72_answer); důkaz v62 jen v pilotních třídách.
+        'lesson_exit' => ['tutorial_v52.php', 'session_v53.php', 'learning_v56.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_approval_v72.php', 'competencies_v62.php', 'evidence_v62.php', 'lesson_exit_v72.php'],
     ],
     // Stránky, které vkládá přímo index.php (globální ochrany).
     'pages' => [
@@ -196,6 +198,8 @@ return [
         ['match' => ['proj65_s_*'], 'file' => 'actions/projects_v65.php', 'libs' => ['layout', 'projects65']],
         // v63 · výukové cesty: odevzdání kroku, posun řádku Parsonovy úlohy bez JS, reflexe (identita ze session).
         ['match' => ['p63_*'], 'file' => 'actions/paths.php', 'libs' => ['paths']],
+        // v72 · exit ticket schválené lekce (formativní; identita ze session, varianta určená serverem).
+        ['match' => ['lx72_answer'], 'file' => 'actions/lesson_exit_v72.php', 'libs' => ['lesson_exit']],
         // v67 · profil: cíle žáka (přidat, týdenní kontrola, odebrat) a sdílení se spolužáky (identita ze session).
         ['match' => ['grow67_*'], 'file' => 'actions/growth_v67.php', 'libs' => ['growth']],
         // v64 · retrospektiva týmové hry (tři otázky po dohrané hře; identita ze session).

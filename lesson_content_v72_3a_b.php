@@ -1,0 +1,308 @@
+<?php
+
+declare(strict_types=1);
+if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
+
+/**
+ * EDUCANET v72 · obsahová stopa, vlna 1 – 3.A (operační systémy a sítě), lekce 11–16.
+ * STAV: NÁVRH (žák vidí až po schválení učitelem). Tvar a pravidla viz lesson_content_v72_1a_a.php,
+ * ověřované příkazy simulátoru (klíč `sim`) viz lesson_content_v72_3a_a.php. Kompetence: katalog v62 „os_site“.
+ */
+
+return ['class_3a' => ['lessons' => [
+    11 => [
+        'status' => 'navrh', 'version' => 1,
+        'title' => 'Lekce 11 · Uživatelé, skupiny a oprávnění',
+        'goal' => [
+            'student' => 'Na konci hodiny umím přečíst oprávnění z výpisu ls -l, nastavit chmod pro vlastníka, skupinu a ostatní a navrhnout nejmenší potřebná práva pro sdílený soubor.',
+            'success_criteria' => ['Převedu zápis rw-r----- na význam i na číslo 640.', 'Rozliším chmod (práva) a chown (vlastník a skupina).', 'Pro sdílený soubor navrhnu skupinu místo práv pro všechny.'],
+        ],
+        'competencies' => [['id' => 'lnx_users', 'level' => 2]],
+        'timeline' => [
+            ['from' => 0, 'to' => 10, 'phase' => 'Start', 'teacher' => 'Ukáže, že student nemůže přečíst /var/log/auth.log.', 'student' => 'Odhadnou, proč přístup chybí.', 'form' => 'frontálně'],
+            ['from' => 10, 'to' => 25, 'phase' => 'Vlastník, skupina, ostatní', 'teacher' => 'Rozebere řádek ls -l (typ, tři trojice práv, vlastník, skupina).', 'student' => 'Přečtou práva u tří souborů v /var/log.', 'form' => 'jednotlivě'],
+            ['from' => 25, 'to' => 42, 'phase' => 'rwx a čísla', 'teacher' => 'Vysvětlí r = 4, w = 2, x = 1.', 'student' => 'Nastaví souboru tajne.conf práva 640 a ověří je.', 'form' => 'jednotlivě'],
+            ['from' => 42, 'to' => 60, 'phase' => 'Skupinový přístup', 'teacher' => 'Předvede groupadd, usermod -aG a chown.', 'student' => 'Vytvoří skupinu webteam a přiřadí jí soubor.', 'form' => 've dvojicích'],
+            ['from' => 60, 'to' => 78, 'phase' => 'Nejmenší práva (least privilege)', 'teacher' => 'Ukáže, proč chmod 777 není oprava.', 'student' => 'Navrhnou práva pro konfiguraci, log a sdílený soubor.', 'form' => 'jednotlivě'],
+            ['from' => 78, 'to' => 90, 'phase' => 'Shrnutí a exit ticket', 'teacher' => 'Shrne: kdo potřebuje co dělat?', 'student' => 'Odpoví na exit ticket.', 'form' => 'jednotlivě'],
+        ],
+        'tasks' => [
+            ['text' => 'Spusť ls -l /var/log a přečti práva souboru auth.log; vysvětli, proč ho student bez sudo nepřečte.', 'output' => '-rw-r----- root adm: číst smí jen vlastník root a skupina adm.', 'time' => '13 min',
+                'sim' => [['cmd' => 'ls -l /var/log', 'expect' => '-rw-r----- 1 root adm'], ['cmd' => 'tail -n 3 /var/log/auth.log', 'expect' => 'Permission denied']]],
+            ['text' => 'Vytvoř soubor tajne.conf, nastav mu práva 640 a ověř je příkazy ls -l a stat.', 'output' => '-rw-r----- a „Access: (0640/-rw-r-----)“.', 'time' => '15 min',
+                'sim' => [['cmd' => 'touch tajne.conf; chmod 640 tajne.conf; ls -l tajne.conf', 'expect' => '-rw-r----- 1 student student'], ['cmd' => 'touch tajne.conf; chmod 640 tajne.conf; stat tajne.conf', 'expect' => 'Access: (0640/-rw-r-----)']]],
+            ['text' => 'Vytvoř skupinu webteam, přidej do ní uživatele student a změň skupinu souboru sdileny.txt na webteam.', 'output' => 'id student ukáže skupinu webteam; ls -l ukáže skupinu webteam u souboru.', 'time' => '18 min',
+                'sim' => [['cmd' => 'sudo groupadd webteam; sudo usermod -aG webteam student; id student', 'expect' => '(webteam)'], ['cmd' => 'sudo groupadd webteam; touch sdileny.txt; sudo chown root:webteam sdileny.txt; ls -l sdileny.txt', 'expect' => 'root webteam']]],
+            ['text' => 'Navrhni práva (číslem i písmeny) pro konfigurační soubor s heslem, log služby a sdílený soubor týmu a každé zdůvodni.', 'output' => 'Např. 600 nebo 640, 640, 664 se skupinou – se zdůvodněním.', 'time' => '18 min'],
+        ],
+        'differentiation' => [
+            'support' => 'Dostane tabulku r = 4, w = 2, x = 1 a tři rozepsané příklady převodu.',
+            'standard' => 'Čtení práv, chmod, skupina a návrh práv podle zadání.',
+            'challenge' => 'Vysvětlí, co znamená právo x u adresáře a proč bez něj do adresáře nevstoupíš.',
+        ],
+        'assessment' => [
+            'formative' => ['Převodní rychlovka: učitel řekne rw-r--r--, třída napíše 644.', 'Dvojice: chmod, nebo chown? (učitel popisuje situace)'],
+            'rubric' => [
+                ['criterion' => 'Čtení práv', 'levels' => ['Nepřečte ls -l.', 'Přečte jen vlastníka.', 'Přečte všechny tři trojice i číslo.', 'Vysvětlí právo x u adresáře.']],
+                ['criterion' => 'Nastavení práv', 'levels' => ['Nezvládne.', 'chmod s chybou.', 'chmod 640 i chown se skupinou ověřené.', 'Ověřuje stat i z pohledu jiného uživatele.']],
+                ['criterion' => 'Nejmenší práva', 'levels' => ['Navrhne 777.', 'Práva příliš široká.', 'Přiměřená práva se zdůvodněním.', 'Model „kdo potřebuje co“ pro celý tým.']],
+            ],
+        ],
+        'exit_ticket' => ['competence' => 'lnx_users', 'competence_label' => 'Linux: uživatelé a práva', 'variants' => [
+            ['question' => 'Jaký číselný zápis odpovídá právům rw-r--r--?', 'options' => ['755', '644', '600'], 'correct' => 1, 'explanation' => 'rw- = 6, r-- = 4, r-- = 4.'],
+            ['question' => 'Soubor má vlastníka root a skupinu adm s právy rw-r-----. Kdo ho smí číst?', 'options' => ['Root a členové skupiny adm.', 'Všichni uživatelé.', 'Jen root.'], 'correct' => 0, 'explanation' => 'Druhá trojice r-- platí pro skupinu.'],
+            ['question' => 'Tým potřebuje upravovat jeden sdílený soubor. Jaké řešení je nejlepší?', 'options' => ['chmod 777 pro všechny.', 'Sdílet heslo účtu root.', 'Skupina týmu jako skupina souboru a právo zápisu pro skupinu.'], 'correct' => 2, 'explanation' => 'Skupina = jen ti, kdo práva potřebují.'],
+        ]],
+        'homework' => [['text' => 'Volitelné: v Linux Labu vyřeš jednu úroveň balíčku Práva a zapiš použitý příkaz chmod.', 'minutes' => 20, 'optional' => true]],
+        'safety' => ['Práva a uživatele měníme jen v simulátoru, ne na školních počítačích.', 'Hesla v ukázkových souborech jsou vymyšlená; skutečná hesla do souborů nepíšeme.'],
+        'teacher_notes' => ['Používej model „kdo potřebuje co dělat“ místo memorování čísel.', 'Otázka do třídy: Proč chmod 777 problém spíš schová, než opraví?', 'Tempo: propojení s dalšími lekcemi – SSH klíče (L14) potřebují právě tato práva.'],
+        'substitution' => ['Zástup bez odborníka: úkoly 1–3 v Linux Labu (výstupy v zadání), úkol 4 na papír.', 'Plán B offline: karty s výpisy ls -l a převod na čísla.'],
+        'glossary' => ['least-privilege', 'sudo'],
+    ],
+    12 => [
+        'status' => 'navrh', 'version' => 1,
+        'title' => 'Lekce 12 · Procesy a systemd: služba není magie',
+        'goal' => [
+            'student' => 'Na konci hodiny umím najít běžící proces služby, přečíst stav služby v systemctl status a rozlišit restart, reload, start a enable.',
+            'success_criteria' => ['Ve výpisu systemctl status najdu Active, Main PID a poslední řádky logu.', 'Rozliším proces (PID) a jednotku služby (unit).', 'Před reloadem ověřím konfiguraci (nginx -t) a vysvětlím, proč restart není první krok.'],
+        ],
+        'competencies' => [['id' => 'lnx_services', 'level' => 2]],
+        'timeline' => [
+            ['from' => 0, 'to' => 10, 'phase' => 'Start', 'teacher' => 'Zeptá se: web nejde, co uděláš jako první?', 'student' => 'Většina řekne „restart“ – zapíšeme si to.', 'form' => 'frontálně'],
+            ['from' => 10, 'to' => 25, 'phase' => 'Proces a služba', 'teacher' => 'Předvede ps aux a pgrep.', 'student' => 'Najdou procesy nginx a jejich PID.', 'form' => 'jednotlivě'],
+            ['from' => 25, 'to' => 42, 'phase' => 'systemctl status', 'teacher' => 'Rozebere řádky Loaded, Active, Main PID a log.', 'student' => 'Přečtou stav nginx a cron.', 'form' => 'jednotlivě'],
+            ['from' => 42, 'to' => 58, 'phase' => 'start / restart / reload / enable', 'teacher' => 'Vysvětlí rozdíly a kontrolu konfigurace.', 'student' => 'Ověří nginx -t a is-enabled.', 'form' => 've dvojicích'],
+            ['from' => 58, 'to' => 78, 'phase' => 'Služba neběží', 'teacher' => 'Zastaví nginx v simulátoru a zadá incident.', 'student' => 'Ze statusu zjistí stav a navrhnou nejmenší další test.', 'form' => 'jednotlivě'],
+            ['from' => 78, 'to' => 90, 'phase' => 'Návrat k úvodu a exit ticket', 'teacher' => 'Vrátí se k odpovědi „restart“ z úvodu.', 'student' => 'Zdůvodní, proč nejdřív důkaz; exit ticket.', 'form' => 'frontálně'],
+        ],
+        'tasks' => [
+            ['text' => 'Najdi procesy webového serveru příkazy ps aux a pgrep nginx a zapiš PID hlavního procesu.', 'output' => 'Hlavní proces „nginx: master process“ s PID 591, pracovní proces 728.', 'time' => '13 min',
+                'sim' => [['cmd' => 'pgrep nginx', 'expect' => '591'], ['cmd' => 'ps aux', 'expect' => 'nginx: master process']]],
+            ['text' => 'Přečti systemctl status nginx a zapiš hodnoty Loaded, Active a Main PID.', 'output' => 'Loaded … enabled; Active: active (running); Main PID: 591 (nginx).', 'time' => '15 min',
+                'sim' => [['cmd' => 'systemctl status nginx', 'expect' => 'Active: active (running)'], ['cmd' => 'systemctl status nginx', 'expect' => 'Main PID: 591 (nginx)']]],
+            ['text' => 'Ověř konfiguraci příkazem sudo nginx -t a zjisti, zda se služba spouští po startu (systemctl is-enabled nginx).', 'output' => '„syntax is ok“ a „enabled“.', 'time' => '12 min',
+                'sim' => [['cmd' => 'sudo nginx -t', 'expect' => 'syntax is ok'], ['cmd' => 'systemctl is-enabled nginx', 'expect' => 'enabled']]],
+            ['text' => 'Zastav nginx, přečti jeho status a navrhni nejmenší další test, než cokoli restartuješ.', 'output' => 'Active: inactive (dead) + navržený test (např. přečíst log služby).', 'time' => '20 min',
+                'sim' => [['cmd' => 'sudo systemctl stop nginx; systemctl status nginx', 'expect' => 'inactive (dead)']]],
+        ],
+        'differentiation' => [
+            'support' => 'Dostane vytištěný výstup systemctl status s barevně označenými řádky.',
+            'standard' => 'Úkoly 1–4 v Linux Labu podle zadání.',
+            'challenge' => 'Vysvětlí, proč reload nepřeruší rozpracované požadavky a restart ano.',
+        ],
+        'assessment' => [
+            'formative' => ['Ukaž řádek: učitel řekne „hlavní proces“, žáci ukážou Main PID.', 'Situace: změnil jsem konfiguraci – restart, nebo reload?'],
+            'rubric' => [
+                ['criterion' => 'Proces a služba', 'levels' => ['Nerozliší.', 'Najde PID, neví vztah ke službě.', 'Najde PID a přiřadí ho ke službě.', 'Vysvětlí hlavní a pracovní procesy.']],
+                ['criterion' => 'Čtení statusu', 'levels' => ['Nepřečte.', 'Jen Active.', 'Loaded, Active, Main PID, log.', 'Z logu odvodí další krok.']],
+                ['criterion' => 'Akce se službou', 'levels' => ['Vždy restart.', 'Zná rozdíly, neověřuje konfiguraci.', 'nginx -t před reloadem, ví co je enable.', 'Navrhne nejmenší bezpečný zásah.']],
+            ],
+        ],
+        'exit_ticket' => ['competence' => 'lnx_services', 'competence_label' => 'Linux: služby a logy', 'variants' => [
+            ['question' => 'Co dělá systemctl enable nginx?', 'options' => ['Okamžitě službu restartuje.', 'Nastaví automatické spuštění služby při startu systému.', 'Smaže logy služby.'], 'correct' => 1, 'explanation' => 'enable = po startu; start = teď.'],
+            ['question' => 'Změnil jsi konfiguraci nginx. Co uděláš před reloadem?', 'options' => ['Ověřím syntaxi příkazem nginx -t.', 'Restartuji celý počítač.', 'Nic, reload chybu sám opraví.'], 'correct' => 0, 'explanation' => 'Chybná konfigurace by službu shodila.'],
+            ['question' => 'Proč restart není dobrý první krok při výpadku služby?', 'options' => ['Restart trvá hodiny.', 'Restart je zakázaný.', 'Změní stav dřív, než získáš důkazy, a může schovat příčinu.'], 'correct' => 2, 'explanation' => 'Nejdřív status a log, pak zásah.'],
+        ]],
+        'homework' => [['text' => 'Volitelné: v Linux Labu zjisti stav služby cron a zapiš její Main PID.', 'minutes' => 10, 'optional' => true]],
+        'safety' => ['Služby zastavujeme jen v simulátoru nebo testovacím virtuálním počítači.', 'Na skutečném serveru by výpadek služby zasáhl uživatele – proto nejdřív důkaz, pak zásah.'],
+        'teacher_notes' => ['Doporuč bezpečný lab; připomínej kontrolu syntaxe před reloadem webového serveru.', 'Otázka do třídy: Co nám status řekl dřív, než jsme cokoli změnili?', 'Tempo: incident (úkol 4) je klíčový – úkol 1 může být rychlý.'],
+        'substitution' => ['Zástup bez odborníka: úkoly 1–4 v Linux Labu, výstupy jsou v zadání.', 'Plán B offline: vytištěné výstupy status a ps a karty „restart / reload / enable“.'],
+        'glossary' => ['systemd-unit', 'pid', 'reload'],
+    ],
+    13 => [
+        'status' => 'navrh', 'version' => 1,
+        'title' => 'Lekce 13 · Logy a journalctl: časová osa důkazů',
+        'goal' => [
+            'student' => 'Na konci hodiny umím použít logy jako cílený důkaz: filtrovat podle služby, času a závažnosti (severity) a propojit log se stavem služby a testem portu.',
+            'success_criteria' => ['V záznamu logu najdu čas, zdroj, závažnost a zprávu.', 'Omezím journalctl na jednu službu a časové okno.', 'Napíšu hypotézu, kterou důkazy z logu potvrdí nebo vyloučí.'],
+        ],
+        'competencies' => [['id' => 'lnx_services', 'level' => 3]],
+        'timeline' => [
+            ['from' => 0, 'to' => 10, 'phase' => 'Start', 'teacher' => 'Ukáže 2000 řádků logu a zeptá se, kde začít.', 'student' => 'Navrhnou strategii hledání.', 'form' => 'frontálně'],
+            ['from' => 10, 'to' => 25, 'phase' => 'Užitečný záznam', 'teacher' => 'Rozebere řádek logu: čas, počítač, služba, zpráva.', 'student' => 'Rozeberou tři řádky z auth.log.', 'form' => 'jednotlivě'],
+            ['from' => 25, 'to' => 42, 'phase' => 'Filtry', 'teacher' => 'Předvede journalctl -u, -n, -p a --since.', 'student' => 'Omezí log na nginx, ssh a na chyby.', 'form' => 'jednotlivě'],
+            ['from' => 42, 'to' => 58, 'phase' => 'Hledání v textovém logu', 'teacher' => 'Ukáže sudo grep -c v auth.log.', 'student' => 'Spočítají neúspěšná přihlášení.', 'form' => 've dvojicích'],
+            ['from' => 58, 'to' => 78, 'phase' => 'Korelace', 'teacher' => 'Zadá incident: zastavený web.', 'student' => 'Propojí status, journal a test portu do časové osy.', 'form' => 'jednotlivě'],
+            ['from' => 78, 'to' => 90, 'phase' => 'Závěr a exit ticket', 'teacher' => 'Zeptá se: co důkazy vylučují?', 'student' => 'Napíšou vyloučenou hypotézu a odpoví na exit ticket.', 'form' => 'jednotlivě'],
+        ],
+        'tasks' => [
+            ['text' => 'Přečti poslední čtyři řádky auth.log (sudo tail -n 4) a u každého urči čas, službu a co se stalo.', 'output' => 'Tabulka: čas – služba (systemd-logind, sudo) – událost.', 'time' => '15 min',
+                'sim' => [['cmd' => 'sudo tail -n 4 /var/log/auth.log', 'expect' => 'sudo:']]],
+            ['text' => 'Omez journal na jednu službu (journalctl -u nginx -n 5, journalctl -u ssh -n 3) a na chyby (journalctl -p err -n 5).', 'output' => 'Řádek „Started nginx.service …“, „Server listening on 0.0.0.0 port 22.“ a „-- No entries --“ u chyb.', 'time' => '17 min',
+                'sim' => [['cmd' => 'journalctl -u nginx -n 5', 'expect' => 'Started nginx.service'], ['cmd' => 'journalctl -u ssh -n 3', 'expect' => 'Server listening on 0.0.0.0 port 22.'], ['cmd' => 'journalctl -p err -n 5', 'expect' => '-- No entries --']]],
+            ['text' => 'Spočítej neúspěšná přihlášení v auth.log příkazem sudo grep -c "Failed password".', 'output' => 'Výsledek 1.', 'time' => '10 min',
+                'sim' => [['cmd' => "sudo grep -c 'Failed password' /var/log/auth.log", 'expect' => '1']]],
+            ['text' => 'Zastav nginx, pak sestav časovou osu ze systemctl status, journalctl -u nginx a curl -I http://localhost a napiš hypotézu, kterou důkazy vylučují.', 'output' => 'Časová osa (Stopping → Stopped → curl selže) + vyloučená hypotéza (např. „chyba DNS“).', 'time' => '25 min',
+                'sim' => [['cmd' => 'sudo systemctl stop nginx; journalctl -u nginx -n 5', 'expect' => 'Stopped nginx.service']]],
+        ],
+        'differentiation' => [
+            'support' => 'Dostane tahák přepínačů journalctl (-u, -n, -p, --since) s jedním příkladem.',
+            'standard' => 'Úkoly 1–4 v Linux Labu podle zadání.',
+            'challenge' => 'Vysvětlí, proč „-- No entries --“ u chyb neznamená, že je systém zdravý.',
+        ],
+        'assessment' => [
+            'formative' => ['Rozbor řádku: učitel promítne řádek logu, třída určí čas, službu, zprávu.', 'Filtr na zavolání: jak omezíš log jen na ssh?'],
+            'rubric' => [
+                ['criterion' => 'Čtení záznamu', 'levels' => ['Nepřečte.', 'Jen zpráva.', 'Čas, služba, závažnost, zpráva.', 'Odliší příznak od příčiny.']],
+                ['criterion' => 'Filtrování', 'levels' => ['Čte celý log.', 'Jeden filtr.', 'Služba, počet, závažnost.', 'Časové okno kolem incidentu.']],
+                ['criterion' => 'Korelace', 'levels' => ['Bez osy.', 'Osa z jednoho zdroje.', 'Status + journal + test portu.', 'Vyloučená hypotéza se zdůvodněním.']],
+            ],
+        ],
+        'exit_ticket' => ['competence' => 'lnx_services', 'competence_label' => 'Linux: služby a logy', 'variants' => [
+            ['question' => 'Kterým přepínačem omezíš journalctl na jednu službu?', 'options' => ['-u', '-n', '-p'], 'correct' => 0, 'explanation' => '-u = unit (jednotka služby); -n = počet řádků; -p = závažnost.'],
+            ['question' => 'Při dlouhém logu je nejlepší začít:', 'options' => ['Od prvního řádku po startu systému.', 'Smazáním logu a čekáním na novou chybu.', 'U času incidentu a u konkrétní služby.'], 'correct' => 2, 'explanation' => 'Čas + služba = malé okno důkazů.'],
+            ['question' => 'journalctl -p err vrátí „-- No entries --“. Co z toho plyne?', 'options' => ['Systém je určitě v pořádku.', 'Tento zdroj neobsahuje chyby – problém může být jinde nebo se nezaloguje jako chyba.', 'Logování je vypnuté.'], 'correct' => 1, 'explanation' => 'Absence chyby v logu není důkaz zdraví.'],
+        ]],
+        'homework' => [['text' => 'Volitelné: napiš pět řádků „časové osy“ svého rána (čas – událost) ve formátu logu.', 'minutes' => 10, 'optional' => true]],
+        'safety' => ['Logy mohou obsahovat osobní údaje (jména uživatelů, adresy) – pracujeme jen s logy simulátoru.', 'Logy skutečných systémů se nesdílejí mimo správu.'],
+        'teacher_notes' => ['Učte časovou korelaci napříč logy, ne čtení odshora.', 'Otázka do třídy: Proč tenhle filtr používáš?', 'Tempo: auth.log je čitelný jen přes sudo – to je i opakování z lekce 11.'],
+        'substitution' => ['Zástup bez odborníka: úkoly 1–4 v Linux Labu, výstupy jsou v zadání.', 'Plán B offline: vytištěné logy a skládání časové osy z kartiček.'],
+        'glossary' => ['journal', 'severity'],
+    ],
+    14 => [
+        'status' => 'navrh', 'version' => 1,
+        'title' => 'Lekce 14 · SSH a SFTP: bezpečný vzdálený přístup',
+        'goal' => [
+            'student' => 'Na konci hodiny umím vytvořit pár klíčů SSH, odlišit soukromý a veřejný klíč, rozlišit chybu sítě od chyby přihlášení a bezpečně přenést soubor přes SFTP.',
+            'success_criteria' => ['Vytvořím pár klíčů a ověřím, že soukromý klíč má práva 600.', 'Podle chyby rozliším „síť nedostupná“ a „Permission denied“.', 'Vím, který soubor je tajný a kam nepatří (projekt, odevzdání, chat).'],
+        ],
+        'competencies' => [['id' => 'lnx_ssh', 'level' => 2]],
+        'timeline' => [
+            ['from' => 0, 'to' => 10, 'phase' => 'Start', 'teacher' => 'Ukáže obrázek zámku a klíče: co je veřejné, co tajné?', 'student' => 'Přiřadí pojmy veřejný a soukromý klíč.', 'form' => 'frontálně'],
+            ['from' => 10, 'to' => 25, 'phase' => 'Cesta spojení SSH', 'teacher' => 'Vysvětlí pořadí: jméno/IP → TCP 22 → přihlášení.', 'student' => 'V simulátoru ověří, že port 22 na 10.0.0.10 odpovídá.', 'form' => 'jednotlivě'],
+            ['from' => 25, 'to' => 42, 'phase' => 'Klíče', 'teacher' => 'Předvede ssh-keygen v simulátoru.', 'student' => 'Vytvoří pár klíčů a prohlédnou práva souborů.', 'form' => 'jednotlivě'],
+            ['from' => 42, 'to' => 58, 'phase' => 'Permission denied', 'teacher' => 'Ukáže přihlášení bez nahraného veřejného klíče.', 'student' => 'Zapíší tři možné příčiny chyby přihlášení.', 'form' => 've dvojicích'],
+            ['from' => 58, 'to' => 78, 'phase' => 'Nastavení serveru a SFTP', 'teacher' => 'Ukáže sshd_config a SFTP přenos.', 'student' => 'Najdou PermitRootLogin a popíšou bezpečný přenos.', 'form' => 'jednotlivě'],
+            ['from' => 78, 'to' => 90, 'phase' => 'Pravidla klíčů a exit ticket', 'teacher' => 'Shrne pravidla nakládání s klíči.', 'student' => 'Zapíší pravidla a odpoví na exit ticket.', 'form' => 'frontálně'],
+        ],
+        'tasks' => [
+            ['text' => 'Ověř příkazem nc -zv 10.0.0.10 22, že na serveru odpovídá port SSH, dřív než budeš řešit přihlášení.', 'output' => '„Connection … 22 port [tcp/ssh] succeeded!“', 'time' => '10 min',
+                'sim' => [['cmd' => 'nc -zv 10.0.0.10 22', 'expect' => 'succeeded']]],
+            ['text' => 'Vytvoř pár klíčů ssh-keygen -t ed25519 -f ~/.ssh/id_lab -N \'\' a ověř práva obou souborů příkazem ls -l ~/.ssh.', 'output' => 'id_lab má -rw------- (600), id_lab.pub má -rw-r--r-- (644).', 'time' => '17 min',
+                'sim' => [['cmd' => "ssh-keygen -t ed25519 -f ~/.ssh/id_lab -N ''; ls -l ~/.ssh", 'expect' => '-rw------- 1 student student'], ['cmd' => "ssh-keygen -t ed25519 -f ~/.ssh/id_lab -N ''", 'expect' => 'Your public key has been saved in /home/student/.ssh/id_lab.pub']]],
+            ['text' => 'Zkus ssh student@10.0.0.10 a podle chyby urči, zda jde o síť, nebo o přihlášení; zapiš tři možné příčiny.', 'output' => '„Permission denied (publickey,password)“ = síť funguje, selhalo přihlášení (chybí veřejný klíč v ~/.ssh/authorized_keys na serveru, špatný uživatel, špatná práva klíče).', 'time' => '16 min',
+                'sim' => [['cmd' => 'ssh student@10.0.0.10', 'expect' => 'Permission denied (publickey,password)']]],
+            ['text' => 'Přečti nastavení serveru (sudo cat /etc/ssh/sshd_config) a najdi, zda se smí přihlásit root; popiš bezpečný přenos souboru přes SFTP.', 'output' => '„PermitRootLogin no“ + postup SFTP (ověřit cílovou cestu a práva).', 'time' => '20 min',
+                'sim' => [['cmd' => 'sudo cat /etc/ssh/sshd_config', 'expect' => 'PermitRootLogin no']]],
+        ],
+        'differentiation' => [
+            'support' => 'Dostane diagram „síť → port → přihlášení“ a tabulku chyb s významem.',
+            'standard' => 'Úkoly 1–4 v Linux Labu podle zadání.',
+            'challenge' => 'Vysvětlí, k čemu je soubor known_hosts a co znamená varování o změně klíče serveru.',
+        ],
+        'assessment' => [
+            'formative' => ['Rozhodni: učitel přečte chybovou hlášku, třída určí „síť“ nebo „přihlášení“.', 'Palec nahoru/dolů: smím poslat id_lab.pub spolužákovi? A id_lab?'],
+            'rubric' => [
+                ['criterion' => 'Klíče a práva', 'levels' => ['Nevytvoří pár.', 'Vytvoří, nezná práva.', 'Pár klíčů, soukromý klíč 600.', 'Vysvětlí, proč SSH odmítá příliš otevřený klíč.']],
+                ['criterion' => 'Diagnostika spojení', 'levels' => ['Nerozliší chyby.', 'Jen „nejde to“.', 'Síť vs. přihlášení podle hlášky.', 'Tři příčiny Permission denied.']],
+                ['criterion' => 'Bezpečné návyky', 'levels' => ['Sdílí soukromý klíč.', 'Neví, co je tajné.', 'Soukromý klíč nikam neposílá, root zakázaný.', 'Navrhne pravidla pro tým.']],
+            ],
+        ],
+        'exit_ticket' => ['competence' => 'lnx_ssh', 'competence_label' => 'Linux: SSH a klíče', 'variants' => [
+            ['question' => 'Port 22 odpovídá, ale SSH hlásí „Permission denied“. Kde je nejpravděpodobnější problém?', 'options' => ['V síti mezi počítači.', 'V DNS.', 'V přihlášení: uživatel, klíč nebo jeho práva.'], 'correct' => 2, 'explanation' => 'Síť je ověřená, selhalo ověření identity.'],
+            ['question' => 'Který soubor po ssh-keygen nesmíš nikomu poslat?', 'options' => ['id_lab (soukromý klíč).', 'id_lab.pub (veřejný klíč).', 'Oba můžeš sdílet.'], 'correct' => 0, 'explanation' => 'Soukromý klíč = tvoje identita.'],
+            ['question' => 'Jaká práva má mít soukromý klíč SSH?', 'options' => ['777, aby k němu SSH vždy mělo přístup.', '600 – číst a zapisovat jen vlastník.', '644 jako běžný soubor.'], 'correct' => 1, 'explanation' => 'Příliš otevřený soukromý klíč SSH odmítne.'],
+        ]],
+        'homework' => [['text' => 'Volitelné: přečti si v manuálové stránce ssh-keygen (man ssh-keygen v Linux Labu) popis přepínače -t a zapiš dva typy klíčů.', 'minutes' => 15, 'optional' => true]],
+        'safety' => ['Nikdy neodevzdáváme ani nesdílíme skutečné soukromé klíče – pracujeme jen s testovacími klíči v simulátoru.', 'Do projektu ani repozitáře soukromý klíč nepatří.'],
+        'teacher_notes' => ['Nikdy nevyžaduj reálné soukromé klíče žáků do odevzdání; pracuj s testovacími klíči a VM.', 'Otázka do třídy: Co přesně dokazuje hláška Permission denied?', 'Tempo: ssh-keygen v simulátoru je rychlý – čas dej diagnostice chyb.'],
+        'substitution' => ['Zástup bez odborníka: úkoly 1–4 v Linux Labu, výstupy jsou v zadání.', 'Plán B offline: karty chybových hlášek a diagram cesty spojení.'],
+        'glossary' => ['sftp', 'authorized-keys', 'known-hosts'],
+    ],
+    15 => [
+        'status' => 'navrh', 'version' => 1,
+        'title' => 'Lekce 15 · Firewall a služby: co poslouchá a kdo se tam dostane',
+        'goal' => [
+            'student' => 'Na konci hodiny umím zjistit, které služby poslouchají a na jaké adrese, a propojit naslouchání, navázání na adresu (bind), firewall a test z klienta do jednoho diagnostického modelu.',
+            'success_criteria' => ['Z výpisu ss -tln určím port a adresu, na které služba poslouchá.', 'Vysvětlím rozdíl 127.0.0.1, 0.0.0.0 a konkrétní IP.', 'Ke každému pravidlu firewallu napíšu pozitivní i negativní test.'],
+        ],
+        'competencies' => [['id' => 'net_services', 'level' => 2], ['id' => 'net_security', 'level' => 2]],
+        'timeline' => [
+            ['from' => 0, 'to' => 10, 'phase' => 'Start', 'teacher' => 'Popíše: služba běží, ale z jiného počítače se k ní nikdo nedostane.', 'student' => 'Vyjmenují možné příčiny.', 'form' => 'frontálně'],
+            ['from' => 10, 'to' => 25, 'phase' => 'Naslouchání (listener) ≠ dostupnost', 'teacher' => 'Ukáže vrstvy: proces → adresa → firewall → trasa.', 'student' => 'Sepíšou tabulku služeb (služba, port, kdo smí).', 'form' => 'jednotlivě'],
+            ['from' => 25, 'to' => 42, 'phase' => 'ss a adresy', 'teacher' => 'Předvede ss -tln a konfiguraci listen v nginx.', 'student' => 'Určí porty a adresy služeb v simulátoru.', 'form' => 'jednotlivě'],
+            ['from' => 42, 'to' => 57, 'phase' => 'Pravidlo firewallu', 'teacher' => 'Ukáže pravidlo „jen potřebný zdroj a služba“.', 'student' => 'Navrhnou pravidla pro web a SSH bez „povolit vše“.', 'form' => 've dvojicích'],
+            ['from' => 57, 'to' => 78, 'phase' => 'Pozitivní a negativní test', 'teacher' => 'Zdůrazní test i zakázané cesty.', 'student' => 'Otestují povolené a zakázané porty přes nc.', 'form' => 'jednotlivě'],
+            ['from' => 78, 'to' => 90, 'phase' => 'Shrnutí a exit ticket', 'teacher' => 'Připomene návratovou cestu při změně firewallu.', 'student' => 'Odpoví na exit ticket.', 'form' => 'jednotlivě'],
+        ],
+        'tasks' => [
+            ['text' => 'Sepiš tabulku služeb serveru: služba, port, protokol, kdo k ní smí (web 80 pro všechny, SSH 22 jen správa).', 'output' => 'Tabulka služeb se 4 řádky.', 'time' => '15 min'],
+            ['text' => 'Spusť ss -tln a zapiš, na jakých adresách a portech poslouchají služby; ověř řádek listen v /etc/nginx/sites-enabled/default.', 'output' => '0.0.0.0:22 a 0.0.0.0:80; „listen 80 default_server;“.', 'time' => '17 min',
+                'sim' => [['cmd' => 'ss -tln', 'expect' => '0.0.0.0:80'], ['cmd' => 'ss -tln', 'expect' => '0.0.0.0:22'], ['cmd' => 'grep -n listen /etc/nginx/sites-enabled/default', 'expect' => 'listen 80 default_server;']]],
+            ['text' => 'Navrhni pravidla firewallu pro web a SSH tak, aby nevzniklo pravidlo „povolit vše odkudkoli“.', 'output' => 'Dvě až tři pravidla (zdroj, port, akce) + výchozí zákaz.', 'time' => '15 min'],
+            ['text' => 'Proveď pozitivní test (nc -zv 10.0.0.10 80) a negativní test (nc -zv 10.0.0.10 443) a zapiš, co každý dokazuje.', 'output' => 'Port 80 succeeded, port 443 Connection refused.', 'time' => '21 min',
+                'sim' => [['cmd' => 'nc -zv 10.0.0.10 80', 'expect' => 'succeeded'], ['cmd' => 'nc -zv 10.0.0.10 443', 'expect' => 'Connection refused']]],
+        ],
+        'differentiation' => [
+            'support' => 'Dostane tabulku „adresa naslouchání → kdo se připojí“ (127.0.0.1 / 0.0.0.0 / konkrétní IP).',
+            'standard' => 'Tabulka služeb, ss, pravidla a testy podle zadání.',
+            'challenge' => 'Popíše, jak by změnu firewallu na vzdáleném serveru provedl bez rizika, že se zamkne venku.',
+        ],
+        'assessment' => [
+            'formative' => ['Karty adres: učitel ukáže 127.0.0.1:8080, třída řekne, kdo se připojí.', 'Kontrola pravidel: najdi ve sousedově návrhu „povolit vše“.'],
+            'rubric' => [
+                ['criterion' => 'Čtení naslouchání', 'levels' => ['Nepřečte ss.', 'Jen porty.', 'Porty i adresy a jejich význam.', 'Propojí s konfigurací služby.']],
+                ['criterion' => 'Pravidla', 'levels' => ['Povolit vše.', 'Příliš široká.', 'Jen potřebný zdroj a služba + výchozí zákaz.', 'Plán návratu při chybě.']],
+                ['criterion' => 'Ověření', 'levels' => ['Bez testu.', 'Jen pozitivní test.', 'Pozitivní i negativní test.', 'Testy ze správného zdroje se zdůvodněním.']],
+            ],
+        ],
+        'exit_ticket' => ['competence' => 'net_services', 'competence_label' => 'Služby a porty', 'variants' => [
+            ['question' => 'Služba poslouchá jen na 127.0.0.1:8080. Co čekáš při pokusu z jiného počítače?', 'options' => ['Spojení projde, když to firewall dovolí.', 'Služba nebude přes síťové rozhraní dostupná, i když firewall port povoluje.', 'DNS adresu automaticky změní.'], 'correct' => 1, 'explanation' => '127.0.0.1 je jen lokální smyčka.'],
+            ['question' => 'Co znamená v ss -tln adresa 0.0.0.0:80?', 'options' => ['Služba poslouchá na portu 80 na všech adresách IPv4 počítače.', 'Služba je vypnutá.', 'Port 80 je zablokovaný.'], 'correct' => 0, 'explanation' => '0.0.0.0 = všechna rozhraní IPv4.'],
+            ['question' => 'Proč testovat i port, který má být zakázaný?', 'options' => ['Aby se firewall zahřál.', 'Protože pozitivní test nestačí na nic.', 'Abys ověřil, že pravidlo opravdu blokuje, co blokovat má.'], 'correct' => 2, 'explanation' => 'Negativní test dokazuje zákaz.'],
+        ]],
+        'homework' => [['text' => 'Volitelné: nakresli diagram „klient → firewall → adresa naslouchání → proces“ pro webový server.', 'minutes' => 15, 'optional' => true]],
+        'safety' => ['Firewall měníme jen v labu; na skutečném serveru vždy s přístupem přes konzoli a plánem návratu.', 'Neskenujeme porty cizích počítačů ani školní sítě.'],
+        'teacher_notes' => ['Používej pravidla jen v labu; nedělej změny na produkčním školním serveru.', 'Otázka do třídy: Kdo všechno se dostane ke službě na 0.0.0.0?', 'Tempo: simulátor nemá příkaz firewallu – pravidla navrhujeme na papír, testy děláme v simulátoru.'],
+        'substitution' => ['Zástup bez odborníka: úkoly 2 a 4 v Linux Labu (výstupy v zadání), úkoly 1 a 3 na papír.', 'Plán B offline: karty adres a pravidel a vytištěný výstup ss.'],
+        'glossary' => ['bind', 'listener', 'firewall'],
+    ],
+    16 => [
+        'status' => 'navrh', 'version' => 1,
+        'title' => 'Lekce 16 · Webová služba v Linuxu: od procesu k HTTP',
+        'goal' => [
+            'student' => 'Na konci hodiny umím ověřit webovou službu krok za krokem – proces, naslouchání, síť, DNS a odpověď HTTP – a sepsat z toho pětikrokový postup (runbook).',
+            'success_criteria' => ['Projdu řetěz proces → port → síť → DNS → HTTP a u každého kroku mám důkaz.', 'Rozliším lokální a vzdálený test a vím, co znamená rozdíl mezi nimi.', 'Sepíšu runbook o 5 krocích, podle kterého ověří službu i spolužák.'],
+        ],
+        'competencies' => [['id' => 'net_services', 'level' => 2], ['id' => 'lnx_services', 'level' => 3]],
+        'timeline' => [
+            ['from' => 0, 'to' => 10, 'phase' => 'Start', 'teacher' => 'Ukáže hlášku „web nejde“ od uživatele.', 'student' => 'Vyjmenují, co všechno musí fungovat, aby web šel.', 'form' => 'frontálně'],
+            ['from' => 10, 'to' => 22, 'phase' => 'Řetěz služby', 'teacher' => 'Nakreslí řetěz proces → port → síť → DNS → HTTP.', 'student' => 'Ke každému článku přiřadí příkaz.', 'form' => 've dvojicích'],
+            ['from' => 22, 'to' => 40, 'phase' => 'Lokální zdraví', 'teacher' => 'Předvede systemctl status, ss a curl na localhost.', 'student' => 'Ověří službu lokálně a zapíší stav HTTP.', 'form' => 'jednotlivě'],
+            ['from' => 40, 'to' => 58, 'phase' => 'Vzdálená cesta a DNS', 'teacher' => 'Ukáže test přes jméno a adresu.', 'student' => 'Ověří DNS a HTTP přes jméno intranet.skola.test.', 'form' => 'jednotlivě'],
+            ['from' => 58, 'to' => 75, 'phase' => 'Důkaz z HTTP', 'teacher' => 'Vysvětlí, co dokazuje 502 u reverzní proxy (reverse proxy).', 'student' => 'Rozeberou tři cvičné odpovědi HTTP.', 'form' => 've dvojicích'],
+            ['from' => 75, 'to' => 90, 'phase' => 'Runbook a exit ticket', 'teacher' => 'Zadá runbook o 5 krocích.', 'student' => 'Sepíšou runbook a odpoví na exit ticket.', 'form' => 'jednotlivě'],
+        ],
+        'tasks' => [
+            ['text' => 'Ověř lokálně: běží služba (systemctl status nginx), poslouchá port 80 (ss -tln) a odpovídá HTTP (curl -I http://localhost)?', 'output' => 'active (running), 0.0.0.0:80, „HTTP/1.1 200 OK“ a „Server: nginx/1.22.1“.', 'time' => '18 min',
+                'sim' => [['cmd' => 'systemctl status nginx', 'expect' => 'active (running)'], ['cmd' => 'curl -I http://localhost', 'expect' => 'Server: nginx/1.22.1']]],
+            ['text' => 'Ověř cestu přes jméno: dig +short intranet.skola.test a curl -I http://intranet.skola.test.', 'output' => '10.0.0.10 a „HTTP/1.1 200 OK“.', 'time' => '15 min',
+                'sim' => [['cmd' => 'dig +short intranet.skola.test', 'expect' => '10.0.0.10'], ['cmd' => 'curl -I http://intranet.skola.test', 'expect' => 'HTTP/1.1 200 OK']]],
+            ['text' => 'Rozeber tři cvičné odpovědi (200, 404, 502 od reverzní proxy) a u každé napiš, co dokazuje a kde hledat dál.', 'output' => 'Tabulka stav → co dokazuje → další krok.', 'time' => '17 min'],
+            ['text' => 'Sepiš runbook o 5 krocích „ověření webové služby“ od procesu po klienta, s příkazem a očekávaným výsledkem u každého kroku.', 'output' => 'Runbook o 5 krocích.', 'time' => '15 min'],
+        ],
+        'differentiation' => [
+            'support' => 'Dostane kostru runbooku s nadpisy kroků a doplňuje příkazy a výsledky.',
+            'standard' => 'Úkoly 1–4 podle zadání.',
+            'challenge' => 'Doplní do runbooku větev „lokálně funguje, vzdáleně ne“ s testy navázání na adresu a firewallu.',
+        ],
+        'assessment' => [
+            'formative' => ['Řetěz na tabuli: učitel škrtne článek, třída řekne, jaký symptom uvidí uživatel.', 'Runbook ve dvojici: spolužák podle něj projde službu bez dotazů?'],
+            'rubric' => [
+                ['criterion' => 'Řetěz služby', 'levels' => ['Náhodné testy.', 'Část řetězu.', 'Celý řetěz s důkazy.', 'Najde první chybějící článek v incidentu.']],
+                ['criterion' => 'Lokální vs. vzdálený test', 'levels' => ['Nerozliší.', 'Jen lokální test.', 'Oba testy a význam rozdílu.', 'Navrhne testy pro větev „vzdáleně nejde“.']],
+                ['criterion' => 'Runbook', 'levels' => ['Chybí.', 'Kroky bez výsledků.', '5 kroků s příkazem a výsledkem.', 'Použitelný spolužákem bez dotazů.']],
+            ],
+        ],
+        'exit_ticket' => ['competence' => 'net_services', 'competence_label' => 'Služby a porty', 'variants' => [
+            ['question' => 'curl -I http://localhost vrací 200 OK, ale z jiného počítače se web nenačte. Kde hledáš nejdřív?', 'options' => ['V adrese, na které služba poslouchá, ve firewallu a trase.', 'V obsahu stránky.', 'V oprávněních souboru index.html.'], 'correct' => 0, 'explanation' => 'Lokálně funguje – problém je mezi klientem a službou.'],
+            ['question' => 'Reverzní proxy vrací 502. Co to dokazuje?', 'options' => ['DNS nefunguje.', 'Klient nemá IP adresu.', 'Proxy je dosažitelná, ale nedostala platnou odpověď od služby za ní.'], 'correct' => 2, 'explanation' => '502 = problém mezi proxy a upstreamem.'],
+            ['question' => 'K čemu je runbook?', 'options' => ['K zálohování serveru.', 'Aby postup ověření nebo opravy zvládl kdokoli z týmu stejně a krok za krokem.', 'K vypnutí monitoringu.'], 'correct' => 1, 'explanation' => 'Runbook = opakovatelný postup.'],
+        ]],
+        'homework' => [['text' => 'Volitelné: dopiš do runbooku jeden krok „co dělat, když krok 3 selže“.', 'minutes' => 10, 'optional' => true]],
+        'safety' => ['Webovou službu zkoušíme v simulátoru nebo připraveném labu; nezávisíme na veřejném DNS.', 'Neprovádíme testy proti cizím serverům.'],
+        'teacher_notes' => ['Může být simulované prostředí nebo předpřipravený lab; nezávislé na veřejném DNS.', 'Otázka do třídy: Který článek řetězu ověřuje tenhle příkaz?', 'Tempo: runbook je hlavní výstup – nech na něj aspoň 15 minut.'],
+        'substitution' => ['Zástup bez odborníka: úkoly 1–2 v Linux Labu (výstupy v zadání), úkoly 3–4 na papír.', 'Plán B offline: řetěz služby z kartiček a runbook na papír.'],
+        'glossary' => ['runbook', 'reverse-proxy', 'upstream'],
+    ],
+]]];

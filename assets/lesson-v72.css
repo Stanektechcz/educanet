@@ -1,0 +1,20 @@
+/* EDUCANET v72 · cíl hodiny, exit ticket a volitelná domácí příprava (žák, lekce v56). Jen tokeny v61/v67 – funguje ve světlém i tmavém vzhledu. */
+.lx72 { margin: var(--ui-space-5, 24px) 0; padding: var(--ui-space-4, 16px) var(--ui-space-5, 24px); border: 1px solid var(--ui-line); border-radius: var(--ui-radius, 16px); background: var(--ui-surface); color: var(--ui-ink); }
+.lx72 h2 { margin: 0 0 var(--ui-space-2, 8px); font-size: var(--ui-text-lg, 1.15rem); }
+.lx72 h3 { margin: 0 0 var(--ui-space-2, 8px); font-size: var(--ui-text, .95rem); }
+.lx72-goal { margin: 0 0 var(--ui-space-3, 12px); line-height: var(--ui-leading, 1.55); }
+.lx72-lead, .lx72-muted { margin: 0 0 var(--ui-space-2, 8px); color: var(--ui-muted); font-size: var(--ui-text-sm, .875rem); }
+.lx72-list { margin: 0 0 var(--ui-space-3, 12px); padding-left: 1.2em; line-height: var(--ui-leading, 1.55); }
+.lx72-card { margin-top: var(--ui-space-4, 16px); padding: var(--ui-space-4, 16px); border-radius: var(--ui-radius-sm, 12px); background: var(--ui-surface-2); border: 1px solid var(--ui-line); }
+.lx72-chip { display: inline-block; padding: 0 var(--ui-space-2, 8px); border-radius: var(--ui-radius-pill, 999px); background: var(--ui-accent-soft); color: var(--ui-accent-ink); font-size: var(--ui-text-xs, .75rem); }
+.lx72-fieldset { margin: 0 0 var(--ui-space-3, 12px); padding: 0; border: 0; min-width: 0; }
+.lx72-question { margin: 0 0 var(--ui-space-2, 8px); padding: 0; font-weight: 600; line-height: var(--ui-leading, 1.55); }
+.lx72-option { display: flex; gap: var(--ui-space-3, 12px); align-items: center; min-height: 44px; margin: 0 0 var(--ui-space-2, 8px); padding: var(--ui-space-2, 8px) var(--ui-space-3, 12px); border: 1px solid var(--ui-field-border); border-radius: var(--ui-radius-sm, 12px); background: var(--ui-surface); cursor: pointer; }
+.lx72-option input { flex: 0 0 auto; width: 20px; height: 20px; margin: 0; accent-color: var(--ui-accent); }
+.lx72-option:focus-within { outline: var(--ui-focus, 3px) solid var(--ui-accent); outline-offset: 2px; }
+.lx72-option:has(input:checked) { border-color: var(--ui-accent); background: var(--ui-accent-soft); }
+.lx72 .btn { min-height: 44px; }
+.lx72-result { margin: 0 0 var(--ui-space-2, 8px); padding: var(--ui-space-2, 8px) var(--ui-space-3, 12px); border-radius: var(--ui-radius-sm, 12px); border-left: 4px solid var(--ui-line); }
+.lx72-result.is-ok { border-left-color: var(--ui-ok-ink); color: var(--ui-ok-ink); background: var(--ui-surface); }
+.lx72-result.is-miss { border-left-color: var(--ui-hot-ink); color: var(--ui-ink); background: var(--ui-hot-soft); }
+@media (max-width: 480px) { .lx72 { padding: var(--ui-space-3, 12px); } }

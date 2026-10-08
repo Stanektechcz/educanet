@@ -1,0 +1,14 @@
+/* EDUCANET v72 · Schvalování lekcí (náhled návrhu, rubrika, formuláře rozhodnutí). Jen tokeny v61/v68 – světlý i tmavý režim.
+   Cíle dotyku ≥ 44 px, viditelný fokus, 390 px bez vodorovného posunu stránky (široká rubrika se posouvá uvnitř bloku). */
+.c72-preview h3 { margin-top: var(--ui-space-4); }
+.c72-preview code { font-size: var(--ui-text-sm); overflow-wrap: anywhere; }
+.c72-decide { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--ui-space-3); margin: var(--ui-space-3) 0; padding: var(--ui-space-3); border: 1px solid var(--ui-line); border-radius: var(--ui-radius-sm); background: var(--ui-surface-2); }
+.c72-decide form { margin: 0; }
+.c72-return { display: flex; flex-direction: column; gap: var(--ui-space-2); flex: 1 1 260px; min-width: 0; }
+.c72-return label { font-weight: 600; font-size: var(--ui-text-sm); }
+.c72-return textarea { box-sizing: border-box; width: 100%; min-height: 44px; padding: var(--ui-space-2); border: 1px solid var(--ui-field-border); border-radius: var(--ui-radius-sm); background: var(--ui-surface); color: var(--ui-ink); font: inherit; }
+.c72-decide .btn { min-height: 44px; }
+.c72-scroll { max-width: 100%; overflow-x: auto; }
+.c72-rubric td, .c72-rubric th { min-width: 7rem; }
+.c72-return textarea:focus-visible, .c72-decide .btn:focus-visible, .c72-scroll:focus-visible { outline: var(--ui-focus, 3px) solid var(--ui-accent); outline-offset: 2px; }
+@media (max-width: 480px) { .c72-decide { flex-direction: column; align-items: stretch; } .c72-return { flex: 0 0 auto; } }

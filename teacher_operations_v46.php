@@ -110,6 +110,8 @@ function teacher_action_permission_prefixes(): array
         'a66_'=>'content.manage','g66_'=>'grading.manage',
         // v68 · přepínač vzhledu cockpitu (cookie edu_theme, žádná data): smí každá přihlášená role.
         'teacher68_'=>'view',
+        // v72 · schvalování obsahu lekcí (lc72_approve / lc72_return) = správa obsahu (asistent jen čte).
+        'lc72_'=>'content.manage',
     ];
 }
 function teacher_action_permission(string $action): ?string
