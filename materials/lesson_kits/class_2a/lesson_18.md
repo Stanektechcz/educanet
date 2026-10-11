@@ -146,60 +146,53 @@ Spojit IA, responsive UI, komponenty, accessibility, testování a handoff do je
 
 ## 6. AI prompty pro studenta
 
-### Vysvětli mi to jednoduše
+> **Dobrovolné procvičení s AI – než začneš:**
+> - Použij jen AI nástroj, který povolila škola nebo tvůj učitel.
+> - Nevkládej osobní údaje – své ani cizí: jméno, e-mail, telefon, adresu, fotky ani třídu.
+> - Nevkládej přihlašovací údaje školy: hesla, jednorázové kódy, kód hodiny ani odkazy z EDUCANETu.
+> - Výstup AI vždy ověř (v náhledu na mobilu i počítači, v zápisu z hodiny nebo u učitele). AI se plete i s jistotou.
+> - Když ti AI pomohla s odevzdanou prací, napiš to: jaký nástroj, k čemu a co jsi upravil(a) sám/sama.
+
+### 1. Vysvětli mi jednoduše: Informační architektura II
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 18 · Capstone: produktová landing page + case study v předmětu grafika a webdesign. Cíl lekce: Spojit IA, responsive UI, komponenty, accessibility, testování a handoff do jednoho obhajitelného produktového návrhu.. Klíčová témata: Informační architektura II, Auto Layout a varianty II, Accessibility audit II, Usability test II, Design QA a handoff II.
-Vysvětli mi princip co nejjednodušeji v 5–7 větách. Použij jeden konkrétní příklad a na konci mi polož jednu kontrolní otázku. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Učím se téma „Informační architektura II“ (lekce „Capstone: produktová landing page + case study“, obor grafika a webdesign). Z hodiny vím: IA organizuje obsah podle očekávání a cílů uživatele, ne podle interní struktury firmy.
+Vysvětli mi ho v 5–7 větách pro začátečníka a přidej jeden konkrétní příklad z plakátu nebo webové stránky. Na konci mi polož jednu kontrolní otázku a počkej na moji odpověď.
 ```
 
-### Přirovnání + hranice přirovnání
+### 2. Přirovnání a jeho hranice: Auto Layout a varianty II
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 18 · Capstone: produktová landing page + case study v předmětu grafika a webdesign. Cíl lekce: Spojit IA, responsive UI, komponenty, accessibility, testování a handoff do jednoho obhajitelného produktového návrhu.. Klíčová témata: Informační architektura II, Auto Layout a varianty II, Accessibility audit II, Usability test II, Design QA a handoff II.
-Vysvětli téma pomocí přirovnání z běžného života. Pak výslovně napiš, kde přirovnání přestává platit, abych si nevytvořil chybný mentální model. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+V lekci „Capstone: produktová landing page + case study“ jsme probírali téma „Auto Layout a varianty II“. Vysvětli mi ho pomocí přirovnání z běžného života. Z hodiny vím: Auto Layout vyjadřuje vztahy mezi obsahem a prostorem, takže komponenta lépe reaguje na změnu textu a viewportu.
+Potom napiš, ve kterém místě přirovnání přestává platit, abych si nevytvořil(a) chybnou představu. Odpověz nejvýš na 10 řádků.
 ```
 
-### Sokratický tutor
+### 3. Sokratický tutor k cíli lekce
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 18 · Capstone: produktová landing page + case study v předmětu grafika a webdesign. Cíl lekce: Spojit IA, responsive UI, komponenty, accessibility, testování a handoff do jednoho obhajitelného produktového návrhu.. Klíčová témata: Informační architektura II, Auto Layout a varianty II, Accessibility audit II, Usability test II, Design QA a handoff II.
-Buď můj sokratický tutor. Nepřednášej. Ptej se vždy jen na jednu otázku, vycházej z mé odpovědi a veď mě k tomu, abych princip odvodil sám. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Cíl lekce „Capstone: produktová landing page + case study“: Spojit IA, responsive UI, komponenty, accessibility, testování a handoff do jednoho obhajitelného produktového návrhu.
+Buď můj sokratický tutor. Nevysvětluj hned celé řešení – ptej se vždy jen na jednu otázku a podle mé odpovědi mě veď dál, dokud cíl nedokážu vysvětlit vlastními slovy.
 ```
 
-### Najdi díru v mém postupu
+### 4. Zkontroluj můj postup
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 18 · Capstone: produktová landing page + case study v předmětu grafika a webdesign. Cíl lekce: Spojit IA, responsive UI, komponenty, accessibility, testování a handoff do jednoho obhajitelného produktového návrhu.. Klíčová témata: Informační architektura II, Auto Layout a varianty II, Accessibility audit II, Usability test II, Design QA a handoff II.
-Pošlu ti svůj postup/řešení. Najdi první místo, kde můj závěr není podložený důkazem nebo kde měním příliš mnoho věcí najednou. Neopravuj vše za mě; polož otázku, která mě dovede k lepšímu testu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Řeším úkol z lekce „Capstone: produktová landing page + case study“: Product brief: Definuj uživatele, problém, cíl stránky a success signal.
+Popíšu ti slovy svůj návrh (rozvržení, písmo, barvy, texty) – bez fotek lidí a bez osobních údajů. Najdi jedno nejslabší místo vzhledem k cíli lekce a zeptej se mě, jak bych ho ověřil(a). Nepředělávej návrh za mě.
 ```
 
-### Vytvoř mi nový transfer úkol
+### 5. Nový procvičovací úkol
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 18 · Capstone: produktová landing page + case study v předmětu grafika a webdesign. Cíl lekce: Spojit IA, responsive UI, komponenty, accessibility, testování a handoff do jednoho obhajitelného produktového návrhu.. Klíčová témata: Informační architektura II, Auto Layout a varianty II, Accessibility audit II, Usability test II, Design QA a handoff II.
-Vytvoř jeden nový realistický problém, který používá stejný princip, ale v jiném kontextu. Nedávej řešení. Nejdřív chtěj moji hypotézu, potom důkaz a až nakonec mi dej zpětnou vazbu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Vymysli mi jeden nový realistický úkol na stejný princip jako lekce „Capstone: produktová landing page + case study“ („Informační architektura II“, „Auto Layout a varianty II“, „Accessibility audit II“, „Usability test II“), ale v jiné situaci – pro vymyšlenou firmu nebo akci.
+Nedávej mi řešení. Nejdřív chtěj můj odhad, pak postup a až nakonec mi dej zpětnou vazbu.
 ```
 
-### Vyzkoušej mě ústně
+### 6. Vyzkoušej mě
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 18 · Capstone: produktová landing page + case study v předmětu grafika a webdesign. Cíl lekce: Spojit IA, responsive UI, komponenty, accessibility, testování a handoff do jednoho obhajitelného produktového návrhu.. Klíčová témata: Informační architektura II, Auto Layout a varianty II, Accessibility audit II, Usability test II, Design QA a handoff II.
-Simuluj ústní zkoušení. Polož 5 otázek od základní po aplikační. Po každé mé odpovědi stručně řekni, co bylo přesné, co chybělo, a polož navazující otázku. Známku navrhni až na konci. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
-```
-
-### Praktická zkouška nanečisto
-
-```text
-Jsem student EDUCANETu. Probírám Lekce 18 · Capstone: produktová landing page + case study v předmětu grafika a webdesign. Cíl lekce: Spojit IA, responsive UI, komponenty, accessibility, testování a handoff do jednoho obhajitelného produktového návrhu.. Klíčová témata: Informační architektura II, Auto Layout a varianty II, Accessibility audit II, Usability test II, Design QA a handoff II.
-Připrav krátkou praktickou zkoušku nanečisto na 15–20 minut. Dej mi realistické zadání, success criteria a 3 kontrolní body. Během řešení mi neposkytuj hotový postup; reaguj jen na konkrétní evidence, které ti pošlu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
-```
-
-### Zkontroluj moje vysvětlení
-
-```text
-Jsem student EDUCANETu. Probírám Lekce 18 · Capstone: produktová landing page + case study v předmětu grafika a webdesign. Cíl lekce: Spojit IA, responsive UI, komponenty, accessibility, testování a handoff do jednoho obhajitelného produktového návrhu.. Klíčová témata: Informační architektura II, Auto Layout a varianty II, Accessibility audit II, Usability test II, Design QA a handoff II.
-Pošlu ti své vysvětlení tématu. Ohodnoť pouze: správnost mentálního modelu, práci s důkazem, schopnost přenést princip a jednu největší mezeru. Pak mi dej jediný další krok k opravě. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Opakuji si lekci „Capstone: produktová landing page + case study“. Polož mi 5 otázek k tématům „Informační architektura II“, „Auto Layout a varianty II“, „Accessibility audit II“, „Usability test II“ od základní po praktickou. Ptej se po jedné a po každé odpovědi řekni, co bylo přesné a co chybělo.
+Nejde o známku ani o školní test – nehledej a neprozrazuj jeho odpovědi.
 ```
 
 ## 7. Zkouška nanečisto

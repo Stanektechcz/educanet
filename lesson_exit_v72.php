@@ -4,24 +4,27 @@ declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
 /**
- * EDUCANET v72 · exit ticket lekce (formativní, nikdy nevstupuje do známky).
+ * EDUCANET v72 · exit ticket lekce (v72.1: podle volby učitele třídy jen zpětná vazba, nebo i podklad ke známce).
  *
  * Úložiště kvízových kroků v52 (tutorial_v52_scores) drží jen nejlepší body bez obsahu odpovědi, proto má exit ticket
  * minimální vlastní úložiště po třídách: storage/lesson_exit_v72_<třída>.json.php =
- *   {"v":1,"answers":{"<lekce>":{"<hash žáka>":{"v":varianta,"c":volba,"ok":0|1,"at":"ISO 8601"}}}}
+ *   {"v":1,"answers":{"<lekce>":{"<hash žáka>":{"v":varianta,"c":volba,"ok":0|1,"at":"ISO 8601","m":"f"|"g"}}}}
+ * v72.1: „m“ = režim třídy v okamžiku odpovědi (f = jen zpětná vazba, g = podklad ke známce; viz teacher_prefs_v72_1.php).
  * Hash žáka = prvních 20 znaků SHA-256 z „lx72|“ + klíče žáka (žádné jméno ani e-mail). Jedna odpověď na lekci,
  * zápis jen přes storage_update. Retence: při každém zápisu se mažou odpovědi starší než LX72_RETENTION_DAYS (školní rok).
  *
  * Žák vidí exit ticket jen u schválené lekce (lc72_student_overlay) a jen do aktuální lekce podle kalendáře.
  * Variantu určuje server z identity v session (ne parametr požadavku), aby se sousedé lišili.
  * V pilotních třídách kompetencí (COMP62_PILOT_CLASSES) se zapíše důkaz v62 se zdrojem „lesson“ – ten podle
- * G66_MASTERY_SOURCES nevstupuje do návrhů hodnocení (formativní, LC72_EXIT_FORMATIVE_ONLY).
+ * G66_MASTERY_SOURCES nevstupuje do zvládnutí kompetencí. Do návrhu hodnocení v66 jde exit ticket jen v režimu „podklad ke známce“
+ * (část sumativní testy, tp721_exit_graded_part) – rozhodnutí školy 8. 10. 2026, bod 9.
  */
 
 const LX72_RETENTION_DAYS = 365;
 const LX72_HASH_LEN = 20;
 
 require_once __DIR__ . '/lesson_approval_v72.php';
+require_once __DIR__ . '/teacher_prefs_v72_1.php';   // v72.1: režim exit ticketu třídy (jen zpětná vazba / podklad ke známce)
 
 function lx72_path(string $classId): string
 {
@@ -107,15 +110,16 @@ function lx72_submit(string $classId, string $studentKey, int $number, int $choi
     if ($choice < 0 || $choice >= count($variant['options'])) { $res['error'] = 'choice'; return $res; }
     $hash = lx72_student_hash($studentKey);
     $ok = $choice === $variant['correct'];
+    $mode = tp721_exit_mode($classId) === 'grade' ? 'g' : 'f';   // v72.1: režim platný při odpovědi
     $dup = false;
-    storage_update(lx72_path($classId), static function (array $d) use ($number, $hash, $vi, $choice, $ok, $now, &$dup): array {
+    storage_update(lx72_path($classId), static function (array $d) use ($number, $hash, $vi, $choice, $ok, $now, $mode, &$dup): array {
         $answers = lx72_purge(is_array($d['answers'] ?? null) ? $d['answers'] : [], $now);
         if (isset($answers[(string)$number][$hash])) { $dup = true; return $d; }
-        $answers[(string)$number][$hash] = ['v' => $vi, 'c' => $choice, 'ok' => $ok ? 1 : 0, 'at' => date(DATE_ATOM, $now)];
+        $answers[(string)$number][$hash] = ['v' => $vi, 'c' => $choice, 'ok' => $ok ? 1 : 0, 'at' => date(DATE_ATOM, $now), 'm' => $mode];
         return ['v' => 1, 'answers' => $answers];
     });
     if ($dup) { $res['error'] = 'duplicate'; return $res; }
-    $res = ['ok' => true, 'error' => '', 'correct' => $ok, 'explanation' => $variant['explanation'], 'evidence' => 0];
+    $res = ['ok' => true, 'error' => '', 'correct' => $ok, 'explanation' => $variant['explanation'], 'evidence' => 0, 'mode' => $mode];
     $res['evidence'] = lx72_record_evidence($classId, $ticket['competence'], $number, $vi, $ok, $now);
     return $res;
 }
@@ -146,7 +150,7 @@ function lx72_record_evidence(string $classId, string $competency, int $number, 
 function lx72_summary(string $classId, int $number, array $studentKeys): array
 {
     $ticket = lx72_normalize(lc72_overlay($classId, $number));
-    $out = ['has_ticket' => $ticket !== null, 'approved' => lc72_status($classId, $number)['status'] === 'schvaleno', 'responded' => 0, 'students' => count($studentKeys),
+    $out = ['has_ticket' => $ticket !== null, 'approved' => lc72_status($classId, $number)['status'] === 'schvaleno', 'mode' => tp721_exit_mode($classId), 'responded' => 0, 'students' => count($studentKeys),
         'correct' => 0, 'percent' => null, 'wrong_top' => null, 'competence' => '', 'variants' => []];
     if ($ticket === null) return $out;
     $out['competence'] = lx72_competence_label($classId, $ticket);
@@ -182,14 +186,15 @@ function lx72_competence_label(string $classId, array $ticket): string
     return (string)$ticket['competence_label'];
 }
 
-/** Volitelná domácí příprava schválené lekce (pro žáka). @return list<array{text:string,minutes:int}> */
+/** Dobrovolná domácí příprava schválené lekce (pro žáka; rozhodnutí školy 8. 10. 2026). Úvodní „Volitelné:“ z textu obsahu se při zobrazení vynechá. @return list<array{text:string,minutes:int}> */
 function lx72_homework(string $classId, int $number): array
 {
     $ov = lc72_student_overlay($classId, $number);
     if ($ov === null) return [];
     $out = [];
     foreach ((array)($ov['homework'] ?? []) as $h) {
-        $text = is_array($h) ? trim((string)($h['text'] ?? '')) : trim((string)$h);
+        $text = trim((string)preg_replace('/^(?:Volitelné|Dobrovolné)\s*:\s*/u', '', is_array($h) ? trim((string)($h['text'] ?? '')) : trim((string)$h)));
+        if ($text !== '') $text = mb_strtoupper(mb_substr($text, 0, 1)) . mb_substr($text, 1);
         $minutes = is_array($h) ? (int)($h['minutes'] ?? 0) : 0;
         if ($text !== '' && $minutes <= LC72_HOMEWORK_MAX_MIN) $out[] = ['text' => $text, 'minutes' => $minutes];
     }

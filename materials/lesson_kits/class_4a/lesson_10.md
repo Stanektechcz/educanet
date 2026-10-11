@@ -129,60 +129,53 @@ Analyzovat service unit, dependency chain a restart policy a bezpečně řešit 
 
 ## 6. AI prompty pro studenta
 
-### Vysvětli mi to jednoduše
+> **Dobrovolné procvičení s AI – než začneš:**
+> - Použij jen AI nástroj, který povolila škola nebo tvůj učitel.
+> - Nevkládej osobní údaje – své ani cizí: jméno, e-mail, telefon, adresu, fotky ani třídu.
+> - Nevkládej přihlašovací údaje školy: hesla, jednorázové kódy, kód hodiny ani odkazy z EDUCANETu.
+> - Výstup AI vždy ověř (v simulátoru Linux Labu, v zápisu z hodiny nebo u učitele). AI se plete i s jistotou.
+> - Když ti AI pomohla s odevzdanou prací, napiš to: jaký nástroj, k čemu a co jsi upravil(a) sám/sama.
+
+### 1. Vysvětli mi jednoduše: systemd: dependencies a failure policy
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 10 · systemd do hloubky: dependencies, restart policy, failure v předmětu operační systémy a počítačové sítě. Cíl lekce: Analyzovat service unit, dependency chain a restart policy a bezpečně řešit opakovaný failure bez restart loopu.. Klíčová témata: systemd: dependencies a failure policy, Logy a monitoring: korelace místo hádání.
-Vysvětli mi princip co nejjednodušeji v 5–7 větách. Použij jeden konkrétní příklad a na konci mi polož jednu kontrolní otázku. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Učím se téma „systemd: dependencies a failure policy“ (lekce „systemd do hloubky: dependencies, restart policy, failure“, obor Linux a počítačové sítě). Z hodiny vím: Pokročilá správa služby vyžaduje rozumět ordering, dependencies a restart policy, ne pouze příkazům start/stop.
+Vysvětli mi ho v 5–7 větách pro začátečníka a přidej jeden konkrétní příklad ze správy malé firemní nebo školní sítě. Na konci mi polož jednu kontrolní otázku a počkej na moji odpověď.
 ```
 
-### Přirovnání + hranice přirovnání
+### 2. Přirovnání a jeho hranice: Logy a monitoring: korelace místo hádání
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 10 · systemd do hloubky: dependencies, restart policy, failure v předmětu operační systémy a počítačové sítě. Cíl lekce: Analyzovat service unit, dependency chain a restart policy a bezpečně řešit opakovaný failure bez restart loopu.. Klíčová témata: systemd: dependencies a failure policy, Logy a monitoring: korelace místo hádání.
-Vysvětli téma pomocí přirovnání z běžného života. Pak výslovně napiš, kde přirovnání přestává platit, abych si nevytvořil chybný mentální model. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+V lekci „systemd do hloubky: dependencies, restart policy, failure“ jsme probírali téma „Logy a monitoring: korelace místo hádání“. Vysvětli mi ho pomocí přirovnání z běžného života. Z hodiny vím: Monitoring říká, že něco selhává. Logy pomáhají vysvětlit proč. Největší hodnotu mají, když je spojíš s časem, requestem a změnou.
+Potom napiš, ve kterém místě přirovnání přestává platit, abych si nevytvořil(a) chybnou představu. Odpověz nejvýš na 10 řádků.
 ```
 
-### Sokratický tutor
+### 3. Sokratický tutor k cíli lekce
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 10 · systemd do hloubky: dependencies, restart policy, failure v předmětu operační systémy a počítačové sítě. Cíl lekce: Analyzovat service unit, dependency chain a restart policy a bezpečně řešit opakovaný failure bez restart loopu.. Klíčová témata: systemd: dependencies a failure policy, Logy a monitoring: korelace místo hádání.
-Buď můj sokratický tutor. Nepřednášej. Ptej se vždy jen na jednu otázku, vycházej z mé odpovědi a veď mě k tomu, abych princip odvodil sám. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Cíl lekce „systemd do hloubky: dependencies, restart policy, failure“: Analyzovat service unit, dependency chain a restart policy a bezpečně řešit opakovaný failure bez restart loopu.
+Buď můj sokratický tutor. Nevysvětluj hned celé řešení – ptej se vždy jen na jednu otázku a podle mé odpovědi mě veď dál, dokud cíl nedokážu vysvětlit vlastními slovy.
 ```
 
-### Najdi díru v mém postupu
+### 4. Zkontroluj můj postup
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 10 · systemd do hloubky: dependencies, restart policy, failure v předmětu operační systémy a počítačové sítě. Cíl lekce: Analyzovat service unit, dependency chain a restart policy a bezpečně řešit opakovaný failure bez restart loopu.. Klíčová témata: systemd: dependencies a failure policy, Logy a monitoring: korelace místo hádání.
-Pošlu ti svůj postup/řešení. Najdi první místo, kde můj závěr není podložený důkazem nebo kde měním příliš mnoho věcí najednou. Neopravuj vše za mě; polož otázku, která mě dovede k lepšímu testu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Řeším úkol z lekce „systemd do hloubky: dependencies, restart policy, failure“: Unit anatomy: Rozliš Unit/Service/Install. Najdi ExecStart, User a Restart.
+Pošlu ti svůj postup a výpis ze simulátoru Linux Labu (bez skutečných IP adres, jmen počítačů a hesel). Najdi první krok, který není podložený důkazem, a polož mi otázku, která mě dovede k lepšímu ověření. Neopravuj celý postup za mě.
 ```
 
-### Vytvoř mi nový transfer úkol
+### 5. Nový procvičovací úkol
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 10 · systemd do hloubky: dependencies, restart policy, failure v předmětu operační systémy a počítačové sítě. Cíl lekce: Analyzovat service unit, dependency chain a restart policy a bezpečně řešit opakovaný failure bez restart loopu.. Klíčová témata: systemd: dependencies a failure policy, Logy a monitoring: korelace místo hádání.
-Vytvoř jeden nový realistický problém, který používá stejný princip, ale v jiném kontextu. Nedávej řešení. Nejdřív chtěj moji hypotézu, potom důkaz a až nakonec mi dej zpětnou vazbu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Vymysli mi jeden nový realistický úkol na stejný princip jako lekce „systemd do hloubky: dependencies, restart policy, failure“ („systemd: dependencies a failure policy“, „Logy a monitoring: korelace místo hádání“), ale v jiné situaci – jen s adresami z dokumentačních nebo privátních rozsahů (např. 192.0.2.0/24, 10.0.0.0/8).
+Nedávej mi řešení. Nejdřív chtěj můj odhad, pak postup a až nakonec mi dej zpětnou vazbu.
 ```
 
-### Vyzkoušej mě ústně
+### 6. Vyzkoušej mě
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 10 · systemd do hloubky: dependencies, restart policy, failure v předmětu operační systémy a počítačové sítě. Cíl lekce: Analyzovat service unit, dependency chain a restart policy a bezpečně řešit opakovaný failure bez restart loopu.. Klíčová témata: systemd: dependencies a failure policy, Logy a monitoring: korelace místo hádání.
-Simuluj ústní zkoušení. Polož 5 otázek od základní po aplikační. Po každé mé odpovědi stručně řekni, co bylo přesné, co chybělo, a polož navazující otázku. Známku navrhni až na konci. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
-```
-
-### Praktická zkouška nanečisto
-
-```text
-Jsem student EDUCANETu. Probírám Lekce 10 · systemd do hloubky: dependencies, restart policy, failure v předmětu operační systémy a počítačové sítě. Cíl lekce: Analyzovat service unit, dependency chain a restart policy a bezpečně řešit opakovaný failure bez restart loopu.. Klíčová témata: systemd: dependencies a failure policy, Logy a monitoring: korelace místo hádání.
-Připrav krátkou praktickou zkoušku nanečisto na 15–20 minut. Dej mi realistické zadání, success criteria a 3 kontrolní body. Během řešení mi neposkytuj hotový postup; reaguj jen na konkrétní evidence, které ti pošlu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
-```
-
-### Zkontroluj moje vysvětlení
-
-```text
-Jsem student EDUCANETu. Probírám Lekce 10 · systemd do hloubky: dependencies, restart policy, failure v předmětu operační systémy a počítačové sítě. Cíl lekce: Analyzovat service unit, dependency chain a restart policy a bezpečně řešit opakovaný failure bez restart loopu.. Klíčová témata: systemd: dependencies a failure policy, Logy a monitoring: korelace místo hádání.
-Pošlu ti své vysvětlení tématu. Ohodnoť pouze: správnost mentálního modelu, práci s důkazem, schopnost přenést princip a jednu největší mezeru. Pak mi dej jediný další krok k opravě. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Opakuji si lekci „systemd do hloubky: dependencies, restart policy, failure“. Polož mi 5 otázek k tématům „systemd: dependencies a failure policy“, „Logy a monitoring: korelace místo hádání“ od základní po praktickou. Ptej se po jedné a po každé odpovědi řekni, co bylo přesné a co chybělo.
+Nejde o známku ani o školní test – nehledej a neprozrazuj jeho odpovědi.
 ```
 
 ## 7. Zkouška nanečisto

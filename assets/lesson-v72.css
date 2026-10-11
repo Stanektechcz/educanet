@@ -18,3 +18,10 @@
 .lx72-result.is-ok { border-left-color: var(--ui-ok-ink); color: var(--ui-ok-ink); background: var(--ui-surface); }
 .lx72-result.is-miss { border-left-color: var(--ui-hot-ink); color: var(--ui-ink); background: var(--ui-hot-soft); }
 @media (max-width: 480px) { .lx72 { padding: var(--ui-space-3, 12px); } }
+/* v72.1 · režim exit ticketu a dobrovolné AI prompty (jen tokeny) */
+.lx72-mode { margin: 0 0 var(--ui-space-2, 8px); }
+.lx72-ai { color: var(--ui-ink); }
+.lx72-ai summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; }
+.lx72-ai summary:focus-visible, .lx72-prompt:focus-visible { outline: var(--ui-focus, 3px) solid var(--ui-accent); outline-offset: 2px; }
+.lx72-ai-title { margin: var(--ui-space-3, 12px) 0 var(--ui-space-2, 8px); font-size: var(--ui-text, .95rem); }
+.lx72-prompt { margin: 0; padding: var(--ui-space-3, 12px); white-space: pre-wrap; overflow-wrap: anywhere; border: 1px solid var(--ui-line); border-radius: var(--ui-radius-sm, 12px); background: var(--ui-surface); color: var(--ui-ink); font: inherit; font-size: var(--ui-text-sm, .875rem); line-height: var(--ui-leading, 1.55); user-select: all; }

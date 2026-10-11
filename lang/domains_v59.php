@@ -295,6 +295,10 @@ return [
             'lesson_exit_v72_views.php',
             'app/actions/lesson_exit_v72.php',
         ],
+        // v72.1 · dobrovolné AI prompty pro studenta v lekci (upozornění na soukromí; prompty zůstávají česky).
+        'lesson_v72_1' => [
+            'ai_prompts_v72_1.php',
+        ],
         // Integrátor – sdílené soubory, dokončí se až po B1–B6 (F2).
         'shared' => [
             'bootstrap.php',

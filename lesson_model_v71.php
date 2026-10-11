@@ -13,6 +13,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  *   žákovská cesta lm71_bundle()          – v56_lesson_bundle() nad stejnými zdroji (žák vidí totéž, jen z runtime cache)
  *   model          lm71_lesson()          – normalizovaný tvar (docs: sekce 2 PROMPT_V71_V75) + skóre úplnosti
  *   den bez lekce  lm71_day()             – karta z calendar_days_v71.php (+ overlay dnů)
+ *   ŠVP (v72.1)    curriculum.svp         – návrh vazby z svp_v72_map.php (zdroj a otisk), stav schválení čte svp72_status()
  * Original zdrojových souborů se nikdy nepřepisuje. Texty jsou česky (cockpit).
  */
 
@@ -457,6 +458,10 @@ function lm71_lesson(string $classId, int $number, ?array $module = null): array
             'version' => LM71_MODEL_VERSION, 'status' => 'puvodni', 'reviewed_at' => null, 'overlay' => '', 'content_hash' => ''],
     ];
     if ($ov !== []) $model = lm71_apply_overlay($model, $ov, $raw);
+    if (empty($model['curriculum']['svp'])) {   // v72.1: návrh vazby na ŠVP školy (svp_v72_map.php); mimo overlay i otisk obsahu
+        if (!function_exists('svp72_curriculum')) require_once __DIR__ . '/svp_v72.php';
+        $model['curriculum']['svp'] = svp72_curriculum($classId, $number);
+    }
     $model['meta']['content_hash'] = substr(hash('sha256', (string)json_encode([$model['title'], $model['goal'], $model['timeline'], $model['tasks'], $model['exit_ticket'], $model['teacher_notes']])), 0, 16);
     $model['completeness'] = lm71_completeness($model);
     return $model;

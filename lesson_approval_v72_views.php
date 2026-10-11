@@ -13,6 +13,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 
 require_once __DIR__ . '/lesson_approval_v72.php';
 require_once __DIR__ . '/lesson_glossary_v72.php';
+if (is_file(__DIR__ . '/svp_v72_views.php')) require_once __DIR__ . '/svp_v72_views.php';   // v72.1: vazba na ŠVP
+if (is_file(__DIR__ . '/ai_prompts_v72_1.php')) require_once __DIR__ . '/ai_prompts_v72_1.php';   // v72.1: AI prompty pro studenta (náhled)
 if (is_file(__DIR__ . '/cockpit_v70.php')) require_once __DIR__ . '/cockpit_v70.php';
 
 function lc72_render_tab(array $modules, string $classId, string $csrf): void
@@ -45,8 +47,9 @@ function lc72_render_tab(array $modules, string $classId, string $csrf): void
     ], 'Souhrn schvalování');
     echo lc72_table_html($class, $rows, $lesson);
     if ($lesson > 0) echo lc72_preview_html($class, $lesson, $csrf);
-    echo '<p class="c70-muted">Čeká na rozhodnutí školy (výchozí nastavení): vazba na ŠVP „' . e(LC72_SVP_DEFAULT) . '“; domácí příprava jen volitelná, nejvýš '
-        . LC72_HOMEWORK_MAX_MIN . ' min týdně na lekci; exit ticket je čistě formativní a nevstupuje do hodnocení.</p>';
+    if (function_exists('svp72_section_html')) echo svp72_section_html($class, $csrf);   // v72.1: vazba na ŠVP (návrh ke schválení)
+    echo '<p class="c70-muted">Rozhodnutí školy (8. 10. 2026): vazba na ŠVP z dokumentu školy – návrh ke schválení v sekci Vazba na ŠVP; domácí příprava je dobrovolná (nejvýš '
+        . LC72_HOMEWORK_MAX_MIN . ' min týdně na lekci); exit ticket je podle volby učitele třídy jen zpětná vazba, nebo podklad ke známce (záložka Nastavení výuky).</p>';
 }
 
 /** Přepínač třídy (jen třídy v rozsahu). */
@@ -116,11 +119,12 @@ function lc72_preview_html(string $class, int $n, string $csrf): string
     $html .= lc72_section_html('Formativní kontrola', (array)($model['assessment']['formative'] ?? []));
     $html .= lc72_rubric_html((array)($model['assessment']['rubric'] ?? []));
     $html .= lc72_exit_html($class, $ov);
-    $html .= lc72_section_html('Domácí příprava (volitelná, nejvýš ' . LC72_HOMEWORK_MAX_MIN . ' min)', array_map(static fn($h): string => is_array($h) ? (string)($h['text'] ?? '') . ' (' . (int)($h['minutes'] ?? 0) . ' min)' : (string)$h, (array)($ov['homework'] ?? [])));
+    $html .= lc72_section_html('Domácí příprava (dobrovolná, nejvýš ' . LC72_HOMEWORK_MAX_MIN . ' min)', array_map(static fn($h): string => is_array($h) ? (string)($h['text'] ?? '') . ' (' . (int)($h['minutes'] ?? 0) . ' min)' : (string)$h, (array)($ov['homework'] ?? [])));
     $html .= lc72_section_html('Bezpečnost a licence', $model['safety']) . lc72_section_html('Poznámky pro učitele', $model['teacher_notes']) . lc72_section_html('Zástup a plán B', $model['substitution']);
     $terms = lg72_for_lesson((array)($ov['glossary'] ?? []));
     if ($terms !== []) $html .= lc72_section_html('Glosář', array_map(static fn(array $t): string => $t['term'] . ' = ' . $t['cs'] . ' – ' . $t['explain'], $terms));
-    return $html . '<p class="c70-muted">Vazba na ŠVP: ' . e(LC72_SVP_DEFAULT) . ' (čeká na dokument školy).</p></section>';
+    if (function_exists('aip721_teacher_preview_html')) $html .= aip721_teacher_preview_html($class, $n);   // v72.1: AI prompty, které žák v lekci vidí
+    return $html . (function_exists('svp72_lesson_html') ? svp72_lesson_html($class, $n) : '<p class="c70-muted">Vazba na ŠVP: ' . e(LC72_SVP_DEFAULT) . '.</p>') . '</section>';
 }
 
 function lc72_ul(array $items): string

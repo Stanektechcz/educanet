@@ -17,19 +17,21 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * POST akce (modul `schvalovani` v teacher_v58.php): lc72_approve, lc72_return – CSRF a ověření teacher.php,
  * politika teacher59 (třída povinná a v rozsahu), oprávnění content.manage (asistent jen čte). Neznámá lc72_* = zákaz.
  *
- * Rozhodnutí školy čekají (výchozí bezpečné hodnoty, viz CHANGELOG_V72.md): konstanty níže.
+ * Rozhodnutí školy z 8. 10. 2026 (v72.1, CHANGELOG_V72_1.md): ŠVP z brno.educanet.cz (svp_v72.php, vazba = návrh ke schválení),
+ * domácí příprava dobrovolná, AI prompty pro studenta ponechat a vylepšit, exit ticket podle volby učitele (teacher_prefs_v72_1.php).
+ * POST lc72_svp_approve / lc72_svp_return (vazba na ŠVP) obsluhuje svp72_teacher_handle_post – stejný modul, politika i oprávnění.
  */
 
-/** Domácí příprava: nejvýš minut týdně na lekci (výchozí bezpečná hodnota, čeká na rozhodnutí školy). */
+/** Domácí příprava: nejvýš minut týdně na lekci (limit škola nestanovila – zůstává výchozí hodnota v72). */
 const LC72_HOMEWORK_MAX_MIN = 30;
-/** Domácí příprava je vždy volitelná (čeká na rozhodnutí školy). */
+/** Domácí příprava je dobrovolná (rozhodnutí školy 8. 10. 2026, bod 3) – žák ji vidí s označením „dobrovolné“. */
 const LC72_HOMEWORK_OPTIONAL = true;
-/** Exit ticket je čistě formativní – nikdy nevstupuje do známky ani návrhu hodnocení (čeká na rozhodnutí školy). */
-const LC72_EXIT_FORMATIVE_ONLY = true;
-/** Vazba na ŠVP: dokud škola nedodá dokument, platí „chybí vazba“ (nevymýšlíme kódy ŠVP). */
+/** v72.1: exit ticket už není jen formativní – režim volí učitel třídy (výchozí „jen zpětná vazba“, viz TP721_EXIT_DEFAULT). */
+const LC72_EXIT_FORMATIVE_ONLY = false;
+/** Vazba na ŠVP: lekce bez návrhu vazby v svp_v72_map.php hlásí „chybí vazba“ (nevymýšlíme kódy ŠVP). */
 const LC72_SVP_DEFAULT = 'chybí vazba';
-/** Sekce „AI prompty pro studenta“ v materials/ se nikam nově neodkazují (čeká na rozhodnutí školy). */
-const LC72_LINK_AI_PROMPTS = false;
+/** v72.1: sekce „AI prompty pro studenta“ – ponechat, upravit a vylepšit; žák je má v lekci (ai_prompts_v72_1.php). */
+const LC72_LINK_AI_PROMPTS = true;
 /** Lekce vlny 1 (obsahová stopa v72). */
 const LC72_WAVE1 = [5, 16];
 const LC72_NOTE_MAX = 300;
@@ -218,6 +220,11 @@ function lc72_decide(string $action, string $classId, int $number, string $hash,
 /** POST lc72_approve / lc72_return (politiku, CSRF a oprávnění už ověřil teacher.php). */
 function lc72_teacher_handle_post(string $action): void
 {
+    if (str_starts_with($action, 'lc72_svp_')) {   // v72.1: vazba na ŠVP (svp_v72.php)
+        if (!function_exists('svp72_teacher_handle_post')) require_once __DIR__ . '/svp_v72.php';
+        svp72_teacher_handle_post($action);
+        return;
+    }
     $classId = is_string($_POST['class_id'] ?? null) ? (string)$_POST['class_id'] : '';
     $number = is_string($_POST['lesson'] ?? null) && preg_match('/^\d{1,2}$/', (string)$_POST['lesson']) === 1 ? (int)$_POST['lesson'] : 0;
     if (!lm71_class_ok($classId) || (function_exists('teacher59_can_class') && !teacher59_can_class($classId))) throw new RuntimeException('Třída není v rozsahu.');

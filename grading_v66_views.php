@@ -48,6 +48,7 @@ function g66v_link_html(string $classId): string
 function g66v_test_label(string $ref): string
 {
     if (preg_match('/^v56:l(\d+)$/', $ref, $m) === 1) return tr('Test lekce {n}', ['n' => (int)$m[1]]);
+    if ($ref === 'lx72:exit') return tr('Exit tickety (podklad ke známce)');   // v72.1
     return tr('Ověření cesty');
 }
 

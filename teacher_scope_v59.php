@@ -313,6 +313,10 @@ function teacher59_action_policies(): array
     $table['teacher68_theme_set'] = $none;
     // v72 · schvalování obsahu lekcí: třída formuláře povinná a v rozsahu (handler ji ověří znovu); jiné lc72_* akce zůstávají zakázané.
     foreach (['lc72_approve', 'lc72_return'] as $action) $table[$action] = $req;
+    // v72.1 · vazba na ŠVP (stejný modul `schvalovani`): třída povinná a v rozsahu. Nastavení výuky: vlastní volba jmen bez třídy (jen vlastní
+    // záznam učitele), režim exit ticketu třída povinná a v rozsahu. Jiné lc72_* / tp721_* akce zůstávají zakázané.
+    foreach (['lc72_svp_approve', 'lc72_svp_return', 'tp721_class_exit'] as $action) $table[$action] = $req;
+    $table['tp721_self_names'] = $none;
     return $table;
 }
 

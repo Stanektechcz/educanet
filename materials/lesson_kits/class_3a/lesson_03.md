@@ -140,60 +140,53 @@ Pochopit DNS a DHCP jako běžící služby, jejich konfiguraci, porty, logy a s
 
 ## 6. AI prompty pro studenta
 
-### Vysvětli mi to jednoduše
+> **Dobrovolné procvičení s AI – než začneš:**
+> - Použij jen AI nástroj, který povolila škola nebo tvůj učitel.
+> - Nevkládej osobní údaje – své ani cizí: jméno, e-mail, telefon, adresu, fotky ani třídu.
+> - Nevkládej přihlašovací údaje školy: hesla, jednorázové kódy, kód hodiny ani odkazy z EDUCANETu.
+> - Výstup AI vždy ověř (v simulátoru Linux Labu, v zápisu z hodiny nebo u učitele). AI se plete i s jistotou.
+> - Když ti AI pomohla s odevzdanou prací, napiš to: jaký nástroj, k čemu a co jsi upravil(a) sám/sama.
+
+### 1. Vysvětli mi jednoduše: DNS bez magie
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 3 · DNS + DHCP jako služby v předmětu operační systémy a počítačové sítě. Cíl lekce: Pochopit DNS a DHCP jako běžící služby, jejich konfiguraci, porty, logy a systematickou validaci.. Klíčová témata: DNS bez magie, DHCP a automatická konfigurace, Porty a služby, Systematický troubleshooting sítě.
-Vysvětli mi princip co nejjednodušeji v 5–7 větách. Použij jeden konkrétní příklad a na konci mi polož jednu kontrolní otázku. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Učím se téma „DNS bez magie“ (lekce „DNS + DHCP jako služby“, obor Linux a počítačové sítě). Z hodiny vím: Doménová jména, resolvery a základní záznamy.
+Vysvětli mi ho v 5–7 větách pro začátečníka a přidej jeden konkrétní příklad ze správy malé firemní nebo školní sítě. Na konci mi polož jednu kontrolní otázku a počkej na moji odpověď.
 ```
 
-### Přirovnání + hranice přirovnání
+### 2. Přirovnání a jeho hranice: DHCP a automatická konfigurace
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 3 · DNS + DHCP jako služby v předmětu operační systémy a počítačové sítě. Cíl lekce: Pochopit DNS a DHCP jako běžící služby, jejich konfiguraci, porty, logy a systematickou validaci.. Klíčová témata: DNS bez magie, DHCP a automatická konfigurace, Porty a služby, Systematický troubleshooting sítě.
-Vysvětli téma pomocí přirovnání z běžného života. Pak výslovně napiš, kde přirovnání přestává platit, abych si nevytvořil chybný mentální model. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+V lekci „DNS + DHCP jako služby“ jsme probírali téma „DHCP a automatická konfigurace“. Vysvětli mi ho pomocí přirovnání z běžného života. Z hodiny vím: Jak klient získá IP, masku, bránu a DNS.
+Potom napiš, ve kterém místě přirovnání přestává platit, abych si nevytvořil(a) chybnou představu. Odpověz nejvýš na 10 řádků.
 ```
 
-### Sokratický tutor
+### 3. Sokratický tutor k cíli lekce
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 3 · DNS + DHCP jako služby v předmětu operační systémy a počítačové sítě. Cíl lekce: Pochopit DNS a DHCP jako běžící služby, jejich konfiguraci, porty, logy a systematickou validaci.. Klíčová témata: DNS bez magie, DHCP a automatická konfigurace, Porty a služby, Systematický troubleshooting sítě.
-Buď můj sokratický tutor. Nepřednášej. Ptej se vždy jen na jednu otázku, vycházej z mé odpovědi a veď mě k tomu, abych princip odvodil sám. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Cíl lekce „DNS + DHCP jako služby“: Pochopit DNS a DHCP jako běžící služby, jejich konfiguraci, porty, logy a systematickou validaci.
+Buď můj sokratický tutor. Nevysvětluj hned celé řešení – ptej se vždy jen na jednu otázku a podle mé odpovědi mě veď dál, dokud cíl nedokážu vysvětlit vlastními slovy.
 ```
 
-### Najdi díru v mém postupu
+### 4. Zkontroluj můj postup
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 3 · DNS + DHCP jako služby v předmětu operační systémy a počítačové sítě. Cíl lekce: Pochopit DNS a DHCP jako běžící služby, jejich konfiguraci, porty, logy a systematickou validaci.. Klíčová témata: DNS bez magie, DHCP a automatická konfigurace, Porty a služby, Systematický troubleshooting sítě.
-Pošlu ti svůj postup/řešení. Najdi první místo, kde můj závěr není podložený důkazem nebo kde měním příliš mnoho věcí najednou. Neopravuj vše za mě; polož otázku, která mě dovede k lepšímu testu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Řeším úkol z lekce „DNS + DHCP jako služby“: Kdo na čem poslouchá: Urči DNS port 53. Urči DHCP UDP 67/68.
+Pošlu ti svůj postup a výpis ze simulátoru Linux Labu (bez skutečných IP adres, jmen počítačů a hesel). Najdi první krok, který není podložený důkazem, a polož mi otázku, která mě dovede k lepšímu ověření. Neopravuj celý postup za mě.
 ```
 
-### Vytvoř mi nový transfer úkol
+### 5. Nový procvičovací úkol
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 3 · DNS + DHCP jako služby v předmětu operační systémy a počítačové sítě. Cíl lekce: Pochopit DNS a DHCP jako běžící služby, jejich konfiguraci, porty, logy a systematickou validaci.. Klíčová témata: DNS bez magie, DHCP a automatická konfigurace, Porty a služby, Systematický troubleshooting sítě.
-Vytvoř jeden nový realistický problém, který používá stejný princip, ale v jiném kontextu. Nedávej řešení. Nejdřív chtěj moji hypotézu, potom důkaz a až nakonec mi dej zpětnou vazbu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Vymysli mi jeden nový realistický úkol na stejný princip jako lekce „DNS + DHCP jako služby“ („DNS bez magie“, „DHCP a automatická konfigurace“, „Porty a služby“, „Systematický troubleshooting sítě“), ale v jiné situaci – jen s adresami z dokumentačních nebo privátních rozsahů (např. 192.0.2.0/24, 10.0.0.0/8).
+Nedávej mi řešení. Nejdřív chtěj můj odhad, pak postup a až nakonec mi dej zpětnou vazbu.
 ```
 
-### Vyzkoušej mě ústně
+### 6. Vyzkoušej mě
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 3 · DNS + DHCP jako služby v předmětu operační systémy a počítačové sítě. Cíl lekce: Pochopit DNS a DHCP jako běžící služby, jejich konfiguraci, porty, logy a systematickou validaci.. Klíčová témata: DNS bez magie, DHCP a automatická konfigurace, Porty a služby, Systematický troubleshooting sítě.
-Simuluj ústní zkoušení. Polož 5 otázek od základní po aplikační. Po každé mé odpovědi stručně řekni, co bylo přesné, co chybělo, a polož navazující otázku. Známku navrhni až na konci. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
-```
-
-### Praktická zkouška nanečisto
-
-```text
-Jsem student EDUCANETu. Probírám Lekce 3 · DNS + DHCP jako služby v předmětu operační systémy a počítačové sítě. Cíl lekce: Pochopit DNS a DHCP jako běžící služby, jejich konfiguraci, porty, logy a systematickou validaci.. Klíčová témata: DNS bez magie, DHCP a automatická konfigurace, Porty a služby, Systematický troubleshooting sítě.
-Připrav krátkou praktickou zkoušku nanečisto na 15–20 minut. Dej mi realistické zadání, success criteria a 3 kontrolní body. Během řešení mi neposkytuj hotový postup; reaguj jen na konkrétní evidence, které ti pošlu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
-```
-
-### Zkontroluj moje vysvětlení
-
-```text
-Jsem student EDUCANETu. Probírám Lekce 3 · DNS + DHCP jako služby v předmětu operační systémy a počítačové sítě. Cíl lekce: Pochopit DNS a DHCP jako běžící služby, jejich konfiguraci, porty, logy a systematickou validaci.. Klíčová témata: DNS bez magie, DHCP a automatická konfigurace, Porty a služby, Systematický troubleshooting sítě.
-Pošlu ti své vysvětlení tématu. Ohodnoť pouze: správnost mentálního modelu, práci s důkazem, schopnost přenést princip a jednu největší mezeru. Pak mi dej jediný další krok k opravě. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Opakuji si lekci „DNS + DHCP jako služby“. Polož mi 5 otázek k tématům „DNS bez magie“, „DHCP a automatická konfigurace“, „Porty a služby“, „Systematický troubleshooting sítě“ od základní po praktickou. Ptej se po jedné a po každé odpovědi řekni, co bylo přesné a co chybělo.
+Nejde o známku ani o školní test – nehledej a neprozrazuj jeho odpovědi.
 ```
 
 ## 7. Zkouška nanečisto

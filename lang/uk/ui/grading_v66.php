@@ -36,4 +36,5 @@ return [
     'Zatím není dost podkladů' => 'Ще недостатньо підстав',
     'Otevřít moje cesty' => 'Відкрити мої шляхи',
     'Až budeš mít výsledky sumativního testu, ověřené kompetence nebo hodnocený projekt, objeví se tady.' => 'Тут з’являться результати підсумкового тесту, підтверджені компетентності або оцінений проєкт.',
+    'Exit tickety (podklad ke známce)' => 'Exit-квитки (враховуються в оцінку)',   // v72.1
 ];

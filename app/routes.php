@@ -57,7 +57,7 @@ return [
         'hands_on_views' => ['hands_on_learning_v50.php', 'independent_growth_v50.php', 'hands_on_learning_views_v50.php', 'independent_growth_views_v50.php'],
         'lesson_kit_views' => ['adaptive_lesson_views_v42.php', 'cognitive_visualization_views_v43.php', 'learning_studio_views_v44.php', 'visual_simulation_views_v45.php'],
         'tutorial_views' => ['tutorial_v52.php', 'points_v53.php', 'tutorial_v52_views.php'],
-        'lesson_path_views' => ['learning_v56.php', 'question_meta_v66.php', 'assessment_v66.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php', 'lesson_exit_v72_views.php', 'learning_v56_views.php'], // v66: sumativní test lekce (pořadí otázek, bez odměn)
+        'lesson_path_views' => ['learning_v56.php', 'question_meta_v66.php', 'assessment_v66.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'lesson_exit_v72_views.php', 'ai_prompts_v72_1.php', 'learning_v56_views.php'], // v66: sumativní test lekce (pořadí otázek, bez odměn)
         // v58 · Robotí liga (LAB-01); další herní moduly v58 přidává integrátor po dokončení.
         'robots' => ['robots_v58.php', 'robots_v58_game.php', 'robots_v58_views.php'],
         // v58 · CTF týden a Incidenty (ARN-02, ARN-03).
@@ -103,7 +103,7 @@ return [
         'project_workspace' => ['teacher_operations_v46.php', 'project_workspace_views.php'],
         'auth' => ['session_v53.php', 'student_v55.php'],
         // v72 · exit ticket schválené lekce (akce lx72_answer); důkaz v62 jen v pilotních třídách.
-        'lesson_exit' => ['tutorial_v52.php', 'session_v53.php', 'learning_v56.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_approval_v72.php', 'competencies_v62.php', 'evidence_v62.php', 'lesson_exit_v72.php'],
+        'lesson_exit' => ['tutorial_v52.php', 'session_v53.php', 'learning_v56.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'competencies_v62.php', 'evidence_v62.php', 'lesson_exit_v72.php'],   // v72.1: režim exit ticketu třídy
     ],
     // Stránky, které vkládá přímo index.php (globální ochrany).
     'pages' => [

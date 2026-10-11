@@ -135,8 +135,8 @@ $old = ['5' => ['aaaa' => ['v' => 0, 'c' => 0, 'ok' => 1, 'at' => date(DATE_ATOM
 $variantsUsed = count(array_unique(array_map(static fn(int $i): int => lx72_variant_index('k' . $i, 5, 3), range(1, 30))));
 $check('mimo pilot (2.A bez katalogu) se důkaz nezapisuje; retence maže odpovědi starší než ' . LX72_RETENTION_DAYS . ' dní; varianta je deterministická a třída dostane všechny 3',
     $r6['ok'] && $r6['evidence'] === 0 && array_keys(lx72_purge($old, time())['5']) === ['bbbb'] && $variantsUsed === 3 && lx72_variant_index('k1', 5, 3) === lx72_variant_index('k1', 5, 3));
-$check('formativní: exit ticket nevstupuje do návrhů hodnocení (G66_MASTERY_SOURCES bez „lesson“), domácí příprava jen volitelná v limitu',
-    LC72_EXIT_FORMATIVE_ONLY === true && str_contains($read('grading_v66.php'), "const G66_MASTERY_SOURCES = ['test', 'project', 'lab'];") && lx72_homework('class_3a', 5) !== []
+$check('výchozí režim exit ticketu = jen zpětná vazba (v72.1: „podklad ke známce“ volí učitel třídy, hlídá v72_1_decisions_audit); důkaz „lesson“ dál mimo G66_MASTERY_SOURCES; domácí příprava dobrovolná v limitu',
+    LC72_EXIT_FORMATIVE_ONLY === false && tp721_exit_mode('class_3a') === 'feedback' && $r6['mode'] === 'f' && str_contains($read('grading_v66.php'), "const G66_MASTERY_SOURCES = ['test', 'project', 'lab'];") && lx72_homework('class_3a', 5) !== []
     && array_reduce(lx72_homework('class_3a', 5), static fn(bool $ok, array $h): bool => $ok && $h['minutes'] <= LC72_HOMEWORK_MAX_MIN, true) && lx72_homework('class_3a', 6) === []);
 
 // ---------------------------------------------------------------- 4) žákovský blok (bez JS)
@@ -146,10 +146,10 @@ $blk5 = audit_capture(static fn() => lx72_render_student_block('class_3a', 5));
 $vNone = $t5['variants'][lx72_variant_index($key('none'), 5, 3)];
 $asStudent('good');
 $blkGood = audit_capture(static fn() => lx72_render_student_block('class_3a', 5));
-$check('žák: neschválená lekce = žádný blok; schválená = cíl, kritéria, exit ticket jako formulář (POST, CSRF, lx72_answer, radio required) bez JS a bez prozrazení odpovědi; domácí příprava „volitelné“',
+$check('žák: neschválená lekce = žádný blok; schválená = cíl, kritéria, exit ticket jako formulář (POST, CSRF, lx72_answer, radio required) bez JS a bez prozrazení odpovědi; domácí příprava „dobrovolné“ (v72.1)',
     $blk6 === '' && str_contains($blk5, 'Cíl dnešní hodiny') && str_contains($blk5, 'name="action" value="lx72_answer"') && str_contains($blk5, 'name="csrf"')
     && substr_count($blk5, 'type="radio"') === count($vNone['options']) && str_contains($blk5, 'required') && !str_contains($blk5, '<script') && !str_contains($blk5, e($vNone['explanation']))
-    && str_contains($blk5, 'Domácí příprava (volitelné)') && str_contains($blk5, e($vNone['question'])));
+    && str_contains($blk5, 'Domácí příprava (dobrovolné)') && str_contains($blk5, 'Režim: jen zpětná vazba') && str_contains($blk5, e($vNone['question'])));
 $check('žák po odpovědi: zpětná vazba (tvoje odpověď, správná odpověď, vysvětlení) místo formuláře', str_contains($blkGood, 'Tentokrát ne.') && str_contains($blkGood, e($vGood['options'][$vGood['correct']]))
     && !str_contains($blkGood, 'value="lx72_answer"'));
 
@@ -179,7 +179,7 @@ try {
     $today = $h->request('GET', '/teacher.php', ['tab' => 'hodina', 'class' => 'class_3a', 'lesson' => '5']);
     $todayBody = (string)$today['body'];
     $check('HTTP: Dnešní hodina L5 – stav „schváleno“, souhrn exit ticketu (odpovědělo, % správně, kompetence), formativní, karta souhrnu bez jmen žáků; L8 hlásí „čeká na schválení“',
-        audit_response_clean($today) && str_contains($todayBody, 'Exit ticket lekce 5') && str_contains($todayBody, 'Odpovědělo:') && str_contains($todayBody, 'formativní – nevstupuje do hodnocení')
+        audit_response_clean($today) && str_contains($todayBody, 'Exit ticket lekce 5') && str_contains($todayBody, 'Odpovědělo:') && str_contains($todayBody, 'režim: jen zpětná vazba – nevstupuje do hodnocení')
         && preg_match('~aria-labelledby="lx72-sum">(.*?)</section>~s', $todayBody, $sumHtml) === 1 && !str_contains($sumHtml[1], 'Audit ') && str_contains((string)$h->request('GET', '/teacher.php', ['tab' => 'hodina', 'class' => 'class_3a', 'lesson' => '8'])['body'], 'čeká na schválení'));
     $student = audit_login_student($h, 'class_3a', 'Audit Nikdo');
     $sCsrf = (string)$student['csrf'];

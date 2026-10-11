@@ -7,6 +7,7 @@ require_once __DIR__ . '/evidence_v62.php';
 require_once __DIR__ . '/mastery_v62.php';
 require_once __DIR__ . '/projects_v65.php';
 require_once __DIR__ . '/assessment_v66.php';
+require_once __DIR__ . '/teacher_prefs_v72_1.php';   // v72.1: exit ticket jako podklad ke známce (volba učitele třídy)
 
 /**
  * EDUCANET v66 · návrh hodnocení (známka 1–5 + slovní hodnocení) s řetězcem důkazů. Rozhoduje učitel.
@@ -15,7 +16,8 @@ require_once __DIR__ . '/assessment_v66.php';
  * 90 / 75 / 50 / 30 % (váhy a hranice jsou nastavitelné po třídách, mění je jen administrátor). Návrh je ve výchozím stavu
  * VYPNUTÝ a zapíná se po třídách. Žák vidí řetězec důkazů vždy (je-li hodnocení ve třídě zapnuté), známku až po převzetí
  * učitelem (g66_accept). Do návrhu jdou jen zdroje z G66_SOURCES (whitelist): sumativní testy, zvládnutí kompetencí
- * (jen důkazy typu test / project / lab) a hodnocení projektů v65. Hry, aréna, ekonomika ani odměny se nepočítají.
+ * (jen důkazy typu test / project / lab) a hodnocení projektů v65. v72.1: exit tickety jdou do části „sumativní testy“ jen v režimu
+ * „podklad ke známce“, který volí učitel třídy (teacher_prefs_v72_1.php); ve výchozím režimu „jen zpětná vazba“ se nepočítají. Hry, aréna, ekonomika ani odměny se nepočítají.
  * Návrh i převzetí se ukládají do storage/assessment_v66/ (nastavení, převzetí s hashem vzorce a učitele, cache třídy).
  */
 
@@ -199,6 +201,9 @@ function g66_part_summative(string $classId, string $studentKey, ?string $sid): 
         $scores[] = $pct;
         $chain[] = ['source' => 'summative_test', 'ref' => $testId, 'label' => a66_test_label($testId), 'score' => round($pct / 100, 3), 'at' => $at, 'evidence' => []];
     }
+    // v72.1: exit tickety v režimu „podklad ke známce“ = jedna položka sumativních testů (váhy 40/40/20 beze změny).
+    $exit = tp721_exit_graded_part($classId, $studentKey);
+    if ($exit !== null) { $scores[] = $exit['pct']; $chain[] = $exit['chain']; }
     return ['pct' => $scores === [] ? null : round(array_sum($scores) / count($scores), 2), 'n' => count($scores), 'chain' => $chain];
 }
 

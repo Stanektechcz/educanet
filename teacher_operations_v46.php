@@ -112,6 +112,9 @@ function teacher_action_permission_prefixes(): array
         'teacher68_'=>'view',
         // v72 · schvalování obsahu lekcí (lc72_approve / lc72_return) = správa obsahu (asistent jen čte).
         'lc72_'=>'content.manage',
+        // v72.1 · nastavení výuky: vlastní volba jmen žáků smí každá role (view), režim exit ticketu třídy = správa obsahu (asistent jen čte).
+        // Vazba na ŠVP (lc72_svp_approve / lc72_svp_return) spadá pod prefix lc72_ výše.
+        'tp721_self_'=>'view','tp721_class_'=>'content.manage',
     ];
 }
 function teacher_action_permission(string $action): ?string

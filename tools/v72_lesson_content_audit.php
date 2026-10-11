@@ -173,10 +173,10 @@ foreach ($rawOv as $c => $rows) {
         foreach ($mm[1] as $dom) if (!in_array(rtrim($dom, '.'), ['example.com', '10.0.0.10'], true)) $textBad[] = $c . ' L' . $n . ' e-mail ' . $dom;
     }
 }
-$check('domácí příprava: jedna položka „Volitelné: …“, optional, 1–' . LC72_HOMEWORK_MAX_MIN . ' min (rozhodnutí školy čeká – výchozí limit)' . ($hwBad ? ' [' . implode(', ', array_slice($hwBad, 0, 5)) . ']' : ''), $hwBad === [] && LC72_HOMEWORK_OPTIONAL === true);
+$check('domácí příprava: jedna položka „Volitelné: …“, optional, 1–' . LC72_HOMEWORK_MAX_MIN . ' min (v72.1: dobrovolná – rozhodnutí školy; text obsahu beze změny kvůli otisku schválení)' . ($hwBad ? ' [' . implode(', ', array_slice($hwBad, 0, 5)) . ']' : ''), $hwBad === [] && LC72_HOMEWORK_OPTIONAL === true);
 $check('kompetence: pilot 1.A/3.A jen id z katalogu v62 (úroveň 1–4, exit ticket s kompetencí), 2.A/4.A bez katalogu (v75) jen s popisem' . ($compBad ? ' [' . implode(', ', array_slice($compBad, 0, 5)) . ']' : ''), $compBad === []);
-$check('obsah: ŠVP zůstává „' . LC72_SVP_DEFAULT . '“ (žádné vymyšlené kódy), žádné externí URL (jen hosté labu: localhost, intranet.skola.test, 10.0.0.x), odkazy do materials/ ani na AI prompty, e-maily jen example.com' . ($textBad ? ' [' . implode(', ', array_slice($textBad, 0, 5)) . ']' : ''),
-    $textBad === [] && array_reduce($all, static fn(bool $ok, array $l): bool => $ok && empty($l['curriculum']['svp']), true) && LC72_LINK_AI_PROMPTS === false);
+$check('obsah: overlay nenese ŠVP (v72.1: vazba je jen v svp_v72_map.php z dokumentu školy, každá lekce ji má jako návrh), žádné externí URL (jen hosté labu: localhost, intranet.skola.test, 10.0.0.x), odkazy do materials/ ani na AI prompty, e-maily jen example.com' . ($textBad ? ' [' . implode(', ', array_slice($textBad, 0, 5)) . ']' : ''),
+    $textBad === [] && array_reduce($all, static fn(bool $ok, array $l): bool => $ok && is_array($l['curriculum']['svp'] ?? null) && ($l['curriculum']['svp']['status'] ?? '') === 'navrh' && ($l['curriculum']['svp']['outcomes'] ?? []) !== [], true) && LC72_LINK_AI_PROMPTS === true);
 
 // ---------------------------------------------------------------- 6) technická fakta v simulátoru
 $simTotal = 0;

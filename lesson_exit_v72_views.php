@@ -5,8 +5,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 
 /**
  * EDUCANET v72 · vykreslení exit ticketu a domácí přípravy.
- *   - žák (lekce v56): lx72_render_student_block – cíl hodiny, exit ticket (formulář bez JS, akce lx72_answer s CSRF)
- *     a volitelná domácí příprava; jen u schválené lekce. UI přes tr() (katalog lang/<en|uk>/ui/lesson_v72.php),
+ *   - žák (lekce v56): lx72_render_student_block – cíl hodiny, exit ticket (formulář bez JS, akce lx72_answer s CSRF;
+ *     v72.1 s viditelným režimem „jen zpětná vazba“ / „podklad ke známce“) a dobrovolná domácí příprava; jen u schválené lekce. UI přes tr() (katalog lang/<en|uk>/ui/lesson_v72.php),
  *     výukový obsah zůstává česky v kontejneru s edu_content_lang_attr().
  *   - učitel (Dnešní hodina v71): lx72_teacher_card_html – souhrn bez jmen (cockpit je vždy česky).
  * Každý výstup přes e(); žádné innerHTML ani data žáka v URL.
@@ -29,7 +29,7 @@ function lx72_render_student_block(string $classId, int $lessonNo): void
     $criteria = array_values(array_filter(array_map(static fn($c): string => trim((string)$c), (array)($goal['success_criteria'] ?? [])), static fn(string $c): bool => $c !== ''));
     $ticket = lx72_ticket($classId, $lessonNo);
     $homework = lx72_homework($classId, $lessonNo);
-    echo '<link rel="stylesheet" href="' . e(function_exists('asset_url') ? asset_url('assets/lesson-v72.css?v=72') : 'assets/lesson-v72.css?v=72') . '">';
+    echo '<link rel="stylesheet" href="' . e(function_exists('asset_url') ? asset_url('assets/lesson-v72.css?v=72.1') : 'assets/lesson-v72.css?v=72.1') . '">';
     echo '<section class="lx72" aria-labelledby="lx72-goal-h">';
     echo '<h2 id="lx72-goal-h">' . e(tr('Cíl dnešní hodiny')) . '</h2>';
     if (trim((string)($goal['student'] ?? '')) !== '') echo '<p class="lx72-goal"' . edu_content_lang_attr() . '>' . e(trim((string)$goal['student'])) . '</p>';
@@ -41,7 +41,7 @@ function lx72_render_student_block(string $classId, int $lessonNo): void
     echo edu_content_note_html();
     if ($ticket !== null && $studentKey !== '') lx72_render_ticket($classId, $lessonNo, $studentKey, $ticket);
     if ($homework !== []) {
-        echo '<div class="lx72-card lx72-homework"><h3>' . e(tr('Domácí příprava (volitelné)')) . '</h3>'
+        echo '<div class="lx72-card lx72-homework"><h3>' . e(tr('Domácí příprava (dobrovolné)')) . '</h3>'
             . '<p class="lx72-muted">' . e(tr('Dobrovolné – nezapočítává se do hodnocení.')) . '</p><ul class="lx72-list">';
         foreach ($homework as $h) {
             echo '<li><span' . edu_content_lang_attr() . '>' . e($h['text']) . '</span>'
@@ -58,9 +58,15 @@ function lx72_render_ticket(string $classId, int $lessonNo, string $studentKey, 
     $vi = lx72_variant_index($studentKey, $lessonNo, count($ticket['variants']));
     $variant = $ticket['variants'][$vi];
     $answer = lx72_answer_of($classId, $studentKey, $lessonNo);
+    // v72.1: režim volí učitel třídy; žák ho vidí před odpovědí, po odpovědi platí režim uložený u odpovědi.
+    $answered = is_array($answer) && (int)($answer['v'] ?? -1) === $vi;
+    $graded = $answered ? (string)($answer['m'] ?? 'f') === 'g' : (function_exists('tp721_exit_mode') && tp721_exit_mode($classId) === 'grade');
     echo '<div class="lx72-card lx72-exit" id="exit-ticket"><h3>' . e(tr('Exit ticket')) . '</h3>'
-        . '<p class="lx72-muted">' . e(tr('Jedna rychlá otázka na konec hodiny. Nehodnotí se – pomůže učiteli poznat, co zopakovat.')) . '</p>';
-    if (is_array($answer) && (int)($answer['v'] ?? -1) === $vi) {
+        . '<p class="lx72-mode"><span class="lx72-chip">' . e($graded ? tr('Režim: podklad ke známce') : tr('Režim: jen zpětná vazba')) . '</span></p>'
+        . '<p class="lx72-muted">' . e($graded
+            ? tr('Jedna rychlá otázka na konec hodiny. Učitel ji tentokrát použije jako podklad ke známce – rozmysli si odpověď, poslat ji jde jen jednou.')
+            : tr('Jedna rychlá otázka na konec hodiny. Nehodnotí se – pomůže učiteli poznat, co zopakovat.')) . '</p>';
+    if ($answered) {
         $chosen = (string)($variant['options'][(int)($answer['c'] ?? -1)] ?? '');
         $ok = (int)($answer['ok'] ?? 0) === 1;
         echo '<p class="lx72-question"' . edu_content_lang_attr() . '>' . e($variant['question']) . '</p>'
@@ -98,8 +104,9 @@ function lx72_teacher_card_html(array $m): string
     }
     if (!$sum['has_ticket']) return '';
     $link = function_exists('lt70_tab_link') ? lt70_tab_link('schvalovani', $classId, 'Otevřít schvalování lekce ' . $n . ' →', ['lesson' => (string)$n]) : '';
+    if (function_exists('lt70_tab_link') && function_exists('c70_tab_visible') && c70_tab_visible('nastaveni_vyuky')) $link .= ' · ' . lt70_tab_link('nastaveni_vyuky', $classId, 'Režim exit ticketu →');   // v72.1
     $html = '<section class="c70-card" aria-labelledby="lx72-sum"><h2 id="lx72-sum">Exit ticket lekce ' . $n . '</h2>'
-        . '<p><span class="c70-chip">' . e($status['label']) . '</span> <span class="c70-chip">formativní – nevstupuje do hodnocení</span></p>';
+        . '<p><span class="c70-chip">' . e($status['label']) . '</span> <span class="c70-chip">' . e(($sum['mode'] ?? 'feedback') === 'grade' ? 'režim: podklad ke známce (návrh hodnocení v66)' : 'režim: jen zpětná vazba – nevstupuje do hodnocení') . '</span></p>';
     if (!$sum['approved']) {
         return $html . '<p class="c70-muted">Žáci exit ticket ani domácí přípravu zatím nevidí – lekce čeká na schválení. Do té doby vidí původní obsah lekce.</p>'
             . ($link !== '' ? '<p>' . $link . '</p>' : '') . '</section>';

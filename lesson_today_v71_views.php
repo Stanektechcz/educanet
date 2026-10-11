@@ -213,8 +213,10 @@ function lt71_students_html(array $m): string
         . '<table class="c70-table"><caption class="c70-sr">Postup žáků v lekci ' . $n . '</caption><thead><tr><th scope="col">Žák</th><th scope="col">Lekce ' . $n . '</th><th scope="col">Minulá lekce</th>'
         . '<th scope="col">Kompetence</th><th scope="col">Úkoly</th><th scope="col">V hodině</th><th scope="col">Signály</th></tr></thead><tbody>';
     $detail = c70_tab_visible('student360');
-    foreach ($rows as $r) {
-        $name = $detail ? '<a href="' . e('?tab=student360&class=' . rawurlencode($m['class']) . '&student=' . rawurlencode($r['key'])) . '">' . e($r['label']) . '</a>' : e($r['label']);
+    $hideNames = function_exists('tp721_names_hidden') && tp721_names_hidden();   // v72.1: osobní volba učitele (Nastavení výuky)
+    foreach (array_values($rows) as $i => $r) {
+        $shown = function_exists('tp721_student_label') ? tp721_student_label((string)$r['label'], $i + 1, $hideNames) : (string)$r['label'];
+        $name = $detail ? '<a href="' . e('?tab=student360&class=' . rawurlencode($m['class']) . '&student=' . rawurlencode($r['key'])) . '">' . e($shown) . '</a>' : e($shown);
         $mastery = $r['mastered'] === null ? '—' : (int)$r['mastered'] . ' / ' . (int)$r['mastery_total'];
         $signal = !empty($r['idle']) ? '<span class="c70-chip">zatím bez aktivity</span>' : ($r['reasons'] === [] ? '<span class="c70-ok">v pořádku</span>' : e(implode(' · ', $r['reasons'])));
         $html .= '<tr' . ($r['behind'] ? ' class="is-behind"' : '') . '><th scope="row" data-label="Žák">' . $name . '</th>'

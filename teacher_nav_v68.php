@@ -18,7 +18,7 @@ require_once __DIR__ . '/ui_v67.php';
 /** Záložky cockpitu s tmavým režimem (po převodu CSS na tokeny a kontrole kontrastu; ostatní zůstanou světlé). */
 const UI68_TEACHER_DARK_TABS = [
     'attention', 'hodina', 'prehled', 'hlaseni', 'student360', 'class_results', 'analytics', 'interventions', 'communications', 'intake', 'pristupy', 'groups',
-    'cesty', 'schvalovani', 'curriculum', 'teach', 'session', 'calendar', 'authoring', 'editor', 'labdata',
+    'cesty', 'schvalovani', 'nastaveni_vyuky', 'curriculum', 'teach', 'session', 'calendar', 'authoring', 'editor', 'labdata',
     'hodnoceni66', 'kompetence', 'projekty65', 'grade', 'projekty', 'workspace', 'history',
     'arena', 'roboti', 'hry', 'ctf', 'incidenty', 'souboje', 'ekonomika', 'obchod',
     'sprava_prehled', 'ucitele', 'identita', 'provoz', 'quality', 'ops_audit', 'team_admin', 'demo_accounts', 'overview', 'reports', 'ucet', 'sekce',
@@ -60,6 +60,7 @@ function teacher68_tab_map(): array
         'groups' => $t('trida', 'Týmy', 'Členství, lobby a role v týmech'),
         'cesty' => $t('vyuka', 'Výukové cesty', 'Přiřazení cest, trychtýř kroků a kalibrace'),
         'schvalovani' => $t('vyuka', 'Schvalování lekcí', 'Návrhy obsahu, náhled a schválení'),   // v72
+        'nastaveni_vyuky' => $t('vyuka', 'Nastavení výuky', 'Jména žáků a režim exit ticketu'),   // v72.1
         'curriculum' => $t('vyuka', 'Plán a kurikulum', 'Lekce, checklist a příprava'),
         'teach' => $t('vyuka', 'Režim hodiny', 'Projekce, simulace a živá výuka'),
         'session' => $t('vyuka', 'Kód hodiny', 'Kód pro žáky, příchody a odevzdání', false),

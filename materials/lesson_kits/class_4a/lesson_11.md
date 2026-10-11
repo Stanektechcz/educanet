@@ -110,60 +110,53 @@ Rozlišit blokové zařízení, filesystem, mount point, kapacitu a inode probl�
 
 ## 6. AI prompty pro studenta
 
-### Vysvětli mi to jednoduše
+> **Dobrovolné procvičení s AI – než začneš:**
+> - Použij jen AI nástroj, který povolila škola nebo tvůj učitel.
+> - Nevkládej osobní údaje – své ani cizí: jméno, e-mail, telefon, adresu, fotky ani třídu.
+> - Nevkládej přihlašovací údaje školy: hesla, jednorázové kódy, kód hodiny ani odkazy z EDUCANETu.
+> - Výstup AI vždy ověř (v simulátoru Linux Labu, v zápisu z hodiny nebo u učitele). AI se plete i s jistotou.
+> - Když ti AI pomohla s odevzdanou prací, napiš to: jaký nástroj, k čemu a co jsi upravil(a) sám/sama.
+
+### 1. Vysvětli mi jednoduše: Storage a filesystems
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 11 · Storage: disk, filesystem, mount a „disk full“ incident v předmětu operační systémy a počítačové sítě. Cíl lekce: Rozlišit blokové zařízení, filesystem, mount point, kapacitu a inode problém a bezpečně diagnostikovat nedostatek místa.. Klíčová témata: Storage a filesystems.
-Vysvětli mi princip co nejjednodušeji v 5–7 větách. Použij jeden konkrétní příklad a na konci mi polož jednu kontrolní otázku. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Učím se téma „Storage a filesystems“ (lekce „Storage: disk, filesystem, mount a „disk full“ incident“, obor Linux a počítačové sítě). Z hodiny vím: Provozní incident „disk full“ může být kapacita, inodes, špatný mount nebo nekontrolovaný růst dat.
+Vysvětli mi ho v 5–7 větách pro začátečníka a přidej jeden konkrétní příklad ze správy malé firemní nebo školní sítě. Na konci mi polož jednu kontrolní otázku a počkej na moji odpověď.
 ```
 
-### Přirovnání + hranice přirovnání
+### 2. Přirovnání a jeho hranice: Storage a filesystems
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 11 · Storage: disk, filesystem, mount a „disk full“ incident v předmětu operační systémy a počítačové sítě. Cíl lekce: Rozlišit blokové zařízení, filesystem, mount point, kapacitu a inode problém a bezpečně diagnostikovat nedostatek místa.. Klíčová témata: Storage a filesystems.
-Vysvětli téma pomocí přirovnání z běžného života. Pak výslovně napiš, kde přirovnání přestává platit, abych si nevytvořil chybný mentální model. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+V lekci „Storage: disk, filesystem, mount a „disk full“ incident“ jsme probírali téma „Storage a filesystems“. Vysvětli mi ho pomocí přirovnání z běžného života.
+Potom napiš, ve kterém místě přirovnání přestává platit, abych si nevytvořil(a) chybnou představu. Odpověz nejvýš na 10 řádků.
 ```
 
-### Sokratický tutor
+### 3. Sokratický tutor k cíli lekce
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 11 · Storage: disk, filesystem, mount a „disk full“ incident v předmětu operační systémy a počítačové sítě. Cíl lekce: Rozlišit blokové zařízení, filesystem, mount point, kapacitu a inode problém a bezpečně diagnostikovat nedostatek místa.. Klíčová témata: Storage a filesystems.
-Buď můj sokratický tutor. Nepřednášej. Ptej se vždy jen na jednu otázku, vycházej z mé odpovědi a veď mě k tomu, abych princip odvodil sám. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Cíl lekce „Storage: disk, filesystem, mount a „disk full“ incident“: Rozlišit blokové zařízení, filesystem, mount point, kapacitu a inode problém a bezpečně diagnostikovat nedostatek místa.
+Buď můj sokratický tutor. Nevysvětluj hned celé řešení – ptej se vždy jen na jednu otázku a podle mé odpovědi mě veď dál, dokud cíl nedokážu vysvětlit vlastními slovy.
 ```
 
-### Najdi díru v mém postupu
+### 4. Zkontroluj můj postup
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 11 · Storage: disk, filesystem, mount a „disk full“ incident v předmětu operační systémy a počítačové sítě. Cíl lekce: Rozlišit blokové zařízení, filesystem, mount point, kapacitu a inode problém a bezpečně diagnostikovat nedostatek místa.. Klíčová témata: Storage a filesystems.
-Pošlu ti svůj postup/řešení. Najdi první místo, kde můj závěr není podložený důkazem nebo kde měním příliš mnoho věcí najednou. Neopravuj vše za mě; polož otázku, která mě dovede k lepšímu testu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Řeším úkol z lekce „Storage: disk, filesystem, mount a „disk full“ incident“: Storage layers: Device → partition/LV → filesystem → mount point. Rozliš kapacitu a inode.
+Pošlu ti svůj postup a výpis ze simulátoru Linux Labu (bez skutečných IP adres, jmen počítačů a hesel). Najdi první krok, který není podložený důkazem, a polož mi otázku, která mě dovede k lepšímu ověření. Neopravuj celý postup za mě.
 ```
 
-### Vytvoř mi nový transfer úkol
+### 5. Nový procvičovací úkol
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 11 · Storage: disk, filesystem, mount a „disk full“ incident v předmětu operační systémy a počítačové sítě. Cíl lekce: Rozlišit blokové zařízení, filesystem, mount point, kapacitu a inode problém a bezpečně diagnostikovat nedostatek místa.. Klíčová témata: Storage a filesystems.
-Vytvoř jeden nový realistický problém, který používá stejný princip, ale v jiném kontextu. Nedávej řešení. Nejdřív chtěj moji hypotézu, potom důkaz a až nakonec mi dej zpětnou vazbu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Vymysli mi jeden nový realistický úkol na stejný princip jako lekce „Storage: disk, filesystem, mount a „disk full“ incident“ („Storage a filesystems“), ale v jiné situaci – jen s adresami z dokumentačních nebo privátních rozsahů (např. 192.0.2.0/24, 10.0.0.0/8).
+Nedávej mi řešení. Nejdřív chtěj můj odhad, pak postup a až nakonec mi dej zpětnou vazbu.
 ```
 
-### Vyzkoušej mě ústně
+### 6. Vyzkoušej mě
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 11 · Storage: disk, filesystem, mount a „disk full“ incident v předmětu operační systémy a počítačové sítě. Cíl lekce: Rozlišit blokové zařízení, filesystem, mount point, kapacitu a inode problém a bezpečně diagnostikovat nedostatek místa.. Klíčová témata: Storage a filesystems.
-Simuluj ústní zkoušení. Polož 5 otázek od základní po aplikační. Po každé mé odpovědi stručně řekni, co bylo přesné, co chybělo, a polož navazující otázku. Známku navrhni až na konci. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
-```
-
-### Praktická zkouška nanečisto
-
-```text
-Jsem student EDUCANETu. Probírám Lekce 11 · Storage: disk, filesystem, mount a „disk full“ incident v předmětu operační systémy a počítačové sítě. Cíl lekce: Rozlišit blokové zařízení, filesystem, mount point, kapacitu a inode problém a bezpečně diagnostikovat nedostatek místa.. Klíčová témata: Storage a filesystems.
-Připrav krátkou praktickou zkoušku nanečisto na 15–20 minut. Dej mi realistické zadání, success criteria a 3 kontrolní body. Během řešení mi neposkytuj hotový postup; reaguj jen na konkrétní evidence, které ti pošlu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
-```
-
-### Zkontroluj moje vysvětlení
-
-```text
-Jsem student EDUCANETu. Probírám Lekce 11 · Storage: disk, filesystem, mount a „disk full“ incident v předmětu operační systémy a počítačové sítě. Cíl lekce: Rozlišit blokové zařízení, filesystem, mount point, kapacitu a inode problém a bezpečně diagnostikovat nedostatek místa.. Klíčová témata: Storage a filesystems.
-Pošlu ti své vysvětlení tématu. Ohodnoť pouze: správnost mentálního modelu, práci s důkazem, schopnost přenést princip a jednu největší mezeru. Pak mi dej jediný další krok k opravě. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Opakuji si lekci „Storage: disk, filesystem, mount a „disk full“ incident“. Polož mi 5 otázek k tématům „Storage a filesystems“ od základní po praktickou. Ptej se po jedné a po každé odpovědi řekni, co bylo přesné a co chybělo.
+Nejde o známku ani o školní test – nehledej a neprozrazuj jeho odpovědi.
 ```
 
 ## 7. Zkouška nanečisto

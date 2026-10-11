@@ -104,6 +104,7 @@ function v56_render_lesson(string $classId, array $module, array $bundle, ?array
       </section>
 
       <?php if (function_exists('lx72_render_student_block')) lx72_render_student_block($classId, $lessonNo); /* v72: cíl, exit ticket a volitelná domácí příprava – jen schválená lekce */ ?>
+      <?php if (function_exists('aip721_render_student_block')) aip721_render_student_block($classId, $lessonNo); /* v72.1: dobrovolné AI prompty s upozorněním na soukromí */ ?>
 
       <?php if ($state['complete'] && $isToday): ?>
         <?php v55_render_bonus($classId, $module, $session, $window, v55_bonus_get((string)$session['id'], $studentKey), (string)$session['id']); ?>

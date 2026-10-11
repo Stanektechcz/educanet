@@ -15,6 +15,8 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  * témata bez materiálu, chybějící ŠVP, materiály bez metadat, šablonové MD v materials/, karty dnů, T-14, stav cache.
  * v72: úplnost vlny 1 (L5–L16), stav schválení (z --storage, jinak vše „návrh“), T-14 podle schválení, exit ticket
  * (počet odpovědí a % správně po kompetencích – jen souhrnné počty z --storage, žádné hashe ani jména).
+ * v72.1: vazba na ŠVP (s vazbou / chybí, stav schválení z --storage, výsledky jiného ročníku), AI prompty v lesson kitech,
+ * exit ticket v režimu „podklad ke známce“ (jen počet odpovědí).
  */
 
 error_reporting(E_ALL);
@@ -33,7 +35,7 @@ $_ENV['EDUCANET_STORAGE_DIR'] = $tmp . '/storage';
 putenv('EDUCANET_LM71_CACHE_DIR=' . $tmp . '/lesson_model');
 
 require_once $ROOT . '/bootstrap.php';
-foreach (['tutorial_v52.php', 'learning_v56.php', 'lesson_model_v71.php', 'calendar_days_v71.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['tutorial_v52.php', 'learning_v56.php', 'lesson_model_v71.php', 'calendar_days_v71.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php', 'svp_v72.php', 'ai_prompts_v72_1.php'] as $lib) require_once $ROOT . '/' . $lib;
 
 $year = require $ROOT . '/school_year.php';
 $lessons = [];
@@ -228,6 +230,29 @@ foreach (LM71_CLASSES as $c) {
 $wave['prumer_poli'] = round($wave['prumer_poli'] / max(1, $wave['lekci']), 2);
 ksort($exitStats['kompetence']);
 $cache = lm71_cache_status($ROOT . '/cache/lesson_model');
+// v72.1 · vazba na ŠVP a AI prompty
+$svpRecords = $storageArg !== null ? (array)($readStore($storeDir . '/lesson_approvals_v72.json.php')['svp'] ?? []) : [];
+$svp = ['s_vazbou' => 0, 'chybi' => 0, 'navrh' => 0, 'schvaleno' => 0, 'vraceno' => 0, 'zmeneno' => 0, 'vysledku_pouzito' => 0, 'vysledku_v_katalogu' => count(svp72_outcomes()),
+    'vazeb_jiny_rocnik' => 0, 'zdroj' => SVP72_SOURCE['title'], 'overeno' => SVP72_SOURCE['verified_at']];
+$svpUsed = [];
+$aip = ['kitu' => 0, 's_prompty' => 0, 'promptu' => 0, 's_upozornenim' => 0, 'duplicitnich_promptu' => 0, 'zdvojenych_tecek' => 0];
+$aipSeen = [];
+foreach (LM71_CLASSES as $c) for ($n = 1; $n <= LM71_LESSONS; $n++) {
+    $st = svp72_status($c, $n, $svpRecords)['status'];
+    $svp[$st === 'chybi' ? 'chybi' : 's_vazbou']++;
+    if ($st !== 'chybi') $svp[$st]++;
+    foreach ((array)(svp72_curriculum($c, $n)['outcomes'] ?? []) as $o) { $svpUsed[$o['id']] = true; $svp['vazeb_jiny_rocnik'] += (int)$o['year'] !== (SVP72_CLASS_YEAR[$c] ?? 0) ? 1 : 0; }
+    $aip['kitu']++;
+    $md = (string)@file_get_contents(aip721_kit_path($c, $n));
+    $prompts = aip721_parse($md);
+    $aip['s_prompty'] += $prompts !== [] ? 1 : 0;
+    $aip['promptu'] += count($prompts);
+    $aip['s_upozornenim'] += str_contains($md, 'Nevkládej osobní údaje') && str_contains($md, 'přihlašovací údaje školy') ? 1 : 0;
+    foreach ($prompts as $p) { $k = sha1($p['text']); $aip['duplicitnich_promptu'] += isset($aipSeen[$k]) ? 1 : 0; $aipSeen[$k] = true; $aip['zdvojenych_tecek'] += preg_match('/(?<!\.)\.\.(?!\.)/u', $p['text']); }
+}
+$svp['vysledku_pouzito'] = count($svpUsed);
+$exitGraded = 0;
+if ($storageArg !== null) foreach (LM71_CLASSES as $c) foreach ((array)($readStore($storeDir . '/lesson_exit_v72_' . $c . '.json.php')['answers'] ?? []) as $rows) foreach ((array)$rows as $r) $exitGraded += is_array($r) && (string)($r['m'] ?? '') === 'g' ? 1 : 0;
 
 // ------------------------------------------------------------------ výstup
 $report = [
@@ -244,7 +269,8 @@ $report = [
     'chybi_svp' => $svpMissing, 'materials_md' => $mdFamilies,
     'dny_bez_lekce' => ['v_kalendari' => count($calendarDays), 'karet' => $dayCards, 'ocekavano' => count($calendarDays) * count(LM71_CLASSES)],
     't14' => $t14, 'cache' => $cache,
-    'v72_vlna1' => $wave, 'v72_exit_ticket' => $exitStats + ['zdroj' => $storageArg !== null ? 'storage' : 'nezjišťováno (bez --storage)'],
+    'v72_vlna1' => $wave, 'v72_1_svp' => $svp + ['zdroj_stav' => $storageArg !== null ? 'storage' : 'bez --storage (vše návrh)'], 'v72_1_ai_prompty' => $aip,
+    'v72_1_exit_podklad_ke_znamce' => $storageArg !== null ? $exitGraded : null, 'v72_exit_ticket' => $exitStats + ['zdroj' => $storageArg !== null ? 'storage' : 'nezjišťováno (bez --storage)'],
 ];
 $lines = [
     'EDUCANET v71 · report obsahu (' . date('j. n. Y H:i') . ')',
@@ -259,6 +285,10 @@ $lines = [
     'Témata bez materiálu: ' . implode(', ', array_map(static fn(string $c, array $r): string => $c . ' ' . $r['bez_materialu'] . '/' . $r['temat'], array_keys($topicsNoMaterial), $topicsNoMaterial)),
     'Videa učitelů v42: ' . ($teacherVideos === null ? 'nezjišťováno (bez --storage)' : $teacherVideos['celkem'] . ' (bez metadat ' . $teacherVideos['bez_metadat'] . ', http bez TLS ' . $teacherVideos['http_bez_tls'] . ')'),
     'Chybí vazba na ŠVP: ' . $svpMissing . ' lekcí',
+    sprintf('ŠVP (v72.1, %s, ověřeno %s): s vazbou %d, chybí %d · schváleno %d, návrh %d, vráceno %d, změněno %d · výsledků použito %d z %d · vazeb na jiný ročník %d',
+        $svp['zdroj'], $svp['overeno'], $svp['s_vazbou'], $svp['chybi'], $svp['schvaleno'], $svp['navrh'], $svp['vraceno'], $svp['zmeneno'], $svp['vysledku_pouzito'], $svp['vysledku_v_katalogu'], $svp['vazeb_jiny_rocnik']),
+    sprintf('AI prompty (v72.1): kitů %d, s prompty %d, promptů %d, s upozorněním na soukromí %d, duplicitních %d, zdvojených teček %d', $aip['kitu'], $aip['s_prompty'], $aip['promptu'], $aip['s_upozornenim'], $aip['duplicitnich_promptu'], $aip['zdvojenych_tecek']),
+    'Exit ticket v režimu podklad ke známce: ' . ($storageArg === null ? 'nezjišťováno (bez --storage)' : $exitGraded . ' odpovědí'),
     'materials/ MD: ' . implode(' · ', array_map(static fn(string $f, array $r): string => $f . ' ' . $r['souboru'] . ' souborů, šablonový podíl ' . $r['sablonovy_podil_radku'] . ' %, AI prompty ' . $r['se_sekci_ai_prompty'] . ', dupl. otázka ' . $r['s_duplicitni_otazkou'], array_keys($mdFamilies), $mdFamilies)),
     'Dny bez lekce: ' . count($calendarDays) . ' v kalendáři, karet ' . $dayCards . ' z ' . count($calendarDays) * count(LM71_CLASSES),
     'T-14: lekcí v příštích 14 dnech ' . $t14['lekci'] . ', z toho schválené ' . $t14['schvaleno'] . ', ve stavu návrh ' . $t14['navrh'] . ' (žák do schválení vidí původní obsah)',

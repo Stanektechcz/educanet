@@ -28,7 +28,7 @@ function teacher58_modules(): array
             'files' => ['points_v53.php', 'teacher_class_dashboard.php', 'teacher_overview_v61.php', 'competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php',
                 'paths_v63.php', 'paths_v63_class.php', 'cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'calendar_days_v71.php',
                 'lesson_today_v70.php', 'lesson_today_v70_views.php', 'lesson_today_v71_views.php',
-                'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php', 'lesson_exit_v72_views.php'],   // v72: stav schválení a souhrn exit ticketu (jen čtení)
+                'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'lesson_exit_v72_views.php'],   // v72: stav schválení a souhrn exit ticketu (jen čtení); v72.1: jména a režim exit ticketu
             // v71: model lekce lm71 (plán po minutách, poznámky, pracovní list, úplnost) a karty dnů bez lekce; stále jen čtení.
             'css' => ['assets/cockpit-v71.css'],
             'render' => static function (array $m, string $c): void { lt71_render_tab($m, $c); },
@@ -37,10 +37,20 @@ function teacher58_modules(): array
         // politiky v teacher_scope_v59.php (třída povinná a v rozsahu), oprávnění lc72_ = content.manage (asistent jen čte). GET jen ?class= a ?lesson=.
         'schvalovani' => [
             'label' => 'Schvalování lekcí', 'hint' => 'Návrhy obsahu lekcí: náhled, schválení a vrácení', 'group' => 'podpora',
-            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php', 'lesson_approval_v72_views.php'],
+            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php',
+                'svp_v72.php', 'svp_v72_map.php', 'svp_v72_views.php', 'ai_prompts_v72_1.php', 'lesson_approval_v72_views.php'],   // v72.1: vazba na ŠVP + náhled AI promptů
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v72.css'],
-            'post' => ['lc72_' => 'lc72_teacher_handle_post'],
+            'post' => ['lc72_' => 'lc72_teacher_handle_post'],   // v72.1: lc72_svp_approve / lc72_svp_return předává handler do svp72_teacher_handle_post
             'render' => static function (array $m, string $c) use ($csrf): void { lc72_render_tab($m, $c, $csrf()); },
+        ],
+        // v72.1 · Nastavení výuky (rozhodnutí školy 8. 10. 2026): vlastní volba jmen žáků (tp721_self_names, každá role) a režim exit ticketu
+        // po třídách (tp721_class_exit, třída povinná a v rozsahu, content.manage). Exact politiky v teacher_scope_v59.php; GET jen ?class=.
+        'nastaveni_vyuky' => [
+            'label' => 'Nastavení výuky', 'hint' => 'Jména žáků a režim exit ticketu', 'group' => 'podpora',
+            'files' => ['cockpit_v70.php', 'grading_v66.php', 'teacher_prefs_v72_1.php', 'teacher_prefs_v72_1_views.php'],
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v72.css'],
+            'post' => ['tp721_' => 'tp721_teacher_handle_post'],
+            'render' => static function (array $m, string $c) use ($csrf): void { tp721_render_tab($m, $c, $csrf()); },
         ],
         // v70 · Přehled správy: účty a role, pokrytí tříd, provoz, kvalita dat a doporučení – jen administrátor, jen čtení.
         'sprava_prehled' => [

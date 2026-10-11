@@ -129,60 +129,53 @@ Převést základní znalost typografie a gridu do čitelného editorial layoutu
 
 ## 6. AI prompty pro studenta
 
-### Vysvětli mi to jednoduše
+> **Dobrovolné procvičení s AI – než začneš:**
+> - Použij jen AI nástroj, který povolila škola nebo tvůj učitel.
+> - Nevkládej osobní údaje – své ani cizí: jméno, e-mail, telefon, adresu, fotky ani třídu.
+> - Nevkládej přihlašovací údaje školy: hesla, jednorázové kódy, kód hodiny ani odkazy z EDUCANETu.
+> - Výstup AI vždy ověř (v náhledu na mobilu i počítači, v zápisu z hodiny nebo u učitele). AI se plete i s jistotou.
+> - Když ti AI pomohla s odevzdanou prací, napiš to: jaký nástroj, k čemu a co jsi upravil(a) sám/sama.
+
+### 1. Vysvětli mi jednoduše: Typografie I · Škála, čitelnost a dlouhý text
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 8 · Typografie I + Layout I v předmětu grafika a webdesign. Cíl lekce: Převést základní znalost typografie a gridu do čitelného editorial layoutu s jasnou škálou, rytmem a whitespace.. Klíčová témata: Typografie I · Škála, čitelnost a dlouhý text, Layout I · Rytmus, whitespace a baseline.
-Vysvětli mi princip co nejjednodušeji v 5–7 větách. Použij jeden konkrétní příklad a na konci mi polož jednu kontrolní otázku. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Učím se téma „Typografie I · Škála, čitelnost a dlouhý text“ (lekce „Typografie I + Layout I“, obor grafika a webdesign). Z hodiny vím: Navazuje na základní typografii: vytvoř jasnou škálu nadpisů a textu, nastav délku řádku a rytmus odstavců tak, aby se obsah četl bez námahy.
+Vysvětli mi ho v 5–7 větách pro začátečníka a přidej jeden konkrétní příklad z plakátu nebo webové stránky. Na konci mi polož jednu kontrolní otázku a počkej na moji odpověď.
 ```
 
-### Přirovnání + hranice přirovnání
+### 2. Přirovnání a jeho hranice: Layout I · Rytmus, whitespace a baseline
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 8 · Typografie I + Layout I v předmětu grafika a webdesign. Cíl lekce: Převést základní znalost typografie a gridu do čitelného editorial layoutu s jasnou škálou, rytmem a whitespace.. Klíčová témata: Typografie I · Škála, čitelnost a dlouhý text, Layout I · Rytmus, whitespace a baseline.
-Vysvětli téma pomocí přirovnání z běžného života. Pak výslovně napiš, kde přirovnání přestává platit, abych si nevytvořil chybný mentální model. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+V lekci „Typografie I + Layout I“ jsme probírali téma „Layout I · Rytmus, whitespace a baseline“. Vysvětli mi ho pomocí přirovnání z běžného života. Z hodiny vím: Rozšiř grid o vertikální rytmus: nauč se používat whitespace jako aktivní nástroj a skládat prvky do předvídatelného systému.
+Potom napiš, ve kterém místě přirovnání přestává platit, abych si nevytvořil(a) chybnou představu. Odpověz nejvýš na 10 řádků.
 ```
 
-### Sokratický tutor
+### 3. Sokratický tutor k cíli lekce
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 8 · Typografie I + Layout I v předmětu grafika a webdesign. Cíl lekce: Převést základní znalost typografie a gridu do čitelného editorial layoutu s jasnou škálou, rytmem a whitespace.. Klíčová témata: Typografie I · Škála, čitelnost a dlouhý text, Layout I · Rytmus, whitespace a baseline.
-Buď můj sokratický tutor. Nepřednášej. Ptej se vždy jen na jednu otázku, vycházej z mé odpovědi a veď mě k tomu, abych princip odvodil sám. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Cíl lekce „Typografie I + Layout I“: Převést základní znalost typografie a gridu do čitelného editorial layoutu s jasnou škálou, rytmem a whitespace.
+Buď můj sokratický tutor. Nevysvětluj hned celé řešení – ptej se vždy jen na jednu otázku a podle mé odpovědi mě veď dál, dokud cíl nedokážu vysvětlit vlastními slovy.
 ```
 
-### Najdi díru v mém postupu
+### 4. Zkontroluj můj postup
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 8 · Typografie I + Layout I v předmětu grafika a webdesign. Cíl lekce: Převést základní znalost typografie a gridu do čitelného editorial layoutu s jasnou škálou, rytmem a whitespace.. Klíčová témata: Typografie I · Škála, čitelnost a dlouhý text, Layout I · Rytmus, whitespace a baseline.
-Pošlu ti svůj postup/řešení. Najdi první místo, kde můj závěr není podložený důkazem nebo kde měním příliš mnoho věcí najednou. Neopravuj vše za mě; polož otázku, která mě dovede k lepšímu testu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Řeším úkol z lekce „Typografie I + Layout I“: Typografické role: Dokonči Type Scale Lab. Pojmenuj 4 textové role.
+Popíšu ti slovy svůj návrh (rozvržení, písmo, barvy, texty) – bez fotek lidí a bez osobních údajů. Najdi jedno nejslabší místo vzhledem k cíli lekce a zeptej se mě, jak bych ho ověřil(a). Nepředělávej návrh za mě.
 ```
 
-### Vytvoř mi nový transfer úkol
+### 5. Nový procvičovací úkol
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 8 · Typografie I + Layout I v předmětu grafika a webdesign. Cíl lekce: Převést základní znalost typografie a gridu do čitelného editorial layoutu s jasnou škálou, rytmem a whitespace.. Klíčová témata: Typografie I · Škála, čitelnost a dlouhý text, Layout I · Rytmus, whitespace a baseline.
-Vytvoř jeden nový realistický problém, který používá stejný princip, ale v jiném kontextu. Nedávej řešení. Nejdřív chtěj moji hypotézu, potom důkaz a až nakonec mi dej zpětnou vazbu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Vymysli mi jeden nový realistický úkol na stejný princip jako lekce „Typografie I + Layout I“ („Typografie I · Škála, čitelnost a dlouhý text“, „Layout I · Rytmus, whitespace a baseline“), ale v jiné situaci – pro vymyšlenou firmu nebo akci.
+Nedávej mi řešení. Nejdřív chtěj můj odhad, pak postup a až nakonec mi dej zpětnou vazbu.
 ```
 
-### Vyzkoušej mě ústně
+### 6. Vyzkoušej mě
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 8 · Typografie I + Layout I v předmětu grafika a webdesign. Cíl lekce: Převést základní znalost typografie a gridu do čitelného editorial layoutu s jasnou škálou, rytmem a whitespace.. Klíčová témata: Typografie I · Škála, čitelnost a dlouhý text, Layout I · Rytmus, whitespace a baseline.
-Simuluj ústní zkoušení. Polož 5 otázek od základní po aplikační. Po každé mé odpovědi stručně řekni, co bylo přesné, co chybělo, a polož navazující otázku. Známku navrhni až na konci. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
-```
-
-### Praktická zkouška nanečisto
-
-```text
-Jsem student EDUCANETu. Probírám Lekce 8 · Typografie I + Layout I v předmětu grafika a webdesign. Cíl lekce: Převést základní znalost typografie a gridu do čitelného editorial layoutu s jasnou škálou, rytmem a whitespace.. Klíčová témata: Typografie I · Škála, čitelnost a dlouhý text, Layout I · Rytmus, whitespace a baseline.
-Připrav krátkou praktickou zkoušku nanečisto na 15–20 minut. Dej mi realistické zadání, success criteria a 3 kontrolní body. Během řešení mi neposkytuj hotový postup; reaguj jen na konkrétní evidence, které ti pošlu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
-```
-
-### Zkontroluj moje vysvětlení
-
-```text
-Jsem student EDUCANETu. Probírám Lekce 8 · Typografie I + Layout I v předmětu grafika a webdesign. Cíl lekce: Převést základní znalost typografie a gridu do čitelného editorial layoutu s jasnou škálou, rytmem a whitespace.. Klíčová témata: Typografie I · Škála, čitelnost a dlouhý text, Layout I · Rytmus, whitespace a baseline.
-Pošlu ti své vysvětlení tématu. Ohodnoť pouze: správnost mentálního modelu, práci s důkazem, schopnost přenést princip a jednu největší mezeru. Pak mi dej jediný další krok k opravě. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Opakuji si lekci „Typografie I + Layout I“. Polož mi 5 otázek k tématům „Typografie I · Škála, čitelnost a dlouhý text“, „Layout I · Rytmus, whitespace a baseline“ od základní po praktickou. Ptej se po jedné a po každé odpovědi řekni, co bylo přesné a co chybělo.
+Nejde o známku ani o školní test – nehledej a neprozrazuj jeho odpovědi.
 ```
 
 ## 7. Zkouška nanečisto

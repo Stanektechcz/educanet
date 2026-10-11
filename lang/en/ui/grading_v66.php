@@ -36,4 +36,5 @@ return [
     'Zatím není dost podkladů' => 'Not enough evidence yet',
     'Otevřít moje cesty' => 'Open my paths',
     'Až budeš mít výsledky sumativního testu, ověřené kompetence nebo hodnocený projekt, objeví se tady.' => 'The results of a summative test, verified competencies or a graded project will appear here.',
+    'Exit tickety (podklad ke známce)' => 'Exit tickets (counted towards your grade)',   // v72.1
 ];

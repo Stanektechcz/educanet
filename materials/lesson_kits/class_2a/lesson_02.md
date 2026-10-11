@@ -150,60 +150,53 @@ Převést master plakát do konzistentního systému: master 1080×1350, square 
 
 ## 6. AI prompty pro studenta
 
-### Vysvětli mi to jednoduše
+> **Dobrovolné procvičení s AI – než začneš:**
+> - Použij jen AI nástroj, který povolila škola nebo tvůj učitel.
+> - Nevkládej osobní údaje – své ani cizí: jméno, e-mail, telefon, adresu, fotky ani třídu.
+> - Nevkládej přihlašovací údaje školy: hesla, jednorázové kódy, kód hodiny ani odkazy z EDUCANETu.
+> - Výstup AI vždy ověř (v náhledu na mobilu i počítači, v zápisu z hodiny nebo u učitele). AI se plete i s jistotou.
+> - Když ti AI pomohla s odevzdanou prací, napiš to: jaký nástroj, k čemu a co jsi upravil(a) sám/sama.
+
+### 1. Vysvětli mi jednoduše: Mini vizuální systém a konzistence
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 2 · Z jednoho plakátu udělej malou kampaň v předmětu grafika a webdesign. Cíl lekce: Převést master plakát do konzistentního systému: master 1080×1350, square 1080×1080 a story 1080×1920. Student se učí adaptaci, photo treatment a obhajobu design systému.. Klíčová témata: Mini vizuální systém a konzistence, Práce s fotografií v kampani, Adaptace designu do více formátů, Rozlišení a export, Prezentace procesu a obhajoba návrhu.
-Vysvětli mi princip co nejjednodušeji v 5–7 větách. Použij jeden konkrétní příklad a na konci mi polož jednu kontrolní otázku. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Učím se téma „Mini vizuální systém a konzistence“ (lekce „Z jednoho plakátu udělej malou kampaň“, obor grafika a webdesign). Z hodiny vím: Kampaň není jeden hezký plakát. Je to sada pravidel, díky kterým různé formáty vypadají jako jedna značka.
+Vysvětli mi ho v 5–7 větách pro začátečníka a přidej jeden konkrétní příklad z plakátu nebo webové stránky. Na konci mi polož jednu kontrolní otázku a počkej na moji odpověď.
 ```
 
-### Přirovnání + hranice přirovnání
+### 2. Přirovnání a jeho hranice: Práce s fotografií v kampani
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 2 · Z jednoho plakátu udělej malou kampaň v předmětu grafika a webdesign. Cíl lekce: Převést master plakát do konzistentního systému: master 1080×1350, square 1080×1080 a story 1080×1920. Student se učí adaptaci, photo treatment a obhajobu design systému.. Klíčová témata: Mini vizuální systém a konzistence, Práce s fotografií v kampani, Adaptace designu do více formátů, Rozlišení a export, Prezentace procesu a obhajoba návrhu.
-Vysvětli téma pomocí přirovnání z běžného života. Pak výslovně napiš, kde přirovnání přestává platit, abych si nevytvořil chybný mentální model. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+V lekci „Z jednoho plakátu udělej malou kampaň“ jsme probírali téma „Práce s fotografií v kampani“. Vysvětli mi ho pomocí přirovnání z běžného života. Z hodiny vím: Fotografie musí podporovat sdělení a typografii. Crop, overlay, kontrast a barevná úprava jsou součást systému.
+Potom napiš, ve kterém místě přirovnání přestává platit, abych si nevytvořil(a) chybnou představu. Odpověz nejvýš na 10 řádků.
 ```
 
-### Sokratický tutor
+### 3. Sokratický tutor k cíli lekce
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 2 · Z jednoho plakátu udělej malou kampaň v předmětu grafika a webdesign. Cíl lekce: Převést master plakát do konzistentního systému: master 1080×1350, square 1080×1080 a story 1080×1920. Student se učí adaptaci, photo treatment a obhajobu design systému.. Klíčová témata: Mini vizuální systém a konzistence, Práce s fotografií v kampani, Adaptace designu do více formátů, Rozlišení a export, Prezentace procesu a obhajoba návrhu.
-Buď můj sokratický tutor. Nepřednášej. Ptej se vždy jen na jednu otázku, vycházej z mé odpovědi a veď mě k tomu, abych princip odvodil sám. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Cíl lekce „Z jednoho plakátu udělej malou kampaň“: Převést master plakát do konzistentního systému: master 1080×1350, square 1080×1080 a story 1080×1920. Student se učí adaptaci, photo treatment a obhajobu design systému.
+Buď můj sokratický tutor. Nevysvětluj hned celé řešení – ptej se vždy jen na jednu otázku a podle mé odpovědi mě veď dál, dokud cíl nedokážu vysvětlit vlastními slovy.
 ```
 
-### Najdi díru v mém postupu
+### 4. Zkontroluj můj postup
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 2 · Z jednoho plakátu udělej malou kampaň v předmětu grafika a webdesign. Cíl lekce: Převést master plakát do konzistentního systému: master 1080×1350, square 1080×1080 a story 1080×1920. Student se učí adaptaci, photo treatment a obhajobu design systému.. Klíčová témata: Mini vizuální systém a konzistence, Práce s fotografií v kampani, Adaptace designu do více formátů, Rozlišení a export, Prezentace procesu a obhajoba návrhu.
-Pošlu ti svůj postup/řešení. Najdi první místo, kde můj závěr není podložený důkazem nebo kde měním příliš mnoho věcí najednou. Neopravuj vše za mě; polož otázku, která mě dovede k lepšímu testu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Řeším úkol z lekce „Z jednoho plakátu udělej malou kampaň“: Definuj design systém: Dokonči Knowledge Tour „Mini vizuální systém“. Zapiš 2 fontové role.
+Popíšu ti slovy svůj návrh (rozvržení, písmo, barvy, texty) – bez fotek lidí a bez osobních údajů. Najdi jedno nejslabší místo vzhledem k cíli lekce a zeptej se mě, jak bych ho ověřil(a). Nepředělávej návrh za mě.
 ```
 
-### Vytvoř mi nový transfer úkol
+### 5. Nový procvičovací úkol
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 2 · Z jednoho plakátu udělej malou kampaň v předmětu grafika a webdesign. Cíl lekce: Převést master plakát do konzistentního systému: master 1080×1350, square 1080×1080 a story 1080×1920. Student se učí adaptaci, photo treatment a obhajobu design systému.. Klíčová témata: Mini vizuální systém a konzistence, Práce s fotografií v kampani, Adaptace designu do více formátů, Rozlišení a export, Prezentace procesu a obhajoba návrhu.
-Vytvoř jeden nový realistický problém, který používá stejný princip, ale v jiném kontextu. Nedávej řešení. Nejdřív chtěj moji hypotézu, potom důkaz a až nakonec mi dej zpětnou vazbu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Vymysli mi jeden nový realistický úkol na stejný princip jako lekce „Z jednoho plakátu udělej malou kampaň“ („Mini vizuální systém a konzistence“, „Práce s fotografií v kampani“, „Adaptace designu do více formátů“, „Rozlišení a export“), ale v jiné situaci – pro vymyšlenou firmu nebo akci.
+Nedávej mi řešení. Nejdřív chtěj můj odhad, pak postup a až nakonec mi dej zpětnou vazbu.
 ```
 
-### Vyzkoušej mě ústně
+### 6. Vyzkoušej mě
 
 ```text
-Jsem student EDUCANETu. Probírám Lekce 2 · Z jednoho plakátu udělej malou kampaň v předmětu grafika a webdesign. Cíl lekce: Převést master plakát do konzistentního systému: master 1080×1350, square 1080×1080 a story 1080×1920. Student se učí adaptaci, photo treatment a obhajobu design systému.. Klíčová témata: Mini vizuální systém a konzistence, Práce s fotografií v kampani, Adaptace designu do více formátů, Rozlišení a export, Prezentace procesu a obhajoba návrhu.
-Simuluj ústní zkoušení. Polož 5 otázek od základní po aplikační. Po každé mé odpovědi stručně řekni, co bylo přesné, co chybělo, a polož navazující otázku. Známku navrhni až na konci. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
-```
-
-### Praktická zkouška nanečisto
-
-```text
-Jsem student EDUCANETu. Probírám Lekce 2 · Z jednoho plakátu udělej malou kampaň v předmětu grafika a webdesign. Cíl lekce: Převést master plakát do konzistentního systému: master 1080×1350, square 1080×1080 a story 1080×1920. Student se učí adaptaci, photo treatment a obhajobu design systému.. Klíčová témata: Mini vizuální systém a konzistence, Práce s fotografií v kampani, Adaptace designu do více formátů, Rozlišení a export, Prezentace procesu a obhajoba návrhu.
-Připrav krátkou praktickou zkoušku nanečisto na 15–20 minut. Dej mi realistické zadání, success criteria a 3 kontrolní body. Během řešení mi neposkytuj hotový postup; reaguj jen na konkrétní evidence, které ti pošlu. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
-```
-
-### Zkontroluj moje vysvětlení
-
-```text
-Jsem student EDUCANETu. Probírám Lekce 2 · Z jednoho plakátu udělej malou kampaň v předmětu grafika a webdesign. Cíl lekce: Převést master plakát do konzistentního systému: master 1080×1350, square 1080×1080 a story 1080×1920. Student se učí adaptaci, photo treatment a obhajobu design systému.. Klíčová témata: Mini vizuální systém a konzistence, Práce s fotografií v kampani, Adaptace designu do více formátů, Rozlišení a export, Prezentace procesu a obhajoba návrhu.
-Pošlu ti své vysvětlení tématu. Ohodnoť pouze: správnost mentálního modelu, práci s důkazem, schopnost přenést princip a jednu největší mezeru. Pak mi dej jediný další krok k opravě. Neprozrazuj řešení hodnoceného testu ani hotovou odpověď za mě. Když tápu, dávej menší nápovědy a vždy se ptej, jaký důkaz mám.
+Opakuji si lekci „Z jednoho plakátu udělej malou kampaň“. Polož mi 5 otázek k tématům „Mini vizuální systém a konzistence“, „Práce s fotografií v kampani“, „Adaptace designu do více formátů“, „Rozlišení a export“ od základní po praktickou. Ptej se po jedné a po každé odpovědi řekni, co bylo přesné a co chybělo.
+Nejde o známku ani o školní test – nehledej a neprozrazuj jeho odpovědi.
 ```
 
 ## 7. Zkouška nanečisto

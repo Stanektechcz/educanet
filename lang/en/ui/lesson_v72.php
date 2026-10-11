@@ -11,7 +11,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 return [
     'Cíl dnešní hodiny' => 'Today\'s lesson goal',
     'Poznáš, že to umíš, když:' => 'You\'ll know you\'ve got it when:',
-    'Domácí příprava (volitelné)' => 'Homework (optional)',
+    'Domácí příprava (dobrovolné)' => 'Homework (voluntary)',
     'Dobrovolné – nezapočítává se do hodnocení.' => 'Voluntary – it does not count towards your grade.',
     'asi {n} min' => 'about {n} min',
     'Exit ticket' => 'Exit ticket',
@@ -28,4 +28,8 @@ return [
     'Vyber jednu odpověď.' => 'Pick one answer.',
     'Exit ticket pro tuto lekci teď není k dispozici.' => 'The exit ticket for this lesson is not available right now.',
     'Odpověď se nepodařilo uložit. Zkus to prosím znovu.' => 'Your answer could not be saved. Please try again.',
+    // v72.1: režim exit ticketu (volba učitele třídy)
+    'Režim: podklad ke známce' => 'Mode: counts towards your grade',
+    'Režim: jen zpětná vazba' => 'Mode: feedback only',
+    'Jedna rychlá otázka na konec hodiny. Učitel ji tentokrát použije jako podklad ke známce – rozmysli si odpověď, poslat ji jde jen jednou.' => 'One quick question at the end of the lesson. This time your teacher will use it as evidence for your grade – think it through, you can only send it once.',
 ];
