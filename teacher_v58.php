@@ -13,6 +13,10 @@ declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
+/** v73: společné soubory přípravného balíčku (model hodiny jako Dnešní hodina, bez postupu žáků). */
+const TEACHER58_V73_PREP_FILES = ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'calendar_days_v71.php', 'lesson_today_v70.php', 'lesson_today_v70_views.php',
+    'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'svp_v72.php', 'svp_v72_map.php', 'teacher_prefs_v72_1.php', 'lesson_prep_v73.php'];
+
 /** @return array<string, array<string, mixed>> */
 function teacher58_modules(): array
 {
@@ -28,7 +32,7 @@ function teacher58_modules(): array
             'files' => ['points_v53.php', 'teacher_class_dashboard.php', 'teacher_overview_v61.php', 'competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php',
                 'paths_v63.php', 'paths_v63_class.php', 'cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'calendar_days_v71.php',
                 'lesson_today_v70.php', 'lesson_today_v70_views.php', 'lesson_today_v71_views.php',
-                'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'lesson_exit_v72_views.php'],   // v72: stav schválení a souhrn exit ticketu (jen čtení); v72.1: jména a režim exit ticketu
+                'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'lesson_exit_v72_views.php', 'lesson_reflect_v73.php', 'lesson_reflect_v73_views.php'],   // v73: karta „Minule“ z reflexe (jen čtení); v72: stav schválení a souhrn exit ticketu (jen čtení); v72.1: jména a režim exit ticketu
             // v71: model lekce lm71 (plán po minutách, poznámky, pracovní list, úplnost) a karty dnů bez lekce; stále jen čtení.
             'css' => ['assets/cockpit-v71.css'],
             'render' => static function (array $m, string $c): void { lt71_render_tab($m, $c); },
@@ -51,6 +55,34 @@ function teacher58_modules(): array
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v72.css'],
             'post' => ['tp721_' => 'tp721_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { tp721_render_tab($m, $c, $csrf()); },
+        ],
+        // v73 · přípravný balíček hodiny: Tisk (A4 plán + pracovní list), Projektor (nástupce Režimu hodiny) a List pro zástup.
+        // JEN ČTENÍ: žádná POST akce ani GET parametr registru (obecné ?class= hlídá teacher59_guard_get_check, ?lesson= je jen číslo 1–28).
+        'hodina_tisk' => [
+            'label' => 'Tisk hodiny', 'hint' => 'A4 plán hodiny a pracovní list', 'group' => 'podpora',
+            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['lesson_print_v73_views.php']),
+            'css' => ['assets/lesson-print-v73.css'], 'js' => ['assets/lesson-v73.js'],
+            'render' => static function (array $m, string $c): void { lp73_render_print($m); },
+        ],
+        'hodina_projektor' => [
+            'label' => 'Projektor', 'hint' => 'Úsek hodiny, cíl, kód a zadání velkým písmem', 'group' => 'podpora',
+            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['lesson_projector_v73_views.php']),
+            'css' => ['assets/lesson-projector-v73.css'], 'js' => ['assets/lesson-v73.js'],
+            'render' => static function (array $m, string $c): void { pj73_render_projector($m); },
+        ],
+        'hodina_zastup' => [
+            'label' => 'Zástup', 'hint' => 'List pro zastupujícího bez jmen žáků', 'group' => 'podpora',
+            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['lesson_print_v73_views.php']),
+            'css' => ['assets/lesson-print-v73.css'], 'js' => ['assets/lesson-v73.js'],
+            'render' => static function (array $m, string $c): void { lp73_render_substitution($m); },
+        ],
+        // v73 · Reflexe hodiny: POST lr73_save (exact politika: třída povinná a v rozsahu, content.manage – asistent jen čte). GET jen ?class= a ?lesson=.
+        'reflexe73' => [
+            'label' => 'Reflexe hodiny', 'hint' => 'Jak hodina proběhla a co příště', 'group' => 'podpora',
+            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['lesson_reflect_v73.php', 'lesson_reflect_v73_views.php']),
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v73.css'],
+            'post' => ['lr73_' => 'lr73_teacher_handle_post'],
+            'render' => static function (array $m, string $c) use ($csrf): void { lr73_render_tab($m, $csrf()); },
         ],
         // v70 · Přehled správy: účty a role, pokrytí tříd, provoz, kvalita dat a doporučení – jen administrátor, jen čtení.
         'sprava_prehled' => [

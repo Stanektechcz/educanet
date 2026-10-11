@@ -44,6 +44,7 @@ function lt71_render_tab(array $modules, string $classId, ?int $now = null): voi
         return;
     }
     echo lt71_head_html($m, $modules);
+    if (function_exists('lr73_today_note_html')) echo lr73_today_note_html($m);   // v73: „Minule: skončili jste u …“ + odkazy Projektor / Tisk / Zástup / Reflexe
     if (is_array($m['day'])) echo lt71_day_html($m);
     echo lt70_picker_html($m, $modules);
     echo lt71_kpis_html($m);

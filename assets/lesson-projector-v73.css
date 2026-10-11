@@ -1,0 +1,42 @@
+/* EDUCANET v73 · Projektor hodiny. Jen tokeny v61/v68 (světlý i tmavý režim, kontrast AA z palety cockpitu).
+   Písmo ≥ 28 px (1.75rem), kód hodiny velkým písmem, rámec cockpitu skrytý (zpět vede odkaz „← Dnešní hodina“).
+   Bez JS: úsek podle hodin (.is-current), jiný úsek přes kotvu (:target). S JS: .pj73-js + .is-shown. */
+.t68-top, .t68-side, .t68-crumbs, .t68-classbar, .t68-next, .c70-related { display: none !important; }
+.t68-body { display: block; }
+.t68-main { max-width: none; }
+.pj73 { font-size: 1.75rem; line-height: 1.4; color: var(--ui-ink); background: var(--ui-bg); padding: var(--ui-space-3); }
+.pj73:fullscreen { overflow: auto; padding: var(--ui-space-5); }
+.pj73 h2 { font-size: 2.1rem; margin: 0 0 var(--ui-space-2); line-height: 1.2; }
+.pj73-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--ui-space-3); margin-bottom: var(--ui-space-4); }
+.pj73-title { margin: 0; overflow-wrap: anywhere; }
+.pj73-title span { color: var(--ui-muted); margin-right: var(--ui-space-2); }
+.pj73-nav { display: flex; flex-wrap: wrap; gap: var(--ui-space-2); }
+.pj73-link, .pj73-btn, .pj73-refresh, .pj73-steps a { display: inline-flex; align-items: center; min-height: 44px; font-size: 1.75rem; }
+.pj73-link, .pj73-refresh, .pj73-steps a { color: var(--ui-accent-ink); }
+.pj73-btn { padding: 0 var(--ui-space-4); border: 2px solid var(--ui-accent); border-radius: var(--ui-radius-sm); background: var(--ui-surface); color: var(--ui-ink); font: inherit; cursor: pointer; }
+.pj73 a:focus-visible, .pj73-btn:focus-visible, .pj73-seg:focus-visible { outline: 4px solid var(--ui-accent); outline-offset: 3px; }
+.pj73-top, .pj73-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: var(--ui-space-4); margin-bottom: var(--ui-space-4); }
+.pj73-code, .pj73-goal, .pj73-seg, .pj73-tasks, .pj73-exit { box-sizing: border-box; min-width: 0; padding: var(--ui-space-4); border: 2px solid var(--ui-line); border-radius: var(--ui-radius); background: var(--ui-surface); }
+.pj73-code { text-align: center; }
+.pj73-codebig { margin: 0; font-size: clamp(3.5rem, 12vw, 8rem); font-weight: 800; letter-spacing: .12em; line-height: 1.1; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; color: var(--ui-ink); }
+.pj73-code p, .pj73-goal p, .pj73-exit p { margin: var(--ui-space-2) 0 0; }
+.pj73-count, .pj73-when, .pj73-hint, .pj73-help, .pj73-nocode { color: var(--ui-muted); }
+.pj73-goaltext { font-weight: 700; }
+.pj73-list { margin: var(--ui-space-2) 0 0; padding-left: 1.4em; }
+.pj73-list li { margin-bottom: var(--ui-space-1); overflow-wrap: anywhere; }
+.pj73-stage { margin-bottom: var(--ui-space-4); }
+.pj73-seg { display: none; border-color: var(--ui-accent); }
+.pj73-seg.is-current { display: block; }
+.pj73-stage:has(.pj73-seg:target) .pj73-seg.is-current:not(:target) { display: none; }
+.pj73-seg:target { display: block; }
+.pj73-js .pj73-seg, .pj73-js .pj73-seg.is-current, .pj73-js .pj73-seg:target { display: none; }
+.pj73-js .pj73-seg.is-shown { display: block; }
+.pj73-when { margin: 0 0 var(--ui-space-1); }
+.pj73-do { margin: 0; font-size: 2rem; }
+.pj73-timer { margin: var(--ui-space-3) 0 0; font-size: 2.4rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.pj73-seg.is-over .pj73-timer { color: var(--ui-warn-ink); }
+.pj73-steps ol { display: flex; flex-wrap: wrap; gap: var(--ui-space-2); margin: var(--ui-space-3) 0 0; padding: 0; list-style: none; }
+.pj73-steps a { padding: 0 var(--ui-space-3); border: 1px solid var(--ui-line); border-radius: var(--ui-radius-pill); font-size: 1.75rem; text-decoration: none; }
+.pj73-steps a[aria-current] { border-color: var(--ui-accent); background: var(--ui-accent-soft); color: var(--ui-ink); font-weight: 700; }
+.pj73-help { font-size: 1.75rem; margin: var(--ui-space-4) 0 0; }
+@media (max-width: 480px) { .pj73 { padding: 0; } .pj73-code, .pj73-goal, .pj73-seg, .pj73-tasks, .pj73-exit { padding: var(--ui-space-3); } }

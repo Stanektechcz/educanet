@@ -661,3 +661,15 @@ Podrobnosti: `CHANGELOG_V72_1.md`, `BUILD_MANIFEST_V72_1.md`, návod pro učitel
 - **Změna limitu auditů:** snímky politik v68/v70/v71 vyjímají navíc `lc72_svp_approve`, `lc72_svp_return`, `tp721_self_names`, `tp721_class_exit`; v72 audity přizpůsobené rozhodnutí školy – viz manifest.
 - **Rollback:** nasadit vydání v72 (`c4a9e38`); `storage/teacher_prefs_v72_1.json.php` a klíč `svp` v `lesson_approvals_v72.json.php` starší verze ignoruje. Pole `m` u odpovědí exit ticketu v72 ignoruje. Kity `materials/lesson_kits/` se vrátí s vydáním.
 - **Kontrola po nasazení:** `php tools/v72_1_decisions_audit.php` → `V72_1_DECISIONS_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v73 · tisk, projektor, zástup a reflexe hodiny
+
+Podrobnosti: `CHANGELOG_V73.md`, `BUILD_MANIFEST_V73.md`, návod pro učitele `docs/NAVOD_HODINA_V73.md`. Nové PHP rozšíření nevyžaduje. **Migrace není potřeba** – úložiště `storage/lesson_reflections_v73.json.php` vznikne samo při první reflexi (zápis přes `storage_update`).
+
+- **Nové záložky (sekce Dnes):** `?tab=hodina_tisk` (A4 plán + pracovní list, `@media print`), `?tab=hodina_projektor` (nástupce Režimu hodiny; ten zůstává do v76), `?tab=hodina_zastup` (A4 bez jmen) – jen čtení, bez nové POST akce i GET politiky (obecné `?class=` a `?lesson=1–28`). `?tab=reflexe73` – akce `lr73_save` (CSRF, třída povinná a v rozsahu, `content.manage`; asistent jen čte).
+- **Konfigurace (volitelná):** `EDUCANET_SUBSTITUTION_CONTACT` – kontakt na koordinaci zástupů na listu pro zástup (role/kancelář, ne osobní telefon; alternativně klíč `substitution_contact` v souboru secrets). `EDUCANET_REFLECTION_READERS=class_teachers` – reflexe čtou i ostatní učitelé třídy (výchozí `author_admin`). Vzor v `docs/deploy/educanet.env.example`.
+- **Retence reflexí:** 365 dní, strop 300 na třídu; čistí se při každém zápisu. Ruční / cron: `php tools/v73_reflection_purge.php --dry-run` (jen počty), pak `--apply` (po záloze `storage/`).
+- **Jména žáků:** kontrolní list na tisku respektuje volbu v Nastavení výuky (v72.1); projektor ukazuje jen počty, list pro zástup je bez jmen.
+- **Změna limitu auditů:** snímky politik v68/v70/v71 vyjímají navíc `lr73_save` – viz manifest.
+- **Rollback:** nasadit vydání v72.1 (`70af0e6`); `storage/lesson_reflections_v73.json.php` starší verze ignoruje (lze ponechat).
+- **Kontrola po nasazení:** `php tools/v73_lesson_prep_audit.php` → `V73_LESSON_PREP_AUDIT_OK`, `php tools/v73_reflection_audit.php` → `V73_REFLECTION_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.

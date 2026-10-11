@@ -317,6 +317,8 @@ function teacher59_action_policies(): array
     // záznam učitele), režim exit ticketu třída povinná a v rozsahu. Jiné lc72_* / tp721_* akce zůstávají zakázané.
     foreach (['lc72_svp_approve', 'lc72_svp_return', 'tp721_class_exit'] as $action) $table[$action] = $req;
     $table['tp721_self_names'] = $none;
+    // v73 · reflexe hodiny (modul `reflexe73`): třída povinná a v rozsahu (handler ji i lekci ověří znovu); jiné lr73_* akce zůstávají zakázané.
+    $table['lr73_save'] = $req;
     return $table;
 }
 

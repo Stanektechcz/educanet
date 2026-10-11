@@ -1,0 +1,20 @@
+/* EDUCANET v73 · Reflexe hodiny (formulář a seznam). Jen tokeny v61/v68 – světlý i tmavý režim; cíle dotyku ≥ 44 px, viditelný fokus, 390 px. */
+.lr73-nav { display: flex; flex-wrap: wrap; gap: var(--ui-space-2) var(--ui-space-4); margin: 0 0 var(--ui-space-3); }
+.lr73-nav a { display: inline-flex; align-items: center; min-height: 44px; }
+.lr73-state { display: flex; flex-wrap: wrap; gap: var(--ui-space-2); }
+.lr73-state legend { width: 100%; }
+.lr73-choice, .lr73-pick { display: inline-flex; align-items: center; gap: var(--ui-space-2); min-height: 44px; padding: 0 var(--ui-space-3); border: 1px solid var(--ui-field-border); border-radius: var(--ui-radius-sm); background: var(--ui-surface); cursor: pointer; }
+.lr73-choice { font-weight: 600; }
+.lr73-choice:has(input:checked), .lr73-pick:has(input:checked) { border-color: var(--ui-accent); background: var(--ui-accent-soft); }
+.lr73-picks { display: flex; flex-wrap: wrap; gap: var(--ui-space-2); }
+.lr73-picks legend { width: 100%; }
+.lr73-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: var(--ui-space-3); margin-bottom: var(--ui-space-3); }
+.lr73-field { display: flex; flex-direction: column; gap: var(--ui-space-1); margin-bottom: var(--ui-space-3); min-width: 0; }
+.lr73-field span { font-weight: 600; font-size: var(--ui-text-sm); }
+.lr73-field small { color: var(--ui-muted); }
+.lr73-field select, .lr73-field textarea { box-sizing: border-box; width: 100%; min-height: 44px; padding: var(--ui-space-2); border: 1px solid var(--ui-field-border); border-radius: var(--ui-radius-sm); background: var(--ui-surface); color: var(--ui-ink); font: inherit; }
+.lr73-submit { min-height: 44px; }
+.lr73-list { margin: 0; padding: 0; list-style: none; }
+.lr73-entry { padding: var(--ui-space-2) 0; border-bottom: 1px solid var(--ui-line); overflow-wrap: anywhere; }
+.lr73-entry p { margin: 0 0 var(--ui-space-1); }
+.lr73-choice:focus-within, .lr73-pick:focus-within, .lr73-field select:focus-visible, .lr73-field textarea:focus-visible, .lr73-submit:focus-visible, .lr73-nav a:focus-visible { outline: 3px solid var(--ui-accent); outline-offset: 2px; }

@@ -17,7 +17,7 @@ require_once __DIR__ . '/ui_v67.php';
 
 /** Záložky cockpitu s tmavým režimem (po převodu CSS na tokeny a kontrole kontrastu; ostatní zůstanou světlé). */
 const UI68_TEACHER_DARK_TABS = [
-    'attention', 'hodina', 'prehled', 'hlaseni', 'student360', 'class_results', 'analytics', 'interventions', 'communications', 'intake', 'pristupy', 'groups',
+    'attention', 'hodina', 'hodina_projektor', 'hodina_tisk', 'hodina_zastup', 'reflexe73', 'prehled', 'hlaseni', 'student360', 'class_results', 'analytics', 'interventions', 'communications', 'intake', 'pristupy', 'groups',
     'cesty', 'schvalovani', 'nastaveni_vyuky', 'curriculum', 'teach', 'session', 'calendar', 'authoring', 'editor', 'labdata',
     'hodnoceni66', 'kompetence', 'projekty65', 'grade', 'projekty', 'workspace', 'history',
     'arena', 'roboti', 'hry', 'ctf', 'incidenty', 'souboje', 'ekonomika', 'obchod',
@@ -48,6 +48,10 @@ function teacher68_tab_map(): array
     return [
         'attention' => $t('dnes', 'Co řešit dnes', 'Upozornění, úkoly a nedávné zásahy'),
         'hodina' => $t('dnes', 'Dnešní hodina', 'Téma, materiály, úkoly a postup žáků'),   // v70
+        'hodina_projektor' => $t('dnes', 'Projektor', 'Úsek hodiny, cíl, kód a zadání velkým písmem'),   // v73 (nástupce Režimu hodiny)
+        'hodina_tisk' => $t('dnes', 'Tisk hodiny', 'A4 plán hodiny a pracovní list'),   // v73
+        'hodina_zastup' => $t('dnes', 'Zástup', 'List pro zastupujícího bez jmen žáků'),   // v73
+        'reflexe73' => $t('dnes', 'Reflexe hodiny', 'Jak hodina proběhla a co příště'),   // v73
         'prehled' => $t('dnes', 'Přehled třídy', 'Kdo zaostává a co čeká na schválení'),
         'hlaseni' => $t('dnes', 'Hlášení', 'Chyby a návrhy od žáků'),
         'student360' => $t('trida', 'Detail žáka', 'Výsledky, dovednosti, úkoly a časová osa'),

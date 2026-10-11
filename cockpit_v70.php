@@ -74,6 +74,10 @@ function c70_related_rules(): array
         'curriculum' => [['hodina', 'Dnešní hodina'], ['teach', 'Promítnout lekci'], ['calendar', 'Kalendář a výjimky']],
         'schvalovani' => [['hodina', 'Dnešní hodina: stav lekce a exit ticket'], ['curriculum', 'Plán a kurikulum']],   // v72
         'nastaveni_vyuky' => [['hodina', 'Dnešní hodina: souhrn exit ticketu'], ['schvalovani', 'Schvalování lekcí a vazba na ŠVP'], ['hodnoceni66', 'Návrhy hodnocení']],   // v72.1
+        'hodina_projektor' => [['hodina', 'Dnešní hodina: žáci a postup'], ['teach', 'Režim hodiny (simulace)']],   // v73
+        'hodina_tisk' => [['hodina', 'Dnešní hodina'], ['hodina_zastup', 'List pro zástup']],   // v73
+        'hodina_zastup' => [['hodina_tisk', 'Tisk: pracovní list pro plán B'], ['hodina', 'Dnešní hodina']],   // v73
+        'reflexe73' => [['hodina', 'Dnešní hodina: „Minule“'], ['schvalovani', 'Schvalování lekcí']],   // v73
         'teach' => [['hodina', 'Dnešní hodina: žáci a postup'], ['session', 'Kód hodiny']],
         'session' => [['hodina', 'Dnešní hodina: téma a materiály'], ['teach', 'Promítnout lekci']],
         'calendar' => [['curriculum', 'Plán lekcí'], ['hodina', 'Dnešní hodina']],
