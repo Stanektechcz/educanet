@@ -22,8 +22,8 @@ try {
     $check('cockpit: 5 záložek v75 (a Dnešní hodina) – čistá odpověď 200 s CSS v75' . ($bad ? ' [' . implode(', ', $bad) . ']' : ''), $bad === []);
     $kp = (string)$h->request('GET', '/teacher.php', ['tab' => 'kompetence75', 'class' => 'class_4a'])['body'];
     $empty1a = (string)$h->request('GET', '/teacher.php', ['tab' => 'ulohy75', 'class' => 'class_1a'])['body'];
-    $check('cockpit: Kompetence 4.A ukazují návrh (stav, katalog s ŠVP, pokrytí, náhled cest, potvrzení); Úlohy 1.A vysvětlí, proč sada chybí', str_contains($kp, 'Návrh čeká na schválení')
-        && str_contains($kp, 'ids26-sbe4-03') && str_contains($kp, 'Reverzní proxy a certifikát TLS') && str_contains($kp, 'name="confirm" value="1" required') && str_contains($empty1a, 'Tahle třída zatím sadu úloh nemá'));
+    $check('cockpit: Kompetence 4.A ukazují návrh (stav, katalog s ŠVP, pokrytí, náhled cest, potvrzení); Úlohy 1.A mají grafickou sadu (v76)', str_contains($kp, 'Návrh čeká na schválení')
+        && str_contains($kp, 'ids26-sbe4-03') && str_contains($kp, 'Reverzní proxy a certifikát TLS') && str_contains($kp, 'name="confirm" value="1" required') && str_contains($empty1a, 'Barvy: HEX a RGB'));   // v76: 1.A má sadu úloh (změna limitu auditu)
     $csrf = (string)$h->csrfToken($kp);
     $no = $h->request('POST', '/teacher.php', ['action' => 'kp75_approve', 'class_id' => 'class_2a', 'confirm' => '1'], ['follow_redirects' => false]);
     $noConfirm = $h->request('POST', '/teacher.php', ['action' => 'kp75_approve', 'class_id' => 'class_2a', 'csrf' => $csrf, 'return_tab' => 'kompetence75'], ['follow_redirects' => false]);
@@ -37,7 +37,7 @@ try {
     $h->request('POST', '/teacher.php', ['action' => 'lv75_approve', 'class_id' => 'class_3a', 'lessons' => ['1'], 'csrf' => (string)$h->csrfToken($ur), 'return_tab' => 'urovne75'], ['follow_redirects' => false]);
     $check('lv75_approve bez potvrzení nic neschválí (kontrola i na serveru)', lv75_status('class_3a', 1)['status'] !== 'schvaleno');
     $lvOk = $h->request('POST', '/teacher.php', ['action' => 'lv75_approve', 'class_id' => 'class_3a', 'lessons' => $lessons, 'confirm' => '1', 'csrf' => (string)$h->csrfToken($ur), 'return_tab' => 'urovne75'], ['follow_redirects' => false]);
-    $check('urovne75: návrhy L1–L16 s tlačítkem hromadného schválení; lv75_approve schválí 16 lekcí 3.A', str_contains($ur, 'Schválit všechny čekající (16)') && str_contains($ur, 'Zatím si nikdo úroveň nevybral') && $redirect($lvOk)
+    $check('urovne75: návrhy L1–L16 s tlačítkem hromadného schválení; lv75_approve schválí 16 lekcí 3.A', str_contains($ur, 'Schválit všechny čekající (28)') /* v76: L1–L28 */ && str_contains($ur, 'Zatím si nikdo úroveň nevybral') && $redirect($lvOk)
         && lv75_status('class_3a', 1)['status'] === 'schvaleno' && lv75_status('class_3a', 16)['status'] === 'schvaleno');
 
     // --- žák 3.A
@@ -110,8 +110,8 @@ try {
     $h->request('GET', '/', ['class' => 'class_2a', 'student' => $label2]);
     $paths = $h->request('GET', '/', ['view' => 'cesty']);
     $u2 = (string)$h->request('GET', '/', ['view' => 'ulohy'])['body'];
-    $check('žák 2.A: po schválení má výukové cesty (Responzivní rozvržení, Audit přístupnosti, Typografická škála); úlohy vysvětlí, že sada pro 2.A zatím není', audit_response_clean($paths)
-        && str_contains((string)$paths['body'], 'Responzivní rozvržení') && str_contains((string)$paths['body'], 'Typografická škála') && str_contains($u2, 'zatím úlohy s variantami nejsou'));
+    $check('žák 2.A: po schválení má výukové cesty (Responzivní rozvržení, Audit přístupnosti, Typografická škála); úlohy 2.A mají grafickou sadu (v76)', audit_response_clean($paths)
+        && str_contains((string)$paths['body'], 'Responzivní rozvržení') && str_contains((string)$paths['body'], 'Typografická škála') && str_contains($u2, 'Barvy: HEX a RGB'));   // v76: 2.A má sadu úloh (změna limitu auditu)
 } finally {
     $h->stop();
 }

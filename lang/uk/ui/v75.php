@@ -15,6 +15,10 @@ return [
     'Cesty v Linuxu' => 'Шляхи в Linux',
     'Oprávnění a chmod' => 'Права доступу і chmod',
     'grep a roury' => 'grep і конвеєри',
+    'Barvy: HEX a RGB' => 'Кольори: HEX і RGB',   // v76
+    'Jednotky CSS: px, em, rem a %' => 'Одиниці CSS: px, em, rem і %',   // v76
+    'Selektory a specificita' => 'Селектори та специфічність',   // v76
+    'Rozlišení obrázku a DPI' => 'Роздільна здатність зображення і DPI',   // v76
     'Vyřešeno {n}×' => 'Розв’язано {n}×',
     'Rozpracováno' => 'В процесі',
     'Nezačato' => 'Не розпочато',

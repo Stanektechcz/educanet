@@ -66,8 +66,8 @@ Options -MultiViews
     <Files "CLAUDE.md">
         Require all denied
     </Files>
-    <!-- SEC59-11: RELEASE_MANIFEST.json (vytvořený tools/build_release.php) obsahuje
-         sha256 každého souboru vydání a nepatří na web. -->
+    # SEC59-11: RELEASE_MANIFEST.json (vytvořený tools/build_release.php) obsahuje
+    # sha256 každého souboru vydání a nepatří na web.
     <Files "RELEASE_MANIFEST.json">
         Require all denied
     </Files>

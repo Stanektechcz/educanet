@@ -16,6 +16,7 @@ function tb75_t_title(string $task): string
     $ids = [
         'net_subnet' => trm('Podsíť: síť, broadcast a počet adres'), 'net_mask' => trm('Maska a prefix'), 'net_ports' => trm('Porty a služby'),
         'net_route' => trm('Směrovací tabulka'), 'lnx_path' => trm('Cesty v Linuxu'), 'lnx_chmod' => trm('Oprávnění a chmod'), 'lnx_grep' => trm('grep a roury'),
+        'gfx_color' => trm('Barvy: HEX a RGB'), 'web_units' => trm('Jednotky CSS: px, em, rem a %'), 'css_spec' => trm('Selektory a specificita'), 'img_dpi' => trm('Rozlišení obrázku a DPI'),   // v76
     ];
     $msgid = $ids[$task] ?? null;
     return $msgid !== null ? tr($msgid) : $task;

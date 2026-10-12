@@ -13,7 +13,10 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  *
  * Varianta: ['task','round','prompt','data'=>list<string> (řádky ukázky), 'fields'=>list<['id','label','kind'=>text|number|select,
  *   'options'?, 'answer','hint']>, 'explain'=>string].
+ * v76: grafické úlohy pro 1.A a 2.A (barvy, jednotky CSS, specificita, rozlišení/DPI) v taskbank_v76_gen.php – připojené do TB75_TASKS.
  */
+
+require_once __DIR__ . '/taskbank_v76_gen.php';
 
 const TB75_TASKS = [
     'net_subnet' => ['title' => 'Podsíť: síť, broadcast a počet adres', 'area' => 'site', 'minutes' => 5],
@@ -23,7 +26,7 @@ const TB75_TASKS = [
     'lnx_path' => ['title' => 'Cesty v Linuxu', 'area' => 'linux', 'minutes' => 4],
     'lnx_chmod' => ['title' => 'Oprávnění a chmod', 'area' => 'linux', 'minutes' => 4],
     'lnx_grep' => ['title' => 'grep a roury', 'area' => 'linux', 'minutes' => 5],
-];
+] + TB76_TASKS;
 
 /** Deterministický generátor celých čísel ze semínka (SHA-256 v režimu čítače). */
 function tb75_rng(string $seed): Closure
@@ -82,7 +85,7 @@ function tb75_variant(string $task, string $seed, int $round): array
         'lnx_path' => tb75_gen_path($r),
         'lnx_chmod' => tb75_gen_chmod($r),
         'lnx_grep' => tb75_gen_grep($r),
-        default => throw new InvalidArgumentException('Neznámá úloha.'),
+        default => tb76_generate($task, $r),   // v76: grafické úlohy (jinak výjimka Neznámá úloha)
     };
     return ['task' => $task, 'round' => $round] + $v + ['data' => []];
 }
@@ -266,6 +269,8 @@ function tb75_grep_count(array $lines, string $needle, bool $ignoreCase, bool $i
 /** Normalizace odpovědi pro porovnání (mezery, koncové lomítko u cest, úvodní nula u osmičkového zápisu). */
 function tb75_norm(string $task, string $fieldId, string $value): string
 {
+    $gfx = tb76_norm($task, $fieldId, $value);   // v76: grafické úlohy mají vlastní normalizaci (HEX, RGB, desetinná čárka, px)
+    if ($gfx !== null) return $gfx;
     $v = strtolower(trim((string)preg_replace('/\s+/u', '', $value)));
     if ($task === 'lnx_path' && strlen($v) > 1) $v = rtrim($v, '/');
     if ($task === 'lnx_chmod' && $fieldId === 'oct' && preg_match('/^0[0-7]{3}$/', $v) === 1) $v = substr($v, 1);

@@ -33,6 +33,8 @@ return [
     'hra' => 'game',
     'aréna' => 'arena',
     'lekce' => 'lesson',
+    'úloha' => 'task',   // v76
+    'pozorování učitele' => 'teacher observation',   // v76
     'pamatuje' => 'remember',
     'použije' => 'apply',
     'analyzuje' => 'analyse',

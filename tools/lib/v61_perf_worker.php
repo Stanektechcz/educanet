@@ -61,6 +61,9 @@ session_id('v61perf' . bin2hex(random_bytes(8)));
 
 $GLOBALS['educanet_request_memo'] = true; // jako ve webovém požadavku (PHP-FPM): paměť čtení v rámci jednoho vykreslení
 $t0 = hrtime(true);
+// v76: samotest auditu (umělé zpomalení 1–1000 ms v měřené části) – dokazuje, že stabilizované měření skutečnou regresi stále zachytí.
+$selftestDelay = (int)($spec['selftest_delay_ms'] ?? 0);
+if ($selftestDelay > 0 && $selftestDelay <= 1000) usleep($selftestDelay * 1000);
 ob_start();
 register_shutdown_function(static function () use ($t0, $spec): void {
     $html = (string)ob_get_clean();

@@ -59,7 +59,7 @@ function port65v_item_html(array $item, bool $onPage): string
 }
 
 /** Samostatný dokument: inline CSS (vč. @media print), bez skriptů, odkazů a externích zdrojů. */
-function port65v_export_html(array $model, string $studentLabel): string
+function port65v_export_html(array $model, string $studentLabel, string $extraHtml = ''): string
 {
     $css = 'body{font-family:system-ui,Arial,sans-serif;max-width:760px;margin:24px auto;padding:0 16px;color:#111;line-height:1.5}h1{margin-bottom:4px}'
         . '.item{border:1px solid #999;border-radius:10px;padding:12px 16px;margin:16px 0;break-inside:avoid}.row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #bbb;padding:3px 0}'
@@ -67,15 +67,16 @@ function port65v_export_html(array $model, string $studentLabel): string
     $html = '<!DOCTYPE html><html lang="' . e(function_exists('edu_locale') ? edu_locale() : 'cs') . '"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
         . '<title>' . e(tr('Portfolio')) . ' – ' . e($studentLabel) . '</title><style>' . $css . '</style></head><body>'
         . '<h1>' . e(tr('Portfolio')) . '</h1><p class="meta">' . e($studentLabel) . ' · ' . e(date('j. n. Y')) . '</p>';
-    if ($model === []) $html .= '<p>' . e(tr('Zatím nemáš nic vybráno.')) . '</p>';
+    if ($model === [] && $extraHtml === '') $html .= '<p>' . e(tr('Zatím nemáš nic vybráno.')) . '</p>';
     foreach ($model as $item) $html .= port65v_item_html($item, false);
-    return $html . '</body></html>';
+    return $html . $extraHtml . '</body></html>';   // v76: + připnuté práce v75 (pf75_export_section_html)
 }
 
 /** Odešle export jako stažení a skončí (jen GET z vlastní session; žádný odkaz ke sdílení). */
 function port65v_send_export(string $classId, string $studentKey): never
 {
-    $html = port65v_export_html(port65_view_model($classId, $studentKey), adaptive_student_label($classId, $studentKey));
+    $pinned = function_exists('pf75_export_section_html') ? pf75_export_section_html($classId, $studentKey) : '';   // v76: připnuté práce do exportu
+    $html = port65v_export_html(port65_view_model($classId, $studentKey), adaptive_student_label($classId, $studentKey), $pinned);
     header('Content-Type: text/html; charset=utf-8');
     header('Content-Disposition: attachment; filename="portfolio-' . date('Y-m-d') . '.html"');
     header("Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'");

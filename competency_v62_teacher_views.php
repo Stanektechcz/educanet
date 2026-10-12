@@ -108,11 +108,12 @@ function comp62_render_teacher_tab(string $requestedClass, string $csrf): void
     $classId = in_array($requestedClass, $classes, true) ? $requestedClass : $classes[0];
     $subject = (string)comp62_subject_for_class($classId);
     $competencies = comp62_competencies($subject);
-    echo '<p class="c62-note">Stav kompetence vychází z posledních 8 důkazů (test, projekt, lab, lekce, hra, aréna) s útlumem po 60 dnech. '
+    echo '<p class="c62-note">Stav kompetence vychází z posledních 8 důkazů (test, projekt, lab, lekce, úloha, pozorování učitele, hra, aréna) s útlumem po 60 dnech. '
         . 'Hra ani aréna samy zvládnutí nedají. Žák vidí jen svou mapu.</p>';
     echo '<form method="post" class="c62-sync"><input type="hidden" name="csrf" value="' . e($csrf) . '"><input type="hidden" name="action" value="comp62_sync">'
         . '<input type="hidden" name="class_id" value="' . e($classId) . '"><button type="submit" aria-describedby="c62-sync-note">Přepočítat důkazy třídy</button>'
         . '<span class="c62-note" id="c62-sync-note">Pilot: ' . e(implode(', ', array_map('comp62_class_label', COMP62_PILOT_CLASSES))) . ' · důkazy se mažou ' . (int)COMP62_RETENTION_GRACE_DAYS . ' dní po odchodu žáka.</span></form>';
     echo comp62_teacher_table($classId, $competencies, m62_class($classId));
+    if (function_exists('ob76_form_html')) echo ob76_form_html($classId, $csrf, $competencies);   // v76: ruční pozorování jedním klikem
     echo '</section>';
 }

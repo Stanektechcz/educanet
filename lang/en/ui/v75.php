@@ -15,6 +15,10 @@ return [
     'Cesty v Linuxu' => 'Paths in Linux',
     'Oprávnění a chmod' => 'Permissions and chmod',
     'grep a roury' => 'grep and pipes',
+    'Barvy: HEX a RGB' => 'Colours: HEX and RGB',   // v76
+    'Jednotky CSS: px, em, rem a %' => 'CSS units: px, em, rem and %',   // v76
+    'Selektory a specificita' => 'Selectors and specificity',   // v76
+    'Rozlišení obrázku a DPI' => 'Image resolution and DPI',   // v76
     'Vyřešeno {n}×' => 'Solved {n}×',
     'Rozpracováno' => 'In progress',
     'Nezačato' => 'Not started',

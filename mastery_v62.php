@@ -22,7 +22,7 @@ const M62_LAST_N = 8;
 const M62_MIN_WEIGHT = 1.0;
 const M62_CONSOLIDATE_SCORE = 0.6;
 const M62_CONSOLIDATE_GAP_DAYS = 7;
-const M62_WEIGHTS = ['test' => 1.0, 'project' => 1.0, 'lab' => 0.7, 'game' => 0.4, 'arena' => 0.4, 'lesson' => 0.3];
+const M62_WEIGHTS = ['test' => 1.0, 'project' => 1.0, 'lab' => 0.7, 'game' => 0.4, 'arena' => 0.4, 'lesson' => 0.3, 'task' => 0.5, 'observation' => 0.8];   // v76: úloha (formativní výpočet) a pozorování učitele
 const M62_GAME_SOURCES = ['game', 'arena'];
 const M62_STATES = ['neovereno', 'rozpracovano', 'zvladnuto', 'upevneno'];
 

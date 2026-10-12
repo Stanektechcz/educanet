@@ -169,7 +169,7 @@ function nav61_v75_items(string $view, ?string $classId): array
 {
     if ($classId === null) return [];
     $items = [];
-    if (in_array($classId, ['class_3a', 'class_4a'], true)) $items[] = nav61_entry('?view=ulohy', trm('Úlohy s variantami'), ['ulohy'], $view);
+    if (in_array($classId, ['class_1a', 'class_2a', 'class_3a', 'class_4a'], true)) $items[] = nav61_entry('?view=ulohy', trm('Úlohy s variantami'), ['ulohy'], $view);   // v76: i grafika a web (1.A, 2.A)
     $packs = defined('STORAGE_DIR') && function_exists('storage_read_request') && is_file(STORAGE_DIR . '/review_v75.json.php') ? (storage_read_request(STORAGE_DIR . '/review_v75.json.php', false)['packs'] ?? []) : [];
     if ((string)($packs[$classId]['status'] ?? '') === 'published') $items[] = nav61_entry('?view=opakovani', trm('Opakování před písemkou'), ['opakovani'], $view);
     return $items;

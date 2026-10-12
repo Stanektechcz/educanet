@@ -24,7 +24,7 @@ function lc72_render_tab(array $modules, string $classId, string $csrf): void
     $class = in_array($requested, $classes, true) ? $requested : ($classes[0] ?? '');
     $lesson = is_string($_GET['lesson'] ?? null) && preg_match('/^\d{1,2}$/', (string)$_GET['lesson']) === 1 ? (int)$_GET['lesson'] : 0;
     echo '<section class="teacher-page-head c70-head"><div><div class="eyebrow">Výuka · obsah lekcí</div><h1>Schvalování lekcí</h1>'
-        . '<p>Návrh obsahu vlny 1 (lekce ' . LC72_WAVE1[0] . '–' . LC72_WAVE1[1] . '). Žáci uvidí cíl, exit ticket a domácí přípravu až po schválení – do té doby mají původní lekci.</p></div></section>';
+        . '<p>Návrh obsahu vlny 1 (lekce ' . LC72_WAVE1[0] . '–' . LC72_WAVE1[1] . ') a vlny 2 (lekce 17–28, v76). Žáci uvidí cíl, exit ticket a domácí přípravu až po schválení – do té doby mají původní lekci.</p></div></section>';
     if ($class === '') {
         echo function_exists('c70_empty_html') ? c70_empty_html('Nemáte přiřazenou žádnou třídu.', 'Schvalování se ukáže, jakmile vám administrátor přidělí třídu.', []) : '';
         return;

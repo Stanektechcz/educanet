@@ -17,7 +17,7 @@ require_once __DIR__ . '/competencies_v62.php'; // COMP62_RETENTION_GRACE_DAYS i
 
 const EV62_VERSION = 1;
 /** Typy zdrojů (váhy viz mastery_v62.php). */
-const EV62_SOURCES = ['test', 'project', 'lab', 'game', 'arena', 'lesson'];
+const EV62_SOURCES = ['test', 'project', 'lab', 'game', 'arena', 'lesson', 'task', 'observation'];   // v76: úlohy s variantami (taskbank_v76.php) a ruční pozorování učitele (observation_v76.php)
 const EV62_MAX_ROWS = 5000;
 const EV62_ID_RE = '/^stu_[0-9a-f]{16}$/';
 const EV62_COMP_RE = '/^[a-z][a-z0-9_]{2,39}$/';

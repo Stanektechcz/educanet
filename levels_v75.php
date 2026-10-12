@@ -15,8 +15,10 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  */
 
 const LV75_LEVELS = ['zaklad' => 'Základ', 'standard' => 'Standard', 'vyzva' => 'Výzva'];
-const LV75_LESSONS_MAX = 16;
+const LV75_LESSONS_MAX = 28;   // v76: vlna 2 (L17–L28) v levels_v76_content_<třída>.php
 const LV75_CLASS_FILES = ['class_1a' => 'levels_v75_content_1a.php', 'class_2a' => 'levels_v75_content_2a.php', 'class_3a' => 'levels_v75_content_3a.php', 'class_4a' => 'levels_v75_content_4a.php'];
+/** v76: návrh úrovní L17–L28 (stejný tvar; čte lv75_content, schvaluje se stejně v záložce urovne75). */
+const LV76_CLASS_FILES = ['class_1a' => 'levels_v76_content_1a.php', 'class_2a' => 'levels_v76_content_2a.php', 'class_3a' => 'levels_v76_content_3a.php', 'class_4a' => 'levels_v76_content_4a.php'];
 const LV75_ACTIONS = ['lv75_approve', 'lv75_return'];
 const LV75_NOTE_MAX = 300;
 const LV75_RECENT_DAYS = 14;
@@ -38,8 +40,9 @@ function lv75_content(string $classId): array
     if (!isset(LV75_CLASS_FILES[$classId])) return [];
     if (isset($memo[$classId])) return $memo[$classId];
     $data = require __DIR__ . '/' . LV75_CLASS_FILES[$classId];
+    $wave2 = isset(LV76_CLASS_FILES[$classId]) && is_file(__DIR__ . '/' . LV76_CLASS_FILES[$classId]) ? require __DIR__ . '/' . LV76_CLASS_FILES[$classId] : [];
     $out = [];
-    foreach ((array)$data as $n => $row) if (is_array($row) && (int)$n >= 1 && (int)$n <= LV75_LESSONS_MAX) $out[(int)$n] = $row;
+    foreach ([(array)$data, (array)$wave2] as $part) foreach ($part as $n => $row) if (is_array($row) && (int)$n >= 1 && (int)$n <= LV75_LESSONS_MAX && !isset($out[(int)$n])) $out[(int)$n] = $row;
     ksort($out);
     return $memo[$classId] = $out;
 }

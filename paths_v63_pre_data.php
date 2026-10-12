@@ -29,6 +29,21 @@ return array (
       'cmd' => 'chmod 755 skript.sh && stat -c \'%A %n\' skript.sh',
       'out' => '-rwxr-xr-x skript.sh',
     ),
+    'lnx_services|predict|c1' => 
+    array (
+      'cmd' => 'systemctl is-active cron',
+      'out' => 'active',
+    ),
+    'lnx_services|predict|c2' => 
+    array (
+      'cmd' => 'systemctl is-enabled ssh',
+      'out' => 'enabled',
+    ),
+    'lnx_services|predict|c3' => 
+    array (
+      'cmd' => 'pgrep cron',
+      'out' => '317',
+    ),
     'net_dns|predict|c1' => 
     array (
       'cmd' => 'cat /etc/hosts',
@@ -52,6 +67,40 @@ search skola.test',
     array (
       'cmd' => 'host intranet.skola.test',
       'out' => 'intranet.skola.test has address 10.0.0.10',
+    ),
+    'net_ports|predict|c1' => 
+    array (
+      'cmd' => 'ss -tln',
+      'out' => 'Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:Port Process
+tcp   LISTEN 0      511            0.0.0.0:22         0.0.0.0:* 
+tcp   LISTEN 0      511            0.0.0.0:80         0.0.0.0:* ',
+    ),
+    'net_ports|predict|c2' => 
+    array (
+      'cmd' => 'nc -zv 10.0.0.10 443',
+      'out' => 'nc: connect to 10.0.0.10 (10.0.0.10) port 443 (tcp) failed: Connection refused',
+    ),
+    'net_ports|predict|c3' => 
+    array (
+      'cmd' => 'nc -zv 10.0.0.10 22',
+      'out' => 'Connection to 10.0.0.10 (10.0.0.10) 22 port [tcp/ssh] succeeded!',
+    ),
+    'net_security|predict|c1' => 
+    array (
+      'cmd' => 'sudo grep PermitRootLogin /etc/ssh/sshd_config',
+      'out' => 'PermitRootLogin no',
+    ),
+    'net_security|predict|c2' => 
+    array (
+      'cmd' => 'nc -zv 10.0.0.99 80',
+      'out' => 'nc: connect to 10.0.0.99 (10.0.0.99) port 80 (tcp) failed: Connection timed out',
+    ),
+    'net_security|predict|c3' => 
+    array (
+      'cmd' => 'ss -tln',
+      'out' => 'Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:Port Process
+tcp   LISTEN 0      511            0.0.0.0:22         0.0.0.0:* 
+tcp   LISTEN 0      511            0.0.0.0:80         0.0.0.0:* ',
     ),
   ),
 );

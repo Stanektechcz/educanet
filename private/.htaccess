@@ -2,7 +2,7 @@
 # hostingu, který ho neumí umístit mimo web root vůbec).
 <IfModule mod_authz_core.c>
     Require all denied
-    <!-- SEC59-01: hlubší <FilesMatch> vyhrává nad kořenovým allowlistem PHP skriptů. -->
+    # SEC59-01: hlubší <FilesMatch> vyhrává nad kořenovým allowlistem PHP skriptů.
     <FilesMatch ".">
         Require all denied
     </FilesMatch>

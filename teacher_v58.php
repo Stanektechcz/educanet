@@ -168,6 +168,30 @@ function teacher58_modules(): array
             ],
             'render' => static function (array $m, string $c) use ($csrf): void { rv75_render_teacher_tab($m, $c, $csrf()); },
         ],
+        // v76 · Plán vs. skutečnost: tematický plán (kalendář školy) proti reflexím hodin v73, zpoždění, prognóza a návrhy dohnání (jen čtení, bez jmen).
+        // GET ?tisk=1 = stránka k tisku (politika plan76|tisk: třída povinná a v rozsahu). Kalendář se nikdy sám nemění.
+        'plan76' => [
+            'label' => 'Plán vs. skutečnost', 'hint' => 'Odučeno, posuny, prognóza a jak dohnat', 'group' => 'podpora',
+            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_today_v70.php', 'lesson_reflect_v73.php', 'plan_v76.php', 'plan_v76_views.php'],
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v76.css'],
+            'get' => [
+                'tisk' => static function (array $m): void { pv76_print_page(); },
+            ],
+            'render' => static function (array $m, string $c): void { pv76_render_tab($m, $c); },
+        ],
+        // v76 · Plnění ŠVP po třídách a pololetích (schválené vazby × odučené lekce, mezery) – jen čtení, bez jmen. GET ?tisk=1 a ?csv=1
+        // (politiky svp76|tisk a svp76|csv: třída povinná a v rozsahu); ?pololeti=1|2 jen přepíná pohled.
+        'svp76' => [
+            'label' => 'Plnění ŠVP', 'hint' => 'Výsledky ŠVP po pololetích, mezery, tisk a CSV', 'group' => 'podpora',
+            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_today_v70.php', 'lesson_reflect_v73.php', 'svp_v72.php',
+                'plan_v76.php', 'svp_export_v76.php', 'svp_export_v76_views.php'],
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v76.css'],
+            'get' => [
+                'tisk' => static function (array $m): void { sx76_print_page(); },
+                'csv' => static function (array $m): void { sx76_csv_download(); },
+            ],
+            'render' => static function (array $m, string $c): void { sx76_render_tab($m, $c); },
+        ],
         // v70 · Přehled správy: účty a role, pokrytí tříd, provoz, kvalita dat a doporučení – jen administrátor, jen čtení.
         'sprava_prehled' => [
             'label' => 'Přehled správy', 'hint' => 'Účty, role, pokrytí tříd, zálohy a doporučení', 'group' => 'podpora', 'admin' => true,
@@ -302,9 +326,9 @@ function teacher58_modules(): array
         // Žádný zvláštní GET parametr registru.
         'kompetence' => [
             'label' => 'Kompetence', 'hint' => 'Mapa „umím / učím se / zatím ne“ za třídu (pilot 3.A a 1.A)', 'group' => 'podpora',
-            'files' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'competency_v62_teacher_views.php'],
-            'css' => ['assets/competency-v62.css'],
-            'post' => ['comp62_' => 'comp62_teacher_handle_post'],
+            'files' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'teacher_prefs_v72_1.php', 'observation_v76.php', 'competency_v62_teacher_views.php'],
+            'css' => ['assets/competency-v62.css', 'assets/cockpit-v76.css'],
+            'post' => ['comp62_' => 'comp62_teacher_handle_post', 'ob76_' => 'ob76_teacher_handle_post'],   // v76: ruční pozorování (ob76_add, grading.manage)
             'render' => static function (array $m, string $c) use ($csrf): void { comp62_render_teacher_tab($c, $csrf()); },
         ],
         // v64 · ekonomika her: report inflace XP, absolutní žebříček u akcí, retrospektivy týmových her (bez jmen; asistent je nevidí).

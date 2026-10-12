@@ -79,7 +79,7 @@ foreach ([[$C3, 'a', 'lnx_chmod'], [$C3, 'c', 'net_dns'], [$C1, 'b', 'web_html']
 }
 $check('šablony: každý krok všech 4 cest se vykreslí (h1, ovládací prvek podle typu, CSRF, bez PHP chyb)' . ($renderProblems ? ': ' . implode(', ', $renderProblems) : ''), $renderProblems === []);
 $listHtml = audit_capture(static function () use ($C3, $keyA): void { p63_render_list($C3, $keyA); });
-$check('seznam cest: <h1>, karty cest s <ol> kroků, každý stav textem i ikonou (Hotovo/Další krok/Zamčeno), přiřazení štítkem; bez jmen jiných žáků a bez PHP chyb', str_contains($listHtml, '<h1>Moje cesty</h1>') && substr_count($listHtml, '<ol class="p63-steps"') === 2 && str_contains($listHtml, 'Hotovo') && str_contains($listHtml, 'aria-hidden="true"')
+$check('seznam cest: <h1>, karty cest s <ol> kroků, každý stav textem i ikonou (Hotovo/Další krok/Zamčeno), přiřazení štítkem; bez jmen jiných žáků a bez PHP chyb', str_contains($listHtml, '<h1>Moje cesty</h1>') && substr_count($listHtml, '<ol class="p63-steps"') === count(p63_paths_for_class($C3)) && str_contains($listHtml, 'Hotovo')   /* v76: 5 cest 3.A */ && str_contains($listHtml, 'aria-hidden="true"')
     && !str_contains($listHtml, 'Audit Cesta Dva') && audit_response_clean(['status' => 200, 'body' => $listHtml]));
 $retr = p63_submit_step($C3, v63fx_key($C3, 'd'), 'lnx_chmod', 'recall', v63fx_input($C3, 'd', $pathChmod, (array)p63_step($pathChmod, 'recall'), false), $NOW + 6 * $day);
 $retrHtml = p63_render_result(['score' => $retr['score'], 'passed' => $retr['passed'], 'detail' => $retr['detail']], $pathChmod, (array)p63_step($pathChmod, 'recall'));

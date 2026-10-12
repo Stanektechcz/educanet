@@ -16,7 +16,8 @@ require_once __DIR__ . '/taskbank_v75_gen.php';
  */
 
 const TB75_CLASS_SETS = ['class_3a' => ['net_subnet', 'net_mask', 'net_ports', 'net_route', 'lnx_path', 'lnx_chmod', 'lnx_grep'],
-    'class_4a' => ['net_subnet', 'net_mask', 'net_ports', 'net_route', 'lnx_path', 'lnx_chmod', 'lnx_grep']];
+    'class_4a' => ['net_subnet', 'net_mask', 'net_ports', 'net_route', 'lnx_path', 'lnx_chmod', 'lnx_grep'],
+    'class_1a' => ['gfx_color', 'web_units', 'css_spec', 'img_dpi'], 'class_2a' => ['gfx_color', 'web_units', 'css_spec', 'img_dpi']];   // v76: grafika a web
 const TB75_TRIES = 3;
 const TB75_LOG_MAX = 20;
 const TB75_ACTIONS = ['tb75_answer', 'tb75_next'];
@@ -109,6 +110,10 @@ function tb75_submit(string $classId, string $studentKey, string $task, array $a
         $out = ['ok' => true, 'error' => null, 'result' => $res, 'entry' => $e];
         return $d;
     });
+    if (($out['ok'] ?? false) && is_array($out['entry'] ?? null)) {   // v76: dokončené kolo = důkaz kompetence (zdroj task)
+        require_once __DIR__ . '/taskbank_v76.php';
+        $out['evidence'] = tb76_record_evidence($classId, $ref, $task, $out['entry'], $now);
+    }
     return $out;
 }
 

@@ -38,8 +38,12 @@ const P63_BANK_COMPETENCY = [
     'color' => ['gfx_color_contrast'], 'type' => ['gfx_typography', 'g2_typography'], 'formats' => ['gfx_formats'], 'license' => ['gfx_formats'],
     'html' => ['web_html_structure'], 'css' => ['web_css_layout', 'w2_css_responsive'], 'a11y' => ['web_a11y', 'w2_a11y_audit'], 'ux' => ['web_ux', 'gfx_composition'],
     // v75 · 2.A (grafika_web_ii) a 4.A (provoz_site): typografie, směrování, proxy a TLS, záloha (vlastní banka paths_v75_bank.php).
-    'ip' => ['ops_routing'], 'ports' => ['ops_proxy_tls'], 'backup' => ['ops_backup'],
+    'ip' => ['ops_routing'], 'ports' => ['ops_proxy_tls', 'net_services'], 'backup' => ['ops_backup'],
+    // v76 · další cesty 3.A (porty a služby, procesy a služby, zabezpečení) – banka týmových her net.ports / net.procs / net.security.
+    'procs' => ['lnx_services'], 'security' => ['net_security'],
 ];
+/** v76 · další cesty pilotních tříd (fáze E bod 3: 1.A ≥ 4, 3.A ≥ 5) – připojí se za cesty z P63_CLASS_FILES. */
+const P76_PATH_FILES = ['class_1a' => 'paths_v76_content_gfx.php', 'class_3a' => 'paths_v76_content_os.php'];
 
 // ---------------------------------------------------------------------------
 // Katalog cest
@@ -75,9 +79,10 @@ function p63_paths_for_class(string $classId): array
     static $cache = [];
     if (!p63_enabled_for_class($classId)) return [];
     if (isset($cache[$classId])) return $cache[$classId];
-    $data = require __DIR__ . '/' . p63_class_file($classId);
+    $data = (array)require __DIR__ . '/' . p63_class_file($classId);
+    if (isset(P76_PATH_FILES[$classId]) && is_file(__DIR__ . '/' . P76_PATH_FILES[$classId])) $data += (array)require __DIR__ . '/' . P76_PATH_FILES[$classId];   // v76
     $out = [];
-    foreach ((array)$data as $id => $path) {
+    foreach ($data as $id => $path) {
         if (is_array($path) && preg_match(P63_PATH_RE, (string)$id) === 1) $out[(string)$id] = ['id' => (string)$id, 'class' => $classId] + $path;
     }
     return $cache[$classId] = $out;

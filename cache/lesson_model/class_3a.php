@@ -7536,6 +7536,3235 @@ return array (
         ),
         '_file' => 'lesson_content_v72_3a_b.php',
       ),
+      17 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 17 · Shell a cron: malá automatizace s logem',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím napsat krátký skript zálohy, který zapisuje do logu, končí srozumitelným návratovým kódem, a naplánovat ho v cronu se správným zápisem času.',
+          'success_criteria' => 
+          array (
+            0 => 'Skript zapisuje začátek a konec práce do souboru logu.',
+            1 => 'Umím přečíst návratový kód ($?) a vysvětlím, co znamená 0 a nenulová hodnota.',
+            2 => 'Zapíšu cron výraz pro „každý den ve 2:30“ a vysvětlím všech pět polí.',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'lnx_automation',
+            'level' => 2,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start: tichá záloha',
+            'teacher' => 'Popíše zálohu, která měsíc „běžela“, ale nic nezálohovala, protože nikdo neviděl chybu.',
+            'student' => 'Navrhnou, co by chybu odhalilo.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Návratový kód',
+            'teacher' => 'Ukáže $? po úspěšném a neúspěšném příkazu.',
+            'student' => 'Vyzkoušejí návratové kódy v Linux Labu.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 45,
+            'phase' => 'Skript s logem',
+            'teacher' => 'Předvede zápis do logu přes >> a archiv tar s datem v názvu.',
+            'student' => 'Napíší skript zálohy s logem.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 45,
+            'to' => 62,
+            'phase' => 'Cron',
+            'teacher' => 'Rozebere /etc/crontab a pět polí času.',
+            'student' => 'Zapíší cron výrazy pro tři situace.',
+            'form' => 've dvojicích',
+          ),
+          4 => 
+          array (
+            'from' => 62,
+            'to' => 80,
+            'phase' => 'Bezpečné selhání',
+            'teacher' => 'Ukáže kontrolu existence adresáře před zálohou.',
+            'student' => 'Doplní do skriptu kontrolu a hlášku do logu.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 80,
+            'to' => 90,
+            'phase' => 'Exit ticket',
+            'teacher' => 'Shrne: automatizace bez logu je slepá.',
+            'student' => 'Odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Spusť jeden úspěšný a jeden neúspěšný příkaz a po každém vypiš návratový kód příkazem echo $?.',
+            'output' => 'Po false je kód 1, po ls neexistujícího adresáře 2, po úspěchu 0.',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'false; echo $?',
+                'expect' => '1',
+              ),
+              1 => 
+              array (
+                'cmd' => 'ls /neexistuje; echo $?',
+                'expect' => 'No such file or directory',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Vytvoř archiv adresáře data s datem v názvu a zapiš začátek a konec zálohy do souboru zaloha.log.',
+            'output' => 'Soubor zaloha-RRRR-MM-DD.tar.gz a log se dvěma řádky.',
+            'time' => '20 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'mkdir -p data; echo a > data/x.txt; tar -czf zaloha-$(date +%F).tar.gz data; ls',
+                'expect' => '.tar.gz',
+              ),
+              1 => 
+              array (
+                'cmd' => 'echo start >> zaloha.log; echo konec >> zaloha.log; cat zaloha.log',
+                'expect' => 'konec',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Přečti systémový /etc/crontab, vysvětli pět polí času a zapiš cron výrazy pro: každý den ve 2:30, každou neděli ve 23:00 a každých 15 minut.',
+            'output' => '30 2 * * *, 0 23 * * 0 a */15 * * * * s vysvětlením polí.',
+            'time' => '15 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'cat /etc/crontab',
+                'expect' => 'm h dom mon dow user',
+              ),
+              1 => 
+              array (
+                'cmd' => 'crontab -l',
+                'expect' => 'no crontab for student',
+              ),
+            ),
+          ),
+          3 => 
+          array (
+            'text' => 'Doplň do skriptu kontrolu, že zdrojový adresář existuje; když chybí, zapiš do logu chybu a skonči nenulovým kódem.',
+            'output' => 'Řádek typu [ -d data ] || { echo "chybí data" >> zaloha.log; exit 1; } a ověření.',
+            'time' => '18 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => '[ -d /zaloha ] || echo \'chybi adresar\'',
+                'expect' => 'chybi adresar',
+              ),
+            ),
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane kostru skriptu s komentáři a tabulku polí cronu; doplňuje příkazy.',
+          'standard' => 'Návratové kódy, skript s logem a archivem, cron výrazy a kontrola adresáře.',
+          'challenge' => 'Navrhne rotaci záloh (ponechat posledních 7 archivů) a popíše, jak ji ověří.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Rychlá otázka: echo $? vypsalo 2 – uspěl příkaz?',
+            1 => 'Kartičky: učitel řekne čas, dvojice zapíše cron výraz.',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Návratový kód',
+              'levels' => 
+              array (
+                0 => 'Nezná.',
+                1 => 'Ví, že 0 je úspěch.',
+                2 => 'Čte $? a používá ho ve skriptu.',
+                3 => 'Vysvětlí, proč skript končí nenulovým kódem.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Skript s logem',
+              'levels' => 
+              array (
+                0 => 'Bez logu.',
+                1 => 'Log přepisuje (>).',
+                2 => 'Log připisuje (>>) začátek i konec.',
+                3 => 'Log s datem a výsledkem každého kroku.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Cron',
+              'levels' => 
+              array (
+                0 => 'Nezná pole.',
+                1 => 'Pole zná, výrazy s chybou.',
+                2 => 'Tři správné výrazy.',
+                3 => 'Vysvětlí, jak ověří, že úloha opravdu běží.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'lnx_automation',
+          'competence_label' => 'Linux: automatizace skriptem a cronem',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Který cron výraz spustí úlohu každý den ve 2:30?',
+              'options' => 
+              array (
+                0 => '2 30 * * *',
+                1 => '30 2 * * *',
+                2 => '* * 2 30 *',
+              ),
+              'correct' => 1,
+              'explanation' => 'Pořadí polí: minuta, hodina, den v měsíci, měsíc, den v týdnu.',
+            ),
+            1 => 
+            array (
+              'question' => 'Co znamená, když echo $? po příkazu vypíše 0?',
+              'options' => 
+              array (
+                0 => 'Předchozí příkaz skončil úspěšně.',
+                1 => 'Příkaz nic nevypsal.',
+                2 => 'Příkaz skončil chybou číslo 0.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Návratový kód 0 = úspěch, nenulový = chyba.',
+            ),
+            2 => 
+            array (
+              'question' => 'Proč skript zálohy zapisuje do logu pomocí >> a ne >?',
+              'options' => 
+              array (
+                0 => '>> je rychlejší.',
+                1 => '> nefunguje v cronu.',
+                2 => '>> připisuje na konec, > by log pokaždé přepsal.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Historie logu zůstane zachovaná.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: zapiš cron výraz pro úlohu každé pondělí v 7:15 a ověř ho v nápovědě crontab v Linux Labu.',
+            'minutes' => 10,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Skripty a cron zkoušíme jen v simulátoru Linux Labu, ne na školních počítačích.',
+          1 => 'Do skriptů ani logů nepíšeme hesla; zálohujeme jen ukázková data.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: zaměněné pořadí minuty a hodiny v cronu – nech žáky číst pole nahlas.',
+          1 => 'Otázka do třídy: Jak poznáš ráno, že noční záloha opravdu proběhla?',
+          2 => 'Tempo: simulátor nepodporuje řídicí struktury ve skriptech – podmínku zapisuj jako [ … ] || …; if/else ukaž na tabuli.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1–3 v Linux Labu podle zadání (výstupy jsou v zadání), úkol 4 na papír.',
+          1 => 'Plán B offline: tabulka polí cronu a kartičky s časy; skript zálohy napsaný do sešitu.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'shell',
+          1 => 'retention',
+        ),
+        '_file' => 'lesson_content_v76_3a_a.php',
+      ),
+      18 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 18 · Závěrečný incident: nefunguje služba – Linux i síť',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím vyřešit incident „web nejde“ postupem od důkazu k nápravě: stav služby, naslouchající port, konfigurace, oprava a ověření, a sepsat krátký záznam incidentu.',
+          'success_criteria' => 
+          array (
+            0 => 'Každý krok podložím výstupem příkazu (systemctl, ss, curl).',
+            1 => 'Před restartem ověřím konfiguraci (nginx -t).',
+            2 => 'Záznam incidentu má příznak, příčinu, opravu, ověření a prevenci.',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'lnx_services',
+            'level' => 3,
+          ),
+          1 => 
+          array (
+            'id' => 'net_diagnose',
+            'level' => 3,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Hlášení incidentu',
+            'teacher' => 'Přečte hlášení „intranet nejde“ a rozdá role ve dvojici (řešitel, zapisovatel).',
+            'student' => 'Zapíší příznak a čas.',
+            'form' => 've dvojicích',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 30,
+            'phase' => 'Sběr důkazů',
+            'teacher' => 'Připomene pořadí: služba → port → konfigurace → aplikace.',
+            'student' => 'Zjistí stav služby a naslouchající porty.',
+            'form' => 've dvojicích',
+          ),
+          2 => 
+          array (
+            'from' => 30,
+            'to' => 50,
+            'phase' => 'Příčina a oprava',
+            'teacher' => 'Hlídá, aby oprava byla nejmenší možná.',
+            'student' => 'Ověří konfiguraci a službu spustí.',
+            'form' => 've dvojicích',
+          ),
+          3 => 
+          array (
+            'from' => 50,
+            'to' => 65,
+            'phase' => 'Ověření',
+            'teacher' => 'Vyžaduje ověření z pohledu uživatele (curl).',
+            'student' => 'Ověří odpověď webu a zkontrolují log.',
+            'form' => 've dvojicích',
+          ),
+          4 => 
+          array (
+            'from' => 65,
+            'to' => 82,
+            'phase' => 'Záznam incidentu',
+            'teacher' => 'Ukáže osnovu záznamu bez hledání viníka.',
+            'student' => 'Sepíší záznam incidentu.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 82,
+            'to' => 90,
+            'phase' => 'Exit ticket',
+            'teacher' => 'Shrne postup od důkazu k nápravě.',
+            'student' => 'Odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'V simulátoru zastav nginx a jako řešitel zjisti stav služby a odpověď webu na localhost.',
+            'output' => 'systemctl is-active vrátí inactive a curl hlásí, že se nemůže připojit.',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo systemctl stop nginx; systemctl is-active nginx',
+                'expect' => 'inactive',
+              ),
+              1 => 
+              array (
+                'cmd' => 'sudo systemctl stop nginx; curl -I http://localhost',
+                'expect' => 'Couldn\'t connect to server',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Zjisti, které porty server poslouchá, a ověř konfiguraci webového serveru dřív, než ho spustíš.',
+            'output' => 'ss -tln ukáže porty 22 a 80, nginx -t hlásí syntax is ok.',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'ss -tln',
+                'expect' => '0.0.0.0:22',
+              ),
+              1 => 
+              array (
+                'cmd' => 'sudo nginx -t',
+                'expect' => 'syntax is ok',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Spusť službu a ověř opravu z pohledu uživatele i v logu služby.',
+            'output' => 'curl -I vrací HTTP/1.1 200 OK a journal obsahuje Started nginx.service.',
+            'time' => '15 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo systemctl stop nginx; sudo systemctl start nginx; curl -I http://localhost',
+                'expect' => 'HTTP/1.1 200 OK',
+              ),
+              1 => 
+              array (
+                'cmd' => 'sudo systemctl stop nginx; sudo systemctl start nginx; journalctl -u nginx -n 5',
+                'expect' => 'Started nginx.service',
+              ),
+            ),
+          ),
+          3 => 
+          array (
+            'text' => 'Sepiš záznam incidentu: příznak, časová osa, příčina, oprava, ověření a jedno opatření prevence – bez jmen a hledání viníka.',
+            'output' => 'Záznam incidentu na půl strany.',
+            'time' => '18 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane kartu s pořadím příkazů (systemctl → ss → nginx -t → curl) a šablonu záznamu.',
+          'standard' => 'Celý incident podle postupu a záznam.',
+          'challenge' => 'Navrhne kontrolu (monitoring), která by výpadek ohlásila dřív než uživatel.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Zapisovatel ukáže, který příkaz dokládá každý krok.',
+            1 => 'Učitel se zeptá: proč nginx -t před startem?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Důkazy',
+              'levels' => 
+              array (
+                0 => 'Hádá.',
+                1 => 'Jeden důkaz.',
+                2 => 'Každý krok podložený výstupem.',
+                3 => 'Důkazy seřazené od uživatele ke službě.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Oprava',
+              'levels' => 
+              array (
+                0 => 'Restartuje naslepo.',
+                1 => 'Restart bez kontroly konfigurace.',
+                2 => 'nginx -t, start a ověření.',
+                3 => 'Nejmenší oprava se zdůvodněním.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Záznam incidentu',
+              'levels' => 
+              array (
+                0 => 'Chybí.',
+                1 => 'Jen oprava.',
+                2 => 'Příznak, příčina, oprava, ověření, prevence.',
+                3 => 'Časová osa a měřitelné opatření.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'net_diagnose',
+          'competence_label' => 'Diagnostika síťového problému',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Co uděláš před restartem webového serveru po změně konfigurace?',
+              'options' => 
+              array (
+                0 => 'Smažu log, ať je přehledný.',
+                1 => 'Restartuji celý server.',
+                2 => 'Ověřím konfiguraci příkazem nginx -t.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Chybná konfigurace by službu po restartu shodila.',
+            ),
+            1 => 
+            array (
+              'question' => 'curl -I http://localhost hlásí „Couldn’t connect to server“. Co ověříš jako první?',
+              'options' => 
+              array (
+                0 => 'Jestli služba běží a poslouchá na portu 80.',
+                1 => 'Jestli funguje DNS na internetu.',
+                2 => 'Jestli má uživatel správné heslo.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Spojení odmítnuto = nikdo neposlouchá.',
+            ),
+            2 => 
+            array (
+              'question' => 'Co do záznamu incidentu nepatří?',
+              'options' => 
+              array (
+                0 => 'Ověření opravy.',
+                1 => 'Jméno člověka, který chybu způsobil.',
+                2 => 'Opatření prevence.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Záznam hledá příčinu v systému, ne viníka.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: v Linux Labu vyřeš jednu úroveň s nefunkční službou a zapiš důkaz, který tě dovedl k příčině.',
+            'minutes' => 20,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Služby zastavujeme a spouštíme jen v simulátoru Linux Labu.',
+          1 => 'Záznam incidentu neobsahuje jména, hesla ani skutečné adresy.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: restart jako první krok – nech žáky nejdřív zapsat důkaz.',
+          1 => 'Otázka do třídy: Který výstup by přesvědčil kolegu, že je opraveno?',
+          2 => 'Tempo: když incident trvá, záznam dokončete jako domácí dobrovolnou část, ověření ale v hodině.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: dvojice plní úkoly 1–3 v Linux Labu (výstupy v zadání), úkol 4 na papír.',
+          1 => 'Plán B offline: karty s výpisy systemctl, ss a curl; žáci podle nich sestaví postup a záznam.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'listener',
+          1 => 'runbook',
+        ),
+        '_file' => 'lesson_content_v76_3a_a.php',
+      ),
+      19 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 19 · Incident souborového systému: kde zmizelo místo?',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím zjistit zaplnění disku, najít největší adresáře a soubory a rozlišit, jestli problém způsobilo místo, nebo počet souborů (inody).',
+          'success_criteria' => 
+          array (
+            0 => 'Z výpisu df -h přečtu zaplnění a přípojný bod oddílu.',
+            1 => 'Příkazy du a find najdu, co zabírá nejvíc místa v /var/log.',
+            2 => 'Vysvětlím, co je inode a proč může dojít, i když místo zbývá.',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'lnx_navigation',
+            'level' => 3,
+          ),
+          1 => 
+          array (
+            'id' => 'lnx_services',
+            'level' => 2,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start: „No space left on device“',
+            'teacher' => 'Ukáže hlášku a zeptá se, co všechno mohlo dojít.',
+            'student' => 'Navrhnou hypotézy.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'df a lsblk',
+            'teacher' => 'Vysvětlí oddíly, přípojné body (mount point) a sloupce df.',
+            'student' => 'Přečtou zaplnění a najdou, kde je připojený kořen.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 45,
+            'phase' => 'du a find',
+            'teacher' => 'Předvede hledání velkých adresářů a souborů.',
+            'student' => 'Najdou největší položky v /var/log.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 45,
+            'to' => 60,
+            'phase' => 'Inody',
+            'teacher' => 'Vysvětlí inode a ukáže ho ve výpisu stat.',
+            'student' => 'Najdou číslo inode souboru a popíší, kdy dojdou.',
+            'form' => 've dvojicích',
+          ),
+          4 => 
+          array (
+            'from' => 60,
+            'to' => 80,
+            'phase' => 'Bezpečný úklid',
+            'teacher' => 'Ukáže, proč se nemaže log služby, která do něj právě píše.',
+            'student' => 'Navrhnou bezpečný úklid a retenci logů.',
+            'form' => 've dvojicích',
+          ),
+          5 => 
+          array (
+            'from' => 80,
+            'to' => 90,
+            'phase' => 'Exit ticket',
+            'teacher' => 'Shrne postup: df → du → find → bezpečný úklid.',
+            'student' => 'Odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Přečti zaplnění disků příkazem df -h a v lsblk najdi, který oddíl je připojený jako kořen /.',
+            'output' => '/dev/sda1 připojený na /, zaplnění v procentech a volné místo.',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'df -h',
+                'expect' => '/dev/sda1',
+              ),
+              1 => 
+              array (
+                'cmd' => 'lsblk',
+                'expect' => 'sda1',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Zjisti velikost položek v /var/log a najdi všechny soubory s příponou .log.',
+            'output' => 'du ukáže /var/log/nginx jako největší; find vypíše čtyři soubory .log.',
+            'time' => '18 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'du -sh /var/log/*',
+                'expect' => '/var/log/nginx',
+              ),
+              1 => 
+              array (
+                'cmd' => 'find /var/log -type f -name \'*.log\'',
+                'expect' => '/var/log/nginx/error.log',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Najdi ve výpisu stat číslo inode souboru /etc/hosts a vysvětli, co by se stalo, kdyby inody došly.',
+            'output' => 'Řádek Inode: 120501 a vysvětlení: nový soubor nejde vytvořit, i když místo zbývá.',
+            'time' => '13 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'stat /etc/hosts',
+                'expect' => 'Inode: 120501',
+              ),
+            ),
+          ),
+          3 => 
+          array (
+            'text' => 'Navrhni bezpečný postup úklidu plného /var/log: co smažeš, co zkomprimuješ, jak nastavíš retenci a jak ověříš, že služba dál zapisuje.',
+            'output' => 'Postup ve 4–5 krocích s ověřením.',
+            'time' => '20 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane popsaný výpis df -h se zvýrazněnými sloupci a pořadí příkazů.',
+          'standard' => 'Zaplnění, hledání velkých položek, inody a návrh úklidu.',
+          'challenge' => 'Vysvětlí, proč po smazání otevřeného logu místo nepřibude, dokud služba soubor nezavře.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Učitel ukáže řádek df a třída řekne zaplnění a přípojný bod.',
+            1 => 'Dvojice: místo, nebo inody? (učitel popisuje situace)',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Zaplnění disku',
+              'levels' => 
+              array (
+                0 => 'Nečte df.',
+                1 => 'Přečte procenta.',
+                2 => 'Oddíl, přípojný bod, zaplnění.',
+                3 => 'Spojí s lsblk a odhadne růst.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Hledání příčiny',
+              'levels' => 
+              array (
+                0 => 'Nehledá.',
+                1 => 'Jen du.',
+                2 => 'du i find s filtrem.',
+                3 => 'Najde příčinu i dobu vzniku.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Bezpečný úklid',
+              'levels' => 
+              array (
+                0 => 'Smaže vše.',
+                1 => 'Maže bez ověření.',
+                2 => 'Komprese, retence a ověření.',
+                3 => 'Navrhne prevenci (rotace, upozornění).',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'lnx_navigation',
+          'competence_label' => 'Linux: shell a práce se soubory',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Disk hlásí „No space left on device“, ale df -h ukazuje 40 % volného místa. Co ověříš?',
+              'options' => 
+              array (
+                0 => 'Rychlost disku.',
+                1 => 'Jestli nedošly inody (df -i).',
+                2 => 'Jestli je zapnutý firewall.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Každý soubor potřebuje inode; může jich dojít dřív než místa.',
+            ),
+            1 => 
+            array (
+              'question' => 'Kterým příkazem zjistíš, kolik místa zabírají jednotlivé položky v /var/log?',
+              'options' => 
+              array (
+                0 => 'du -sh /var/log/*',
+                1 => 'ls /var/log',
+                2 => 'pwd /var/log',
+              ),
+              'correct' => 0,
+              'explanation' => 'du sčítá velikost obsahu adresářů.',
+            ),
+            2 => 
+            array (
+              'question' => 'Proč nemazat log, do kterého služba právě zapisuje?',
+              'options' => 
+              array (
+                0 => 'Protože log je vždy prázdný.',
+                1 => 'Protože to zakazuje df.',
+                2 => 'Protože místo se uvolní až po zavření souboru službou a ztratíš historii.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Bezpečnější je komprese a rotace logů.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: v Linux Labu najdi příkazem find všechny soubory větší než 1 kB v /var/log a zapiš, co v nich je.',
+            'minutes' => 15,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Úklid a mazání zkoušíme jen v simulátoru; na skutečném systému se nejdřív zálohuje.',
+          1 => 'Logy mohou obsahovat osobní údaje – nesdílíme je mimo hodinu.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: rm -rf /var/log/* jako „oprava“ – zdůrazni ztrátu důkazů i historie.',
+          1 => 'Otázka do třídy: Jak se dozvíte o plném disku dřív, než ho nahlásí uživatel?',
+          2 => 'Tempo: inody stačí vysvětlit na jednom výpisu stat; víc času dej návrhu úklidu.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1–3 v Linux Labu (výstupy v zadání), úkol 4 písemně.',
+          1 => 'Plán B offline: vytištěné výpisy df, du a stat s otázkami.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'inode',
+          1 => 'mount-point',
+        ),
+        '_file' => 'lesson_content_v76_3a_a.php',
+      ),
+      20 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 20 · Služby a jejich závislosti v systemd',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím vypsat služby systému, zjistit, které selhaly, rozlišit stav „běží“ a „povolena po startu“ a vysvětlit, proč služba závisí na síti nebo jiné službě.',
+          'success_criteria' => 
+          array (
+            0 => 'Z výpisu list-units najdu běžící služby a v --failed selhané.',
+            1 => 'Rozliším is-active (běží teď) a is-enabled (spustí se po startu).',
+            2 => 'Ke službě nginx popíšu, na čem závisí (síť, konfigurace, port).',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'lnx_services',
+            'level' => 3,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start: po restartu nejede',
+            'teacher' => 'Popíše situaci: web běžel, po restartu serveru ne.',
+            'student' => 'Hádají, co se změnilo.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Seznam služeb',
+            'teacher' => 'Předvede systemctl list-units a --failed.',
+            'student' => 'Vypíší služby a zjistí, která selhala.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 45,
+            'phase' => 'Active vs. enabled',
+            'teacher' => 'Vysvětlí rozdíl mezi stavem teď a po startu.',
+            'student' => 'Ověří is-active a is-enabled u nginx a ssh.',
+            'form' => 've dvojicích',
+          ),
+          3 => 
+          array (
+            'from' => 45,
+            'to' => 65,
+            'phase' => 'Závislosti',
+            'teacher' => 'Nakreslí graf: síť → nginx → web; ssh → správa.',
+            'student' => 'Nakreslí závislosti služeb svého serveru.',
+            'form' => 've dvojicích',
+          ),
+          4 => 
+          array (
+            'from' => 65,
+            'to' => 80,
+            'phase' => 'Scénář po restartu',
+            'teacher' => 'Zadá scénář: služba je active, ale disabled.',
+            'student' => 'Navrhnou opravu a ověření.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 80,
+            'to' => 90,
+            'phase' => 'Exit ticket',
+            'teacher' => 'Shrne: běží ≠ spustí se.',
+            'student' => 'Odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Vypiš služby systému a zjisti, jestli některá selhala.',
+            'output' => 'list-units ukáže cron, nginx, ssh a journald; --failed hlásí 0 loaded units listed.',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'systemctl list-units --type=service',
+                'expect' => 'nginx.service',
+              ),
+              1 => 
+              array (
+                'cmd' => 'systemctl --failed',
+                'expect' => '0 loaded units listed',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Ověř u nginx, jestli běží a jestli se spustí po startu; potom službu zastav a stav ověř znovu.',
+            'output' => 'is-enabled = enabled; po stop je is-active inactive, ale enabled zůstává.',
+            'time' => '15 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'systemctl is-enabled nginx',
+                'expect' => 'enabled',
+              ),
+              1 => 
+              array (
+                'cmd' => 'sudo systemctl stop nginx; systemctl is-active nginx',
+                'expect' => 'inactive',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Přečti stav služby ssh a najdi v něm hlavní proces (Main PID) a řádek, který říká, že je povolená po startu.',
+            'output' => 'Main PID: 180 (sshd) a Loaded: … enabled.',
+            'time' => '10 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'systemctl status ssh',
+                'expect' => 'Main PID: 180',
+              ),
+            ),
+          ),
+          3 => 
+          array (
+            'text' => 'Nakresli graf závislostí služeb serveru (síť, nginx, ssh, cron, journald) a popiš scénář „po restartu web nejede“ s opravou a ověřením.',
+            'output' => 'Graf závislostí a postup: is-enabled → enable → restart serveru → ověření.',
+            'time' => '23 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane tabulku stavů (active/inactive, enabled/disabled) s příklady.',
+          'standard' => 'Seznam služeb, stavy, status a graf závislostí.',
+          'challenge' => 'Vysvětlí, co je drop-in soubor a proč se úprava jednotky dělá raději v něm než v originálu.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Učitel ukáže dvojici stavů (active + disabled), třída řekne, co se stane po restartu.',
+            1 => 'Dvojice: kde ve výpisu status je informace o povolení?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Přehled služeb',
+              'levels' => 
+              array (
+                0 => 'Nevypíše.',
+                1 => 'Vypíše bez porozumění.',
+                2 => 'Najde běžící i selhané služby.',
+                3 => 'Pozná neobvyklou službu.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Stav služby',
+              'levels' => 
+              array (
+                0 => 'Zaměňuje.',
+                1 => 'Zná jen active.',
+                2 => 'Rozliší active a enabled.',
+                3 => 'Navrhne ověření po restartu.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Závislosti',
+              'levels' => 
+              array (
+                0 => 'Chybí.',
+                1 => 'Seznam bez vazeb.',
+                2 => 'Graf s vazbami.',
+                3 => 'Odvodí z grafu pořadí kontroly.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'lnx_services',
+          'competence_label' => 'Linux: služby a systémové logy',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Služba je active, ale disabled. Co se stane po restartu serveru?',
+              'options' => 
+              array (
+                0 => 'Spustí se dvakrát.',
+                1 => 'Nespustí se sama.',
+                2 => 'Smaže se.',
+              ),
+              'correct' => 1,
+              'explanation' => 'disabled = po startu se automaticky nespustí.',
+            ),
+            1 => 
+            array (
+              'question' => 'Který příkaz ukáže služby, které selhaly?',
+              'options' => 
+              array (
+                0 => 'systemctl --failed',
+                1 => 'ls /failed',
+                2 => 'ps aux --failed',
+              ),
+              'correct' => 0,
+              'explanation' => 'systemctl --failed vypíše jednotky ve stavu failed.',
+            ),
+            2 => 
+            array (
+              'question' => 'Co znamená stav „enabled“ u služby?',
+              'options' => 
+              array (
+                0 => 'Služba právě běží.',
+                1 => 'Služba má chybu.',
+                2 => 'Služba se spustí automaticky při startu systému.',
+              ),
+              'correct' => 2,
+              'explanation' => 'enabled se týká startu, ne aktuálního běhu.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: v Linux Labu zjisti stav služby cron (běží? povolená?) a zapiš oba výstupy.',
+            'minutes' => 10,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Služby měníme jen v simulátoru Linux Labu.',
+          1 => 'Na skutečném serveru se službám mění stav jen v domluveném okně změn.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: „běží, tak je to v pořádku“ – po restartu může služba chybět, když není enabled.',
+          1 => 'Otázka do třídy: Jak ověříte chování po restartu bez skutečného restartu produkce?',
+          2 => 'Tempo: drop-in je jen pro výzvu; standard je active vs. enabled a graf.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1–3 v Linux Labu (výstupy v zadání), graf na papír.',
+          1 => 'Plán B offline: kartičky služeb a šipky závislostí na lavici.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'systemd-unit',
+          1 => 'drop-in',
+        ),
+        '_file' => 'lesson_content_v76_3a_a.php',
+      ),
+      21 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 21 · Forenzní čtení logů: co se stalo a kdy',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím z logů služby a přístupového logu webu sestavit časovou osu události, spočítat odpovědi podle stavových kódů a oddělit fakt od domněnky.',
+          'success_criteria' => 
+          array (
+            0 => 'Z journalctl přečtu, kdy se služba zastavila a znovu spustila.',
+            1 => 'Z přístupového logu spočítám odpovědi podle stavového kódu (200, 403, 404).',
+            2 => 'Časová osa obsahuje jen fakta s časem a zdrojem.',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'lnx_services',
+            'level' => 3,
+          ),
+          1 => 
+          array (
+            'id' => 'lnx_text',
+            'level' => 3,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start: kdo za to může?',
+            'teacher' => 'Přečte stížnost „web byl ráno pomalý a hlásil chyby“.',
+            'student' => 'Zapíší, jaké důkazy by potřebovali.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 28,
+            'phase' => 'Journal služby',
+            'teacher' => 'Předvede journalctl -u a -n.',
+            'student' => 'Najdou zastavení a start služby.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 28,
+            'to' => 48,
+            'phase' => 'Přístupový log',
+            'teacher' => 'Rozebere řádek access logu a pole stavového kódu.',
+            'student' => 'Spočítají odpovědi podle kódů.',
+            'form' => 've dvojicích',
+          ),
+          3 => 
+          array (
+            'from' => 48,
+            'to' => 62,
+            'phase' => 'Podezřelé požadavky',
+            'teacher' => 'Ukáže filtr na 403 a opakované adresy.',
+            'student' => 'Najdou požadavky na /admin.',
+            'form' => 've dvojicích',
+          ),
+          4 => 
+          array (
+            'from' => 62,
+            'to' => 82,
+            'phase' => 'Časová osa',
+            'teacher' => 'Ukáže sloupce čas – zdroj – fakt.',
+            'student' => 'Sestaví časovou osu a oddělí domněnky.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 82,
+            'to' => 90,
+            'phase' => 'Exit ticket',
+            'teacher' => 'Shrne: fakt má čas a zdroj.',
+            'student' => 'Odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Zastav v simulátoru nginx a v journalu služby najdi záznamy o zastavení.',
+            'output' => 'Řádky Stopping a Stopped nginx.service s časem.',
+            'time' => '13 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo systemctl stop nginx; journalctl -u nginx -n 5',
+                'expect' => 'Stopped nginx.service',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Spočítej odpovědi webu podle stavového kódu z přístupového logu (pole 9) pomocí awk, sort a uniq -c.',
+            'output' => '15× 200, 6× 403, 9× 404.',
+            'time' => '18 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo awk \'{print $9}\' /var/log/nginx/access.log | sort | uniq -c',
+                'expect' => '9 404',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Vypiš první dva požadavky, na které server odpověděl 403, a zapiš, na jakou stránku mířily.',
+            'output' => 'Požadavky GET /admin z adres 10.0.0.23 a 10.0.0.44.',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo grep \' 403 \' /var/log/nginx/access.log | head -n 2',
+                'expect' => 'GET /admin',
+              ),
+            ),
+          ),
+          3 => 
+          array (
+            'text' => 'Sestav časovou osu ve sloupcích čas – zdroj – fakt a pod ni zvlášť napiš domněnky, které je třeba ověřit.',
+            'output' => 'Časová osa s aspoň 5 fakty a seznam 2 domněnek.',
+            'time' => '20 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane rozebraný řádek access logu s očíslovanými poli a hotový příkaz pro počítání kódů.',
+          'standard' => 'Journal, počty kódů, filtr 403 a časová osa.',
+          'challenge' => 'Najde, ze které adresy přišlo nejvíc chybových odpovědí (awk + sort + uniq -c).',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Učitel ukáže řádek logu, třída řekne čas, adresu, stránku a kód.',
+            1 => 'Dvojice: je tvrzení fakt, nebo domněnka?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Čtení journalu',
+              'levels' => 
+              array (
+                0 => 'Nečte.',
+                1 => 'Najde jen poslední řádek.',
+                2 => 'Najde zastavení i start s časem.',
+                3 => 'Spojí s jinými logy.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Analýza access logu',
+              'levels' => 
+              array (
+                0 => 'Nečte.',
+                1 => 'Ruční počítání.',
+                2 => 'awk + sort + uniq -c.',
+                3 => 'Rozdělení podle adres i stránek.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Časová osa',
+              'levels' => 
+              array (
+                0 => 'Chybí.',
+                1 => 'Fakta bez zdroje.',
+                2 => 'Fakta s časem a zdrojem, domněnky zvlášť.',
+                3 => 'Domněnky s návrhem ověření.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'lnx_text',
+          'competence_label' => 'Linux: práce s textem v příkazové řádce',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Co dělá roura awk "{print $9}" log | sort | uniq -c?',
+              'options' => 
+              array (
+                0 => 'Smaže devátý řádek logu.',
+                1 => 'Seřadí log podle času.',
+                2 => 'Vypíše 9. pole každého řádku a spočítá, kolikrát se která hodnota opakuje.',
+              ),
+              'correct' => 2,
+              'explanation' => 'uniq -c počítá stejné sousední řádky, proto se nejdřív řadí.',
+            ),
+            1 => 
+            array (
+              'question' => 'Které tvrzení je fakt z logu?',
+              'options' => 
+              array (
+                0 => 'V 08:23:55 přišel z 10.0.0.23 požadavek GET /admin s odpovědí 403.',
+                1 => 'Někdo se pokoušel web hacknout.',
+                2 => 'Server je pomalý kvůli útoku.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Fakt má čas, zdroj a obsah; zbytek jsou domněnky.',
+            ),
+            2 => 
+            array (
+              'question' => 'Jak zobrazíš posledních 5 záznamů journalu služby nginx?',
+              'options' => 
+              array (
+                0 => 'tail nginx',
+                1 => 'journalctl -u nginx -n 5',
+                2 => 'cat /nginx/5',
+              ),
+              'correct' => 1,
+              'explanation' => '-u vybere jednotku, -n počet řádků.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: v Linux Labu zjisti, kolik požadavků v access logu skončilo kódem 404 a na které stránky mířily.',
+            'minutes' => 15,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Logy jsou ze simulátoru; adresy 10.0.0.x jsou laboratorní.',
+          1 => 'Skutečné logy mohou obsahovat osobní údaje – čte je jen oprávněná osoba a nesdílí je.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: závěr „útok“ z jednoho 403 – veď k oddělení faktů a domněnek.',
+          1 => 'Otázka do třídy: Co bychom ještě potřebovali vědět, abychom domněnku potvrdili?',
+          2 => 'Tempo: časová osa je výstup hodiny; když awk trvá, dej hotový příkaz a soustřeď se na výklad.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1–3 v Linux Labu (výstupy v zadání), časová osa na papír.',
+          1 => 'Plán B offline: vytištěný výřez logu a ruční sestavení časové osy.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'journal',
+          1 => 'severity',
+        ),
+        '_file' => 'lesson_content_v76_3a_a.php',
+      ),
+      22 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 22 · SSH klíče v praxi: vytvořit, chránit, ověřit',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím vytvořit pár klíčů ed25519, zkontrolovat práva soukromého klíče, vysvětlit roli souborů authorized_keys a known_hosts a ověřit, že server nepovoluje přihlášení roota.',
+          'success_criteria' => 
+          array (
+            0 => 'Soukromý klíč má práva 600 a nikdy ho nikomu neposílám.',
+            1 => 'Rozliším authorized_keys (na serveru, veřejné klíče) a known_hosts (u klienta, otisky serverů).',
+            2 => 'V konfiguraci SSH najdu PermitRootLogin a vysvětlím jeho hodnotu.',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'lnx_ssh',
+            'level' => 3,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start: heslo, nebo klíč?',
+            'teacher' => 'Porovná přihlášení heslem a klíčem z pohledu útočníka.',
+            'student' => 'Vyjmenují rizika hesel.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 28,
+            'phase' => 'Vytvoření klíče',
+            'teacher' => 'Předvede ssh-keygen -t ed25519.',
+            'student' => 'Vytvoří pár klíčů a prohlédnou si veřejnou část.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 28,
+            'to' => 45,
+            'phase' => 'Práva a ochrana',
+            'teacher' => 'Vysvětlí práva 600 a heslo ke klíči (passphrase).',
+            'student' => 'Ověří práva souborů v ~/.ssh.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 45,
+            'to' => 62,
+            'phase' => 'authorized_keys a known_hosts',
+            'teacher' => 'Nakreslí, kde který soubor leží a co obsahuje.',
+            'student' => 'Doplní schéma klient–server.',
+            'form' => 've dvojicích',
+          ),
+          4 => 
+          array (
+            'from' => 62,
+            'to' => 80,
+            'phase' => 'Konfigurace serveru',
+            'teacher' => 'Ukáže sshd_config a port 22.',
+            'student' => 'Ověří dostupnost SSH a nastavení PermitRootLogin.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 80,
+            'to' => 90,
+            'phase' => 'Exit ticket',
+            'teacher' => 'Shrne: soukromý klíč zůstává u tebe.',
+            'student' => 'Odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Vytvoř pár klíčů ed25519 a vypiš veřejnou část klíče.',
+            'output' => 'Soubory id_ed25519 a id_ed25519.pub; veřejný klíč začíná ssh-ed25519.',
+            'time' => '13 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N \'\'; cat ~/.ssh/id_ed25519.pub',
+                'expect' => 'ssh-ed25519 AAAA',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Ověř práva souborů v ~/.ssh a vysvětli, proč soukromý klíč smí číst jen vlastník.',
+            'output' => 'id_ed25519 má -rw------- (600), veřejný klíč -rw-r--r-- (644).',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N \'\'; ls -l ~/.ssh',
+                'expect' => '-rw------- 1 student student',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Nakresli schéma klient–server a doplň, kde leží soukromý klíč, veřejný klíč v authorized_keys a otisk serveru v known_hosts.',
+            'output' => 'Schéma se třemi soubory a šipkou, co se kam kopíruje.',
+            'time' => '15 min',
+          ),
+          3 => 
+          array (
+            'text' => 'Ověř, že na serveru 10.0.0.10 poslouchá SSH, a v konfiguraci najdi nastavení přihlášení roota.',
+            'output' => 'nc hlásí succeeded na portu 22, sshd_config obsahuje PermitRootLogin no.',
+            'time' => '15 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'nc -zv 10.0.0.10 22',
+                'expect' => 'succeeded',
+              ),
+              1 => 
+              array (
+                'cmd' => 'sudo grep -n PermitRootLogin /etc/ssh/sshd_config',
+                'expect' => 'PermitRootLogin no',
+              ),
+            ),
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane schéma s prázdnými políčky a tabulku práv 600/644.',
+          'standard' => 'Klíče, práva, schéma a kontrola konfigurace.',
+          'challenge' => 'Vysvětlí, co se stane při změně otisku serveru v known_hosts a jak postupovat bezpečně.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Rychlá otázka: který soubor smíš poslat správci serveru?',
+            1 => 'Dvojice: ukaž ve výpisu ls -l, kdo smí číst soukromý klíč.',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Vytvoření klíče',
+              'levels' => 
+              array (
+                0 => 'Nezvládne.',
+                1 => 'Klíč bez porozumění.',
+                2 => 'Pár klíčů a rozlišení částí.',
+                3 => 'Vysvětlí volbu ed25519 a passphrase.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Ochrana klíče',
+              'levels' => 
+              array (
+                0 => 'Posílá soukromý klíč.',
+                1 => 'Práva nezkontroluje.',
+                2 => 'Práva 600 ověřená.',
+                3 => 'Navrhne postup při úniku klíče.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Konfigurace serveru',
+              'levels' => 
+              array (
+                0 => 'Nezná.',
+                1 => 'Najde port.',
+                2 => 'Port i PermitRootLogin s vysvětlením.',
+                3 => 'Navrhne další zpevnění.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'lnx_ssh',
+          'competence_label' => 'Linux: SSH a klíče',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Který soubor pošleš správci serveru, aby ti povolil přihlášení klíčem?',
+              'options' => 
+              array (
+                0 => 'id_ed25519',
+                1 => 'known_hosts',
+                2 => 'id_ed25519.pub',
+              ),
+              'correct' => 2,
+              'explanation' => 'Posílá se jen veřejná část; soukromý klíč zůstává u tebe.',
+            ),
+            1 => 
+            array (
+              'question' => 'Jaká práva má mít soukromý klíč?',
+              'options' => 
+              array (
+                0 => '600 – číst a zapisovat jen vlastník.',
+                1 => '777 – všichni všechno.',
+                2 => '644 – číst může každý.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Soukromý klíč nesmí číst nikdo jiný.',
+            ),
+            2 => 
+            array (
+              'question' => 'Co obsahuje soubor known_hosts u klienta?',
+              'options' => 
+              array (
+                0 => 'Hesla k serverům.',
+                1 => 'Otisky serverů, ke kterým ses už připojil(a).',
+                2 => 'Veřejné klíče uživatelů serveru.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Chrání před podvrženým serverem.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: zapiš si postup, co uděláš, když ti unikne soukromý klíč (tři kroky).',
+            'minutes' => 10,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Klíče vytváříme jen v simulátoru; skutečné soukromé klíče nikdy nevkládáme do dokumentů, chatů ani AI nástrojů.',
+          1 => 'Ke školním serverům se připojujeme jen s povolením správce.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: žák pošle soubor bez přípony .pub – zdůrazni, že soukromý klíč neopouští počítač.',
+          1 => 'Otázka do třídy: Proč je přihlášení roota přes SSH zakázané?',
+          2 => 'Tempo: navazuje na práva z L11 a SSH z L14 – připomeň je rychle, neopakuj.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1, 2 a 4 v Linux Labu (výstupy v zadání), schéma na papír.',
+          1 => 'Plán B offline: schéma klient–server s kartičkami „soukromý / veřejný / otisk“.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'authorized-keys',
+          1 => 'known-hosts',
+        ),
+        '_file' => 'lesson_content_v76_3a_a.php',
+      ),
+      23 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 23 · Řetěz důkazů DNS: od jména k odpovědi webu',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím ověřit cestu od doménového jména k odpovědi webu krok za krokem – záznam v /etc/hosts nebo DNS, adresa, port, HTTP – a u každého kroku ukázat důkaz.',
+          'success_criteria' => 
+          array (
+            0 => 'Přeložím jméno na adresu dvěma nástroji (dig, host) a vysvětlím rozdíl odpovědi NOERROR a NXDOMAIN.',
+            1 => 'Vím, že /etc/hosts má přednost před DNS, a umím ho přečíst.',
+            2 => 'Řetěz důkazů má čtyři články: jméno → adresa → port → HTTP odpověď.',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'net_dns_dhcp',
+            'level' => 3,
+          ),
+          1 => 
+          array (
+            'id' => 'net_diagnose',
+            'level' => 2,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start: „je to DNS“',
+            'teacher' => 'Ukáže hlášení „intranet nejde“ a tři různé příčiny se stejným příznakem.',
+            'student' => 'Navrhnou, jak příčiny rozlišit.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Jméno na adresu',
+            'teacher' => 'Předvede dig +short, host a sekci ANSWER.',
+            'student' => 'Přeloží jméno intranetu na adresu.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 40,
+            'phase' => 'NXDOMAIN a /etc/hosts',
+            'teacher' => 'Ukáže neexistující jméno a statický záznam v /etc/hosts.',
+            'student' => 'Porovnají odpovědi a najdou záznam v /etc/hosts.',
+            'form' => 've dvojicích',
+          ),
+          3 => 
+          array (
+            'from' => 40,
+            'to' => 60,
+            'phase' => 'Port a HTTP',
+            'teacher' => 'Připomene nc -zv a curl -I.',
+            'student' => 'Ověří port 80 a odpověď webu.',
+            'form' => 'jednotlivě',
+          ),
+          4 => 
+          array (
+            'from' => 60,
+            'to' => 80,
+            'phase' => 'Řetěz důkazů',
+            'teacher' => 'Ukáže tabulku článek – příkaz – důkaz – závěr.',
+            'student' => 'Sestaví řetěz pro intranet a pro neexistující jméno.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 80,
+            'to' => 90,
+            'phase' => 'Exit ticket',
+            'teacher' => 'Shrne: každý článek má vlastní důkaz.',
+            'student' => 'Odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Přelož jméno intranet.skola.test na adresu příkazy dig +short a host.',
+            'output' => 'Oba nástroje vrátí 10.0.0.10.',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'dig +short intranet.skola.test',
+                'expect' => '10.0.0.10',
+              ),
+              1 => 
+              array (
+                'cmd' => 'host intranet.skola.test',
+                'expect' => 'has address 10.0.0.10',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Zeptej se DNS na jméno www.skola.lab a najdi stav odpovědi; potom najdi statický záznam intranetu v /etc/hosts.',
+            'output' => 'status: NXDOMAIN a řádek 10.0.0.10 intranet.skola.test intranet.',
+            'time' => '15 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'dig www.skola.lab',
+                'expect' => 'status: NXDOMAIN',
+              ),
+              1 => 
+              array (
+                'cmd' => 'cat /etc/hosts',
+                'expect' => 'intranet.skola.test intranet',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Ověř port 80 na adrese intranetu a hlavičky odpovědi webu.',
+            'output' => 'nc hlásí succeeded, curl -I vrací HTTP/1.1 200 OK.',
+            'time' => '15 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'nc -zv 10.0.0.10 80',
+                'expect' => 'succeeded',
+              ),
+              1 => 
+              array (
+                'cmd' => 'curl -I http://intranet.skola.test',
+                'expect' => 'HTTP/1.1 200 OK',
+              ),
+            ),
+          ),
+          3 => 
+          array (
+            'text' => 'Sestav řetěz důkazů ve sloupcích článek – příkaz – důkaz – závěr pro intranet a pro jméno www.skola.lab.',
+            'output' => 'Dvě tabulky po čtyřech článcích; u www.skola.lab řetěz končí u NXDOMAIN.',
+            'time' => '20 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane tabulku řetězu s vyplněnými příkazy; doplňuje důkazy a závěry.',
+          'standard' => 'Překlad jména, NXDOMAIN, /etc/hosts, port, HTTP a dva řetězy.',
+          'challenge' => 'Vysvětlí, proč dotaz na záznam AAAA vrací prázdnou odpověď se stavem NOERROR a co to znamená pro dual-stack.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Učitel ukáže výstup dig, třída řekne stav a adresu.',
+            1 => 'Dvojice: který článek řetězu chybí v kolegově tabulce?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Překlad jména',
+              'levels' => 
+              array (
+                0 => 'Nezvládne.',
+                1 => 'Jeden nástroj.',
+                2 => 'dig i host se správnou adresou.',
+                3 => 'Vysvětlí sekce odpovědi dig.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'NXDOMAIN a hosts',
+              'levels' => 
+              array (
+                0 => 'Nerozliší.',
+                1 => 'Pozná NXDOMAIN.',
+                2 => 'NXDOMAIN i přednost /etc/hosts.',
+                3 => 'Navrhne, kdy hosts použít a kdy ne.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Řetěz důkazů',
+              'levels' => 
+              array (
+                0 => 'Chybí.',
+                1 => 'Neúplný.',
+                2 => 'Čtyři články s důkazy.',
+                3 => 'Řetěz pro chybový i funkční případ.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'net_dns_dhcp',
+          'competence_label' => 'DNS a DHCP',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Odpověď dig obsahuje „status: NXDOMAIN“. Co z toho plyne?',
+              'options' => 
+              array (
+                0 => 'Server neodpověděl.',
+                1 => 'Jméno v DNS neexistuje.',
+                2 => 'Port 80 je zavřený.',
+              ),
+              'correct' => 1,
+              'explanation' => 'NXDOMAIN = doména neexistuje; síť i server DNS fungují.',
+            ),
+            1 => 
+            array (
+              'question' => 'Jméno je v /etc/hosts i v DNS s jinou adresou. Kterou systém použije běžně?',
+              'options' => 
+              array (
+                0 => 'Adresu z /etc/hosts.',
+                1 => 'Adresu z DNS.',
+                2 => 'Náhodně jednu z nich.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Výchozí pořadí: nejdřív soubor hosts, pak DNS.',
+            ),
+            2 => 
+            array (
+              'question' => 'Jméno se přeloží, port 80 odpovídá, ale curl vrací chybu 500. Kde hledáš dál?',
+              'options' => 
+              array (
+                0 => 'V DNS.',
+                1 => 'V kabelu.',
+                2 => 'V aplikaci a jejím logu.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Síťové články fungují; chyba je ve webové aplikaci.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: v Linux Labu sestav řetěz důkazů pro jméno localhost a zapiš, kterým článkem se liší od intranetu.',
+            'minutes' => 15,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'DNS a síť zkoušíme jen v simulátoru; jména a adresy jsou laboratorní (skola.test, 10.0.0.x).',
+          1 => 'Úpravy /etc/hosts na skutečném počítači dělá jen správce.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: „je to DNS“ bez důkazu – každý článek musí mít výstup příkazu.',
+          1 => 'Otázka do třídy: Jak rozlišíte nefunkční DNS od neexistujícího jména?',
+          2 => 'Tempo: AAAA a dual-stack jen jako výzva; standard je řetěz se čtyřmi články.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1–3 v Linux Labu (výstupy v zadání), úkol 4 na papír.',
+          1 => 'Plán B offline: vytištěné výstupy dig, host, nc a curl; žáci sestaví řetěz.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'nxdomain',
+          1 => 'dual-stack',
+        ),
+        '_file' => 'lesson_content_v76_3a_b.php',
+      ),
+      24 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 24 · Stavový firewall: co je otevřené a proč',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím zjistit, které služby na serveru poslouchají, rozlišit odmítnuté a nedostupné spojení a navrhnout pravidla stavového firewallu podle principu nejmenších práv.',
+          'success_criteria' => 
+          array (
+            0 => 'Z výpisu ss -tln určím porty a adresy, na kterých služby poslouchají.',
+            1 => 'Rozliším „Connection refused“ (port zavřený) a „Connection timed out“ (zahozeno nebo nedostupné).',
+            2 => 'Navrhnu pravidla: výchozí zákaz příchozích, povolené jen potřebné služby a odpovědi na navázaná spojení.',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'net_security',
+            'level' => 3,
+          ),
+          1 => 
+          array (
+            'id' => 'net_services',
+            'level' => 3,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start: otevřené dveře',
+            'teacher' => 'Přirovná porty k dveřím budovy a zeptá se, které mají být zamčené.',
+            'student' => 'Vyjmenují služby, které server opravdu potřebuje.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Kdo poslouchá',
+            'teacher' => 'Předvede ss -tln a rozdíl 0.0.0.0 a 127.0.0.1.',
+            'student' => 'Zjistí naslouchající porty.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 42,
+            'phase' => 'Refused vs. timeout',
+            'teacher' => 'Vysvětlí odpověď RST a zahozený paket.',
+            'student' => 'Otestují tři cíle a výsledky zapíší.',
+            'form' => 've dvojicích',
+          ),
+          3 => 
+          array (
+            'from' => 42,
+            'to' => 60,
+            'phase' => 'Stavový firewall',
+            'teacher' => 'Vysvětlí stav spojení (nové, navázané) a pořadí pravidel.',
+            'student' => 'Seřadí kartičky pravidel do správného pořadí.',
+            'form' => 've dvojicích',
+          ),
+          4 => 
+          array (
+            'from' => 60,
+            'to' => 80,
+            'phase' => 'Návrh pravidel',
+            'teacher' => 'Zadá server s webem a SSH jen ze správcovské sítě.',
+            'student' => 'Navrhnou tabulku pravidel a test každého pravidla.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 80,
+            'to' => 90,
+            'phase' => 'Exit ticket',
+            'teacher' => 'Shrne: výchozí zákaz, výjimky s důvodem.',
+            'student' => 'Odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Zjisti příkazem ss -tln, které porty server poslouchá a na jaké adrese.',
+            'output' => 'Porty 22 a 80 na 0.0.0.0 – dostupné ze všech rozhraní.',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'ss -tln',
+                'expect' => '0.0.0.0:80',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Otestuj nc -zv tři cíle: 10.0.0.10 port 22, 10.0.0.10 port 443 a 10.0.0.99 port 80, a zapiš, co znamená každý výsledek.',
+            'output' => '22 succeeded, 443 Connection refused (zavřený port), 10.0.0.99 Connection timed out (nedostupné nebo zahozené).',
+            'time' => '15 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'nc -zv 10.0.0.10 22',
+                'expect' => 'succeeded',
+              ),
+              1 => 
+              array (
+                'cmd' => 'nc -zv 10.0.0.10 443',
+                'expect' => 'Connection refused',
+              ),
+              2 => 
+              array (
+                'cmd' => 'nc -zv 10.0.0.99 80',
+                'expect' => 'Connection timed out',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Seřaď kartičky pravidel stavového firewallu do správného pořadí a zdůvodni, proč je výchozí zákaz až na konci.',
+            'output' => 'Pořadí: navázaná spojení povolit → SSH ze sítě správců → HTTP pro všechny → ostatní zakázat.',
+            'time' => '18 min',
+          ),
+          3 => 
+          array (
+            'text' => 'Navrhni tabulku pravidel pro server s webem (80) a SSH jen ze sítě 10.0.0.0/24 a ke každému pravidlu napiš test, který ho ověří.',
+            'output' => 'Tabulka pravidlo – důvod – test (např. nc -zv z povolené a nepovolené adresy).',
+            'time' => '20 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane tabulku výsledků nc s vysvětlením a kartičky pravidel s nápovědou pořadí.',
+          'standard' => 'Naslouchající porty, testy nc, pořadí pravidel a návrh tabulky.',
+          'challenge' => 'Popíše, jak by změnil(a) naslouchání služby na 127.0.0.1 a proč je to lepší než jen pravidlo firewallu.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Učitel přečte výsledek nc, třída zvedne kartu „zavřeno / zahozeno / otevřeno“.',
+            1 => 'Dvojice: proč nestačí pravidlo „zakázat vše“ na začátku seznamu?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Naslouchající služby',
+              'levels' => 
+              array (
+                0 => 'Nečte ss.',
+                1 => 'Najde porty.',
+                2 => 'Porty i adresy naslouchání.',
+                3 => 'Navrhne omezení naslouchání.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Výsledky testů',
+              'levels' => 
+              array (
+                0 => 'Nerozliší.',
+                1 => 'Rozliší úspěch a neúspěch.',
+                2 => 'Refused vs. timeout s vysvětlením.',
+                3 => 'Spojí s RST a zahozeným paketem.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Pravidla firewallu',
+              'levels' => 
+              array (
+                0 => 'Chybí.',
+                1 => 'Špatné pořadí.',
+                2 => 'Správné pořadí a nejmenší práva.',
+                3 => 'Každé pravidlo má test.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'net_security',
+          'competence_label' => 'Zabezpečení sítě a firewall',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'nc hlásí „Connection refused“. Co to nejspíš znamená?',
+              'options' => 
+              array (
+                0 => 'Počítač je vypnutý.',
+                1 => 'Kabel je odpojený.',
+                2 => 'Počítač odpověděl, ale na portu nic neposlouchá.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Odmítnutí (RST) posílá dostupný počítač se zavřeným portem.',
+            ),
+            1 => 
+            array (
+              'question' => 'Proč stavový firewall povoluje „navázaná spojení“?',
+              'options' => 
+              array (
+                0 => 'Aby prošly odpovědi na spojení, která jsme sami zahájili.',
+                1 => 'Aby prošlo všechno.',
+                2 => 'Aby se zrychlil DNS.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Odpovědi patří k povolenému spojení, nové příchozí spojení ne.',
+            ),
+            2 => 
+            array (
+              'question' => 'Služba poslouchá na 0.0.0.0:80. Co to znamená?',
+              'options' => 
+              array (
+                0 => 'Služba je vypnutá.',
+                1 => 'Služba přijímá spojení na všech rozhraních serveru.',
+                2 => 'Služba přijímá jen z localhostu.',
+              ),
+              'correct' => 1,
+              'explanation' => '0.0.0.0 = všechna rozhraní IPv4.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: napiš pravidla firewallu pro domácí server, na kterém běží jen web, a ke každému jeden test.',
+            'minutes' => 15,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Skenujeme a testujeme porty jen v simulátoru; skenování cizích sítí je bez povolení zakázané.',
+          1 => 'Pravidla firewallu na skutečném serveru mění jen správce s plánem návratu.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: „firewall vyřeší vše“ – nejdřív ať služba neposlouchá tam, kde nemusí.',
+          1 => 'Otázka do třídy: Jak poznáte z druhé strany, jestli port zavřel firewall, nebo nikdo neposlouchá?',
+          2 => 'Tempo: kartičky pravidel jsou nejrychlejší způsob, jak pochopit pořadí – nevynechávej je.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1–2 v Linux Labu (výstupy v zadání), úkoly 3–4 na papíře.',
+          1 => 'Plán B offline: kartičky pravidel a tabulka výsledků nc.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'firewall',
+          1 => 'rst',
+        ),
+        '_file' => 'lesson_content_v76_3a_b.php',
+      ),
+      25 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 25 · Bezpečné skripty v Bashu: uvozovky, kontroly a nanečisto',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím napsat skript, který správně pracuje s názvy souborů s mezerou, kontroluje předpoklady před nebezpečnou akcí, zapisuje chyby do logu a umí běžet nanečisto.',
+          'success_criteria' => 
+          array (
+            0 => 'Proměnné s názvy souborů dávám do uvozovek ("$F").',
+            1 => 'Před mazáním ověřím, že cesta existuje a není prázdná.',
+            2 => 'Skript má režim nanečisto, který akce jen vypíše.',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'lnx_automation',
+            'level' => 3,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start: skript, který smazal víc',
+            'teacher' => 'Popíše skutečný typ chyby: prázdná proměnná v příkazu mazání.',
+            'student' => 'Hledají, která kontrola chyběla.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Uvozovky',
+            'teacher' => 'Ukáže soubor s mezerou s uvozovkami a bez nich.',
+            'student' => 'Vyzkoušejí rozdíl v simulátoru.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 42,
+            'phase' => 'Kontroly předpokladů',
+            'teacher' => 'Předvede test -f, test -d a ukončení při chybě.',
+            'student' => 'Doplní kontroly do skriptu.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 42,
+            'to' => 58,
+            'phase' => 'Chyby do logu',
+            'teacher' => 'Ukáže přesměrování 2> a návratový kód.',
+            'student' => 'Zapíší chybový výstup do souboru.',
+            'form' => 've dvojicích',
+          ),
+          4 => 
+          array (
+            'from' => 58,
+            'to' => 80,
+            'phase' => 'Nanečisto',
+            'teacher' => 'Ukáže režim, kdy skript místo akce vypíše příkaz (echo).',
+            'student' => 'Přidají režim nanečisto a otestují ho.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 80,
+            'to' => 90,
+            'phase' => 'Exit ticket',
+            'teacher' => 'Shrne čtyři pojistky.',
+            'student' => 'Odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Vytvoř soubor s mezerou v názvu jednou s uvozovkami kolem proměnné a jednou bez nich a porovnej výsledek ls.',
+            'output' => 'S uvozovkami vznikne jeden soubor „muj soubor.txt“, bez nich dva soubory „muj“ a „soubor.txt“.',
+            'time' => '13 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'F=\'muj soubor.txt\'; touch "$F"; ls',
+                'expect' => '\'muj soubor.txt\'',
+              ),
+              1 => 
+              array (
+                'cmd' => 'touch muj soubor.txt; ls',
+                'expect' => 'muj  soubor.txt',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Ověř existenci souboru testem a výsledek vypiš; zkus totéž s neexistující cestou.',
+            'output' => 'test -f /etc/hosts && echo existuje vypíše existuje; u chybějící cesty se nic nestane.',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'test -f /etc/hosts && echo existuje',
+                'expect' => 'existuje',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Přesměruj chybový výstup neúspěšného příkazu do souboru chyby.log a obsah zobraz.',
+            'output' => 'chyby.log obsahuje hlášku „No such file or directory“.',
+            'time' => '13 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'ls /neexistuje 2> chyby.log; cat chyby.log',
+                'expect' => 'No such file or directory',
+              ),
+            ),
+          ),
+          3 => 
+          array (
+            'text' => 'Přidej do skriptu úklidu režim nanečisto: místo smazání starých záloh příkaz jen vypíše (echo rm …) a skript ukáže, co by udělal.',
+            'output' => 'Výpis „rm -rf /tmp/stare-zalohy“ bez skutečného smazání a vysvětlení, kdy se režim vypíná.',
+            'time' => '22 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'echo rm -rf /tmp/stare-zalohy',
+                'expect' => 'rm -rf /tmp/stare-zalohy',
+              ),
+            ),
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane kostru skriptu s vyznačenými místy pro uvozovky a kontroly.',
+          'standard' => 'Uvozovky, kontroly, log chyb a režim nanečisto.',
+          'challenge' => 'Popíše, co dělá set -euo pipefail ve skutečném Bashi a kterou chybu z úvodu hodiny by zachytilo.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Učitel ukáže řádek skriptu, třída najde chybějící uvozovky.',
+            1 => 'Dvojice: co by skript smazal, kdyby byla proměnná prázdná?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Uvozovky',
+              'levels' => 
+              array (
+                0 => 'Bez uvozovek.',
+                1 => 'Jen někde.',
+                2 => 'Všechny proměnné s cestou v uvozovkách.',
+                3 => 'Vysvětlí rozdělení slov shellem.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Kontroly',
+              'levels' => 
+              array (
+                0 => 'Žádné.',
+                1 => 'Jedna kontrola.',
+                2 => 'Kontroly před každou nebezpečnou akcí.',
+                3 => 'Kontrola prázdné proměnné i cesty.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Nanečisto a log',
+              'levels' => 
+              array (
+                0 => 'Chybí.',
+                1 => 'Jen log.',
+                2 => 'Režim nanečisto a log chyb.',
+                3 => 'Výchozí je nanečisto, ostrý běh přepínačem.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'lnx_automation',
+          'competence_label' => 'Linux: automatizace skriptem a cronem',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Proč psát proměnnou s cestou jako "$F" v uvozovkách?',
+              'options' => 
+              array (
+                0 => 'Aby se název s mezerou nerozdělil na víc slov.',
+                1 => 'Aby skript běžel rychleji.',
+                2 => 'Uvozovky jsou jen pro hezčí zápis.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Shell bez uvozovek dělí text podle mezer.',
+            ),
+            1 => 
+            array (
+              'question' => 'K čemu je režim nanečisto (dry-run)?',
+              'options' => 
+              array (
+                0 => 'Skript se spustí dvakrát.',
+                1 => 'Skript ukáže, co by udělal, ale nic nezmění.',
+                2 => 'Skript smaže jen polovinu souborů.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Výpis plánovaných akcí dovolí chybu chytit předem.',
+            ),
+            2 => 
+            array (
+              'question' => 'Co dělá přesměrování 2> chyby.log?',
+              'options' => 
+              array (
+                0 => 'Spustí příkaz dvakrát.',
+                1 => 'Zapíše běžný výstup do souboru.',
+                2 => 'Zapíše chybový výstup do souboru chyby.log.',
+              ),
+              'correct' => 2,
+              'explanation' => '2 je číslo chybového výstupu (stderr).',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: najdi v jednom svém skriptu proměnnou bez uvozovek a oprav ji.',
+            'minutes' => 10,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Mazací příkazy zkoušíme jen v simulátoru a v režimu nanečisto.',
+          1 => 'Do skriptů nepíšeme hesla ani tokeny; citlivé hodnoty patří do chráněných souborů mimo skript.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: rm -rf "$DIR/" s prázdnou proměnnou – ukaž, proč je kontrola prázdné hodnoty nutná.',
+          1 => 'Otázka do třídy: Kterou pojistku byste chtěli mít, kdyby skript běžel v noci bez dozoru?',
+          2 => 'Tempo: simulátor nepodporuje set ani if ve skriptech – pojistky ukazuj přes test a ||, set -euo pipefail jen výkladem.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1–4 v Linux Labu podle zadání (výstupy jsou v zadání).',
+          1 => 'Plán B offline: vytištěný chybný skript, žáci v něm najdou a opraví čtyři problémy.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'dry-run',
+          1 => 'path',
+        ),
+        '_file' => 'lesson_content_v76_3a_b.php',
+      ),
+      26 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 26 · Cvičení obnovy služby: síť, port, TLS a HTTP',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím projít diagnostiku služby po vrstvách – dosažitelnost, směrování, port, šifrované spojení a HTTP – a obnovit službu tak, aby oprava byla ověřená z pohledu uživatele.',
+          'success_criteria' => 
+          array (
+            0 => 'Ověřím dosažitelnost (ping) a výchozí bránu (ip route).',
+            1 => 'Rozliším, že HTTP na portu 80 funguje, ale HTTPS na portu 443 není nastavené.',
+            2 => 'Po obnově služby ukážu odpověď 200 a záznam o startu v logu.',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'net_diagnose',
+            'level' => 3,
+          ),
+          1 => 
+          array (
+            'id' => 'lnx_services',
+            'level' => 3,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Zadání cvičení',
+            'teacher' => 'Rozdá scénář: uživatelé hlásí, že intranet nejde, a role ve dvojici.',
+            'student' => 'Zapíší příznak a hypotézy.',
+            'form' => 've dvojicích',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 25,
+            'phase' => 'Síť a směrování',
+            'teacher' => 'Připomene ping a ip route.',
+            'student' => 'Ověří dosažitelnost a bránu.',
+            'form' => 've dvojicích',
+          ),
+          2 => 
+          array (
+            'from' => 25,
+            'to' => 42,
+            'phase' => 'Porty a TLS',
+            'teacher' => 'Vysvětlí, že HTTPS potřebuje službu na 443 a certifikát.',
+            'student' => 'Porovnají curl na http a https.',
+            'form' => 've dvojicích',
+          ),
+          3 => 
+          array (
+            'from' => 42,
+            'to' => 62,
+            'phase' => 'Obnova služby',
+            'teacher' => 'V simulátoru zastaví nginx a hlídá postup.',
+            'student' => 'Najdou zastavenou službu a obnoví ji.',
+            'form' => 've dvojicích',
+          ),
+          4 => 
+          array (
+            'from' => 62,
+            'to' => 80,
+            'phase' => 'Ověření a záznam',
+            'teacher' => 'Vyžaduje důkaz z pohledu uživatele.',
+            'student' => 'Ověří odpověď a zapíší runbook pro příště.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 80,
+            'to' => 90,
+            'phase' => 'Exit ticket',
+            'teacher' => 'Shrne pořadí vrstev.',
+            'student' => 'Odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Ověř dosažitelnost serveru 10.0.0.10 a výchozí bránu svého počítače.',
+            'output' => 'ping: 0% packet loss; ip route: default via 10.0.0.1.',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'ping -c 2 10.0.0.10',
+                'expect' => '0% packet loss',
+              ),
+              1 => 
+              array (
+                'cmd' => 'ip route',
+                'expect' => 'default via 10.0.0.1',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Porovnej odpověď intranetu přes http a přes https a vysvětli rozdíl.',
+            'output' => 'http vrací 200 OK, https se nepřipojí na port 443 – šifrované spojení na serveru není nastavené.',
+            'time' => '15 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'curl -I http://intranet.skola.test',
+                'expect' => '200 OK',
+              ),
+              1 => 
+              array (
+                'cmd' => 'curl -I https://intranet.skola.test',
+                'expect' => 'port 443',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'V simulátoru zastav nginx, zjisti stav služby a obnov ji; ověř odpověď webu.',
+            'output' => 'Po zastavení inactive, po startu curl -I http://localhost vrací 200 OK.',
+            'time' => '20 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo systemctl stop nginx; systemctl is-active nginx',
+                'expect' => 'inactive',
+              ),
+              1 => 
+              array (
+                'cmd' => 'sudo systemctl stop nginx; sudo systemctl start nginx; curl -I http://localhost',
+                'expect' => '200 OK',
+              ),
+            ),
+          ),
+          3 => 
+          array (
+            'text' => 'Napiš krátký runbook „intranet nejde“ s pořadím kontrol od sítě po HTTP a s ověřením po opravě.',
+            'output' => 'Runbook o 5–7 krocích s příkazem a očekávaným výsledkem.',
+            'time' => '15 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane kartu vrstev (síť → port → TLS → HTTP) s příkazy.',
+          'standard' => 'Diagnostika po vrstvách, obnova služby a runbook.',
+          'challenge' => 'Popíše, co by bylo potřeba pro HTTPS (certifikát, port 443, přesměrování) a jak by ho ověřil(a).',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Učitel přečte výstup, třída určí vrstvu, ke které patří.',
+            1 => 'Výměna runbooků: zvládl by ho spolužák bez otázek?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Diagnostika po vrstvách',
+              'levels' => 
+              array (
+                0 => 'Náhodně.',
+                1 => 'Dvě vrstvy.',
+                2 => 'Síť, port, TLS i HTTP s důkazy.',
+                3 => 'Vrstvy seřazené podle pravděpodobnosti.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Obnova',
+              'levels' => 
+              array (
+                0 => 'Neobnoví.',
+                1 => 'Obnoví bez ověření.',
+                2 => 'Obnova ověřená odpovědí 200.',
+                3 => 'I záznam v logu.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Runbook',
+              'levels' => 
+              array (
+                0 => 'Chybí.',
+                1 => 'Bez očekávaných výsledků.',
+                2 => '5–7 kroků s příkazem a výsledkem.',
+                3 => 'Použitelný kýmkoli z týmu.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'net_diagnose',
+          'competence_label' => 'Diagnostika síťového problému',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'http://intranet.skola.test funguje, https://intranet.skola.test hlásí, že se nelze připojit na port 443. Co z toho plyne?',
+              'options' => 
+              array (
+                0 => 'DNS nefunguje.',
+                1 => 'Server je vypnutý.',
+                2 => 'Na serveru neběží šifrovaná služba na portu 443.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Jméno i port 80 fungují; chybí jen HTTPS.',
+            ),
+            1 => 
+            array (
+              'question' => 'ping na server projde. Co tím víš jistě?',
+              'options' => 
+              array (
+                0 => 'Server je dosažitelný po síti.',
+                1 => 'Webová služba běží.',
+                2 => 'Certifikát je platný.',
+              ),
+              'correct' => 0,
+              'explanation' => 'ping ověřuje síť, ne služby.',
+            ),
+            2 => 
+            array (
+              'question' => 'Co patří do runbooku pro opakovaný problém?',
+              'options' => 
+              array (
+                0 => 'Jméno toho, kdo problém způsobil.',
+                1 => 'Kroky s příkazy, očekávaným výsledkem a ověřením po opravě.',
+                2 => 'Jen věta „restartuj server“.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Runbook musí zvládnout kdokoli z týmu.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: přepiš svůj runbook tak, aby ho zvládl spolužák z jiné třídy, a nech ho ho přečíst.',
+            'minutes' => 15,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Služby zastavujeme jen v simulátoru Linux Labu; adresy jsou laboratorní.',
+          1 => 'Runbook neobsahuje hesla ani přístupové údaje.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: „ping funguje, takže web taky“ – ukaž, že každá vrstva má vlastní důkaz.',
+          1 => 'Otázka do třídy: Která vrstva selhala, když jméno funguje, ale port ne?',
+          2 => 'Tempo: obnova služby je jádro; TLS stačí jako zjištění, nastavení certifikátu je téma 4. ročníku.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1–3 v Linux Labu (výstupy v zadání), runbook na papír.',
+          1 => 'Plán B offline: karty vrstev a vytištěné výstupy; žáci sestaví postup.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'tls',
+          1 => 'gateway',
+        ),
+        '_file' => 'lesson_content_v76_3a_b.php',
+      ),
+      27 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 27 · Týmový incident: role, komunikace a důkazy',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím v týmu vyřešit incident s rozdělenými rolemi (vedoucí, vyšetřovatel, komunikace, zapisovatel), sdílet průběžné stavy a uzavřít incident se záznamem a ověřením.',
+          'success_criteria' => 
+          array (
+            0 => 'Tým má rozdělené role a vedoucí rozhoduje o dalším kroku.',
+            1 => 'Komunikace posílá stav každých 10 minut: co víme, co děláme, kdy další zpráva.',
+            2 => 'Uzavření obsahuje ověření a jedno opatření prevence.',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'lnx_services',
+            'level' => 3,
+          ),
+          1 => 
+          array (
+            'id' => 'lnx_text',
+            'level' => 3,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Role a scénář',
+            'teacher' => 'Rozdá scénář „web vrací chyby a uživatelé si stěžují“ a karty rolí.',
+            'student' => 'Rozdělí role ve čtveřici.',
+            'form' => 've skupinách',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 35,
+            'phase' => 'Vyšetřování',
+            'teacher' => 'Hraje uživatele a vedení, posílá dotazy.',
+            'student' => 'Vyšetřovatel sbírá důkazy, zapisovatel vede časovou osu.',
+            'form' => 've skupinách',
+          ),
+          2 => 
+          array (
+            'from' => 35,
+            'to' => 45,
+            'phase' => 'Stavová zpráva',
+            'teacher' => 'Ukáže tvar zprávy co víme – co děláme – kdy příště.',
+            'student' => 'Komunikace pošle první stavovou zprávu.',
+            'form' => 've skupinách',
+          ),
+          3 => 
+          array (
+            'from' => 45,
+            'to' => 65,
+            'phase' => 'Náprava a ověření',
+            'teacher' => 'Hlídá, aby vedoucí schválil nápravu.',
+            'student' => 'Tým navrhne nápravu a ověří ji.',
+            'form' => 've skupinách',
+          ),
+          4 => 
+          array (
+            'from' => 65,
+            'to' => 82,
+            'phase' => 'Uzavření a rozbor',
+            'teacher' => 'Vede krátký rozbor bez hledání viníka.',
+            'student' => 'Sepíší záznam a opatření.',
+            'form' => 've skupinách',
+          ),
+          5 => 
+          array (
+            'from' => 82,
+            'to' => 90,
+            'phase' => 'Exit ticket',
+            'teacher' => 'Shrne, co role přinesly.',
+            'student' => 'Odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Jako vyšetřovatel zjisti, kolik požadavků v přístupovém logu skončilo kódem 404, a ověř, jestli služba běží.',
+            'output' => '9 odpovědí 404; nginx active (running).',
+            'time' => '15 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo awk \'$9 == 404\' /var/log/nginx/access.log | wc -l',
+                'expect' => '9',
+              ),
+              1 => 
+              array (
+                'cmd' => 'systemctl status nginx',
+                'expect' => 'active (running)',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Přečti poslední řádky chybového logu webového serveru a zapiš, jestli obsahují chybu, nebo jen informaci.',
+            'output' => 'Řádek [notice] … signal process started – informace, ne chyba.',
+            'time' => '10 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo tail -n 3 /var/log/nginx/error.log',
+                'expect' => '[notice]',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Jako komunikace napiš dvě stavové zprávy pro uživatele ve tvaru co víme – co děláme – kdy další zpráva.',
+            'output' => 'Dvě zprávy do tří vět bez technického žargonu.',
+            'time' => '12 min',
+          ),
+          3 => 
+          array (
+            'text' => 'Jako zapisovatel sestav časovou osu incidentu a s týmem napište uzavření: příčina, náprava, ověření a jedno opatření prevence.',
+            'output' => 'Časová osa a záznam uzavření incidentu.',
+            'time' => '25 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane roli zapisovatele s předtištěnou tabulkou časové osy.',
+          'standard' => 'Práce v roli podle karty a společné uzavření.',
+          'challenge' => 'Jako vedoucí incidentu rozhoduje o krocích a na konci zhodnotí, které rozhodnutí bylo nejrizikovější.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Učitel přečte stavovou zprávu a třída posoudí, jestli obsahuje všechny tři části.',
+            1 => 'Kontrola časové osy: má každý záznam čas a zdroj?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Role',
+              'levels' => 
+              array (
+                0 => 'Všichni dělají totéž.',
+                1 => 'Role nejasné.',
+                2 => 'Role dodržené.',
+                3 => 'Vedoucí koordinuje a rozhoduje s důkazy.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Komunikace',
+              'levels' => 
+              array (
+                0 => 'Žádná.',
+                1 => 'Technický žargon.',
+                2 => 'Stav ve tvaru co víme – co děláme – kdy příště.',
+                3 => 'Pravidelně a srozumitelně.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Uzavření',
+              'levels' => 
+              array (
+                0 => 'Chybí.',
+                1 => 'Bez ověření.',
+                2 => 'Příčina, náprava, ověření, prevence.',
+                3 => 'Opatření je měřitelné.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'lnx_services',
+          'competence_label' => 'Linux: služby a systémové logy',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Co patří do stavové zprávy během incidentu?',
+              'options' => 
+              array (
+                0 => 'Co víme, co děláme a kdy přijde další zpráva.',
+                1 => 'Kdo chybu způsobil.',
+                2 => 'Celý výpis logu.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Uživatel potřebuje stav a očekávání.',
+            ),
+            1 => 
+            array (
+              'question' => 'Proč má incident jednoho vedoucího?',
+              'options' => 
+              array (
+                0 => 'Aby ostatní nemuseli pracovat.',
+                1 => 'Aby se rozhodovalo jednotně a kroky se nepřekrývaly.',
+                2 => 'Protože vedoucí ví vše nejlépe.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Jedno rozhodovací místo brání chaosu.',
+            ),
+            2 => 
+            array (
+              'question' => 'Řádek chybového logu má úroveň [notice]. Co to znamená?',
+              'options' => 
+              array (
+                0 => 'Služba spadla.',
+                1 => 'Disk je plný.',
+                2 => 'Jde o informaci, ne o chybu.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Úroveň závažnosti rozlišuje informace a chyby.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: přepiš jednu stavovou zprávu z hodiny tak, aby jí rozuměl člověk bez technických znalostí.',
+            'minutes' => 10,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Incident probíhá jen v simulátoru; žádné skutečné systémy ani data.',
+          1 => 'Rozbor hledá příčiny v systému, ne viníka; role se rozdělují dobrovolně.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: všichni ve skupině píší příkazy a nikdo nezapisuje – trvej na rolích.',
+          1 => 'Otázka do třídy: Kterou informaci jste potřebovali a nikdo ji neměl?',
+          2 => 'Tempo: stavové zprávy vynucuj časovačem každých 10 minut.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: skupiny pracují podle karet rolí a úkolů 1–4 (výstupy v zadání).',
+          1 => 'Plán B offline: incident na kartách s výpisy, role a časová osa na papíře.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'severity',
+          1 => 'journal',
+        ),
+        '_file' => 'lesson_content_v76_3a_b.php',
+      ),
+      28 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 28 · Opakování a ověření dovedností ročníku',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím v okruzích Linux, služby a síť ukázat ověřeným příkazem, co zvládám, najít svou nejslabší kompetenci a naplánovat, jak ji zlepším.',
+          'success_criteria' => 
+          array (
+            0 => 'V každém z pěti okruhů vyřeším jednu úlohu s důkazem z výstupu příkazu.',
+            1 => 'V mapě kompetencí označím silné stránky a jednu mezeru.',
+            2 => 'Napíšu konkrétní plán procvičení (úroveň Linux Labu nebo cesta) na příští měsíc.',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'lnx_users',
+            'level' => 3,
+          ),
+          1 => 
+          array (
+            'id' => 'net_addressing',
+            'level' => 3,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Start: mapa roku',
+            'teacher' => 'Promítne kompetence ročníku a pět okruhů opakování.',
+            'student' => 'Odhadnou, ve kterém okruhu jsou nejsilnější.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 55,
+            'phase' => 'Stanoviště',
+            'teacher' => 'Hlídá čas stanovišť (9 min) a důkazy.',
+            'student' => 'Projdou pět stanovišť: uživatelé, soubory, služby, síť, logy.',
+            'form' => 've dvojicích',
+          ),
+          2 => 
+          array (
+            'from' => 55,
+            'to' => 70,
+            'phase' => 'Sebehodnocení',
+            'teacher' => 'Vysvětlí hodnocení podle důkazů, ne pocitu.',
+            'student' => 'Vyplní mapu kompetencí.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 70,
+            'to' => 82,
+            'phase' => 'Plán procvičení',
+            'teacher' => 'Ukáže, jak vybrat úroveň Linux Labu nebo cestu.',
+            'student' => 'Napíší plán na měsíc.',
+            'form' => 'jednotlivě',
+          ),
+          4 => 
+          array (
+            'from' => 82,
+            'to' => 86,
+            'phase' => 'Sdílení',
+            'teacher' => 'Vybere tři anonymní plány.',
+            'student' => 'Poslouchají příklady dobrých plánů.',
+            'form' => 'frontálně',
+          ),
+          5 => 
+          array (
+            'from' => 86,
+            'to' => 90,
+            'phase' => 'Exit ticket',
+            'teacher' => 'Shrne rok.',
+            'student' => 'Odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Stanoviště uživatelé: zjisti, ve kterých skupinách je uživatel student a co znamená skupina sudo.',
+            'output' => 'id student: skupiny student, sudo, lab; sudo = smí spouštět příkazy jako správce.',
+            'time' => '9 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'id student',
+                'expect' => '27(sudo)',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Stanoviště soubory: přečti práva souborů v /var/log a urči, kdo smí číst auth.log.',
+            'output' => 'auth.log: -rw-r----- root adm – číst smí root a skupina adm.',
+            'time' => '9 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'ls -l /var/log',
+                'expect' => '-rw-r----- 1 root adm',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Stanoviště síť: zjisti adresu sítě a bránu ze směrovací tabulky a urči, kolik adres má síť /24.',
+            'output' => 'Síť 10.0.0.0/24, brána 10.0.0.1, 256 adres (254 pro zařízení).',
+            'time' => '9 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'ip route',
+                'expect' => '10.0.0.0/24 dev eth0',
+              ),
+            ),
+          ),
+          3 => 
+          array (
+            'text' => 'Vyplň mapu kompetencí ročníku (důkaz ze stanoviště nebo z roku) a napiš plán procvičení nejslabší kompetence na příští měsíc.',
+            'output' => 'Mapa kompetencí a plán: co, kde (úroveň labu nebo cesta), kdy, jak poznám zlepšení.',
+            'time' => '25 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane karty stanovišť s nápovědou prvního příkazu.',
+          'standard' => 'Stanoviště, mapa kompetencí a plán.',
+          'challenge' => 'Na stanovišti síť rozdělí 10.0.0.0/24 na čtyři podsítě a zapíše jejich rozsahy.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Dvojice si na stanovišti navzájem potvrzují důkaz.',
+            1 => 'Učitel přečte plán a třída posoudí, jestli je ověřitelný.',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Úlohy na stanovištích',
+              'levels' => 
+              array (
+                0 => 'Méně než 2.',
+                1 => '2–3 s nápovědou.',
+                2 => 'Všech 5 s důkazem.',
+                3 => 'S vysvětlením výstupu spolužákovi.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Sebehodnocení',
+              'levels' => 
+              array (
+                0 => 'Chybí.',
+                1 => 'Podle pocitu.',
+                2 => 'Podle důkazů s jednou mezerou.',
+                3 => 'Mezery seřazené podle důležitosti.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Plán procvičení',
+              'levels' => 
+              array (
+                0 => 'Chybí.',
+                1 => 'Obecný.',
+                2 => 'Konkrétní úroveň nebo cesta a termín.',
+                3 => 'S měřítkem zlepšení.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'net_addressing',
+          'competence_label' => 'Adresace sítě',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Kolik adres je k dispozici pro zařízení v síti /24?',
+              'options' => 
+              array (
+                0 => '256',
+                1 => '254',
+                2 => '24',
+              ),
+              'correct' => 1,
+              'explanation' => '256 adres minus adresa sítě a broadcast.',
+            ),
+            1 => 
+            array (
+              'question' => 'Uživatel je ve skupině sudo. Co to znamená?',
+              'options' => 
+              array (
+                0 => 'Smí spouštět příkazy s právy správce (po ověření).',
+                1 => 'Je automaticky root.',
+                2 => 'Nesmí se přihlásit.',
+              ),
+              'correct' => 0,
+              'explanation' => 'sudo dává dočasná práva správce pro jednotlivé příkazy.',
+            ),
+            2 => 
+            array (
+              'question' => 'Který plán procvičení je nejlepší?',
+              'options' => 
+              array (
+                0 => 'Zlepším se v sítích.',
+                1 => 'Budu víc opakovat.',
+                2 => 'Do 15. 5. vyřeším 3 úrovně labu „Práva“ a ověřím se exit ticketem.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Konkrétní úkol, termín a způsob ověření.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: splň první krok svého plánu procvičení a zapiš výsledek.',
+            'minutes' => 20,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Stanoviště běží v simulátoru Linux Labu; adresy jsou laboratorní.',
+          1 => 'Mapa kompetencí je osobní – vidí ji žák a jeho učitel, nesdílí se.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: sebehodnocení podle pocitu („umím“) – vyžaduj důkaz ze stanoviště nebo z roku.',
+          1 => 'Otázka do třídy: Která dovednost z letoška vás nejvíc překvapila?',
+          2 => 'Tempo: stanoviště po 9 minutách; kdo je hotový dřív, plní výzvu.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: stanoviště 1–3 v Linux Labu (výstupy v zadání), mapa a plán na papír.',
+          1 => 'Plán B offline: vytištěné výpisy pro stanoviště a mapa kompetencí na papíře.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'sudo',
+          1 => 'vlsm',
+        ),
+        '_file' => 'lesson_content_v76_3a_b.php',
+      ),
     ),
     'days' => 
     array (
@@ -7550,9 +10779,17 @@ return array (
       5 => 'lesson_content_v72_3a_b.php',
       6 => 'lesson_content_v72_4a_a.php',
       7 => 'lesson_content_v72_4a_b.php',
+      8 => 'lesson_content_v76_1a_a.php',
+      9 => 'lesson_content_v76_1a_b.php',
+      10 => 'lesson_content_v76_2a_a.php',
+      11 => 'lesson_content_v76_2a_b.php',
+      12 => 'lesson_content_v76_3a_a.php',
+      13 => 'lesson_content_v76_3a_b.php',
+      14 => 'lesson_content_v76_4a_a.php',
+      15 => 'lesson_content_v76_4a_b.php',
     ),
   ),
-  'sig' => 'a91d3ceb5c7f0a2bf8dc3e13dec665db2f11bca6',
-  'hash' => '5f5c1e10c2f18275fc1e2539d421c0d23a117e3049c3b66059d0e748d74a418b',
-  'built_at' => '2026-10-08T07:14:26+02:00',
+  'sig' => '2d75c86284779fb9b76df1d5328dfa465a4d5c6c',
+  'hash' => 'b6839f22ed2e37169161256429f65bbfb5d3a98c87d9959be325e99dbd7acf8a',
+  'built_at' => '2026-10-12T21:50:29+02:00',
 );

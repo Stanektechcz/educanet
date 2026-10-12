@@ -67,11 +67,11 @@ function teacher_render_analytics(string $classId): void
     <?php
 }
 
-/** v74: nahrazeno pal74_render_html() (palette_v74.php) – stránka už neobsahuje jména žáků; zůstává jen kvůli zpětné kompatibilitě a vykreslí totéž co v74. */
+/** v74: nahrazeno pal74_render_html() (palette_v74.php) – stránka neobsahuje jména žáků; v76 vyřadila původní vykreslení se jmény (zbývá jen delegace). */
 function teacher_render_command_palette(): void
 {
     if(function_exists('pal74_render_html')){echo pal74_render_html((string)($_GET['tab']??''),(string)($_GET['class']??''));return;}
-    $entries=teacher_ops_command_entries();?><div class="ops-command-backdrop" data-command-backdrop hidden><div class="ops-command" role="dialog" aria-modal="true" aria-label="Rychlé hledání"><header><span>⌘K</span><input type="search" placeholder="Student, třída, stránka nebo akce…" data-command-input autocomplete="off"><button type="button" data-command-close>Esc</button></header><div class="ops-command-results" data-command-results><?php foreach($entries as $entry): ?><a href="<?=e((string)$entry['url'])?>" data-command-item data-search="<?=e(normalized_person_name((string)$entry['label'].' '.(string)$entry['hint'].' '.(string)$entry['keywords']))?>"><strong><?=e((string)$entry['label'])?></strong><small><?=e((string)$entry['hint'])?></small></a><?php endforeach; ?></div><footer><span>↑↓ pohyb</span><span>Enter otevřít</span><span>Esc zavřít</span></footer></div></div><?php
+    // v76: záložní vykreslení se jmény a e-maily (teacher_ops_command_entries) vyřazeno; bez palety v74 se paleta nevykreslí vůbec.
 }
 
 function teacher_render_team_admin(): void

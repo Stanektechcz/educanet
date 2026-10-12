@@ -67,11 +67,13 @@ unset($post['lc72_svp_approve'], $post['lc72_svp_return'], $post['tp721_self_nam
 unset($post['lr73_save']);   // v73: reflexe hodiny (nový modul `reflexe73`) – vyjmutá ze snímku stejně jako v72/v72.1 (změna limitu auditu, BUILD_MANIFEST_V73.md)
 unset($post['mat74_add'], $post['mat74_update'], $post['mat74_verify'], $post['mat74_retire'], $post['mat74_attach'], $post['mat74_restore'], $post['ba74_approve']);   // v74: knihovna materiálů (modul `materialy74`) a hromadné schválení (modul `hromadne74`) – vyjmuté ze snímku stejně jako v73 (změna limitu auditu, BUILD_MANIFEST_V74.md)
 unset($post['kp75_approve'], $post['kp75_return'], $post['lv75_approve'], $post['lv75_return'], $post['pf75_comment'], $post['op75_publish'], $post['op75_close']);   // v75: kompetence 2.A/4.A, úrovně, portfolia a opakování (nové moduly kompetence75 / urovne75 / portfolia75 / opakovani75) – vyjmuté ze snímku stejně jako v74 (změna limitu auditu, BUILD_MANIFEST_V75.md)
+unset($post['ob76_add']);   // v76: ruční pozorování kompetence (modul kompetence, prefix ob76_) – vyjmuto ze snímku stejně jako v75 (změna limitu auditu, BUILD_MANIFEST_V76.md)
 ksort($post);
 $get = teacher59_get_policies();
 foreach (['kompetence', 'cesty', 'projekty65', 'hodnoceni66', 'labdata'] as $t) unset($get[$t . '|student']);
 unset($get['tyden74|paleta']);   // v74: JSON žáků pro rychlé hledání (modul `tyden74`) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V74.md)
 unset($get['portfolia75|tisk'], $get['opakovani75|tisk']);   // v75: stránky k tisku (moduly portfolia75 / opakovani75) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V75.md)
+unset($get['plan76|tisk'], $get['svp76|tisk'], $get['svp76|csv']);   // v76: tisk Plánu vs. skutečnosti a tisk/CSV Plnění ŠVP (moduly plan76 / svp76) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V76.md)
 ksort($get);
 $check('politiky teacher59: POST i GET tabulka beze změny (v71 nepřidává akci ani GET parametr)', hash('sha256', (string)json_encode($post)) === V71A_POST_POLICY_SHA && hash('sha256', (string)json_encode($get)) === V71A_GET_POLICY_SHA);
 $check('deny-by-default: neznámé akce lt71_*/lm71_*/cd71_* jsou zakázané', teacher59_action_policy('lt71_x')['deny'] === true && teacher59_action_policy('lm71_x')['deny'] === true && teacher59_action_policy('cd71_x')['deny'] === true);
@@ -139,8 +141,12 @@ $check('plán po minutách: souvislý 0–90 platí, mezera / dopočet z kroků 
 $check('anglické titulky (heuristika reportu): „Filesystem incident“ ano, „Anatomie webu: hierarchie…“ a „SSH klíče“ ne',
     lm71_is_english_title('Lekce 19 · Filesystem incident') && !lm71_is_english_title('Anatomie webu: hierarchie od plakátu k obrazovce') && !lm71_is_english_title('SSH klíče') && !lm71_is_english_title('Mini vizuální identita'));
 $l19 = lm71_lesson('class_3a', 19);
-$check('šablony: generované L19–28 mají příznak šablony a šablonové úkoly; exit ticket je zatím jedna varianta shodná s kvízem', $l19['meta']['template'] && count(array_filter($l19['tasks'], static fn(array $t): bool => $t['template'])) >= 3
-    && count($l19['exit_ticket']) === 1 && !$l19['completeness']['checks']['exit_ticket']);
+// v76: L19–L28 mají overlay vlny 2 – šablonový zdroj se ověřuje na surové vrstvě (změna limitu auditu, BUILD_MANIFEST_V76.md), model už šablonové úkoly nemá.
+$raw19 = lm71_raw('class_3a')['lessons'][19] ?? [];
+$rawTpl19 = 0;
+foreach ((array)($raw19['steps'] ?? []) as $st) foreach (is_array($st) ? (array)($st['tasks'] ?? []) : [] as $tx) $rawTpl19 += isset(lm71_raw('class_3a')['template_tasks'][substr(sha1(lm71_norm_text((string)$tx)), 0, 12)]) ? 1 : 0;
+$check('šablony: zdroj L19–28 je označený jako generovaný a má šablonové úkoly; vlna 2 (v76) je přepsala – model L19 bez šablonových úkolů, exit ticket 3 varianty jiné než kvíz', $l19['meta']['template'] && $rawTpl19 >= 3
+    && array_filter($l19['tasks'], static fn(array $t): bool => $t['template']) === [] && count($l19['exit_ticket']) === 3 && $l19['completeness']['checks']['exit_ticket']);
 
 // cache: podpis → obsahový hash → přestavba
 $path = lm71_cache_path('class_2a');

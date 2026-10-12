@@ -121,6 +121,8 @@ function teacher_action_permission_prefixes(): array
         'lr73_'=>'content.manage',
         // v75 · schválení kompetencí 2.A/4.A (kp75_), úrovní v hodině (lv75_) a opakování před písemkou (op75_) = správa obsahu; komentář k portfoliu (pf75_) = správa projektů (asistent jen čte).
         'kp75_'=>'content.manage','lv75_'=>'content.manage','op75_'=>'content.manage','pf75_'=>'projects.manage',
+        // v76 · ruční pozorování kompetence (ob76_add) = důkaz k hodnocení (asistent jen čte).
+        'ob76_'=>'grading.manage',
     ];
 }
 function teacher_action_permission(string $action): ?string
@@ -482,20 +484,5 @@ function teacher_ops_bulk_assign_resource(string $classId,array $studentKeys,arr
     teacher_require_permission('students.manage');$type=(string)($input['resource_type']??'material');if(!in_array($type,['material','lesson','lab','url'],true))$type='material';$ref=trim(u_substr((string)($input['resource_ref']??''),0,500));if($ref==='')throw new RuntimeException('Doplňte odkaz nebo označení materiálu.');$title=trim((string)($input['resource_title']??''));if($title==='')$title='Doporučený materiál';return teacher_bulk_assign_task($classId,$studentKeys,['task_title'=>$title,'task_instructions'=>(string)($input['resource_instructions']??'Projdi přidělený materiál a připrav se na kontrolní checkpoint.'),'task_priority'=>(string)($input['resource_priority']??'normal'),'task_due_at'=>(string)($input['resource_due_at']??''),'resource_type'=>$type,'resource_ref'=>$ref]);
 }
 
-function teacher_ops_command_entries(): array
-{
-    $currentClass=teacher_ops_valid_class((string)($_GET['class']??'class_2a'));
-    $entries=[
-        ['label'=>'Attention Center','hint'=>'Co mám dnes řešit','url'=>'teacher.php?tab=attention','keywords'=>'dnes kritické termíny priority'],
-        ['label'=>'Přehled školy','hint'=>'Všechny třídy','url'=>'teacher.php?tab=overview','keywords'=>'dashboard school'],
-        ['label'=>'Analytika třídy','hint'=>'Trendy a Lesson Intelligence','url'=>'teacher.php?'.http_build_query(['tab'=>'analytics','class'=>$currentClass]),'keywords'=>'grafy trendy lekce intelligence'],
-        ['label'=>'Intervence','hint'=>'Plány podpory studentů','url'=>'teacher.php?'.http_build_query(['tab'=>'interventions','class'=>$currentClass]),'keywords'=>'podpora intervention workflow'],
-        ['label'=>'Cross-class report','hint'=>'Srovnání tříd a export','url'=>'teacher.php?tab=reports','keywords'=>'reporty export csv json třídy health'],
-        ['label'=>'Komunikační šablony','hint'=>'Drafty pro studenty','url'=>'teacher.php?'.http_build_query(['tab'=>'communications','class'=>$currentClass]),'keywords'=>'komunikace zpráva šablona student'],
-        ['label'=>'Kvalita dat','hint'=>'Integrity diagnostika','url'=>'teacher.php?tab=quality','keywords'=>'kvalita data orphan diagnostika integrity'],
-        ['label'=>'Tým a role','hint'=>'Oprávnění učitelů','url'=>'teacher.php?tab=team_admin','keywords'=>'role učitel asistent admin permissions'],
-        ['label'=>'Audit operací','hint'=>'Změny, bulk akce a zásahy','url'=>'teacher.php?tab=ops_audit','keywords'=>'audit historie undo změny operace'],
-    ];
-    foreach(teacher_ops_class_ids() as $cid){$entries[]=['label'=>'Přehled '.teacher_class_label($cid),'hint'=>'Přehled třídy','url'=>'teacher.php?tab=prehled&class='.$cid,'keywords'=>$cid.' třída'];foreach(project_students_for_class($cid) as $key=>$student)$entries[]=['label'=>(string)$student['label'],'hint'=>teacher_class_label($cid).' · Student 360°','url'=>'teacher.php?'.http_build_query(['tab'=>'student360','class'=>$cid,'student'=>(string)$key]),'keywords'=>'student '.$cid.' '.(string)($student['email']??'')];}
-    return $entries;
-}
+// v76: teacher_ops_command_entries() (v46, seznam stránek a všech žáků se jmény a e-maily pro paletu ⌘K) vyřazena – nahradila ji paleta v74
+// (palette_v74.php: jména až po otevření, jen třídy v rozsahu, bez e-mailů). Původní kód je v historii gitu (vydání v75).

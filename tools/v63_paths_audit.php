@@ -50,8 +50,9 @@ $snapshot = static function () use ($tmp): array {
 
 // --- 1) Struktura cest a obsahu ---------------------------------------------------------------------------
 $paths = p63_paths();
-$check('katalog: cesty jsou 4 (2× 3.A, 2× 1.A) a patří třídám s obsahem', array_keys($paths) === ['lnx_chmod', 'net_dns', 'web_html', 'gfx_contrast']
-    && array_keys(p63_paths_for_class($C3)) === ['lnx_chmod', 'net_dns'] && array_keys(p63_paths_for_class($C1)) === ['web_html', 'gfx_contrast'] && p63_paths_for_class('class_2a') === []
+// v76: fáze E bod 3 – 3.A má 5 cest, 1.A 4 cesty (paths_v76_content_*.php; změna limitu auditu, BUILD_MANIFEST_V76.md)
+$check('katalog: cesty jsou 9 (5× 3.A, 4× 1.A) a patří třídám s obsahem', array_keys($paths) === ['lnx_chmod', 'net_dns', 'net_ports', 'lnx_services', 'net_security', 'web_html', 'gfx_contrast', 'web_css', 'gfx_formats']
+    && array_keys(p63_paths_for_class($C3)) === ['lnx_chmod', 'net_dns', 'net_ports', 'lnx_services', 'net_security'] && array_keys(p63_paths_for_class($C1)) === ['web_html', 'gfx_contrast', 'web_css', 'gfx_formats'] && p63_paths_for_class('class_2a') === []
     && p63_enabled_for_class($C3) && p63_enabled_for_class($C1) && !p63_enabled_for_class('class_2a') && !p63_enabled_for_class('class_4a'));
 $problems = [];
 $typesSeen = [];

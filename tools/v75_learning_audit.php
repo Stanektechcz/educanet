@@ -110,7 +110,7 @@ $paths2 = p63_paths_for_class('class_2a');
 $paths4 = p63_paths_for_class('class_4a');
 $check('po schválení: 2.A i 4.A v pilotu (předmět, ≥ 3 cesty, důkazy se zapisují), 1.A a 3.A beze změny, otisk uložen', comp62_enabled_for_class('class_2a') && comp62_subject_for_class('class_2a') === 'grafika_web_ii'
     && comp62_subject_for_class('class_4a') === 'provoz_site' && count($paths2) >= 3 && count($paths4) >= 3 && p63_writes_evidence('class_4a') && comp75_status('class_4a')['status'] === 'schvaleno'
-    && !comp75_status('class_4a')['changed'] && array_keys(p63_paths_for_class('class_3a')) === ['lnx_chmod', 'net_dns'] && comp62_subject_for_class('class_1a') === 'grafika_web');
+    && !comp75_status('class_4a')['changed'] && array_slice(array_keys(p63_paths_for_class('class_3a')), 0, 2) === ['lnx_chmod', 'net_dns'] /* v76: 3.A má 5 cest */ && comp62_subject_for_class('class_1a') === 'grafika_web');
 $pp = [];
 foreach ($paths2 + $paths4 as $pid => $p) {
     $comps = comp62_competencies((string)comp62_subject_for_class((string)$p['class']));

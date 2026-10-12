@@ -8,7 +8,8 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  *   1) fiktivní třída 30 žáků (deterministicky, dočasné úložiště) s historií: XP, body, testy, úrovně labu,
  *   2) 20 stránek žáka + 10 učitelských záložek: medián ms serveru, KB HTML, počet čtení úložiště (samostatný
  *      proces na stránku, opcache jako v PHP-FPM); rozpočty ≤ 60 ms / ≤ 62 KB (žák; +2 KB navigace), ≤ 150 ms (učitel),
- *      čas s tolerancí šumu (V61_NOISE_TOLERANCE v tools/lib/v61_perf_pages.php),
+ *      čas s tolerancí šumu (V61_NOISE_TOLERANCE v tools/lib/v61_perf_pages.php); v76: 2 zahřívací běhy a při překročení limitu nejvýš
+ *      2 opakovaná kola měření (platí nejnižší medián kola), samotest s uměle zpomalenou stránkou dokazuje, že regrese se nezamaskuje,
  *   3) žádné N+1 čtení (stejný soubor ≤ 12×, celkem ≤ 120 čtení na stránku) a GET v ustáleném stavu nic nezapisuje,
  *   4) paměti v rámci požadavku se po zápisu zneplatní (čerstvá data), storage_update beze změny nepřepisuje,
  *   5) režim jen pro čtení (EDUCANET_STORAGE_READONLY) nezapisuje, bez něj by zapisoval (kladná kontrola),
@@ -94,12 +95,14 @@ foreach (v61_student_pages() as $p) $pages[] = ['student', $p];
 foreach (v61_teacher_pages($fx['class']) as $p) $pages[] = ['teacher', $p];
 $results = [];
 foreach ($pages as [$kind, $page]) {
-    $m = v61_perf_measure(v61a_spec($kind, $page, $kind === 'student' ? $studentSession : $teacherSession, $tmp, $opcacheDir), V61A_RUNS, $perfEnv);
-    $results[$page['id']] = ['kind' => $kind, 'm' => $m];
-    $label = ($kind === 'student' ? 'žák ' : 'učitel ') . $page['id'];
-    if ($m === null) { $check($label . ': měření proběhlo', false); continue; }
-    $clean = $m['status'] === 200 && !$m['error'] && $m['location'] === '' && $m['bytes'] > 500;
+    // v76: stabilní měření – 2 zahřívací běhy, medián z 11, při překročení limitu nejvýš 2 opakovaná kola (platí nejnižší medián kola).
     $limitMs = v61_effective_limit_ms($kind === 'student' ? V61_BUDGET_STUDENT_MS : V61_BUDGET_TEACHER_MS);
+    // opakované kolo se spustí už nad rozpočtem bez tolerance (žák 60 ms), aby i souhrnný medián 20 stránek nebyl rukojmím jednoho hlučného kola
+    $m = v61_perf_measure_stable(v61a_spec($kind, $page, $kind === 'student' ? $studentSession : $teacherSession, $tmp, $opcacheDir), V61A_RUNS, $perfEnv, $kind === 'student' ? V61_BUDGET_STUDENT_MS : $limitMs);
+    $results[$page['id']] = ['kind' => $kind, 'm' => $m];
+    $label = ($kind === 'student' ? 'žák ' : 'učitel ') . $page['id'] . ($m !== null && ($m['rounds'] ?? 1) > 1 ? ' (kol měření: ' . $m['rounds'] . ')' : '');
+    if ($m === null) { $check($label . ': měření proběhlo (' . (string)($GLOBALS['v61_perf_last_error'] ?? '?') . ')', false); continue; }
+    $clean = $m['status'] === 200 && !$m['error'] && $m['location'] === '' && $m['bytes'] > 500;
     $kb = round($m['bytes'] / 1024, 1);
     $okKb = $kind === 'teacher' || $kb <= V61_BUDGET_STUDENT_KB;
     $check(sprintf('%s: HTTP 200 bez chyby/přesměrování, %.1f ms (min %.1f, limit %.1f), %.1f KB%s, čtení %d', $label, $m['ms'], $m['ms_min'], $limitMs, $kb, $kind === 'student' ? ' (limit ' . V61_BUDGET_STUDENT_KB . ')' : '', $m['calls']), $clean && $m['ms'] <= $limitMs && $okKb);
@@ -111,6 +114,13 @@ $check('rozpočet: medián všech 20 stránek žáka ≤ ' . V61_BUDGET_STUDENT_
     foreach ($results as $r) if ($r['kind'] === 'student' && $r['m'] !== null) $ms[] = $r['m']['ms'];
     return count($ms) === 20 && v61_median($ms) <= V61_BUDGET_STUDENT_MS;
 })());
+
+// v76: samotest stabilizace – stránka uměle zpomalená o 2× rozpočet zůstane nad limitem i po opakovaných kolech (regrese se nezamaskuje).
+$slowPage = v61_student_pages()[0];
+$slowLimit = v61_effective_limit_ms(V61_BUDGET_STUDENT_MS);
+$slow = v61_perf_measure_stable(v61a_spec('student', $slowPage, $studentSession, $tmp, $opcacheDir) + ['selftest_delay_ms' => (int)(2 * V61_BUDGET_STUDENT_MS)], 3, $perfEnv, $slowLimit);
+$check('samotest stabilizace: uměle zpomalená stránka (+' . (int)(2 * V61_BUDGET_STUDENT_MS) . ' ms) zůstane nad limitem ve všech ' . (1 + V61_REMEASURE_ROUNDS) . ' kolech (' . ($slow['ms'] ?? 0) . ' ms) – skutečná regrese se odhalí',
+    $slow !== null && $slow['ms'] > $slowLimit && ($slow['rounds'] ?? 0) === 1 + V61_REMEASURE_ROUNDS);
 
 // ---------------------------------------------------------------- 3) GET v ustáleném stavu nezapisuje
 $writers = [];

@@ -56,7 +56,7 @@ $lessons = [];
 $rawOv = [];
 $fieldBad = [];
 foreach ($classes as $c => $short) {
-    $ovs = (array)(lm71_raw($c)['overlay']['lessons'] ?? []);
+    $ovs = array_filter((array)(lm71_raw($c)['overlay']['lessons'] ?? []), static fn(int $n): bool => $n >= LC72_WAVE1[0] && $n <= LC72_WAVE1[1], ARRAY_FILTER_USE_KEY);   // v76: vlnu 2 hlídá v76_content_audit
     if (array_keys($ovs) !== range(LC72_WAVE1[0], LC72_WAVE1[1])) $fieldBad[] = $c . ': overlay není přesně L5–L16';
     foreach ($ovs as $n => $ov) {
         $rawOv[$c][$n] = $ov;

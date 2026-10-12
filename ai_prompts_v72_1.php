@@ -48,12 +48,21 @@ function aip721_parse(string $markdown): array
     return $out;
 }
 
-/** Prompty lekce (cache za požadavek). @return list<array{title:string,text:string}> */
-function aip721_prompts(string $classId, int $number): array
+/**
+ * Prompty lekce (cache za požadavek). v76: lekce vlny 2 (L17–L28) se schváleným obsahem berou prompty z tohoto obsahu
+ * (ai_prompts_v76.php); $draft = true (náhled učitele) z návrhu. Jinak prompty z lesson kitu.
+ * @return list<array{title:string,text:string}>
+ */
+function aip721_prompts(string $classId, int $number, bool $draft = false): array
 {
     static $memo = [];
-    $key = $classId . '#' . $number;
+    $key = $classId . '#' . $number . ($draft ? '#d' : '');
     if (isset($memo[$key])) return $memo[$key];
+    if ($number >= 17 && is_file(__DIR__ . '/ai_prompts_v76.php')) {
+        require_once __DIR__ . '/ai_prompts_v76.php';
+        $wave2 = aip76_prompts_for($classId, $number, $draft);
+        if ($wave2 !== null) return $memo[$key] = $wave2;
+    }
     $path = aip721_kit_path($classId, $number);
     $md = $path !== '' && is_file($path) ? (string)@file_get_contents($path) : '';
     return $memo[$key] = $md === '' ? [] : aip721_parse($md);
@@ -94,9 +103,12 @@ function aip721_render_student_block(string $classId, int $lessonNo): void
 /** Náhled pro učitele (Schvalování lekcí, česky). */
 function aip721_teacher_preview_html(string $classId, int $n): string
 {
-    $prompts = aip721_prompts($classId, $n);
+    $prompts = aip721_prompts($classId, $n, true);   // v76: u vlny 2 prompty z návrhu, které žák dostane po schválení
     if ($prompts === []) return '';
-    $html = '<h3>AI prompty pro studenta</h3><p class="c70-muted">Žák je vidí v lekci jako dobrovolné procvičení s upozorněním na soukromí. Nejsou součástí schvalovaného obsahu (bez odpovědí, z názvu, cíle a témat lekce).</p>'
+    $wave2 = $n >= 17 && function_exists('aip76_prompts_for') && aip76_prompts_for($classId, $n, true) !== null;
+    $html = '<h3>AI prompty pro studenta</h3><p class="c70-muted">Žák je vidí v lekci jako dobrovolné procvičení s upozorněním na soukromí. '
+        . ($wave2 ? 'Prompty se skládají z tohoto návrhu (název, cíl, kritéria, úkoly, glosář) – žák je uvidí až po schválení; do té doby má prompty z původní lekce.</p>'
+            : 'Nejsou součástí schvalovaného obsahu (bez odpovědí, z názvu, cíle a témat lekce).</p>')
         . '<details class="c71-steps"><summary>Zobrazit ' . count($prompts) . ' promptů</summary><ol class="c71-list">';
     foreach ($prompts as $p) $html .= '<li><strong>' . e($p['title']) . '</strong><br><span class="c70-muted">' . e($p['text']) . '</span></li>';
     return $html . '</ol></details>';

@@ -86,6 +86,8 @@ function c70_related_rules(): array
         'urovne75' => [['hodina', 'Dnešní hodina'], ['schvalovani', 'Schvalování lekcí']],   // v75
         'portfolia75' => [['projekty65', 'Projekty'], ['ulohy75', 'Úlohy s variantami']],   // v75
         'opakovani75' => [['ulohy75', 'Úlohy s variantami: klíč žáka'], ['hodina', 'Dnešní hodina: exit ticket']],   // v75
+        'plan76' => [['reflexe73', 'Zapsat reflexi hodiny'], ['calendar', 'Kalendář a výjimky'], ['svp76', 'Plnění ŠVP']],   // v76
+        'svp76' => [['schvalovani', 'Schvalování lekcí: vazba na ŠVP'], ['plan76', 'Plán vs. skutečnost']],   // v76
         'teach' => [['hodina', 'Dnešní hodina: žáci a postup'], ['session', 'Kód hodiny']],
         'session' => [['hodina', 'Dnešní hodina: téma a materiály'], ['teach', 'Promítnout lekci']],
         'calendar' => [['curriculum', 'Plán lekcí'], ['hodina', 'Dnešní hodina']],

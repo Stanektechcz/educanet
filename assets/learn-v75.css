@@ -16,7 +16,7 @@
 .l75-task { margin: 0 0 var(--ui-space-4, 16px); }
 .l75-task h2, .l75-levels h2 { margin: 0 0 var(--ui-space-2, 8px); font-size: var(--ui-text-lg, 1.15rem); }
 .l75-prompt { font-weight: 600; line-height: var(--ui-leading, 1.55); }
-.l75-data { margin: var(--ui-space-2, 8px) 0; padding: var(--ui-space-3, 12px); border-radius: var(--ui-radius-sm, 12px); background: var(--ui-surface-2); color: var(--ui-ink); overflow-x: auto; max-width: 100%; font-size: var(--ui-text-sm, .875rem); }
+.l75-data { margin: var(--ui-space-2, 8px) 0; padding: var(--ui-space-3, 12px); border-radius: var(--ui-radius-sm, 12px); background: var(--ui-surface-2); color: var(--ui-ink); overflow-x: auto; max-width: 100%; font-size: var(--ui-text-sm, .875rem); white-space: pre-wrap; overflow-wrap: anywhere; }
 .l75-form { display: grid; gap: var(--ui-space-3, 12px); margin-top: var(--ui-space-3, 12px); }
 .l75-field { display: grid; gap: var(--ui-space-1, 4px); padding: var(--ui-space-2, 8px); border-radius: var(--ui-radius-sm, 12px); border: 1px solid transparent; }
 .l75-field.is-ok { border-color: var(--ui-ok-ink); }

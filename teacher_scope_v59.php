@@ -325,6 +325,7 @@ function teacher59_action_policies(): array
     // v75 · kompetence 2.A/4.A (kp75_*), úrovně v hodině (lv75_*), komentář k portfoliu (pf75_comment) a opakování před písemkou (op75_*): třída povinná
     // a v rozsahu; handlery ji ověří znovu (portfolio i žáka v seznamu třídy). Jiné kp75_* / lv75_* / pf75_* / op75_* akce zůstávají zakázané.
     foreach (['kp75_approve', 'kp75_return', 'lv75_approve', 'lv75_return', 'pf75_comment', 'op75_publish', 'op75_close'] as $action) $table[$action] = $req;
+    $table['ob76_add'] = $req;   // v76 · ruční pozorování kompetence (modul kompetence): třída povinná a v rozsahu, žák jen ze seznamu třídy; jiné ob76_* zakázané
     return $table;
 }
 
@@ -591,6 +592,8 @@ function teacher59_get_policies(): array
         'tyden74|paleta' => [],
         // v75: samostatné stránky k tisku (portfolio žáka, opakování s klíčem) – třída povinná a v rozsahu (handlery ji ověří znovu).
         'portfolia75|tisk' => ['class' => 'required'], 'opakovani75|tisk' => ['class' => 'required'],
+        // v76: Plán vs. skutečnost (tisk) a Plnění ŠVP (tisk, CSV) – třída povinná a v rozsahu (handlery ji ověří znovu), bez jmen žáků.
+        'plan76|tisk' => ['class' => 'required'], 'svp76|tisk' => ['class' => 'required'], 'svp76|csv' => ['class' => 'required'],
     ];
 }
 

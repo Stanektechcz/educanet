@@ -56,6 +56,7 @@ function comp62_t_source(string $source): string
     return [
         'test' => tr('test'), 'project' => tr('projekt'), 'lab' => tr('lab'),
         'game' => tr('hra'), 'arena' => tr('aréna'), 'lesson' => tr('lekce'),
+        'task' => tr('úloha'), 'observation' => tr('pozorování učitele'),   // v76
     ][$source] ?? $source;
 }
 

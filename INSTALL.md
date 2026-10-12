@@ -698,3 +698,17 @@ Podrobnosti: `CHANGELOG_V75.md`, `BUILD_MANIFEST_V75.md`, návod pro učitele `d
 - **Změna limitu auditů:** snímky politik v68/v70/v71 vyjímají 7 akcí v75 a GET `portfolia75|tisk`, `opakovani75|tisk`; `v58_storage_audit` počítá 5 migrací – viz manifest.
 - **Rollback vydání:** nasadit v74 (`74cb857`); nové soubory v `storage/` starší verze ignoruje (historii knihovny vraťte rollbackem migrace 0005 před nasazením v74).
 - **Kontrola po nasazení:** `php tools/v75_learning_audit.php` → `V75_LEARNING_AUDIT_OK`, `php tools/v75_http_audit.php` → `V75_HTTP_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v76 · lekce 17–28, plán vs. skutečnost, plnění ŠVP, úklid
+
+Podrobnosti: `CHANGELOG_V76.md`, `BUILD_MANIFEST_V76.md`, návod pro učitele `docs/NAVOD_V76.md`. Nové PHP rozšíření ani migraci nevyžaduje.
+
+- **Obsah (návrh):** lekce 17–28 všech tříd (`lesson_content_v76_*.php`) a úrovně L17–L28 (`levels_v76_content_*.php`) žáci nevidí, dokud je učitel neschválí (Schvalování lekcí / Hromadné schválení / Úrovně v hodině). Po nasazení přestavte cache: `php tools/build_runtime_cache.php` (model lekce se přestaví i sám při prvním čtení).
+- **Nové záložky:** `?tab=plan76` (Plán vs. skutečnost, tisk `&tisk=1`), `?tab=svp76` (Plnění ŠVP, `&pololeti=1|2`, tisk `&tisk=1`, CSV `&csv=1`) – jen čtení, třída povinná a v rozsahu. V záložce Kompetence formulář pozorování (POST `ob76_add`, `grading.manage`, asistent jen čte).
+- **Žák:** úlohy s variantami i pro 1.A a 2.A (`?view=ulohy`), export portfolia (`?view=portfolio_export`) s připnutými pracemi.
+- **Důkazy kompetencí:** nové zdroje `task` (úlohy, váha 0,5) a `observation` (pozorování učitele, váha 0,8) v `evidence_v62`; do návrhů známek v66 nevstupují. Po nasazení stačí noční přepočet v67 (nebo „Přepočítat důkazy třídy“).
+- **Retence:** `php tools/v58_retention.php` (náhled) → `--apply`; nově maže i `portfolio_v75/`, výsledky úloh a volby úrovní žáků 30 dní po odchodu (výstup `v75_data_purged=`).
+- **Úklid:** `.htaccess` bez HTML komentářů (chování beze změny); vyřazená `teacher_ops_command_entries()`.
+- **Změna limitů auditů:** viz `BUILD_MANIFEST_V76.md` (snímky politik v68/v70/v71, katalog cest v63, vlna 1 v72, sady úloh v75, zdroje důkazů v62).
+- **Rollback vydání:** nasadit v75 (`b982204`); důkazy zdrojů `task` a `observation` starší verze při výpočtu stavu přeskočí (neznámý zdroj má váhu 0), ostatní nová data ignoruje.
+- **Kontrola po nasazení:** `php tools/v76_content_audit.php`, `php tools/v76_learning_audit.php`, `php tools/v76_http_audit.php` → `*_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.

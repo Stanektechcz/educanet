@@ -35,6 +35,25 @@ function pf75_render_student_section(string $classId, string $studentKey): void
     echo '</section></div>';
 }
 
+/**
+ * v76 · připnuté práce do lokálního HTML exportu v65 (port65v_send_export): bez odkazů (URL jen jako text), bez skriptů a formulářů,
+ * s reflexí žáka a komentářem učitele. Prázdné portfolio = prázdný řetězec (export ukáže jen výběr projektů).
+ */
+function pf75_export_section_html(string $classId, string $studentKey): string
+{
+    if ($studentKey === '') return '';
+    $pins = pf75_pins($classId, $studentKey);
+    if ($pins === []) return '';
+    $html = '<h2>' . e(tr('Připnuté práce')) . '</h2>';
+    foreach ($pins as $p) {
+        $html .= '<article class="item"><h3>' . e((string)$p['title']) . '</h3><p class="meta">' . e(pf75_t_kind((string)$p['kind']))
+            . ((string)($p['url'] ?? '') !== '' ? ' · ' . e((string)$p['url']) : '') . '</p>'
+            . ((string)($p['reflection'] ?? '') !== '' ? '<p><strong>' . e(tr('Moje reflexe:')) . '</strong> ' . e((string)$p['reflection']) . '</p>' : '')
+            . (is_array($p['comment'] ?? null) ? '<p><strong>' . e(tr('Komentář učitele:')) . '</strong> ' . e((string)($p['comment']['text'] ?? '')) . '</p>' : '') . '</article>';
+    }
+    return $html;
+}
+
 function pf75_pin_html(string $id, array $p, string $csrf): string
 {
     $title = e((string)$p['title']);

@@ -85,7 +85,7 @@ $stuA = (string)($keys3[0] ?? 'class_3a:student:audit-a');
 $stuB = (string)($keys3[1] ?? 'class_3a:student:audit-b');
 $refA = tb75_student_ref($C3, $stuA);
 $check('identita: ref žáka = student_id nebo pseudonym (nikdy jméno), různí žáci = různé ref', preg_match('/^(stu_[0-9a-f]{16}|h[0-9a-f]{24})$/', $refA) === 1 && $refA !== tb75_student_ref($C3, $stuB)
-    && tb75_tasks_for_class('class_1a') === [] && tb75_submit('class_1a', 'x', 'net_subnet', ['network' => '1'])['error'] === 'unknown_task');
+    && !in_array('net_subnet', tb75_tasks_for_class('class_1a'), true) && tb75_submit('class_1a', 'x', 'net_subnet', ['network' => '1'])['error'] === 'unknown_task');   // v76: 1.A má grafické úlohy (změna limitu auditu)
 $cur = tb75_current($C3, $refA, 'net_subnet')['variant'];
 $wrongAns = ['network' => 'tajny-vstup-zaka', 'broadcast' => '1.1.1.1', 'hosts' => '1'];
 $r1 = tb75_submit($C3, $stuA, 'net_subnet', $wrongAns);
@@ -109,8 +109,8 @@ $check('souhrn třídy: 4 pokusy, 1 správně (25 %), nejčastější chyba po p
 $lvBad = [];
 foreach (array_keys(LV75_CLASS_FILES) as $c) {
     $content = lv75_content($c);
-    if (array_keys($content) !== range(1, 16)) $lvBad[] = $c . ':lekce';
-    foreach ($content as $n => $row) {
+    if (array_slice(array_keys($content), 0, 16) !== range(1, 16)) $lvBad[] = $c . ':lekce';   // v76: L17–L28 hlídá tools/v76_content_audit.php
+    foreach (array_slice($content, 0, 16, true) as $n => $row) {
         $texts = [];
         if (trim((string)($row['activity'] ?? '')) === '') $lvBad[] = $c . ':L' . $n;
         foreach (array_keys(LV75_LEVELS) as $k) {

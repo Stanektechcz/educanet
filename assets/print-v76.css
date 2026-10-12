@@ -1,0 +1,9 @@
+/* EDUCANET v76 · tabulky na stránkách k tisku (Plán vs. skutečnost, Plnění ŠVP). Doplňuje assets/print-v75.css: na obrazovce systémové barvy,
+   pevné barvy jen v @media print (papír nemá tmavý režim). 390 px: tabulka se zalomí, ne posune. */
+.pr75 table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+.pr75 th, .pr75 td { padding: 4px 6px; border-bottom: 1px solid GrayText; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+.pr75 caption { text-align: left; font-weight: 600; margin-bottom: 4px; }
+.pr75 thead th { font-weight: 600; }
+.pr75 tr { break-inside: avoid; }
+.pr75 .c70-chip-bad { font-weight: 700; }
+@media print { .pr75 th, .pr75 td { border-color: #999; } }

@@ -39,7 +39,7 @@ function tb75_render_teacher_tab(array $modules, string $classId): void
     $active = count(array_filter($stats, static fn(array $s): bool => $s['students'] > 0));
     $attempts = array_sum(array_column($stats, 'attempts'));
     if (function_exists('c70_kpis_html')) echo c70_kpis_html([
-        ['Úlohy v sadě', (string)count($tasks), 'síť a Linux', ''],
+        ['Úlohy v sadě', (string)count($tasks), in_array($class, ['class_1a', 'class_2a'], true) ? 'grafika a web' : 'síť a Linux', ''],
         ['Úlohy s pokusem', (string)$active, 'aspoň jeden žák zkusil', ''],
         ['Pokusy celkem', (string)$attempts, 'za celé období', ''],
         ['Žáci ve třídě', (string)count($students), $hidden ? 'jména skrytá (Nastavení výuky)' : 'se jménem', ''],

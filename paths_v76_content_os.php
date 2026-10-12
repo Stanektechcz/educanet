@@ -1,0 +1,150 @@
+<?php
+
+declare(strict_types=1);
+if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
+
+/**
+ * EDUCANET v76 · další výukové cesty pro 3.A (operační systémy a sítě) – statická data, žádná logika ani zápis.
+ * Doplňují paths_v63_content_os.php (fáze E bod 3: 3.A ≥ 5 cest). Schéma viz paths_v63.php; načítá p63_paths_for_class() přes P76_PATH_FILES.
+ * Krok „pre“ (predict–run–explain) má výstupy předpočítané simulátorem do paths_v63_pre_data.php (tools/v63_paths_build_pre.php --apply,
+ * pevné semínko) – za běhu se nic nespouští. Adresy jen z laboratoře (10.0.0.x). Otázky ověřování z banky týmových her
+ * (net.ports, net.procs, net.security – kategorie přiřazené kompetencím v P63_BANK_COMPETENCY).
+ */
+
+return [
+    'net_ports' => [
+        'title' => 'Porty a služby: kdo na serveru poslouchá',
+        'goal' => 'Zjistíš, které služby na serveru naslouchají, ověříš dostupnost portu a rozlišíš odmítnuté a nedostupné spojení.',
+        'class' => 'class_3a',
+        'competency' => 'net_services',
+        'minutes' => 24,
+        'steps' => [
+            ['id' => 'explain', 'type' => 'explain', 'title' => 'Port je číslo dveří', 'competency' => 'net_services', 'level' => 1, 'minutes' => 3,
+                'paragraphs' => [
+                    'IP adresa určuje počítač, port určuje službu na něm. Dobře známé porty: SSH 22, HTTP 80, HTTPS 443, DNS 53. Služba, která na portu čeká na spojení, „naslouchá“ (listener).',
+                    'Příkaz ss -tln vypíše naslouchající TCP porty: adresa 0.0.0.0 znamená všechna rozhraní, 127.0.0.1 jen místní počítač. Co tu není, zvenku nikdo neotevře.',
+                    'Příkaz nc -zv adresa port zkusí spojení: „succeeded“ = služba odpověděla, „Connection refused“ = počítač žije, ale na portu nikdo nenaslouchá, „timed out“ = odpověď nepřišla (počítač nedostupný nebo paket zahodil firewall).',
+                ],
+                'example' => "ss -tln\n0.0.0.0:22   0.0.0.0:80\nnc -zv 10.0.0.10 443  →  Connection refused"],
+            ['id' => 'predict', 'type' => 'pre', 'title' => 'Co příkaz vypíše?', 'competency' => 'net_services', 'level' => 2, 'minutes' => 5,
+                'cases' => [
+                    ['id' => 'c1', 'setup' => [], 'cmd' => 'ss -tln',
+                        'question' => 'Na kterém portu server naslouchá pro vzdálenou správu přes SSH?',
+                        'options' => ['0.0.0.0:22', '0.0.0.0:443', '127.0.0.1:22', '0.0.0.0:21'], 'correct' => 0, 'expect' => '0.0.0.0:22',
+                        'explain' => 'SSH používá port 22; adresa 0.0.0.0 znamená, že je dostupný ze všech rozhraní.'],
+                    ['id' => 'c2', 'setup' => [], 'cmd' => 'nc -zv 10.0.0.10 443',
+                        'question' => 'Intranet na 10.0.0.10 nemá zapnuté HTTPS. Co nc vypíše?',
+                        'options' => ['Connection refused', 'succeeded', 'Connection timed out', 'Name or service not known'], 'correct' => 0, 'expect' => 'Connection refused',
+                        'explain' => 'Počítač je dostupný, ale na portu 443 nikdo nenaslouchá – odpoví odmítnutím.'],
+                    ['id' => 'c3', 'setup' => [], 'cmd' => 'nc -zv 10.0.0.10 22',
+                        'question' => 'Co nc vypíše pro port 22 na stejném serveru?',
+                        'options' => ['succeeded', 'Connection refused', 'Connection timed out', 'Permission denied'], 'correct' => 0, 'expect' => 'succeeded',
+                        'explain' => 'Na portu 22 naslouchá SSH, spojení se podaří.'],
+                ]],
+            ['id' => 'order', 'type' => 'parsons', 'title' => 'Postup: web nejde otevřít', 'competency' => 'net_services', 'level' => 2, 'minutes' => 5,
+                'prompt' => 'Seřaď kroky ověření, proč se web na serveru 10.0.0.10 nedá otevřít.',
+                'lines' => ['Ověř, že se jméno přeloží na adresu (dig)', 'Ověř dostupnost portu 80 z klienta (nc -zv)', 'Na serveru zjisti, jestli služba naslouchá (ss -tln)', 'Zjisti stav služby (systemctl status)', 'Po opravě ověř odpověď webu (curl -I)'],
+                'accept' => []],
+            ['id' => 'recall', 'type' => 'retrieval', 'title' => 'Co si pamatuješ', 'competency' => 'net_services', 'level' => 1, 'minutes' => 4, 'count' => 4,
+                'pool' => ['net.ports.001', 'net.ports.002', 'net.ports.003', 'net.ports.004', 'net.ports.005', 'net.ports.006', 'net.ports.007', 'net.ports.008']],
+            ['id' => 'verify', 'type' => 'verify', 'title' => 'Ověř, co umíš', 'competency' => 'net_services', 'level' => 2, 'minutes' => 5,
+                'variants' => [
+                    ['net.ports.009', 'net.ports.010', 'net.ports.011', 'net.ports.012'],
+                    ['net.ports.013', 'net.ports.015', 'net.ports.016', 'net.ports.017'],
+                    ['net.ports.018', 'net.ports.019', 'net.ports.020', 'net.ports.021'],
+                ]],
+            ['id' => 'reflect', 'type' => 'reflect', 'title' => 'Jak ti to šlo', 'competency' => 'net_services', 'level' => 2, 'minutes' => 2],
+        ],
+        'spaced' => ['count' => 4, 'minutes' => 3, 'pool' => ['net.ports.002', 'net.ports.004', 'net.ports.006', 'net.ports.009', 'net.ports.013', 'net.ports.018', 'net.ports.021', 'net.ports.022', 'net.ports.023', 'net.ports.024']],
+    ],
+    'lnx_services' => [
+        'title' => 'Procesy a služby: běží, nebo jen poběží?',
+        'goal' => 'Najdeš proces služby, rozlišíš stav „běží teď“ a „spustí se po startu“ a vysvětlíš, kdy pomůže restart a kdy ne.',
+        'class' => 'class_3a',
+        'competency' => 'lnx_services',
+        'minutes' => 24,
+        'steps' => [
+            ['id' => 'explain', 'type' => 'explain', 'title' => 'Proces a služba', 'competency' => 'lnx_services', 'level' => 1, 'minutes' => 3,
+                'paragraphs' => [
+                    'Proces je běžící program s číslem PID (ps aux, pgrep). Služba (jednotka systemd) říká, jak se program spouští, kdo ho hlídá a co dělat při pádu.',
+                    'systemctl is-active služba odpoví, jestli služba běží právě teď (active / inactive / failed). systemctl is-enabled odpoví, jestli se spustí sama po startu systému (enabled / disabled). Jsou to dvě různé otázky.',
+                    'Restart opraví jen chybu za běhu. Když je chybná konfigurace, restart službu shodí – proto nejdřív ověř konfiguraci a log (journalctl -u služba).',
+                ],
+                'example' => "systemctl is-active cron   →  active\nsystemctl is-enabled ssh   →  enabled\npgrep cron                 →  317"],
+            ['id' => 'predict', 'type' => 'pre', 'title' => 'Co příkaz vypíše?', 'competency' => 'lnx_services', 'level' => 2, 'minutes' => 5,
+                'cases' => [
+                    ['id' => 'c1', 'setup' => [], 'cmd' => 'systemctl is-active cron',
+                        'question' => 'Plánovač cron běží. Co vypíše systemctl is-active cron?',
+                        'options' => ['active', 'enabled', 'running', 'loaded'], 'correct' => 0, 'expect' => 'active',
+                        'explain' => 'is-active odpovídá stavem běhu: active, inactive nebo failed.'],
+                    ['id' => 'c2', 'setup' => [], 'cmd' => 'systemctl is-enabled ssh',
+                        'question' => 'Co vypíše systemctl is-enabled ssh, když se SSH spouští při startu?',
+                        'options' => ['enabled', 'active', 'started', 'yes'], 'correct' => 0, 'expect' => 'enabled',
+                        'explain' => 'is-enabled se ptá na start systému: enabled nebo disabled.'],
+                    ['id' => 'c3', 'setup' => [], 'cmd' => 'pgrep cron',
+                        'question' => 'Co vypíše pgrep cron?',
+                        'options' => ['317', 'cron', 'active', '/usr/sbin/cron'], 'correct' => 0, 'expect' => '317',
+                        'explain' => 'pgrep vypíše čísla procesů (PID), jejichž název odpovídá.'],
+                ]],
+            ['id' => 'order', 'type' => 'parsons', 'title' => 'Služba po restartu serveru nejede', 'competency' => 'lnx_services', 'level' => 2, 'minutes' => 5,
+                'prompt' => 'Seřaď kroky, když webová služba po restartu serveru neběží.',
+                'lines' => ['Zjisti stav služby (systemctl is-active)', 'Zjisti, jestli se spouští po startu (systemctl is-enabled)', 'Přečti poslední řádky logu služby (journalctl -u)', 'Ověř konfiguraci a službu povol a spusť', 'Ověř odpověď služby z pohledu uživatele'],
+                'accept' => []],
+            ['id' => 'recall', 'type' => 'retrieval', 'title' => 'Co si pamatuješ', 'competency' => 'lnx_services', 'level' => 1, 'minutes' => 4, 'count' => 4,
+                'pool' => ['net.procs.001', 'net.procs.002', 'net.procs.003', 'net.procs.004', 'net.procs.005', 'net.procs.006', 'net.procs.007', 'net.procs.008']],
+            ['id' => 'verify', 'type' => 'verify', 'title' => 'Ověř, co umíš', 'competency' => 'lnx_services', 'level' => 2, 'minutes' => 5,
+                'variants' => [
+                    ['net.procs.009', 'net.procs.010', 'net.procs.011', 'net.procs.012'],
+                    ['net.procs.013', 'net.procs.014', 'net.procs.015', 'net.procs.016'],
+                    ['net.procs.018', 'net.procs.019', 'net.procs.020', 'net.procs.022'],
+                ]],
+            ['id' => 'reflect', 'type' => 'reflect', 'title' => 'Jak ti to šlo', 'competency' => 'lnx_services', 'level' => 2, 'minutes' => 2],
+        ],
+        'spaced' => ['count' => 4, 'minutes' => 3, 'pool' => ['net.procs.001', 'net.procs.003', 'net.procs.005', 'net.procs.007', 'net.procs.009', 'net.procs.013', 'net.procs.018', 'net.procs.022', 'net.procs.023', 'net.procs.024']],
+    ],
+    'net_security' => [
+        'title' => 'Zabezpečení služby: SSH, porty a firewall',
+        'goal' => 'Ověříš bezpečné nastavení SSH, poznáš, které služby jsou zbytečně otevřené, a vysvětlíš, co dělá firewall.',
+        'class' => 'class_3a',
+        'competency' => 'net_security',
+        'minutes' => 24,
+        'steps' => [
+            ['id' => 'explain', 'type' => 'explain', 'title' => 'Méně otevřených dveří', 'competency' => 'net_security', 'level' => 1, 'minutes' => 3,
+                'paragraphs' => [
+                    'Každá naslouchající služba je možný vstup pro útočníka. Zabezpečení začíná tím, že poslouchají jen služby, které server opravdu potřebuje, a jen na rozhraních, kde je to nutné.',
+                    'U SSH se vypíná přímé přihlášení roota (PermitRootLogin no) a dává se přednost klíčům před hesly. Správce se přihlásí svým účtem a práva správce si vyžádá přes sudo.',
+                    'Firewall rozhoduje, které pakety projdou. Zahozený paket vypadá z druhé strany jako „timed out“, odmítnutý jako „Connection refused“. Pravidla se píšou od výjimek k výchozímu zákazu.',
+                ],
+                'example' => "sudo grep PermitRootLogin /etc/ssh/sshd_config  →  PermitRootLogin no\nnc -zv 10.0.0.99 80  →  Connection timed out"],
+            ['id' => 'predict', 'type' => 'pre', 'title' => 'Co příkaz vypíše?', 'competency' => 'net_security', 'level' => 2, 'minutes' => 5,
+                'cases' => [
+                    ['id' => 'c1', 'setup' => [], 'cmd' => 'sudo grep PermitRootLogin /etc/ssh/sshd_config',
+                        'question' => 'Server má zakázané přímé přihlášení roota přes SSH. Co grep vypíše?',
+                        'options' => ['PermitRootLogin no', 'PermitRootLogin yes', 'PermitRootLogin prohibit-password', 'nic – řádek chybí'], 'correct' => 0, 'expect' => 'PermitRootLogin no',
+                        'explain' => 'Hodnota no zakazuje přihlášení jako root; správce použije svůj účet a sudo.'],
+                    ['id' => 'c2', 'setup' => [], 'cmd' => 'nc -zv 10.0.0.99 80',
+                        'question' => 'Adresa 10.0.0.99 v laboratoři neodpovídá (žádný počítač nebo zahozený paket). Co nc vypíše?',
+                        'options' => ['Connection timed out', 'Connection refused', 'succeeded', 'Permission denied'], 'correct' => 0, 'expect' => 'Connection timed out',
+                        'explain' => 'Na zahozený paket nepřijde žádná odpověď – po čase vyprší čekání.'],
+                    ['id' => 'c3', 'setup' => [], 'cmd' => 'ss -tln',
+                        'question' => 'Na které adrese a portu naslouchá webový server?',
+                        'options' => ['0.0.0.0:80', '127.0.0.1:80', '0.0.0.0:8080', '0.0.0.0:443'], 'correct' => 0, 'expect' => '0.0.0.0:80',
+                        'explain' => 'Web naslouchá na portu 80 všech rozhraní – musí ho tedy chránit pravidla firewallu.'],
+                ]],
+            ['id' => 'order', 'type' => 'parsons', 'title' => 'Pořadí pravidel firewallu', 'competency' => 'net_security', 'level' => 2, 'minutes' => 5,
+                'prompt' => 'Seřaď pravidla stavového firewallu serveru s webem a SSH pro správce.',
+                'lines' => ['Povol odpovědi na už navázaná spojení', 'Povol SSH (port 22) jen ze sítě správců', 'Povol HTTP (port 80) pro všechny', 'Zapiš do logu odmítnuté pokusy', 'Vše ostatní příchozí zakaž'],
+                'accept' => []],
+            ['id' => 'recall', 'type' => 'retrieval', 'title' => 'Co si pamatuješ', 'competency' => 'net_security', 'level' => 1, 'minutes' => 4, 'count' => 4,
+                'pool' => ['net.security.001', 'net.security.002', 'net.security.003', 'net.security.004', 'net.security.005', 'net.security.006', 'net.security.007', 'net.security.008']],
+            ['id' => 'verify', 'type' => 'verify', 'title' => 'Ověř, co umíš', 'competency' => 'net_security', 'level' => 2, 'minutes' => 5,
+                'variants' => [
+                    ['net.security.009', 'net.security.010', 'net.security.011', 'net.security.012'],
+                    ['net.security.013', 'net.security.014', 'net.security.015', 'net.security.017'],
+                    ['net.security.018', 'net.security.019', 'net.security.021', 'net.security.022'],
+                ]],
+            ['id' => 'reflect', 'type' => 'reflect', 'title' => 'Jak ti to šlo', 'competency' => 'net_security', 'level' => 2, 'minutes' => 2],
+        ],
+        'spaced' => ['count' => 4, 'minutes' => 3, 'pool' => ['net.security.002', 'net.security.004', 'net.security.006', 'net.security.008', 'net.security.010', 'net.security.013', 'net.security.018', 'net.security.021', 'net.security.023', 'net.security.024']],
+    ],
+];

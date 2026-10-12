@@ -193,6 +193,9 @@ function ops58_retention_policy(): array
         // v63 · stav výukových cest žáka (storage/paths_v63/stu_*.json.php, vč. reflexní věty): stejně jako důkazy se MAŽE 30 dní po
         // stavu left/archived; rozhoduje p63_retention_purge() z tools/v58_retention.php. Přiřazení a trychtýř (bez jmen) se nemažou.
         ['pattern' => 'paths_v63/stu_*.json.php', 'label' => 'Stav výukových cest v63 včetně reflexní věty (maže se 30 dní po odchodu žáka)', 'action' => 'student_left', 'max_age_days' => 30],
+        // v76 · připnuté práce portfolia v75 (soubor na žáka) a výsledky úloh / volby úrovní (záznam žáka ve sdíleném souboru) se MAŽOU 30 dní po
+        // stavu left/archived; rozhoduje r76_retention_purge() z tools/v58_retention.php – ops58_apply_retention() tuto akci přeskakuje.
+        ['pattern' => 'portfolio_v75/*.json.php', 'label' => 'Připnuté práce portfolia v75, výsledky úloh a volby úrovní (mažou se 30 dní po odchodu žáka)', 'action' => 'student_left', 'max_age_days' => 30],
         // v66 · testy a hodnocení: štítky integrity a ranní log se mažou po skončení školního roku, převzaté známky 30 dní po odchodu žáka.
         // Rozhoduje a66_retention_purge() z tools/v58_retention.php (podle času záznamu / stavu žáka, ne stáří souboru); ops58_apply_retention() tyto akce přeskakuje.
         ['pattern' => 'assessment_v66/integrity_flags.json.php', 'label' => 'Štítky integrity testů v66 (mažou se po skončení školního roku)', 'action' => 'student_left', 'max_age_days' => 365],

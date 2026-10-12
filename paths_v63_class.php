@@ -147,12 +147,14 @@ function p63_compute_stats(array $paths, array $ids, string $sig): array
 {
     $stats = [];
     $pairsAll = [];
+    $states = [];   // v76: stav žáka se čte jednou, ne pro každou cestu zvlášť (3.A má 5 cest – výkon Dnešní hodiny)
+    foreach ($ids as $sid) $states[$sid] = p63_state($sid);
     foreach ($paths as $pathId => $path) {
         $steps = array_fill_keys(p63_step_ids($path), ['tried' => 0, 'done' => 0]);
         $row = ['started' => 0, 'finished' => 0, 'steps' => $steps];
         $pairs = [];
         foreach ($ids as $sid) {
-            $state = p63_state($sid);
+            $state = $states[$sid];
             $progress = p63_path_progress($path, $state);
             if ($progress['started']) $row['started']++;
             if ($progress['finished']) $row['finished']++;

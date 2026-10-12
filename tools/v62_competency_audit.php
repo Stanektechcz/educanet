@@ -75,7 +75,7 @@ foreach (ev62_adapters() as $name => $adapter) {
     foreach ($got as $cand) $sourcesSeen[(string)$cand['source']] = true;
 }
 $check('adaptéry: každý z 9 adaptérů vrátí pro fixture žáka aspoň jednoho kandidáta (' . json_encode($adapterHits) . ')', count($adapterHits) === 9 && !in_array(0, $adapterHits, true));
-$check('adaptéry: pokryty všechny typy zdrojů (test, project, lab, game, arena, lesson)', array_diff(EV62_SOURCES, array_keys($sourcesSeen)) === []);
+$check('adaptéry: pokryty všechny typy zdrojů (test, project, lab, game, arena, lesson)', array_diff(array_diff(EV62_SOURCES, ['task', 'observation']), array_keys($sourcesSeen)) === []);   // v76: task a observation zapisuje úloha / učitel přímo, ne adaptér (změna limitu auditu, BUILD_MANIFEST_V76.md)
 $incident = array_values(array_filter((array)(ev62_adapters()['arena_v58']['collect'])($ctxGood), static fn(array $c): bool => str_contains((string)$c['ref'], 'incident')));
 $check('adaptéry: incidenty v58 mají typ zdroje lab (rozhodnutí školy), týdenní hádanka a CTF aréna', $incident !== [] && $incident[0]['source'] === 'lab'
     && array_unique(array_column(array_filter((array)(ev62_adapters()['arena_v58']['collect'])($ctxGood), static fn(array $c): bool => !str_contains((string)$c['ref'], 'incident')), 'source')) === ['arena']);
@@ -244,7 +244,7 @@ $check('učitel: comp62_sync vyžaduje třídu v rozsahu (class required), oprá
     && (teacher59_action_policy('comp63_sync')['deny'] ?? false) === true && (teacher59_action_policy('comp62_hack')['deny'] ?? false) === true && (teacher59_action_policy('comp62_')['deny'] ?? false) === true && (teacher59_action_policy('neznama_akce')['deny'] ?? false) === true && teacher_action_permission('neznama_akce') === TEACHER_PERMISSION_DENY);
 require_once $root . '/teacher_v58.php';
 $mod = teacher58_modules()['kompetence'] ?? [];
-$check('učitel: záložka kompetence je v registru modulů se všemi soubory, POST prefixem comp62_ a bez zvláštního GET parametru', $mod !== [] && teacher58_available('kompetence') && array_keys((array)$mod['post']) === ['comp62_'] && !isset($mod['get'])
+$check('učitel: záložka kompetence je v registru modulů se všemi soubory, POST prefixem comp62_ (v76: + ob76_ ruční pozorování) a bez zvláštního GET parametru', $mod !== [] && teacher58_available('kompetence') && array_keys((array)$mod['post']) === ['comp62_', 'ob76_'] && !isset($mod['get'])
     && array_filter((array)$mod['files'], static fn(string $f): bool => !is_file($root . '/' . $f)) === []);
 ev62_memo_reset();
 $html = audit_capture(static function (): void { comp62_render_teacher_tab(V62FX_CLASS, 'tok-csrf'); });
