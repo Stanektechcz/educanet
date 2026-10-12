@@ -88,15 +88,28 @@
     try{await navigator.clipboard.writeText(text);const old=button.textContent;button.textContent='Zkopírováno ✓';button.classList.add('ops-copy-ok');setTimeout(()=>{button.textContent=old;button.classList.remove('ops-copy-ok');},1600);}catch(_){box.focus();box.select();document.execCommand?.('copy');}
   }));
 
-  const backdrop=document.querySelector('[data-command-backdrop]'),input=document.querySelector('[data-command-input]'),results=document.querySelector('[data-command-results]');
+  // v74: paleta bez jmen v HTML – stránky, třídy i žáky načte až při otevření (JSON tyden74&paleta=1, jen přihlášený učitel, třídy v rozsahu); prvky přes textContent.
+  const backdrop=document.querySelector('[data-command-backdrop]'),input=document.querySelector('[data-command-input]'),results=document.querySelector('[data-command-results]'),status=document.querySelector('[data-palette-status]');
   if(backdrop&&input&&results){
-    const items=()=>[...results.querySelectorAll('[data-command-item]')].filter(i=>!i.hidden);let active=0;
+    const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('cs').trim();
+    const all=()=>[...results.querySelectorAll('[data-command-item]')];
+    const items=()=>all().filter(i=>!i.hidden);let active=0;let loaded=false;
+    const say=t=>{if(status)status.textContent=t;};
     const paint=()=>items().forEach((i,x)=>i.classList.toggle('active',x===active));
-    const open=()=>{backdrop.hidden=false;active=0;input.value='';[...results.querySelectorAll('[data-command-item]')].forEach(i=>i.hidden=false);paint();setTimeout(()=>input.focus(),0);};
+    const filter=()=>{const q=norm(input.value).replace(/\s+/g,' ');all().forEach(i=>i.hidden=!!q&&!norm(i.dataset.search).includes(q));active=0;paint();};
+    const load=()=>{const src=backdrop.dataset.paletteSrc;if(loaded||!src)return;loaded=true;say('Načítám…');
+      fetch(src,{credentials:'same-origin',headers:{'Accept':'application/json'}}).then(r=>r.ok?r.json():Promise.reject(r.status)).then(data=>{
+        if(!data||!data.ok)throw new Error('data');
+        const add=it=>{const a=document.createElement('a');a.href=String(it.url||'');a.setAttribute('data-command-item','');a.dataset.search=norm(it.search||it.label);
+          const s=document.createElement('strong');s.textContent=String(it.label||'');const m=document.createElement('small');m.textContent=String(it.hint||'');a.append(s,m);results.appendChild(a);};
+        (data.pages||[]).forEach(add);(data.items||[]).forEach(add);
+        say(data.names_hidden?'Jména žáků jsou skrytá (Nastavení výuky) – hledají se jen stránky a třídy.':((data.items||[]).length?'':'Ve vašich třídách zatím nejsou žáci.'));filter();
+      }).catch(()=>{loaded=false;say('Hledání se nepodařilo načíst. Zkuste paletu zavřít a otevřít znovu.');});};
+    const open=()=>{backdrop.hidden=false;active=0;input.value='';all().forEach(i=>i.hidden=false);paint();load();setTimeout(()=>input.focus(),0);};
     const close=()=>{backdrop.hidden=true;};
     document.querySelectorAll('[data-command-open]').forEach(b=>b.addEventListener('click',open));document.querySelectorAll('[data-command-close]').forEach(b=>b.addEventListener('click',close));
     document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();backdrop.hidden?open():close();return;}if(backdrop.hidden)return;if(e.key==='Escape'){e.preventDefault();close();}else if(e.key==='ArrowDown'){e.preventDefault();active=Math.min(items().length-1,active+1);paint();}else if(e.key==='ArrowUp'){e.preventDefault();active=Math.max(0,active-1);paint();}else if(e.key==='Enter'){const i=items()[active];if(i){e.preventDefault();location.href=i.href;}}});
-    input.addEventListener('input',()=>{const q=(input.value||'').toLocaleLowerCase('cs').trim();[...results.querySelectorAll('[data-command-item]')].forEach(i=>i.hidden=!!q&&!String(i.dataset.search||'').toLocaleLowerCase('cs').includes(q));active=0;paint();});
+    input.addEventListener('input',filter);
     backdrop.addEventListener('click',e=>{if(e.target===backdrop)close();});
   }
 })();

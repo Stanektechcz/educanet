@@ -32,7 +32,8 @@ function teacher58_modules(): array
             'files' => ['points_v53.php', 'teacher_class_dashboard.php', 'teacher_overview_v61.php', 'competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php',
                 'paths_v63.php', 'paths_v63_class.php', 'cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'calendar_days_v71.php',
                 'lesson_today_v70.php', 'lesson_today_v70_views.php', 'lesson_today_v71_views.php',
-                'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'lesson_exit_v72_views.php', 'lesson_reflect_v73.php', 'lesson_reflect_v73_views.php'],   // v73: karta „Minule“ z reflexe (jen čtení); v72: stav schválení a souhrn exit ticketu (jen čtení); v72.1: jména a režim exit ticketu
+                'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'lesson_exit_v72_views.php', 'lesson_reflect_v73.php', 'lesson_reflect_v73_views.php',
+                'materials_v74.php', 'materials_v74_views.php', 'insights_v74.php', 'insights_v74_views.php'],   // v74: knihovna materiálů a „Komu dnes pomoct“ (jen čtení); v73: karta „Minule“ z reflexe (jen čtení); v72: stav schválení a souhrn exit ticketu (jen čtení); v72.1: jména a režim exit ticketu
             // v71: model lekce lm71 (plán po minutách, poznámky, pracovní list, úplnost) a karty dnů bez lekce; stále jen čtení.
             'css' => ['assets/cockpit-v71.css'],
             'render' => static function (array $m, string $c): void { lt71_render_tab($m, $c); },
@@ -42,7 +43,7 @@ function teacher58_modules(): array
         'schvalovani' => [
             'label' => 'Schvalování lekcí', 'hint' => 'Návrhy obsahu lekcí: náhled, schválení a vrácení', 'group' => 'podpora',
             'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php',
-                'svp_v72.php', 'svp_v72_map.php', 'svp_v72_views.php', 'ai_prompts_v72_1.php', 'lesson_approval_v72_views.php'],   // v72.1: vazba na ŠVP + náhled AI promptů
+                'svp_v72.php', 'svp_v72_map.php', 'svp_v72_views.php', 'ai_prompts_v72_1.php', 'lesson_approval_v72_views.php', 'bulk_approval_v74.php', 'bulk_approval_v74_views.php'],   // v72.1: vazba na ŠVP + náhled AI promptů; v74: karta „Hromadné schválení“ (jen čtení)
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v72.css'],
             'post' => ['lc72_' => 'lc72_teacher_handle_post'],   // v72.1: lc72_svp_approve / lc72_svp_return předává handler do svp72_teacher_handle_post
             'render' => static function (array $m, string $c) use ($csrf): void { lc72_render_tab($m, $c, $csrf()); },
@@ -83,6 +84,39 @@ function teacher58_modules(): array
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v73.css'],
             'post' => ['lr73_' => 'lr73_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { lr73_render_tab($m, $csrf()); },
+        ],
+        // v74 · Hromadné schválení lekcí a vazeb na ŠVP (týden / třída / rok, náhled, potvrzení, výsledek po položkách, vrácení přes lc72_return).
+        // POST ba74_approve má exact politiku v teacher_scope_v59.php (class_ids[] povinné a v rozsahu; handler ověří každou položku), oprávnění ba74_ = content.manage.
+        'hromadne74' => [
+            'label' => 'Hromadné schválení', 'hint' => 'Lekce a vazby na ŠVP po týdnech, třídách nebo za rok', 'group' => 'podpora',
+            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php',
+                'svp_v72.php', 'svp_v72_map.php', 'bulk_approval_v74.php', 'bulk_approval_v74_views.php'],
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v72.css', 'assets/cockpit-v74.css'],
+            'post' => ['ba74_' => 'ba74_teacher_handle_post'],
+            'render' => static function (array $m, string $c) use ($csrf): void { ba74_render_tab($m, $c, $csrf()); },
+        ],
+        // v74 · Knihovna materiálů s verzemi: POST mat74_add / _update / _verify / _retire / _attach / _restore mají exact politiky (třída povinná a v rozsahu),
+        // oprávnění mat74_ = content.manage (asistent jen čte); handler ověří, že materiál patří třídě. GET jen ?class=, ?lesson=, ?stav=, ?q=, ?mat=, ?verze=.
+        'materialy74' => [
+            'label' => 'Knihovna materiálů', 'hint' => 'Materiály k lekcím, ověření, verze a obnova', 'group' => 'podpora',
+            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'materials_v74.php', 'materials_v74_views.php'],
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v72.css', 'assets/cockpit-v74.css'],
+            'post' => ['mat74_' => 'mat74_teacher_handle_post'],
+            'render' => static function (array $m, string $c) use ($csrf): void { mat74_render_tab($m, $c, $csrf()); },
+        ],
+        // v74 · Týdenní souhrn (jen čtení, bez jmen, tisk). GET ?paleta = JSON žáků pro rychlé hledání (palette_v74.php) – politika tyden74|paleta
+        // v teacher_scope_v59.php (každý přihlášený učitel, data jen z tříd v rozsahu); jinak jen ?tyden=.
+        'tyden74' => [
+            'label' => 'Týdenní souhrn', 'hint' => 'Odučeno vs. plán, schválení, žáci a termíny', 'group' => 'podpora',
+            'files' => ['points_v53.php', 'teacher_class_dashboard.php', 'teacher_overview_v61.php', 'competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php',
+                'paths_v63.php', 'paths_v63_class.php', 'cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_today_v70.php',
+                'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'svp_v72.php', 'svp_v72_map.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'lesson_reflect_v73.php',
+                'insights_v74.php', 'weekly_v74.php', 'weekly_v74_views.php', 'palette_v74.php'],
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v74.css'], 'js' => ['assets/lesson-v73.js'],
+            'get' => [
+                'paleta' => static function (array $m): void { pal74_json(); },
+            ],
+            'render' => static function (array $m, string $c): void { wk74_render_tab($m, $c); },
         ],
         // v70 · Přehled správy: účty a role, pokrytí tříd, provoz, kvalita dat a doporučení – jen administrátor, jen čtení.
         'sprava_prehled' => [

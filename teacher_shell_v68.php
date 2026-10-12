@@ -136,7 +136,7 @@ function teacher68_topbar_html(string $tab, string $classId, array $visibleTabs,
     return '<header class="t68-top"><a class="t68-logo" href="teacher.php"><i aria-hidden="true">ED</i><span><strong>EDUCANET</strong><small>Cockpit</small></span></a>'
         . '<details class="t68-menu"><summary>Menu</summary>' . teacher68_nav_html($tab, $classId, $visibleTabs, $sectionParam, 'Hlavní navigace (mobil)') . '</details>'
         . '<div class="t68-tools">' . teacher68_theme_switch_html($tab, $classId) . '<button type="button" class="t68-btn t68-collapse" data-t68-collapse aria-pressed="false" aria-controls="t68-side" hidden>Sbalit panel</button>'
-        . '<button type="button" class="t68-btn teacher-command-button" data-command-open title="Příkazy Ctrl/⌘+K">⌘K</button>'
+        . (!function_exists('pal74_enabled') || pal74_enabled($tab) ? '<button type="button" class="t68-btn teacher-command-button" data-command-open title="Rychlé hledání Ctrl/⌘+K" aria-label="Rychlé hledání (Ctrl+K)">⌘K</button>' : '')   // v74: na projektoru, tisku a zástupu bez palety
         . '<div class="t68-account">' . $account . '</div>' . $logout . '</div></header>';
 }
 

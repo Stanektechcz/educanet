@@ -1,0 +1,11 @@
+# Knihovna materiálů, Komu dnes pomoct, Hromadné schválení a Týdenní souhrn (v74) · návod pro učitele na jednu obrazovku
+
+| Co | Kde | Jak na to |
+|---|---|---|
+| **Komu dnes pomoct** | Dnes → Dnešní hodina, karta pod souhrnem | Nejvýš 5 žáků s konkrétním důvodem (chybí exit ticket, 2× chybný exit ticket, klesající výsledky, chyběl/a v minulé hodině s kódem, 7+ dní bez aktivity, úkol po termínu, nedokončená minulá lekce, váš otevřený follow-up). U každého **navržený krok** s tlačítkem (Detail žáka, Naplánovat podporu, Napsat shrnutí) a **„Proč?“** se zdrojem dat. „Jak vybíráme?“ vysvětluje pravidla. Žák štítek nevidí, nic se neukládá ani nehodnotí. Žáci bez dat se nevybírají. Skryjete-li jména (Nastavení výuky), uvidíte „Žák N“ – číslo odpovídá tabulce žáků. |
+| **Knihovna materiálů** | Výuka → Knihovna materiálů | Přidejte odkaz **https** (název, typ, jazyk, délka, licence, témata). **Ověřte** ho („Funguje a sedí k tématu“ / „Neodpovídá tématu“), **připojte k lekci** (hlavní / doplněk / jen pro učitele, povinný). Každá změna = nová verze; v **Historii verzí** uvidíte kdo a kdy, náhled, rozdíl a tlačítko **Obnovit verzi**. Vyřazený materiál zmizí z Dnešní hodiny, vrátit ho jde obnovením starší verze. Soubory se zatím nenahrávají. |
+| **Hromadné schválení** | Výuka → Hromadné schválení (nebo karta v Schvalování lekcí) | 1) Vyberte **týden**, **třídu** nebo **celý rok** a zda obsah lekcí, vazby na ŠVP nebo obojí. 2) Zkontrolujte náhled: lekce do 14 dní (T-14) jsou nahoře, u každé „nyní → schváleno“ a co se změní; nechte zaškrtnuté, co schválit, potvrďte. 3) Výsledek po položkách – omyl vrátíte tlačítkem **Vrátit** (běžné vrácení k úpravě). Vrácené lekce se hromadně neschvalují. |
+| **Týdenní souhrn** | Dnes → Týdenní souhrn | Odučeno vs. plán (podle vaší reflexe), co čeká na schválení s termínem (výuka − 14 dní), kolik žáků potřebuje pomoc, termíny úkolů a follow-upů. Bez jmen – tlačítkem **Vytisknout souhrn** ho vytisknete na A4. Šipkami přepnete týden. |
+| **Rychlé hledání (Ctrl+K)** | kdekoli v cockpitu | Stránky a třídy hned; jména žáků se načtou až po otevření (jen vašich tříd). Na projektoru, tisku a listu pro zástup hledání není. Při skrytých jménech se žáci nehledají. |
+
+**Asistent** vše vidí jen ke čtení (bez formulářů). **Neznáte důvod?** Klikněte na „Proč?“ – každý signál má zdroj.

@@ -17,8 +17,8 @@ require_once __DIR__ . '/ui_v67.php';
 
 /** Záložky cockpitu s tmavým režimem (po převodu CSS na tokeny a kontrole kontrastu; ostatní zůstanou světlé). */
 const UI68_TEACHER_DARK_TABS = [
-    'attention', 'hodina', 'hodina_projektor', 'hodina_tisk', 'hodina_zastup', 'reflexe73', 'prehled', 'hlaseni', 'student360', 'class_results', 'analytics', 'interventions', 'communications', 'intake', 'pristupy', 'groups',
-    'cesty', 'schvalovani', 'nastaveni_vyuky', 'curriculum', 'teach', 'session', 'calendar', 'authoring', 'editor', 'labdata',
+    'attention', 'hodina', 'hodina_projektor', 'hodina_tisk', 'hodina_zastup', 'reflexe73', 'tyden74', 'prehled', 'hlaseni', 'student360', 'class_results', 'analytics', 'interventions', 'communications', 'intake', 'pristupy', 'groups',
+    'cesty', 'schvalovani', 'hromadne74', 'materialy74', 'nastaveni_vyuky', 'curriculum', 'teach', 'session', 'calendar', 'authoring', 'editor', 'labdata',
     'hodnoceni66', 'kompetence', 'projekty65', 'grade', 'projekty', 'workspace', 'history',
     'arena', 'roboti', 'hry', 'ctf', 'incidenty', 'souboje', 'ekonomika', 'obchod',
     'sprava_prehled', 'ucitele', 'identita', 'provoz', 'quality', 'ops_audit', 'team_admin', 'demo_accounts', 'overview', 'reports', 'ucet', 'sekce',
@@ -52,6 +52,7 @@ function teacher68_tab_map(): array
         'hodina_tisk' => $t('dnes', 'Tisk hodiny', 'A4 plán hodiny a pracovní list'),   // v73
         'hodina_zastup' => $t('dnes', 'Zástup', 'List pro zastupujícího bez jmen žáků'),   // v73
         'reflexe73' => $t('dnes', 'Reflexe hodiny', 'Jak hodina proběhla a co příště'),   // v73
+        'tyden74' => $t('dnes', 'Týdenní souhrn', 'Odučeno vs. plán, schválení a termíny', false),   // v74 (bez ?class=, všechny třídy v rozsahu)
         'prehled' => $t('dnes', 'Přehled třídy', 'Kdo zaostává a co čeká na schválení'),
         'hlaseni' => $t('dnes', 'Hlášení', 'Chyby a návrhy od žáků'),
         'student360' => $t('trida', 'Detail žáka', 'Výsledky, dovednosti, úkoly a časová osa'),
@@ -64,6 +65,8 @@ function teacher68_tab_map(): array
         'groups' => $t('trida', 'Týmy', 'Členství, lobby a role v týmech'),
         'cesty' => $t('vyuka', 'Výukové cesty', 'Přiřazení cest, trychtýř kroků a kalibrace'),
         'schvalovani' => $t('vyuka', 'Schvalování lekcí', 'Návrhy obsahu, náhled a schválení'),   // v72
+        'hromadne74' => $t('vyuka', 'Hromadné schválení', 'Lekce a ŠVP po týdnech, třídách nebo za rok'),   // v74
+        'materialy74' => $t('vyuka', 'Knihovna materiálů', 'Materiály k lekcím, ověření a verze'),   // v74
         'nastaveni_vyuky' => $t('vyuka', 'Nastavení výuky', 'Jména žáků a režim exit ticketu'),   // v72.1
         'curriculum' => $t('vyuka', 'Plán a kurikulum', 'Lekce, checklist a příprava'),
         'teach' => $t('vyuka', 'Režim hodiny', 'Projekce, simulace a živá výuka'),

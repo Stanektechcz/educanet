@@ -48,6 +48,7 @@ function lt71_render_tab(array $modules, string $classId, ?int $now = null): voi
     if (is_array($m['day'])) echo lt71_day_html($m);
     echo lt70_picker_html($m, $modules);
     echo lt71_kpis_html($m);
+    if (function_exists('in74_card_html')) echo in74_card_html($m, $now);   // v74: „Komu dnes pomoct“ (jen čtení, jména podle volby učitele)
     echo '<div class="c70-grid"><div class="c70-col">' . lt71_topic_html($m) . lt71_plan_html($m) . lt71_notes_html($m) . lt71_materials_html($m) . lt70_paths_html($m) . '</div>'
         . '<div class="c70-col c70-side">' . lt70_session_html($m) . (function_exists('lx72_teacher_card_html') ? lx72_teacher_card_html($m) : '') . lt70_actions_html($m) . lt70_tasks_html($m) . '</div></div>';
     echo lt71_students_html($m);
@@ -194,7 +195,8 @@ function lt71_notes_html(array $m): string
 /** Materiály v70 + odkaz na lesson kit v Režimu hodiny (soubory materials/ jsou z webu zakázané, kit se zobrazí v aplikaci). */
 function lt71_materials_html(array $m): string
 {
-    $html = lt70_materials_html($m);
+    // v74: má-li třída knihovnu materiálů, karta ukazuje knihovnu (povinné a ověřené první, vyřazené nikdy); jinak zdroje v70 jako dosud.
+    $html = function_exists('mat74_has_library') && mat74_has_library((string)$m['class']) ? mat74_today_html($m) : lt70_materials_html($m);
     if (!c70_tab_visible('teach')) return $html;
     $n = (int)$m['lesson']['number'];
     $url = (function_exists('teacher68_tab_url') ? teacher68_tab_url('teach', $m['class']) : '?tab=teach&class=' . rawurlencode($m['class'])) . '&lesson=' . $n . '#lesson-kit';

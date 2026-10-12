@@ -45,6 +45,7 @@ function lc72_render_tab(array $modules, string $classId, string $csrf): void
         ['Čeká na rozhodnutí', (string)($count('navrh') + $count('zmeneno')), 'návrh nebo změna po schválení', ''],
         ['Učí se do 14 dní', (string)$t14, 'a nejsou schválené (T-14)', $t14 > 0 ? 'warn' : 'ok'],
     ], 'Souhrn schvalování');
+    if (function_exists('ba74_entry_html')) echo ba74_entry_html($class);   // v74: hromadné schválení (náhled, potvrzení, výsledek, vrácení)
     echo lc72_table_html($class, $rows, $lesson);
     if ($lesson > 0) echo lc72_preview_html($class, $lesson, $csrf);
     if (function_exists('svp72_section_html')) echo svp72_section_html($class, $csrf);   // v72.1: vazba na ŠVP (návrh ke schválení)

@@ -407,9 +407,10 @@ function v61m_http_teachers(string $ROOT, string $tmp, Closure $check, array $ac
         $assistant = $page('s', '&class=class_3a');
         $nobody = $page('e', '');
         $has = static fn(array $r, string $needle): bool => str_contains((string)$r['body'], $needle);
-        $check('HTTP učitel: admin vidí souboje 3.A i 1.A, 200 bez PHP chyby', (int)$admin['status'] === 200 && $has($admin, 'Souboje v Aréně') && $has($admin, 'Trojan') && $has($admin, 'Jedličk') && audit_response_clean($admin));
+        // v74: jména 1.A dřív do stránky vkládala paleta ⌘K (únik opravený ve v74); rozsah tříd se proto ověřuje blokem statistik třídy (<h3>class_1a</h3>) – změna limitu auditu, BUILD_MANIFEST_V74.md
+        $check('HTTP učitel: admin vidí souboje 3.A i 1.A, 200 bez PHP chyby', (int)$admin['status'] === 200 && $has($admin, 'Souboje v Aréně') && $has($admin, 'Trojan') && $has($admin, '<h3>class_1a</h3>') && audit_response_clean($admin));
         $check('HTTP učitel: učitel 3.A+4.A vidí jen svoje (Trojan ano, Jedlick ne)', (int)$teacherB['status'] === 200 && $has($teacherB, 'Trojan') && !$has($teacherB, 'Jedličk'));
-        $check('HTTP učitel: učitel 1.A+2.A nevidí souboje 3.A (ani přes filtr duel_class=class_3a)', (int)$teacherA['status'] === 200 && $has($teacherA, 'Jedličk') && !$has($teacherA, 'Trojan') && (int)$teacherAx['status'] === 200 && !$has($teacherAx, 'Trojan'));
+        $check('HTTP učitel: učitel 1.A+2.A nevidí souboje 3.A (ani přes filtr duel_class=class_3a)', (int)$teacherA['status'] === 200 && $has($teacherA, '<h3>class_1a</h3>') && !$has($teacherA, '<h3>class_3a</h3>') && !$has($teacherA, 'Trojan') && (int)$teacherAx['status'] === 200 && !$has($teacherAx, 'Trojan'));
         $check('HTTP učitel: asistent (3.A) souboje 3.A vidí, jiné třídy ne; učitel bez tříd nevidí žádné jméno', (int)$assistant['status'] === 200 && $has($assistant, 'Trojan') && !$has($assistant, 'Jedličk') && !$has($nobody, 'Trojan') && !$has($nobody, 'Jedličk'));
         $before = $snapshot();
         $statuses = [];

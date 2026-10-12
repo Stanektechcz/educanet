@@ -68,9 +68,11 @@ unset($post['teacher68_theme_set']);
 unset($post['lc72_approve'], $post['lc72_return']);   // v72: nové akce v novém modulu `schvalovani` – vyjmuté ze snímku stejně jako teacher68_theme_set (změna limitu auditu, BUILD_MANIFEST_V72.md)
 unset($post['lc72_svp_approve'], $post['lc72_svp_return'], $post['tp721_self_names'], $post['tp721_class_exit']);   // v72.1: vazba na ŠVP (modul `schvalovani`) a Nastavení výuky (nový modul `nastaveni_vyuky`) – vyjmuté ze snímku stejně jako v72 (změna limitu auditu, BUILD_MANIFEST_V72_1.md)
 unset($post['lr73_save']);   // v73: reflexe hodiny (nový modul `reflexe73`) – vyjmutá ze snímku stejně jako v72/v72.1 (změna limitu auditu, BUILD_MANIFEST_V73.md)
+unset($post['mat74_add'], $post['mat74_update'], $post['mat74_verify'], $post['mat74_retire'], $post['mat74_attach'], $post['mat74_restore'], $post['ba74_approve']);   // v74: knihovna materiálů (modul `materialy74`) a hromadné schválení (modul `hromadne74`) – vyjmuté ze snímku stejně jako v73 (změna limitu auditu, BUILD_MANIFEST_V74.md)
 ksort($post);
 $get = teacher59_get_policies();
 foreach (['kompetence', 'cesty', 'projekty65', 'hodnoceni66', 'labdata'] as $t) unset($get[$t . '|student']);
+unset($get['tyden74|paleta']);   // v74: JSON žáků pro rychlé hledání (modul `tyden74`) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V74.md)
 ksort($get);
 $check('politiky teacher59: POST i GET tabulka beze změny proti v69 (v70 nepřidává akci ani GET parametr registru)',
     hash('sha256', (string)json_encode($post)) === V70C_POST_POLICY_SHA && hash('sha256', (string)json_encode($get)) === V70C_GET_POLICY_SHA);

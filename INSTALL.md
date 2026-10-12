@@ -673,3 +673,15 @@ Podrobnosti: `CHANGELOG_V73.md`, `BUILD_MANIFEST_V73.md`, návod pro učitele `d
 - **Změna limitu auditů:** snímky politik v68/v70/v71 vyjímají navíc `lr73_save` – viz manifest.
 - **Rollback:** nasadit vydání v72.1 (`70af0e6`); `storage/lesson_reflections_v73.json.php` starší verze ignoruje (lze ponechat).
 - **Kontrola po nasazení:** `php tools/v73_lesson_prep_audit.php` → `V73_LESSON_PREP_AUDIT_OK`, `php tools/v73_reflection_audit.php` → `V73_REFLECTION_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v74 · knihovna materiálů, komu pomoct, hromadné schválení, týdenní souhrn
+
+Podrobnosti: `CHANGELOG_V74.md`, `BUILD_MANIFEST_V74.md`, návod pro učitele `docs/NAVOD_V74.md`. Nové PHP rozšíření nevyžaduje.
+
+- **Nové záložky:** `?tab=tyden74` (Dnes · Týdenní souhrn, jen čtení, tisk), `?tab=materialy74` (Výuka · Knihovna materiálů, akce `mat74_add|update|verify|retire|attach|restore`), `?tab=hromadne74` (Výuka · Hromadné schválení, akce `ba74_approve`). Akce: CSRF, třída povinná a v rozsahu, `content.manage` (asistent jen čte). Dnešní hodina má kartu „Komu dnes pomoct“ (jen čtení).
+- **Rychlé hledání (⌘K):** jména žáků už nejsou v HTML; JS je načte z `teacher.php?tab=tyden74&paleta=1` (jen přihlášený učitel, třídy v rozsahu, `no-store`). Nový JS se načte díky `teacher-admin-v46.js?v=74.0` (žádná ruční údržba cache).
+- **Migrace 0004 (knihovna):** `php tools/migrate.php --dry-run --only=0004_materials_v74` (počty: videa v42, zdroje learning_resources, přeskočené http), pak `php tools/migrate.php --apply --backup-now --only=0004_materials_v74`. Idempotentní. Rollback: `php tools/migrate.php --rollback=0004_materials_v74` (náhled) a `--apply` – odebere jen neupravené importy. Bez migrace knihovna funguje (prázdná) a Dnešní hodina ukazuje zdroje jako ve v73.
+- **Úložiště:** `storage/materials_v74.json.php` (vzniká migrací nebo prvním materiálem; bez dat žáků; historie max 30 verzí, retence 730 dní). Hromadné schválení zapisuje do existujícího `storage/lesson_approvals_v72.json.php`.
+- **Změna limitu auditů:** snímky politik v68/v70/v71 vyjímají `mat74_*`, `ba74_approve` a GET `tyden74|paleta`; `v58_storage_audit` počítá 4 migrace – viz manifest.
+- **Rollback vydání:** nasadit v73 (`2f4db0f`); `storage/materials_v74.json.php` starší verze ignoruje.
+- **Kontrola po nasazení:** `php tools/v74_materials_audit.php` → `V74_MATERIALS_AUDIT_OK`, `php tools/v74_cockpit_audit.php` → `V74_COCKPIT_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.

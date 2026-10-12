@@ -1,0 +1,72 @@
+/* EDUCANET v74 · Komu dnes pomoct, Knihovna materiálů, Hromadné schválení, Týdenní souhrn, stav palety. Jen tokeny v61/v68 (světlý i tmavý režim),
+   cíle dotyku ≥ 44 px, viditelný fokus, 390 px bez vodorovného posunu. Pevné barvy jen v @media print (papír nemá tmavý režim). */
+.in74-card { border-left: 4px solid var(--ui-accent); }
+.in74-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--ui-space-2); }
+.in74-head h2 { margin: 0; }
+.in74-why-all, .in74-why { margin: var(--ui-space-1) 0 0; }
+.in74-why-all summary, .in74-why summary, .mat74-sub-form summary, .mat74-add summary { display: inline-flex; align-items: center; min-height: 44px; cursor: pointer; font-weight: 600; color: var(--ui-accent-ink, var(--ui-accent)); }
+.in74-why-all p { margin: 0 0 var(--ui-space-2); max-width: 70ch; }
+.in74-list { margin: var(--ui-space-2) 0 0; padding: 0; list-style: none; display: grid; gap: var(--ui-space-2); }
+.in74-item { padding: var(--ui-space-3); border: 1px solid var(--ui-line); border-radius: var(--ui-radius-sm); background: var(--ui-surface); min-width: 0; overflow-wrap: anywhere; }
+.in74-who { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-2); }
+.in74-chips { display: inline-flex; flex-wrap: wrap; gap: var(--ui-space-1); }
+.in74-chips .c70-chip { white-space: normal; }
+.in74-step { margin: var(--ui-space-2) 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-2); }
+.in74-step-label { font-weight: 600; }
+.in74-btn, .mat74-form .btn, .ba74-form .btn, .ba74-undo .btn, .wk74-nav .btn, .ba74-filter .btn, .mat74-filter .btn { min-height: 44px; }
+.in74-why ul { margin: var(--ui-space-1) 0 0; padding-left: 1.2em; }
+.in74-why em { display: block; color: var(--ui-muted); }
+.in74-empty { margin: var(--ui-space-2) 0 0; }
+.mat74-sub { display: block; color: var(--ui-muted); font-weight: 400; font-size: var(--ui-text-xs); }
+.mat74-filter, .ba74-row, .mat74-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--ui-space-2) var(--ui-space-3); margin: 0 0 var(--ui-space-3); }
+.mat74-filter label, .ba74-row label, .mat74-row label { display: flex; flex-direction: column; gap: var(--ui-space-1); font-size: var(--ui-text-sm); font-weight: 600; min-width: min(100%, 180px); }
+.mat74-filter select, .mat74-filter input, .ba74-row select, .mat74-row select, .mat74-field input, .mat74-field select, .mat74-field textarea, .mat74-form textarea, .ba74-undo input {
+  box-sizing: border-box; width: 100%; min-height: 44px; padding: var(--ui-space-2); border: 1px solid var(--ui-field-border); border-radius: var(--ui-radius-sm); background: var(--ui-surface); color: var(--ui-ink); font: inherit; }
+.mat74-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: var(--ui-space-3); margin: var(--ui-space-3) 0; }
+.mat74-field { display: flex; flex-direction: column; gap: var(--ui-space-1); min-width: 0; }
+.mat74-field label { font-weight: 600; font-size: var(--ui-text-sm); }
+.mat74-field small { color: var(--ui-muted); }
+.mat74-wide { grid-column: 1 / -1; }
+.mat74-dl { display: grid; grid-template-columns: minmax(120px, max-content) 1fr; gap: var(--ui-space-1) var(--ui-space-3); margin: var(--ui-space-2) 0; }
+.mat74-dl dt { font-weight: 600; }
+.mat74-dl dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.mat74-actions { display: grid; gap: var(--ui-space-3); margin: var(--ui-space-3) 0; padding: var(--ui-space-3); border: 1px dashed var(--ui-line); border-radius: var(--ui-radius-sm); }
+.mat74-inline { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-2); margin: 0; }
+.mat74-label { width: 100%; margin: 0; font-weight: 600; }
+.mat74-check, .ba74-radio, .ba74-check { display: inline-flex; align-items: center; gap: var(--ui-space-2); min-height: 44px; cursor: pointer; }
+.mat74-check input, .ba74-radio input, .ba74-check input { width: 22px; height: 22px; }
+.mat74-version { margin-top: var(--ui-space-3); padding-top: var(--ui-space-3); border-top: 1px solid var(--ui-line); }
+.mat74-diff del { color: var(--ui-bad-ink); }
+.mat74-diff ins { color: var(--ui-ok-ink); text-decoration: none; font-weight: 600; }
+.mat74-table tr.is-selected th, .mat74-table tr.is-selected td { background: var(--ui-accent-soft); }
+.ba74-step { display: inline-flex; align-items: center; justify-content: center; width: 1.8em; height: 1.8em; margin-right: var(--ui-space-2); border-radius: 50%; background: var(--ui-accent-soft); color: var(--ui-accent-ink, var(--ui-ink)); font-size: var(--ui-text-sm); }
+.ba74-radios { display: flex; flex-wrap: wrap; gap: var(--ui-space-1) var(--ui-space-3); margin: 0 0 var(--ui-space-3); padding: 0; border: 0; }
+.ba74-radios legend { width: 100%; font-weight: 600; margin-bottom: var(--ui-space-1); }
+.ba74-confirm { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-3); margin-top: var(--ui-space-3); padding: var(--ui-space-3); border-radius: var(--ui-radius-sm); background: var(--ui-surface-2); }
+.ba74-undo { display: flex; flex-wrap: wrap; gap: var(--ui-space-2); margin: 0; min-width: min(100%, 260px); }
+.ba74-undo input { flex: 1 1 160px; }
+.ba74-entry.is-warn, .wk74-list .is-late { border-left: 4px solid var(--ui-warn-ink); }
+.wk74-list .is-late { padding-left: var(--ui-space-2); }
+.wk74-nav { display: flex; flex-wrap: wrap; gap: var(--ui-space-2); margin: 0 0 var(--ui-space-3); }
+.wk74-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: var(--ui-space-4); }
+.wk74-list { margin: 0 0 var(--ui-space-2); padding: 0; list-style: none; }
+.wk74-list li { padding: var(--ui-space-1) 0; border-bottom: 1px solid var(--ui-line); overflow-wrap: anywhere; }
+.pal74-status { margin: 0; padding: 0 var(--ui-space-3); color: var(--ui-muted); font-size: var(--ui-text-sm); }
+.pal74-status:empty { display: none; }
+.in74-why-all summary:focus-visible, .in74-why summary:focus-visible, .in74-btn:focus-visible, .mat74-sub-form summary:focus-visible, .mat74-add summary:focus-visible, .mat74-field input:focus-visible,
+.mat74-field select:focus-visible, .mat74-field textarea:focus-visible, .mat74-filter :focus-visible, .mat74-form :focus-visible, .ba74-form :focus-visible, .ba74-filter :focus-visible, .ba74-undo :focus-visible,
+.wk74-nav :focus-visible, .mat74-check:focus-within, .ba74-radio:focus-within, .ba74-check:focus-within { outline: 3px solid var(--ui-accent); outline-offset: 2px; }
+@media (max-width: 480px) {
+  .mat74-dl { grid-template-columns: 1fr; }
+  .mat74-dl dd { margin-bottom: var(--ui-space-2); }
+  .ba74-confirm .btn, .wk74-nav .btn { width: 100%; }
+}
+@media print {
+  @page { size: A4; margin: 14mm; }
+  body, .t68-main, .c70-card { background: #fff !important; color: #000 !important; }
+  .t68-top, .t68-side, .t68-skip, .t68-crumbs, .t68-classbar, .t68-next, .c70-related, .wk74-noprint, .ops-command-backdrop, .teacher-flash, .ops61-health { display: none !important; }
+  .c70-card { border: 1px solid #999 !important; break-inside: avoid; }
+  .c70-chip { border: 1px solid #666; background: #fff !important; color: #000 !important; }
+  .c70-kpi { border: 1px solid #999; background: #fff !important; color: #000 !important; }
+  a { color: #000 !important; text-decoration: none; }
+}

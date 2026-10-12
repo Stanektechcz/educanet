@@ -319,6 +319,9 @@ function teacher59_action_policies(): array
     $table['tp721_self_names'] = $none;
     // v73 · reflexe hodiny (modul `reflexe73`): třída povinná a v rozsahu (handler ji i lekci ověří znovu); jiné lr73_* akce zůstávají zakázané.
     $table['lr73_save'] = $req;
+    // v74 · knihovna materiálů (modul `materialy74`) a hromadné schválení (modul `hromadne74`): třída povinná a v rozsahu (u ba74_approve class_ids[] všech tříd potvrzení);
+    // handlery ověří třídu materiálu / každou položku znovu. Jiné mat74_* / ba74_* akce zůstávají zakázané.
+    foreach (['mat74_add', 'mat74_update', 'mat74_verify', 'mat74_retire', 'mat74_attach', 'mat74_restore', 'ba74_approve'] as $action) $table[$action] = $req;
     return $table;
 }
 
@@ -581,6 +584,8 @@ function teacher59_get_policies(): array
         // v68: rozcestník žáka (detail žáka → kompetence, cesty, projekty, návrhy hodnocení, lab) – jen čtení, třída povinná a v rozsahu.
         'kompetence|student' => ['class' => 'required'], 'cesty|student' => ['class' => 'required'], 'projekty65|student' => ['class' => 'required'],
         'hodnoceni66|student' => ['class' => 'required'], 'labdata|student' => ['class' => 'required'],
+        // v74: JSON žáků pro rychlé hledání (palette_v74.php) – každý přihlášený učitel; data jen z tříd v rozsahu (pal74_students), při skrytých jménech prázdné.
+        'tyden74|paleta' => [],
     ];
 }
 
