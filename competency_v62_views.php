@@ -12,6 +12,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  */
 
 require_once __DIR__ . '/competencies_v62.php';
+require_once __DIR__ . '/competency_v75_labels.php';   // v75: názvy kompetencí 2.A a 4.A
 
 function comp62_student_assets(): void
 {
@@ -46,7 +47,7 @@ function comp62_label_msgids(): array
 
 function comp62_t_label(string $id, string $fallback): string
 {
-    $msgid = comp62_label_msgids()[$id] ?? null;
+    $msgid = comp62_label_msgids()[$id] ?? comp75_label_msgids()[$id] ?? null;
     return $msgid !== null ? tr($msgid) : $fallback;
 }
 

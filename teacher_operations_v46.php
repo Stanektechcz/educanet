@@ -119,6 +119,8 @@ function teacher_action_permission_prefixes(): array
         'mat74_'=>'content.manage','ba74_'=>'content.manage',
         // v73 · reflexe hodiny (lr73_save) = správa obsahu/výuky třídy (asistent jen čte).
         'lr73_'=>'content.manage',
+        // v75 · schválení kompetencí 2.A/4.A (kp75_), úrovní v hodině (lv75_) a opakování před písemkou (op75_) = správa obsahu; komentář k portfoliu (pf75_) = správa projektů (asistent jen čte).
+        'kp75_'=>'content.manage','lv75_'=>'content.manage','op75_'=>'content.manage','pf75_'=>'projects.manage',
     ];
 }
 function teacher_action_permission(string $action): ?string

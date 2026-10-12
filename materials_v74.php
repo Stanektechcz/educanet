@@ -12,8 +12,9 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * MAT74_HISTORY_MAX a retencí MAT74_HISTORY_DAYS, nejnovějších MAT74_HISTORY_KEEP_MIN zůstává vždy). Obnovení starší verze
  * zapíše novou verzi se stejným obsahem – nic se nepřepisuje. U každé verze kdo (jméno učitele, max 60 znaků) a kdy.
  *
- * Úložiště storage/materials_v74.json.php = {"v":1,"items":{id:aktuální verze},"history":{id:[verze…]}} – zápis jen přes
- * storage_update. Neobsahuje data žáků. Nahrávání souborů není součástí MVP (rozhodnutí školy č. 7 je otevřené): stejně jako
+ * Úložiště storage/materials_v74.json.php = {"v":1,"items":{id:aktuální verze}}; od v75 je historie ve vlastním souboru
+ * storage/materials_v74_history.json.php = {"v":1,"history":{id:[verze…]}} (Dnešní hodina čte jen aktuální verze). Starší klíč
+ * "history" v hlavním souboru se dál čte a přesune ho migrace 0005 nebo první zápis. Zápis jen přes storage_update_many. Neobsahuje data žáků. Nahrávání souborů není součástí MVP (rozhodnutí školy č. 7 je otevřené): stejně jako
  * video k lekci v42 se ukládá jen odkaz, ale v74 přijme výhradně https (http:, javascript:, data: a odkazy s přihlašovacími
  * údaji se odmítnou) a vykresluje se jen jako odkaz s rel="noopener noreferrer" (žádné vložené přehrávače).
  *
@@ -56,6 +57,12 @@ function mat74_path(): string
     return STORAGE_DIR . '/materials_v74.json.php';
 }
 
+/** v75 · historie verzí ve vlastním souboru (Dnešní hodina ji nečte – hlavní soubor je menší a rychlejší). */
+function mat74_history_path(): string
+{
+    return STORAGE_DIR . '/materials_v74_history.json.php';
+}
+
 function mat74_class_ok(string $classId): bool
 {
     return in_array($classId, MAT74_CLASSES, true);
@@ -84,7 +91,15 @@ function mat74_item(string $id, ?array $data = null): ?array
 /** Historie verzí materiálu, od nejstarší. @return list<array> */
 function mat74_history(string $id, ?array $data = null): array
 {
-    return array_values(array_filter((array)((($data ?? mat74_data())['history'] ?? [])[$id] ?? []), 'is_array'));
+    return array_values(array_filter((array)(mat74_history_all($data)[$id] ?? []), 'is_array'));
+}
+
+/** v75 · celá historie: soubor historie má přednost; starší klíč „history“ v hlavním souboru (před migrací 0005) se jen dočte. */
+function mat74_history_all(?array $data = null, ?array $historyFile = null): array
+{
+    $legacy = array_filter((array)(($data ?? mat74_data())['history'] ?? []), 'is_array');
+    $separate = array_filter((array)(($historyFile ?? storage_read(mat74_history_path(), false))['history'] ?? []), 'is_array');
+    return array_replace($legacy, $separate);
 }
 
 /** Text bez řídicích znaků a zdvojených mezer, oříznutý na délku. */
@@ -203,9 +218,10 @@ function mat74_write(string $classId, ?string $id, callable $mutate, string $cha
     $now ??= time();
     $by = mb_substr(trim($by) !== '' ? trim($by) : 'učitel', 0, MAT74_SHORT_MAX);
     $saved = [];
-    storage_update(mat74_path(), static function (array $d) use ($classId, $id, $mutate, $change, $by, $expectedVersion, $now, $origin, &$saved): array {
+    storage_update_many([mat74_path(), mat74_history_path()], static function (array $all) use ($classId, $id, $mutate, $change, $by, $expectedVersion, $now, $origin, &$saved): array {
+        $d = $all[mat74_path()];
         $items = array_filter((array)($d['items'] ?? []), 'is_array');
-        $history = array_filter((array)($d['history'] ?? []), 'is_array');
+        $history = mat74_history_all($d, $all[mat74_history_path()]);
         $current = $id !== null ? ($items[$id] ?? null) : null;
         if ($id !== null && !is_array($current)) throw new RuntimeException('Materiál nebyl nalezen.');
         if (is_array($current) && (string)($current['class_id'] ?? '') !== $classId) throw new RuntimeException('Materiál patří jiné třídě.');
@@ -222,7 +238,7 @@ function mat74_write(string $classId, ?string $id, callable $mutate, string $cha
         $saved = $snapshot + ['id' => $newId, 'class_id' => $classId, 'origin' => is_array($current) ? (string)($current['origin'] ?? 'ucitel') : $origin,
             'created_at' => is_array($current) ? (string)($current['created_at'] ?? $snapshot['at']) : $snapshot['at'], 'created_by' => is_array($current) ? (string)($current['created_by'] ?? $by) : $by];
         $items[$newId] = $saved;
-        return ['v' => 1, 'items' => $items, 'history' => $history];
+        return [mat74_path() => ['v' => 1, 'items' => $items], mat74_history_path() => ['v' => 1, 'history' => $history]];
     });
     return $saved;
 }
@@ -416,9 +432,10 @@ function mat74_import_apply(array $rows, string $by, ?int $now = null): array
 {
     $now ??= time();
     $res = ['added' => 0, 'existing' => 0];
-    storage_update(mat74_path(), static function (array $d) use ($rows, $by, $now, &$res): array {
+    storage_update_many([mat74_path(), mat74_history_path()], static function (array $all) use ($rows, $by, $now, &$res): array {
+        $d = $all[mat74_path()];
         $items = array_filter((array)($d['items'] ?? []), 'is_array');
-        $history = array_filter((array)($d['history'] ?? []), 'is_array');
+        $history = mat74_history_all($d, $all[mat74_history_path()]);
         foreach ($rows as $r) {
             if (isset($items[$r['id']])) { $res['existing']++; continue; }
             $at = date(DATE_ATOM, $now);
@@ -427,7 +444,7 @@ function mat74_import_apply(array $rows, string $by, ?int $now = null): array
             $items[$r['id']] = $snap + ['id' => $r['id'], 'class_id' => $r['class_id'], 'origin' => $r['origin'], 'created_at' => $at, 'created_by' => $by];
             $res['added']++;
         }
-        return ['v' => 1, 'items' => $items, 'history' => $history];
+        return [mat74_path() => ['v' => 1, 'items' => $items], mat74_history_path() => ['v' => 1, 'history' => $history]];
     });
     return $res;
 }

@@ -1,0 +1,26 @@
+/* EDUCANET v75 · samostatné stránky k tisku (portfolio žáka, opakování s klíčem). Na obrazovce systémové barvy (Canvas/CanvasText,
+   světlý i tmavý vzhled podle systému), pevné barvy jen v @media print (papír nemá tmavý režim) – stejně jako v73/v74.
+   Čitelné na 390 px, tlačítko ≥ 44 px a viditelný fokus. */
+:root { color-scheme: light dark; }
+body { margin: 0; background: Canvas; color: CanvasText; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.pr75 { max-width: 780px; margin: 0 auto; padding: 16px; overflow-wrap: anywhere; }
+.pr75 h1 { font-size: 1.5rem; margin: 0 0 4px; }
+.pr75 h2 { font-size: 1.15rem; margin: 20px 0 6px; }
+.pr75 h3 { font-size: 1rem; margin: 12px 0 4px; }
+.pr75-meta { color: GrayText; font-size: .875rem; margin: 0 0 8px; }
+.pr75-item { padding: 8px 0; border-bottom: 1px solid GrayText; break-inside: avoid; }
+.pr75 pre { white-space: pre-wrap; border: 1px solid GrayText; padding: 8px; border-radius: 6px; font-size: .85rem; }
+.pr75 .rv75-correct { font-weight: 700; }
+.pr75 .c70-chip { display: inline-block; padding: 0 6px; border: 1px solid GrayText; border-radius: 999px; font-size: .75rem; }
+.pr75 .c70-muted { color: GrayText; }
+.pr75-noprint { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.pr75-noprint button, .pr75-noprint a { min-height: 44px; display: inline-flex; align-items: center; padding: 0 14px; border: 1px solid ButtonBorder; border-radius: 10px; background: ButtonFace; color: ButtonText; font: inherit; text-decoration: none; cursor: pointer; }
+.pr75-noprint button:focus-visible, .pr75-noprint a:focus-visible { outline: 3px solid Highlight; outline-offset: 2px; }
+@media print {
+  .pr75-noprint { display: none; }
+  body { background: #fff; color: #000; }
+  .pr75 { padding: 0; max-width: none; }
+  .pr75-meta, .pr75 .c70-muted { color: #333; }
+  .pr75-item, .pr75 pre, .pr75 .c70-chip { border-color: #999; }
+  a { color: #000; }
+}

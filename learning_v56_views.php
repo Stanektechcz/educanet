@@ -103,6 +103,7 @@ function v56_render_lesson(string $classId, array $module, array $bundle, ?array
         <?php if ($phase === 'submit') v56_render_submit($classId, $bundle, $state, $lessonNo, $session); ?>
       </section>
 
+      <?php if (function_exists('lv75_render_student_block')) lv75_render_student_block($classId, $lessonNo); /* v75: úroveň aktivity Základ / Standard / Výzva – jen schválené úrovně */ ?>
       <?php if (function_exists('lx72_render_student_block')) lx72_render_student_block($classId, $lessonNo); /* v72: cíl, exit ticket a volitelná domácí příprava – jen schválená lekce */ ?>
       <?php if (function_exists('aip721_render_student_block')) aip721_render_student_block($classId, $lessonNo); /* v72.1: dobrovolné AI prompty s upozorněním na soukromí */ ?>
 

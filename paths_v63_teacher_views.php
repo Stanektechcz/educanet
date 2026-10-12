@@ -16,7 +16,7 @@ require_once __DIR__ . '/paths_v63_class.php';
 /** @return list<string> třídy s cestami v rozsahu přihlášeného učitele */
 function p63_teacher_classes(): array
 {
-    $all = function_exists('teacher59_allowed_class_ids') ? teacher59_allowed_class_ids() : array_keys(P63_CLASS_FILES);
+    $all = function_exists('teacher59_allowed_class_ids') ? teacher59_allowed_class_ids() : array_keys(p63_class_files());
     return array_values(array_filter($all, 'p63_enabled_for_class'));
 }
 

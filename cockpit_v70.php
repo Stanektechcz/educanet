@@ -81,6 +81,11 @@ function c70_related_rules(): array
         'tyden74' => [['hodina', 'Dnešní hodina: komu dnes pomoct'], ['hromadne74', 'Hromadné schválení'], ['reflexe73', 'Zapsat reflexi hodiny']],   // v74
         'hromadne74' => [['schvalovani', 'Schvalování lekcí: náhled jedné lekce'], ['tyden74', 'Týdenní souhrn: termíny T-14']],   // v74
         'materialy74' => [['hodina', 'Dnešní hodina: materiály k lekci'], ['curriculum', 'Plán a kurikulum']],   // v74
+        'kompetence75' => [['kompetence', 'Kompetence 1.A a 3.A'], ['cesty', 'Výukové cesty']],   // v75
+        'ulohy75' => [['opakovani75', 'Opakování před písemkou'], ['urovne75', 'Úrovně v hodině']],   // v75
+        'urovne75' => [['hodina', 'Dnešní hodina'], ['schvalovani', 'Schvalování lekcí']],   // v75
+        'portfolia75' => [['projekty65', 'Projekty'], ['ulohy75', 'Úlohy s variantami']],   // v75
+        'opakovani75' => [['ulohy75', 'Úlohy s variantami: klíč žáka'], ['hodina', 'Dnešní hodina: exit ticket']],   // v75
         'teach' => [['hodina', 'Dnešní hodina: žáci a postup'], ['session', 'Kód hodiny']],
         'session' => [['hodina', 'Dnešní hodina: téma a materiály'], ['teach', 'Promítnout lekci']],
         'calendar' => [['curriculum', 'Plán lekcí'], ['hodina', 'Dnešní hodina']],

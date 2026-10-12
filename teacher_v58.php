@@ -118,6 +118,56 @@ function teacher58_modules(): array
             ],
             'render' => static function (array $m, string $c): void { wk74_render_tab($m, $c); },
         ],
+        // v75 · Kompetence a cesty 2.A a 4.A (fáze E): návrh katalogu, pokrytí témat, vazba na ŠVP, náhled cest; POST kp75_approve / kp75_return
+        // (exact politiky v teacher_scope_v59.php: třída povinná a v rozsahu; oprávnění kp75_ = content.manage, asistent jen čte). GET jen ?class=.
+        'kompetence75' => [
+            'label' => 'Kompetence 2.A a 4.A', 'hint' => 'Návrh katalogu a cest, vazba na ŠVP a schválení', 'group' => 'podpora',
+            'files' => ['cockpit_v70.php', 'competencies_v62.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'svp_v72.php', 'competencies_v75.php', 'competencies_v75_views.php'],
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v75.css'],
+            'post' => ['kp75_' => 'comp75_teacher_handle_post'],
+            'render' => static function (array $m, string $c) use ($csrf): void { comp75_render_tab($m, $c, $csrf()); },
+        ],
+        // v75 · Úlohy s variantami: úspěšnost po úlohách, přehled žáků a klíč k variantě žáka (jen čtení; ?zak= je pořadí v tabulce, ?kolo= číslo kola).
+        'ulohy75' => [
+            'label' => 'Úlohy s variantami', 'hint' => 'Úspěšnost třídy a klíč k variantě každého žáka', 'group' => 'podpora',
+            'files' => ['cockpit_v70.php', 'teacher_prefs_v72_1.php', 'taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v75_teacher_views.php'],
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v75.css'],
+            'render' => static function (array $m, string $c): void { tb75_render_teacher_tab($m, $c); },
+        ],
+        // v75 · Úrovně v hodině (Základ / Standard / Výzva): návrhy L1–L16, schválení po lekcích nebo hromadně (POST lv75_approve / lv75_return,
+        // exact politiky, content.manage) a rozložení voleb žáků bez jmen. GET jen ?class=.
+        'urovne75' => [
+            'label' => 'Úrovně v hodině', 'hint' => 'Základ, Standard, Výzva: schválení a volby žáků', 'group' => 'podpora',
+            'files' => ['cockpit_v70.php', 'levels_v75.php', 'levels_v75_teacher_views.php'],
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v75.css'],
+            'post' => ['lv75_' => 'lv75_teacher_handle_post'],
+            'render' => static function (array $m, string $c) use ($csrf): void { lv75_render_teacher_tab($m, $c, $csrf()); },
+        ],
+        // v75 · Portfolia žáků: připnuté práce a reflexe, komentář učitele (POST pf75_comment, exact politika, projects.manage – asistent jen čte).
+        // GET ?tisk=1 = samostatná stránka k tisku (politika portfolia75|tisk: třída povinná a v rozsahu); jinak ?zak= (pořadí v seznamu).
+        'portfolia75' => [
+            'label' => 'Portfolia žáků', 'hint' => 'Připnuté práce, reflexe a komentáře', 'group' => 'podpora',
+            'files' => ['cockpit_v70.php', 'teacher_prefs_v72_1.php', 'taskbank_v75_gen.php', 'taskbank_v75.php', 'portfolio_v75.php', 'portfolio_v75_teacher_views.php'],
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v75.css'],
+            'post' => ['pf75_' => 'pf75_teacher_handle_post'],
+            'get' => [
+                'tisk' => static function (array $m): void { pf75_print_page(); },
+            ],
+            'render' => static function (array $m, string $c) use ($csrf): void { pf75_render_teacher_tab($m, $c, $csrf()); },
+        ],
+        // v75 · Opakování před písemkou: rozsah lekcí (?od=, ?do=), náhled z chyb třídy, zveřejnění / skrytí (POST op75_publish / op75_close, exact politiky,
+        // content.manage) a GET ?tisk=1 = verze k tisku s klíčem (politika opakovani75|tisk: třída povinná a v rozsahu).
+        'opakovani75' => [
+            'label' => 'Opakování před písemkou', 'hint' => 'Balíček z chyb třídy, zveřejnění a tisk', 'group' => 'podpora',
+            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php',
+                'taskbank_v75_gen.php', 'taskbank_v75.php', 'review_v75.php', 'review_v75_teacher_views.php'],
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v75.css'],
+            'post' => ['op75_' => 'rv75_teacher_handle_post'],
+            'get' => [
+                'tisk' => static function (array $m): void { rv75_print_page(); },
+            ],
+            'render' => static function (array $m, string $c) use ($csrf): void { rv75_render_teacher_tab($m, $c, $csrf()); },
+        ],
         // v70 · Přehled správy: účty a role, pokrytí tříd, provoz, kvalita dat a doporučení – jen administrátor, jen čtení.
         'sprava_prehled' => [
             'label' => 'Přehled správy', 'hint' => 'Účty, role, pokrytí tříd, zálohy a doporučení', 'group' => 'podpora', 'admin' => true,
@@ -310,9 +360,13 @@ function teacher58_available(string $tab): bool
     if (!empty($mod['accounts_only']) && (!function_exists('teacher59_mode') || teacher59_mode() === 'legacy')) return false;
     if (!empty($mod['admin']) && function_exists('teacher59_is_admin') && !teacher59_is_admin()) return false;
     static $filesOk = [];   // v72: existence souborů modulu stačí ověřit jednou za požadavek (teacher58_tabs() se volá opakovaně; na Windows/NFS je stat drahý)
+    static $fileExists = [];   // v75: i sdílený soubor (cockpit_v70.php ap.) jen jednou za požadavek – moduly se v souborech hodně překrývají
     if (!isset($filesOk[$tab])) {
         $filesOk[$tab] = true;
-        foreach ((array)($mod['files'] ?? []) as $file) if (!is_file(__DIR__ . '/' . $file)) { $filesOk[$tab] = false; break; }
+        foreach ((array)($mod['files'] ?? []) as $file) {
+            $fileExists[$file] ??= is_file(__DIR__ . '/' . $file);
+            if (!$fileExists[$file]) { $filesOk[$tab] = false; break; }
+        }
     }
     return $filesOk[$tab];
 }

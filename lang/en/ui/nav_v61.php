@@ -47,4 +47,7 @@ return [
     'Moje hodnocení' => 'My assessment',
     'Průběh projektů' => 'Project progress',
     'Moje portfolio' => 'My portfolio',
+    // v75 · Učení: úlohy s variantami a opakování před písemkou
+    'Úlohy s variantami' => 'Tasks with variants',
+    'Opakování před písemkou' => 'Review before the test',
 ];

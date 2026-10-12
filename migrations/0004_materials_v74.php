@@ -27,7 +27,7 @@ $mat74Sources = static function (): array {
 return [
     'id' => '0004_materials_v74',
     'description' => 'Knihovna materiálů v74: import videí učitelů v42 a zdrojů learning_resources.php (jen https, idempotentní).',
-    'files' => ['materials_v74.json.php'],
+    'files' => ['materials_v74.json.php', 'materials_v74_history.json.php'],
     'up' => static function (bool $dryRun) use ($mat74Sources): array {
         $cand = $mat74Sources();
         $existing = mat74_items(null);
@@ -54,15 +54,20 @@ return [
             if ($imported && (int)($item['version'] ?? 0) === 1) $removed++; else $kept++;
         }
         if (!$dryRun && $removed > 0) {
-            storage_update(mat74_path(), static function (array $d): array {
+            // v75: historie je ve vlastním souboru (materials_v74_history.json.php) – odebírá se z obou.
+            storage_update_many([mat74_path(), mat74_history_path()], static function (array $all): array {
+                $d = $all[mat74_path()];
+                $h = $all[mat74_history_path()];
                 foreach ((array)($d['items'] ?? []) as $id => $item) {
-                    if (is_array($item) && str_starts_with((string)($item['origin'] ?? ''), 'import_') && (int)($item['version'] ?? 0) === 1) unset($d['items'][$id], $d['history'][$id]);
+                    if (is_array($item) && str_starts_with((string)($item['origin'] ?? ''), 'import_') && (int)($item['version'] ?? 0) === 1) unset($d['items'][$id], $d['history'][$id], $h['history'][$id]);
                 }
-                return $d;
+                return [mat74_path() => $d, mat74_history_path() => $h];
             });
-            if (mat74_items(null) === [] && is_file(mat74_path())) {
-                @unlink(mat74_path());
-                if (defined('STORAGE_LOCK_SUFFIX') && is_file(mat74_path() . STORAGE_LOCK_SUFFIX)) @unlink(mat74_path() . STORAGE_LOCK_SUFFIX);
+            if (mat74_items(null) === []) {
+                foreach ([mat74_path(), mat74_history_path()] as $p) {
+                    if (is_file($p)) @unlink($p);
+                    if (defined('STORAGE_LOCK_SUFFIX') && is_file($p . STORAGE_LOCK_SUFFIX)) @unlink($p . STORAGE_LOCK_SUFFIX);
+                }
             }
         }
         return ['removed' => $removed, 'details' => ['importované beze změny: ' . $removed . ($dryRun ? ' k odebrání' : ' odebráno'), 'ponechané (učitel přidal nebo upravil): ' . $kept]];

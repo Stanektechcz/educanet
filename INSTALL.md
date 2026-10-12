@@ -685,3 +685,16 @@ Podrobnosti: `CHANGELOG_V74.md`, `BUILD_MANIFEST_V74.md`, návod pro učitele `d
 - **Změna limitu auditů:** snímky politik v68/v70/v71 vyjímají `mat74_*`, `ba74_approve` a GET `tyden74|paleta`; `v58_storage_audit` počítá 4 migrace – viz manifest.
 - **Rollback vydání:** nasadit v73 (`2f4db0f`); `storage/materials_v74.json.php` starší verze ignoruje.
 - **Kontrola po nasazení:** `php tools/v74_materials_audit.php` → `V74_MATERIALS_AUDIT_OK`, `php tools/v74_cockpit_audit.php` → `V74_COCKPIT_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v75 · kompetence 2.A/4.A, úlohy s variantami, úrovně v hodině, portfolio, opakování před písemkou
+
+Podrobnosti: `CHANGELOG_V75.md`, `BUILD_MANIFEST_V75.md`, návod pro učitele `docs/NAVOD_V75.md`. Nové PHP rozšíření nevyžaduje.
+
+- **Nové záložky:** `?tab=kompetence75` (návrh kompetencí a cest 2.A/4.A, akce `kp75_approve|kp75_return`), `?tab=ulohy75` (úlohy s variantami – jen čtení, klíč k variantě žáka), `?tab=urovne75` (úrovně Základ/Standard/Výzva L1–L16, akce `lv75_approve|lv75_return`), `?tab=portfolia75` (portfolia žáků, akce `pf75_comment`, tisk `&tisk=1`), `?tab=opakovani75` (opakování před písemkou, akce `op75_publish|op75_close`, tisk `&tisk=1`). Akce: CSRF, třída povinná a v rozsahu; `kp75_/lv75_/op75_` = `content.manage`, `pf75_` = `projects.manage` (asistent jen čte).
+- **Žák:** `?view=ulohy` (úlohy s variantami, akce `tb75_answer|tb75_next`), `?view=opakovani`, volba úrovně v lekci (`dif75_pick`, jen schválené úrovně), sekce „Připnuté práce“ na `?view=portfolio` (`pf75_s_pin|reflect|unpin`). Texty přes `tr()`, katalogy `lang/{en,uk}/ui/v75.php`.
+- **Obsah je návrh:** kompetence a cesty 2.A/4.A ani úrovně L1–L16 žáci nevidí, dokud je učitel neschválí. Po schválení kompetencí 2.A/4.A spusťte náhled backfillu důkazů `php tools/v62_evidence_backfill.php --class=class_2a` (a `class_4a`), pak `--apply` (stejně jako u 3.A/1.A); noční přepočet v67 je zahrne sám.
+- **Migrace 0005 (výkon knihovny):** `php tools/migrate.php --dry-run --only=0005_materials_history_v75`, pak `php tools/migrate.php --apply --backup-now --only=0005_materials_history_v75` – přesune historii verzí do `storage/materials_v74_history.json.php` (Dnešní hodina čte jen aktuální verze). Idempotentní; rollback `--rollback=0005_materials_history_v75 [--apply]`. Bez migrace vše funguje (stará historie se dočte, přesune ji první zápis).
+- **Úložiště (vzniká za běhu, bez jmen):** `competency_v75_status.json.php`, `taskbank_v75.json.php` (výsledky po polích, ne text odpovědí), `levels_v75_status.json.php`, `levels_v75_picks.json.php`, `portfolio_v75/<student_id>.json.php`, `review_v75.json.php`.
+- **Změna limitu auditů:** snímky politik v68/v70/v71 vyjímají 7 akcí v75 a GET `portfolia75|tisk`, `opakovani75|tisk`; `v58_storage_audit` počítá 5 migrací – viz manifest.
+- **Rollback vydání:** nasadit v74 (`74cb857`); nové soubory v `storage/` starší verze ignoruje (historii knihovny vraťte rollbackem migrace 0005 před nasazením v74).
+- **Kontrola po nasazení:** `php tools/v75_learning_audit.php` → `V75_LEARNING_AUDIT_OK`, `php tools/v75_http_audit.php` → `V75_HTTP_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.

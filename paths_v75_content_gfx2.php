@@ -1,0 +1,147 @@
+<?php
+
+declare(strict_types=1);
+if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
+
+/**
+ * EDUCANET v75 · obsah výukových cest pro 2.A (grafika a webdesign II) – NÁVRH, statická data bez logiky a zápisu.
+ *
+ * Schéma viz paths_v63.php. Texty jsou výukový obsah (česky). Otázky ověřování a opakování z banky týmových her (gfx.css.*, gfx.a11y.*,
+ * gfx.type.*); varianty ověření 3 × 4 navzájem disjunktní. Kroky „pre“ jsou statické; případy s `calc` (sloupce mřížky, šířka boxu,
+ * typografická škála) a s barvami `fg`/`bg` (kontrast WCAG) přepočítá tools/v75_competency_audit.php.
+ */
+
+return [
+    'w2_layout' => [
+        'title' => 'Responzivní rozvržení: Flexbox a Grid',
+        'goal' => 'Předpovíš, kolik sloupců vytvoří mřížka a jak široký bude box, a navrhneš rozvržení, které funguje od 390 px.',
+        'class' => 'class_2a',
+        'competency' => 'w2_css_responsive',
+        'minutes' => 25,
+        'steps' => [
+            ['id' => 'explain', 'type' => 'explain', 'title' => 'Mřížka, která se přizpůsobí', 'competency' => 'w2_css_responsive', 'level' => 2, 'minutes' => 4,
+                'paragraphs' => [
+                    'Flexbox řadí prvky v jednom směru (řádek nebo sloupec), Grid rozvrhuje plochu ve dvou směrech. Pro karty, které se mají samy zalamovat, se hodí grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)).',
+                    'Kolik sloupců se vejde: každý sloupec potřebuje aspoň 200 px a mezi sloupci je mezera (gap). Do kontejneru o šířce W se vejde nejvýš (W + gap) / (min + gap) sloupců, zaokrouhleno dolů.',
+                    'Šířka boxu závisí na box-sizing: u content-box se k width přičte padding a rámeček z obou stran, u border-box je width už celková šířka. Proto se box-sizing: border-box nastavuje všem prvkům.',
+                ],
+                'example' => ".karty {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\n  gap: 20px;\n}\n*, *::before, *::after { box-sizing: border-box; }"],
+            ['id' => 'predict', 'type' => 'pre', 'title' => 'Kolik sloupců a jak široké?', 'competency' => 'w2_css_responsive', 'level' => 3, 'minutes' => 6,
+                'cases' => [
+                    ['id' => 'c1', 'static' => true, 'show' => 'Kontejner 680 px, repeat(auto-fit, minmax(200px, 1fr)), gap 20 px.', 'calc' => ['kind' => 'autofit', 'width' => 680, 'min' => 200, 'gap' => 20, 'answer' => 3],
+                        'question' => 'Kolik sloupců vznikne?', 'options' => ['3', '2', '4'], 'correct' => 0,
+                        'reveal' => '(680 + 20) / (200 + 20) = 3,18 → 3 sloupce, každý se roztáhne na 213,3 px.', 'explain' => 'Čtvrtý sloupec by potřeboval 4 × 200 + 3 × 20 = 860 px.'],
+                    ['id' => 'c2', 'static' => true, 'show' => 'Stejná mřížka na telefonu: kontejner 358 px (390 px displej minus okraje).', 'calc' => ['kind' => 'autofit', 'width' => 358, 'min' => 200, 'gap' => 20, 'answer' => 1],
+                        'question' => 'Kolik sloupců vznikne?', 'options' => ['1', '2', '0 – karty přetečou'], 'correct' => 0,
+                        'reveal' => '(358 + 20) / 220 = 1,72 → 1 sloupec na celou šířku.', 'explain' => 'Díky minmax se karty samy srovnají pod sebe – bez jediného media query.'],
+                    ['id' => 'c3', 'static' => true, 'show' => 'Box: width 300 px, padding 20 px, border 2 px, box-sizing: content-box.', 'calc' => ['kind' => 'boxwidth', 'width' => 300, 'padding' => 20, 'border' => 2, 'sizing' => 'content-box', 'answer' => 344],
+                        'question' => 'Jak široký box bude na obrazovce?', 'options' => ['344 px', '300 px', '322 px'], 'correct' => 0,
+                        'reveal' => '300 + 2 × 20 + 2 × 2 = 344 px.', 'explain' => 'S box-sizing: border-box by byl box přesně 300 px a obsah by se zúžil na 256 px.'],
+                    ['id' => 'c4', 'static' => true, 'show' => 'Flex kontejner se třemi tlačítky a justify-content: space-between.',
+                        'question' => 'Kde bude první a poslední tlačítko?', 'options' => ['U levého a pravého okraje, mezery jen mezi nimi', 'Všechna uprostřed', 'Stejné mezery i u okrajů'], 'correct' => 0,
+                        'reveal' => 'space-between rozdělí volné místo jen mezi prvky; stejné mezery i u okrajů dává space-evenly.', 'explain' => 'Pro stejné mezery mezi prvky bez ohledu na okraje použij gap.'],
+                ]],
+            ['id' => 'order', 'type' => 'parsons', 'title' => 'Od návrhu k responzivní mřížce', 'competency' => 'w2_css_responsive', 'level' => 3, 'minutes' => 5,
+                'prompt' => 'Seřaď kroky, jak převedeš návrh karet do responzivního CSS.',
+                'lines' => ['Změř v návrhu nejmenší čitelnou šířku karty', 'Nastav box-sizing: border-box všem prvkům', 'Vytvoř grid s repeat(auto-fit, minmax(šířka, 1fr))', 'Nastav mezery pomocí gap místo okrajů karet', 'Otestuj šířku 390 px a 1280 px', 'Oprav přetékající text a zapiš pravidla do předávacího listu'],
+                'accept' => [[1, 0, 2, 3, 4, 5]]],
+            ['id' => 'recall', 'type' => 'retrieval', 'title' => 'Co si pamatuješ', 'competency' => 'w2_css_responsive', 'level' => 1, 'minutes' => 4, 'count' => 4,
+                'pool' => ['gfx.css.001', 'gfx.css.002', 'gfx.css.004', 'gfx.css.005', 'gfx.css.006', 'gfx.css.009', 'gfx.css.016', 'gfx.css.019']],
+            ['id' => 'verify', 'type' => 'verify', 'title' => 'Ověř, co umíš', 'competency' => 'w2_css_responsive', 'level' => 3, 'minutes' => 5,
+                'variants' => [
+                    ['gfx.css.007', 'gfx.css.011', 'gfx.css.013', 'gfx.css.015'],
+                    ['gfx.css.012', 'gfx.css.014', 'gfx.css.022', 'gfx.css.023'],
+                    ['gfx.css.010', 'gfx.css.017', 'gfx.css.020', 'gfx.css.024'],
+                ]],
+            ['id' => 'reflect', 'type' => 'reflect', 'title' => 'Jak ti to šlo', 'competency' => 'w2_css_responsive', 'level' => 2, 'minutes' => 2],
+        ],
+        'spaced' => ['count' => 4, 'minutes' => 3, 'pool' => ['gfx.css.007', 'gfx.css.011', 'gfx.css.012', 'gfx.css.013', 'gfx.css.014', 'gfx.css.015', 'gfx.css.016', 'gfx.css.022', 'gfx.css.023', 'gfx.css.024']],
+    ],
+    'w2_a11y' => [
+        'title' => 'Audit přístupnosti návrhu',
+        'goal' => 'Projdeš návrh podle kontrolního seznamu WCAG 2.2 AA, poznáš nejzávažnější chyby a navrhneš jejich opravu.',
+        'class' => 'class_2a',
+        'competency' => 'w2_a11y_audit',
+        'minutes' => 25,
+        'steps' => [
+            ['id' => 'explain', 'type' => 'explain', 'title' => 'Co audit kontroluje', 'competency' => 'w2_a11y_audit', 'level' => 2, 'minutes' => 4,
+                'paragraphs' => [
+                    'Audit přístupnosti ověřuje, že web zvládne člověk s klávesnicí, se čtečkou obrazovky, se zvětšením nebo s horším zrakem. Základ je WCAG 2.2 úrovně AA.',
+                    'Nejčastější chyby: nízký kontrast textu (pod 4,5:1), ikonová tlačítka bez textové alternativy, pole formuláře jen s placeholderem bez labelu, chybějící viditelný fokus a dotykové cíle menší než 24 × 24 px (doporučeně 44 × 44 px).',
+                    'Nálezy seřaď podle dopadu: co zablokuje úkol (nejde odeslat formulář) má přednost před kosmetikou. U každého nálezu zapiš, kde je, koho omezuje, jak ho opravit a jak opravu ověříš.',
+                ],
+                'example' => "Nález: tlačítko „Hledat“ je jen ikona lupy\nKoho omezuje: uživatele čtečky (slyší jen „tlačítko“)\nOprava: <button aria-label=\"Hledat\"> nebo viditelný text\nOvěření: čtečka přečte „Hledat, tlačítko“"],
+            ['id' => 'predict', 'type' => 'pre', 'title' => 'Projde to auditem?', 'competency' => 'w2_a11y_audit', 'level' => 3, 'minutes' => 6,
+                'cases' => [
+                    ['id' => 'c1', 'static' => true, 'show' => 'Popisek pole: text #6c757d na bílém pozadí #ffffff, běžná velikost.', 'fg' => '#6c757d', 'bg' => '#ffffff', 'ratio' => '4,69', 'passes' => true,
+                        'question' => 'Splní kontrast AA (4,5:1)?', 'options' => ['Splní', 'Nesplní'], 'correct' => 0,
+                        'reveal' => 'Poměr 4,69:1 – hranici splní.', 'explain' => 'Šedé popisky bývají na hraně; vždy je změř.'],
+                    ['id' => 'c2', 'static' => true, 'show' => 'Placeholder #a0a0a0 na bílém pozadí slouží jako jediný popis pole.', 'fg' => '#a0a0a0', 'bg' => '#ffffff', 'ratio' => '2,61', 'passes' => false,
+                        'question' => 'Splní kontrast AA (4,5:1)?', 'options' => ['Splní', 'Nesplní'], 'correct' => 1,
+                        'reveal' => 'Poměr 2,61:1 – nesplní; a placeholder navíc po začátku psaní zmizí.', 'explain' => 'Pole potřebuje viditelný a svázaný label, placeholder je jen nápověda.'],
+                    ['id' => 'c3', 'static' => true, 'show' => 'Bílý text #ffffff na zeleném tlačítku #2e7d32.', 'fg' => '#ffffff', 'bg' => '#2e7d32', 'ratio' => '5,13', 'passes' => true,
+                        'question' => 'Splní kontrast AA (4,5:1)?', 'options' => ['Splní', 'Nesplní'], 'correct' => 0,
+                        'reveal' => 'Poměr 5,13:1 – splní.', 'explain' => 'Tmavší odstín zelené unese bílý text i v běžné velikosti.'],
+                    ['id' => 'c4', 'static' => true, 'show' => 'Tlačítko „Zavřít“ je jen ikona křížku 16 × 16 px bez textu a bez aria-label.',
+                        'question' => 'Co přečte čtečka obrazovky?', 'options' => ['Jen „tlačítko“ – bez účelu', '„Zavřít, tlačítko“', 'Nic, tlačítko přeskočí'], 'correct' => 0,
+                        'reveal' => 'Čtečka nemá z čeho vzít název; navíc je cíl menší než 24 × 24 px.', 'explain' => 'Doplň aria-label="Zavřít" a zvětši klikací plochu aspoň na 44 × 44 px.'],
+                ]],
+            ['id' => 'order', 'type' => 'parsons', 'title' => 'Postup auditu', 'competency' => 'w2_a11y_audit', 'level' => 3, 'minutes' => 5,
+                'prompt' => 'Seřaď kroky auditu přístupnosti jedné stránky.',
+                'lines' => ['Vyber klíčový úkol uživatele (např. odeslat objednávku)', 'Projdi úkol jen klávesnicí a sleduj fokus', 'Změř kontrast textů a ovládacích prvků', 'Zkontroluj labely, alternativní texty a chybové hlášky', 'Seřaď nálezy podle dopadu na úkol', 'Navrhni opravy a urči, jak je ověříš'],
+                'accept' => [[0, 2, 1, 3, 4, 5]]],
+            ['id' => 'recall', 'type' => 'retrieval', 'title' => 'Co si pamatuješ', 'competency' => 'w2_a11y_audit', 'level' => 1, 'minutes' => 4, 'count' => 4,
+                'pool' => ['gfx.a11y.001', 'gfx.a11y.002', 'gfx.a11y.003', 'gfx.a11y.004', 'gfx.a11y.006', 'gfx.a11y.007', 'gfx.a11y.008', 'gfx.a11y.009']],
+            ['id' => 'verify', 'type' => 'verify', 'title' => 'Ověř, co umíš', 'competency' => 'w2_a11y_audit', 'level' => 3, 'minutes' => 5,
+                'variants' => [
+                    ['gfx.a11y.005', 'gfx.a11y.010', 'gfx.a11y.013', 'gfx.a11y.021'],
+                    ['gfx.a11y.011', 'gfx.a11y.012', 'gfx.a11y.016', 'gfx.a11y.019'],
+                    ['gfx.a11y.014', 'gfx.a11y.018', 'gfx.a11y.022', 'gfx.a11y.024'],
+                ]],
+            ['id' => 'reflect', 'type' => 'reflect', 'title' => 'Jak ti to šlo', 'competency' => 'w2_a11y_audit', 'level' => 2, 'minutes' => 2],
+        ],
+        'spaced' => ['count' => 4, 'minutes' => 3, 'pool' => ['gfx.a11y.003', 'gfx.a11y.004', 'gfx.a11y.005', 'gfx.a11y.010', 'gfx.a11y.013', 'gfx.a11y.014', 'gfx.a11y.016', 'gfx.a11y.021', 'gfx.a11y.022', 'gfx.a11y.024']],
+    ],
+    'g2_type' => [
+        'title' => 'Typografická škála pro web',
+        'goal' => 'Spočítáš velikosti nadpisů z modulární škály, převedeš rem na pixely a nastavíš čitelné řádkování.',
+        'class' => 'class_2a',
+        'competency' => 'g2_typography',
+        'minutes' => 24,
+        'steps' => [
+            ['id' => 'explain', 'type' => 'explain', 'title' => 'Modulární škála a jednotky', 'competency' => 'g2_typography', 'level' => 2, 'minutes' => 4,
+                'paragraphs' => [
+                    'Modulární škála určí velikosti písma násobením základní velikosti stále stejným poměrem. Se základem 16 px a poměrem 1,25 vychází 16 → 20 → 25 → 31,25 → 39,06 px.',
+                    'Na webu se velikost zapisuje v rem (násobek velikosti písma kořene stránky, obvykle 16 px). Když si uživatel v prohlížeči písmo zvětší, rem se zvětší s ním – px ne.',
+                    'Řádkování (line-height) u odstavců bývá 1,4–1,6 násobku velikosti písma, u velkých nadpisů menší (1,1–1,25). Funkce clamp(min, preferovaná, max) drží plynulou velikost v mezích.',
+                ],
+                'example' => ":root { font-size: 100%; }   /* 16 px */\nh1 { font-size: 2.441rem; line-height: 1.15; }   /* 16 × 1,25^4 ≈ 39 px */\np  { font-size: 1rem; line-height: 1.5; }        /* 24 px řádek */"],
+            ['id' => 'predict', 'type' => 'pre', 'title' => 'Spočítej velikost', 'competency' => 'g2_typography', 'level' => 3, 'minutes' => 6,
+                'cases' => [
+                    ['id' => 'c1', 'static' => true, 'show' => 'Základ 16 px, poměr 1,25. Nadpis h1 je 4. stupeň škály.', 'calc' => ['kind' => 'scale', 'base' => 16, 'ratio' => 1.25, 'step' => 4, 'answer' => 39],
+                        'question' => 'Jak velký bude h1 (zaokrouhleno na celé px)?', 'options' => ['39 px', '36 px', '80 px'], 'correct' => 0,
+                        'reveal' => '16 × 1,25^4 = 39,06 px.', 'explain' => 'Škála násobí, nesčítá: 16 + 4 × 5 = 36 px by byla lineární řada.'],
+                    ['id' => 'c2', 'static' => true, 'show' => 'Odstavec má font-size 1.125rem, kořen stránky 16 px, line-height 1.5.', 'calc' => ['kind' => 'lineheight', 'rem' => 1.125, 'root' => 16, 'lh' => 1.5, 'answer' => 27],
+                        'question' => 'Jak vysoký bude jeden řádek textu?', 'options' => ['27 px', '24 px', '18 px'], 'correct' => 0,
+                        'reveal' => '1,125 × 16 = 18 px písmo, × 1,5 = 27 px řádek.', 'explain' => 'Řádkování bez jednotky se násobí aktuální velikostí písma prvku.'],
+                    ['id' => 'c3', 'static' => true, 'show' => 'Nadpis má font-size: clamp(1rem, 2.5vw, 2rem), displej telefonu je široký 390 px.', 'calc' => ['kind' => 'clamp', 'min' => 16, 'vw' => 2.5, 'viewport' => 390, 'max' => 32, 'answer' => 16],
+                        'question' => 'Jak velký nadpis bude?', 'options' => ['16 px', '9,75 px', '32 px'], 'correct' => 0,
+                        'reveal' => '2,5vw z 390 px je 9,75 px, to je pod minimem – použije se 1rem = 16 px.', 'explain' => 'clamp nepustí velikost pod minimum ani nad maximum.'],
+                ]],
+            ['id' => 'order', 'type' => 'parsons', 'title' => 'Návrh typografie stránky', 'competency' => 'g2_typography', 'level' => 3, 'minutes' => 5,
+                'prompt' => 'Seřaď kroky návrhu typografie pro web.',
+                'lines' => ['Zvol písmo pro text a ověř, že má české znaky', 'Urči základní velikost textu (16–18 px)', 'Vyber poměr škály a spočítej velikosti nadpisů', 'Nastav řádkování textu a nadpisů', 'Zapiš velikosti jako tokeny v rem', 'Ověř čitelnost na 390 px a při zvětšení na 200 %'],
+                'accept' => []],
+            ['id' => 'recall', 'type' => 'retrieval', 'title' => 'Co si pamatuješ', 'competency' => 'g2_typography', 'level' => 1, 'minutes' => 4, 'count' => 4,
+                'pool' => ['gfx.type.001', 'gfx.type.002', 'gfx.type.003', 'gfx.type.005', 'gfx.type.006', 'gfx.type.008', 'gfx.type.010', 'gfx.type.011']],
+            ['id' => 'verify', 'type' => 'verify', 'title' => 'Ověř, co umíš', 'competency' => 'g2_typography', 'level' => 3, 'minutes' => 5,
+                'variants' => [
+                    ['gfx.type.013', 'gfx.type.014', 'gfx.type.018', 'gfx.type.024'],
+                    ['gfx.type.007', 'gfx.type.009', 'gfx.type.019', 'gfx.type.021'],
+                    ['gfx.type.012', 'gfx.type.015', 'gfx.type.016', 'gfx.type.022'],
+                ]],
+            ['id' => 'reflect', 'type' => 'reflect', 'title' => 'Jak ti to šlo', 'competency' => 'g2_typography', 'level' => 2, 'minutes' => 2],
+        ],
+        'spaced' => ['count' => 4, 'minutes' => 3, 'pool' => ['gfx.type.005', 'gfx.type.006', 'gfx.type.007', 'gfx.type.013', 'gfx.type.014', 'gfx.type.018', 'gfx.type.020', 'gfx.type.021', 'gfx.type.023', 'gfx.type.024']],
+    ],
+];

@@ -35,17 +35,32 @@ const P63_QUESTION_TYPES = ['single', 'bool', 'numeric'];
 /** Kategorie banky týmových her → kompetence, ke kterým se otázka smí vázat (kontroluje audit). */
 const P63_BANK_COMPETENCY = [
     'files' => ['lnx_users'], 'linux' => ['lnx_navigation'], 'dns' => ['net_dns_dhcp'],
-    'color' => ['gfx_color_contrast'], 'type' => ['gfx_typography'], 'formats' => ['gfx_formats'], 'license' => ['gfx_formats'],
-    'html' => ['web_html_structure'], 'css' => ['web_css_layout'], 'a11y' => ['web_a11y'], 'ux' => ['web_ux', 'gfx_composition'],
+    'color' => ['gfx_color_contrast'], 'type' => ['gfx_typography', 'g2_typography'], 'formats' => ['gfx_formats'], 'license' => ['gfx_formats'],
+    'html' => ['web_html_structure'], 'css' => ['web_css_layout', 'w2_css_responsive'], 'a11y' => ['web_a11y', 'w2_a11y_audit'], 'ux' => ['web_ux', 'gfx_composition'],
+    // v75 · 2.A (grafika_web_ii) a 4.A (provoz_site): typografie, směrování, proxy a TLS, záloha (vlastní banka paths_v75_bank.php).
+    'ip' => ['ops_routing'], 'ports' => ['ops_proxy_tls'], 'backup' => ['ops_backup'],
 ];
 
 // ---------------------------------------------------------------------------
 // Katalog cest
 // ---------------------------------------------------------------------------
 
+/** v75: soubory obsahu cest – pilot 3.A/1.A + schválené třídy 2.A/4.A (competencies_v75.php). @return array<string,string> */
+function p63_class_files(): array
+{
+    return P63_CLASS_FILES + (function_exists('comp75_active_path_files') ? comp75_active_path_files() : []);
+}
+
+/** v75: soubor obsahu cest jedné třídy (pilot hned, 2.A/4.A jen po schválení) nebo null. */
+function p63_class_file(string $classId): ?string
+{
+    if (isset(P63_CLASS_FILES[$classId])) return P63_CLASS_FILES[$classId];
+    return function_exists('comp75_class_active') && isset(COMP75_PATH_FILES[$classId]) && comp75_class_active($classId) ? COMP75_PATH_FILES[$classId] : null;
+}
+
 function p63_enabled_for_class(string $classId): bool
 {
-    return isset(P63_CLASS_FILES[$classId]);
+    return p63_class_file($classId) !== null;
 }
 
 /** Zapisují cesty třídy důkazy do v62? (třída musí být v pilotu kompetencí; jinak se jen ukládá postup) */
@@ -60,7 +75,7 @@ function p63_paths_for_class(string $classId): array
     static $cache = [];
     if (!p63_enabled_for_class($classId)) return [];
     if (isset($cache[$classId])) return $cache[$classId];
-    $data = require __DIR__ . '/' . P63_CLASS_FILES[$classId];
+    $data = require __DIR__ . '/' . p63_class_file($classId);
     $out = [];
     foreach ((array)$data as $id => $path) {
         if (is_array($path) && preg_match(P63_PATH_RE, (string)$id) === 1) $out[(string)$id] = ['id' => (string)$id, 'class' => $classId] + $path;
@@ -72,7 +87,7 @@ function p63_paths_for_class(string $classId): array
 function p63_paths(): array
 {
     $all = [];
-    foreach (array_keys(P63_CLASS_FILES) as $classId) $all += p63_paths_for_class($classId);
+    foreach (array_keys(p63_class_files()) as $classId) $all += p63_paths_for_class($classId);
     return $all;
 }
 
@@ -251,7 +266,7 @@ function p63_bank(): array
     static $bank = null;
     if ($bank !== null) return $bank;
     $rows = [];
-    foreach (['teamgames_v58_bank_net.php', 'teamgames_v58_bank_gfx.php'] as $file) {
+    foreach (['teamgames_v58_bank_net.php', 'teamgames_v58_bank_gfx.php', 'paths_v75_bank.php'] as $file) {   // v75: banka cest 4.A (záloha a obnova)
         $data = is_file(__DIR__ . '/' . $file) ? include __DIR__ . '/' . $file : [];
         foreach (is_array($data) ? $data : [] as $row) if (is_array($row)) $rows[] = $row;
     }

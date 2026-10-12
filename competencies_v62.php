@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
+require_once __DIR__ . '/competencies_v75.php';   // v75: návrh katalogů 2.A a 4.A (zapojí se až po schválení učitelem)
 
 /**
  * EDUCANET v62 · katalog kompetencí (páteř učení, fáze 1).
@@ -27,7 +28,7 @@ const COMP62_OVERRIDES = [];
 
 function comp62_enabled_for_class(string $classId): bool
 {
-    return in_array($classId, COMP62_PILOT_CLASSES, true);
+    return in_array($classId, COMP62_PILOT_CLASSES, true) || comp75_class_active($classId);   // v75: 2.A/4.A po schválení návrhu
 }
 
 /** @return array<int,string> úrovně kompetence */
@@ -46,6 +47,15 @@ function comp62_level_label(int $level): string
  * @return array<string,array<string,mixed>>
  */
 function comp62_catalog(): array
+{
+    // v75: schválené katalogy 2.A (grafika_web_ii) a 4.A (provoz_site); paměť požadavku podle sady schválených tříd (výkon – katalog se čte často).
+    static $memo = [];
+    $key = implode(',', array_filter(COMP75_CLASSES, 'comp75_class_active'));
+    return $memo[$key] ??= comp62_base_catalog() + comp75_active_catalog();
+}
+
+/** Katalog pilotu 3.A a 1.A (v62/v63). @return array<string,array<string,mixed>> */
+function comp62_base_catalog(): array
 {
     return [
         'os_site' => [
@@ -126,13 +136,17 @@ function comp62_subject_for_class(string $classId): ?string
  */
 function comp62_competencies(string $subject): array
 {
+    static $memo = [];
+    $catalog = comp62_catalog();
+    $key = $subject . '|' . (isset($catalog[$subject]) ? implode(',', (array)$catalog[$subject]['classes']) : '');
+    if (isset($memo[$key])) return $memo[$key];
     $out = [];
     foreach ((array)(comp62_catalog()[$subject]['areas'] ?? []) as $areaId => $area) {
         foreach ((array)$area['competencies'] as $id => $c) {
             $out[(string)$id] = ['id' => (string)$id, 'area' => (string)$areaId, 'area_label' => (string)$area['label'], 'label' => (string)$c['label'], 'level' => (int)$c['level'], 'tags' => array_values((array)$c['tags'])];
         }
     }
-    return $out;
+    return $memo[$key] = $out;
 }
 
 /** Otisk katalogu – mění se s jakoukoli úpravou kompetencí nebo tagů (invaliduje cache zvládnutí). */

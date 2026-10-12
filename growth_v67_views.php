@@ -21,7 +21,7 @@ function grow67_assets(): void
 
 function grow67_area_label(string $areaId, string $fallback): string
 {
-    $map = ['site' => trm('Sítě'), 'linux' => trm('Linux'), 'web' => trm('Web'), 'grafika' => trm('Grafika')];
+    $map = ['site' => trm('Sítě'), 'linux' => trm('Linux'), 'web' => trm('Web'), 'grafika' => trm('Grafika'), 'provoz' => trm('Provoz a spolehlivost')];
     $text = $map[$areaId] ?? null;
     return $text !== null ? tr($text) : $fallback;
 }

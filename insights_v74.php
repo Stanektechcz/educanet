@@ -112,7 +112,7 @@ function in74_candidates(array $m, ?int $now = null): array
     $progress = lt70_progress_by_hash($class);
     $module = is_array($m['module'] ?? null) ? $m['module'] : [];
     $trendLessons = [];
-    for ($n = $current - IN74_DECLINE_LESSONS; $n < $current - 1; $n++) if ($n >= 1) $trendLessons[$n] = lt70_lesson($class, $module, $n);   // minulou lekci (N−1) už spočítal lt70_students jako `prev`
+    for ($n = $current - IN74_DECLINE_LESSONS; $n < $current - 1; $n++) if ($n >= 1) $trendLessons[$n] = in74_lesson_shape($class, $module, $n);   // minulou lekci (N−1) už spočítal lt70_students jako `prev`
     $lastDate = $taught !== [] ? (string)end($taught) : '';
     $absentSession = $lastDate !== '' ? lt70_session($class, $lastDate) : ['exists' => false, 'status' => []];
     $followups = [];
@@ -138,6 +138,21 @@ function in74_candidates(array $m, ?int $now = null): array
     usort($res['rows'], static fn(array $a, array $b): int => ($b['score'] <=> $a['score']) ?: (count($b['reasons']) <=> count($a['reasons'])) ?: ($a['index'] <=> $b['index']));
     $res['rows'] = array_slice($res['rows'], 0, IN74_MAX);
     return $res;
+}
+
+/**
+ * v75 · výkon: pro trend stačí klíče témat a počet kroků lekce – bere se přímo z balíčku lekce (lm71_bundle, ≈ 0,01 ms) místo celého
+ * modelu lekce (lt70_lesson ≈ 0,5 ms). Témata ani kroky overlay obsahové stopy nemění, výsledek je tedy shodný.
+ * @return array{topics:list<array{key:string}>,steps:list<mixed>}
+ */
+function in74_lesson_shape(string $classId, array $module, int $number): array
+{
+    if (!function_exists('lm71_bundle')) {
+        $l = lt70_lesson($classId, $module, $number);
+        return ['topics' => $l['topics'], 'steps' => $l['steps']];
+    }
+    $bundle = lm71_bundle($classId, $module, max(1, min(LM71_LESSONS, $number)));
+    return ['topics' => array_map(static fn($k): array => ['key' => (string)$k], array_keys((array)($bundle['topics'] ?? []))), 'steps' => array_values((array)($bundle['steps'] ?? []))];
 }
 
 /** Odkaz navrženého kroku na existující záložku (jen záložky, které role vidí); '' = bez odkazu. @return array{0:string,1:string} [url, popisek] */

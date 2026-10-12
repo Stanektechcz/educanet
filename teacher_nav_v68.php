@@ -18,7 +18,7 @@ require_once __DIR__ . '/ui_v67.php';
 /** Záložky cockpitu s tmavým režimem (po převodu CSS na tokeny a kontrole kontrastu; ostatní zůstanou světlé). */
 const UI68_TEACHER_DARK_TABS = [
     'attention', 'hodina', 'hodina_projektor', 'hodina_tisk', 'hodina_zastup', 'reflexe73', 'tyden74', 'prehled', 'hlaseni', 'student360', 'class_results', 'analytics', 'interventions', 'communications', 'intake', 'pristupy', 'groups',
-    'cesty', 'schvalovani', 'hromadne74', 'materialy74', 'nastaveni_vyuky', 'curriculum', 'teach', 'session', 'calendar', 'authoring', 'editor', 'labdata',
+    'cesty', 'schvalovani', 'hromadne74', 'materialy74', 'urovne75', 'ulohy75', 'opakovani75', 'kompetence75', 'portfolia75', 'nastaveni_vyuky', 'curriculum', 'teach', 'session', 'calendar', 'authoring', 'editor', 'labdata',
     'hodnoceni66', 'kompetence', 'projekty65', 'grade', 'projekty', 'workspace', 'history',
     'arena', 'roboti', 'hry', 'ctf', 'incidenty', 'souboje', 'ekonomika', 'obchod',
     'sprava_prehled', 'ucitele', 'identita', 'provoz', 'quality', 'ops_audit', 'team_admin', 'demo_accounts', 'overview', 'reports', 'ucet', 'sekce',
@@ -63,7 +63,11 @@ function teacher68_tab_map(): array
         'intake' => $t('trida', 'Dotazník', 'Seznamovací dotazník a aktivační kódy', false, 'students.manage'),
         'pristupy' => $t('trida', 'Přístupy', 'Jednorázová hesla a kartičky žáků', true, 'students.manage'),
         'groups' => $t('trida', 'Týmy', 'Členství, lobby a role v týmech'),
+        'portfolia75' => $t('trida', 'Portfolia žáků', 'Připnuté práce, reflexe a komentáře'),   // v75
         'cesty' => $t('vyuka', 'Výukové cesty', 'Přiřazení cest, trychtýř kroků a kalibrace'),
+        'urovne75' => $t('vyuka', 'Úrovně v hodině', 'Základ, Standard, Výzva: schválení a volby žáků'),   // v75
+        'ulohy75' => $t('vyuka', 'Úlohy s variantami', 'Úspěšnost třídy a klíč k variantě žáka'),   // v75
+        'opakovani75' => $t('vyuka', 'Opakování před písemkou', 'Balíček z chyb třídy, zveřejnění a tisk'),   // v75
         'schvalovani' => $t('vyuka', 'Schvalování lekcí', 'Návrhy obsahu, náhled a schválení'),   // v72
         'hromadne74' => $t('vyuka', 'Hromadné schválení', 'Lekce a ŠVP po týdnech, třídách nebo za rok'),   // v74
         'materialy74' => $t('vyuka', 'Knihovna materiálů', 'Materiály k lekcím, ověření a verze'),   // v74
@@ -77,6 +81,7 @@ function teacher68_tab_map(): array
         'labdata' => $t('vyuka', 'Analytika Labu', 'Chyby třídy, dohled a export'),
         'hodnoceni66' => $t('hodnoceni', 'Testy a hodnocení', 'Ráno, položková analýza a návrhy hodnocení'),
         'kompetence' => $t('hodnoceni', 'Kompetence', 'Mapa „umím / učím se / zatím ne“'),
+        'kompetence75' => $t('hodnoceni', 'Kompetence 2.A a 4.A', 'Návrh katalogu a cest, schválení'),   // v75
         'projekty65' => $t('hodnoceni', 'Cyklus projektů', 'Návrhy, rubriky, peer review a týmy'),
         'grade' => $t('hodnoceni', 'Hodnotit projekty', 'Rubriky, komentáře a publikace'),
         'projekty' => $t('hodnoceni', 'Nabídky projektů', 'Projekty podle levelu a přihlášky'),

@@ -322,6 +322,9 @@ function teacher59_action_policies(): array
     // v74 · knihovna materiálů (modul `materialy74`) a hromadné schválení (modul `hromadne74`): třída povinná a v rozsahu (u ba74_approve class_ids[] všech tříd potvrzení);
     // handlery ověří třídu materiálu / každou položku znovu. Jiné mat74_* / ba74_* akce zůstávají zakázané.
     foreach (['mat74_add', 'mat74_update', 'mat74_verify', 'mat74_retire', 'mat74_attach', 'mat74_restore', 'ba74_approve'] as $action) $table[$action] = $req;
+    // v75 · kompetence 2.A/4.A (kp75_*), úrovně v hodině (lv75_*), komentář k portfoliu (pf75_comment) a opakování před písemkou (op75_*): třída povinná
+    // a v rozsahu; handlery ji ověří znovu (portfolio i žáka v seznamu třídy). Jiné kp75_* / lv75_* / pf75_* / op75_* akce zůstávají zakázané.
+    foreach (['kp75_approve', 'kp75_return', 'lv75_approve', 'lv75_return', 'pf75_comment', 'op75_publish', 'op75_close'] as $action) $table[$action] = $req;
     return $table;
 }
 
@@ -586,6 +589,8 @@ function teacher59_get_policies(): array
         'hodnoceni66|student' => ['class' => 'required'], 'labdata|student' => ['class' => 'required'],
         // v74: JSON žáků pro rychlé hledání (palette_v74.php) – každý přihlášený učitel; data jen z tříd v rozsahu (pal74_students), při skrytých jménech prázdné.
         'tyden74|paleta' => [],
+        // v75: samostatné stránky k tisku (portfolio žáka, opakování s klíčem) – třída povinná a v rozsahu (handlery ji ověří znovu).
+        'portfolia75|tisk' => ['class' => 'required'], 'opakovani75|tisk' => ['class' => 'required'],
     ];
 }
 

@@ -266,7 +266,7 @@ try {
     $check('migrace: nalezeny 0001 a 0002 s id, popisem, soubory a up', isset($migrations['0001_streams_jsonl'], $migrations['0002_profile_versions'], $migrations['0003_projects_v65']) && is_array($migrations['0001_streams_jsonl']['files'] ?? null));
     $h0 = $treeHash(STORAGE_DIR);
     $dry = migrate_run($migrations, true);
-    $check('migrate --dry-run nic nezmění', $treeHash(STORAGE_DIR) === $h0 && count($dry['pending']) === 4 && $dry['applied'] === []); // v65: přibyla migrace 0003 (sidecary projektů); v74: 0004 (knihovna materiálů) – změna limitu auditu, BUILD_MANIFEST_V74.md
+    $check('migrate --dry-run nic nezmění', $treeHash(STORAGE_DIR) === $h0 && count($dry['pending']) === 5 && $dry['applied'] === []); // v65: přibyla migrace 0003 (sidecary projektů); v74: 0004 (knihovna materiálů); v75: 0005 (historie knihovny zvlášť) – změna limitu auditu, BUILD_MANIFEST_V74.md / BUILD_MANIFEST_V75.md
     $applied = migrate_run($migrations, false);
     unset($GLOBALS['educanet_json_request_cache'], $GLOBALS['educanet_stream_cache']);
     $after = count(storage_stream_rows('practice_results'));
@@ -276,7 +276,7 @@ try {
     $profiles = storage_read(STORAGE_DIR . '/learning_profiles.json.php');
     $check('migrace 0002: profily mají verzi, XP beze změny', ($profiles['k1']['version'] ?? null) === 0 && ($profiles['k2']['version'] ?? null) === 3 && ($profiles['k1']['xp'] ?? null) === 5);
     $check('manifest schémat _schema_v58.json.php zapsán', storage_schema_version('practice_results') === 2 && storage_schema_version('learning_profiles.json.php') === 2);
-    $check('záznam provedených migrací', count(storage_read(migrate_log_path())) === 4 && count($applied['applied']) === 4 && is_file(STORAGE_DIR . '/projects_v65_cycle.json.php'));
+    $check('záznam provedených migrací', count(storage_read(migrate_log_path())) === 5 && count($applied['applied']) === 5 && is_file(STORAGE_DIR . '/projects_v65_cycle.json.php'));
     $h1 = $treeHash(STORAGE_DIR);
     $again = migrate_run($migrations, false);
     $direct = ($migrations['0001_streams_jsonl']['up'])(false);

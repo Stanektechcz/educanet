@@ -17,6 +17,7 @@ if ($view === 'portfolio') {
     guarded_study_redirect();
     render_header(tr('Moje portfolio'), $module);
     port65v_render_page((string)$classId, adaptive_student_key((string)$classId), (string)$flash);
+    pf75_render_student_section((string)$classId, adaptive_student_key((string)$classId));   // v75: připnuté práce (odkazy, úlohy, projekty) s reflexí a komentářem učitele
     render_footer();
     exit;
 }

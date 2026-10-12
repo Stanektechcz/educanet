@@ -123,6 +123,7 @@ html:not([data-theme="light"]) .learning-toast.error i{background:var(--bad-soft
 html:not([data-theme="light"]) .assessment-mode-label span{color:var(--muted)}
 html:not([data-theme="light"]) .assessment-answer.selected{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 1px var(--accent) inset}
 html:not([data-theme="light"]) .assessment-answer.correct{border-color:var(--ok);background:var(--ok-soft)}
+html:not([data-theme="light"]) .assessment-answer.wrong{border-color:var(--bad);background:var(--bad-soft)}
 html:not([data-theme="light"]) .kb-quiz-feedback.ok{background:var(--ok-soft);border-color:color-mix(in srgb,var(--ok) 30%,var(--line))}
 html:not([data-theme="light"]) .kb-quiz-feedback.bad{background:var(--bad-soft);border-color:color-mix(in srgb,var(--bad) 25%,var(--line))}
 html:not([data-theme="light"]) .sim-fix-list span.ok{background:#1e2420;color:#bbffcd}

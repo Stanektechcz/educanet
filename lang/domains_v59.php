@@ -146,6 +146,7 @@ return [
         // v62 · kompetence: žákovská záložka profilu; učitelský registr competency_v62_teacher_views.php je vždy česky.
         'competency' => [
             'competency_v62_views.php',
+            'competency_v75_labels.php',   // v75: názvy kompetencí 2.A a 4.A
         ],
         // v64 · hry, ligy a férová ekonomika (žákovské UI); učitelský registr economy_v64_teacher_views.php je vždy česky.
         'games64' => [
@@ -298,6 +299,16 @@ return [
         // v72.1 · dobrovolné AI prompty pro studenta v lekci (upozornění na soukromí; prompty zůstávají česky).
         'lesson_v72_1' => [
             'ai_prompts_v72_1.php',
+        ],
+        // v75 · úlohy s variantami, úrovně v hodině, připnuté práce v portfoliu a opakování před písemkou (zadání úloh a úrovní zůstávají česky).
+        'v75' => [
+            'taskbank_v75_views.php',
+            'levels_v75_views.php',
+            'portfolio_v75_views.php',
+            'review_v75_views.php',
+            'app/views/ulohy_v75.php',
+            'app/views/opakovani_v75.php',
+            'app/actions/v75.php',
         ],
         // Integrátor – sdílené soubory, dokončí se až po B1–B6 (F2).
         'shared' => [

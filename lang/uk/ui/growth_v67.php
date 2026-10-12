@@ -67,4 +67,6 @@ return [
     'Světlý' => 'Світлий',
     'Tmavý' => 'Темний',
     'Vzhled' => 'Вигляд',
+    // v75 · kompetence 2.A a 4.A
+    'Provoz a spolehlivost' => 'Експлуатація та надійність',
 ];

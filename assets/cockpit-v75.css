@@ -1,0 +1,53 @@
+/* EDUCANET v75 · cockpit: Kompetence 2.A/4.A, Úlohy s variantami, Úrovně v hodině, Portfolia žáků, Opakování před písemkou.
+   Jen tokeny v61/v68 (světlý i tmavý režim), cíle dotyku ≥ 44 px, viditelný fokus, 390 px bez vodorovného posunu stránky (tabulky se posouvají uvnitř). */
+.c70-chip-ok { color: var(--ui-ok-ink); border-color: currentColor; }
+.kp75-scroll { overflow-x: auto; max-width: 100%; }
+.kp75-table { width: 100%; border-collapse: collapse; font-size: var(--ui-text-sm); }
+.kp75-table th, .kp75-table td { padding: var(--ui-space-2); border-bottom: 1px solid var(--ui-line); text-align: left; vertical-align: top; }
+.kp75-table thead th { color: var(--ui-muted); font-weight: 600; white-space: nowrap; }
+.kp75-table tbody th { font-weight: 600; min-width: 12rem; }
+.kp75-table tr.is-selected th, .kp75-table tr.is-selected td { background: var(--ui-accent-soft); }
+.kp75-table a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ui-accent-ink, var(--ui-accent)); }
+.kp75-area { display: block; color: var(--ui-muted); font-size: var(--ui-text-xs); font-weight: 400; }
+.kp75-svp { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--ui-space-1); }
+.kp75-decision { border-left: 4px solid var(--ui-accent); }
+.kp75-form { display: grid; gap: var(--ui-space-2); margin: var(--ui-space-3) 0 0; max-width: 60ch; }
+.kp75-form textarea, .kp75-form input:not([type="checkbox"]), .lv75-return input, .tb75-round input, .rv75-range input { min-height: 44px; padding: var(--ui-space-2) var(--ui-space-3); border: 1px solid var(--ui-field-border); border-radius: var(--ui-radius-sm); background: var(--ui-surface); color: var(--ui-ink); font: inherit; max-width: 100%; box-sizing: border-box; }
+.kp75-form .btn, .lv75-lesson .btn, .tb75-round .btn, .rv75-range .btn { min-height: 44px; justify-self: start; }
+.kp75-check { display: flex; gap: var(--ui-space-2); align-items: center; min-height: 44px; }
+.kp75-check input { width: 22px; height: 22px; flex: none; }
+.kp75-paths { margin: var(--ui-space-2) 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--ui-space-3); }
+.kp75-path { padding: var(--ui-space-3); border: 1px solid var(--ui-line); border-radius: var(--ui-radius-sm); background: var(--ui-surface); min-width: 0; overflow-wrap: anywhere; }
+.kp75-path h3 { margin: 0 0 var(--ui-space-1); }
+.kp75-steps { font-size: var(--ui-text-sm); color: var(--ui-muted); }
+.tb75-keys { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--ui-space-3); }
+.tb75-key { padding: var(--ui-space-3); border: 1px solid var(--ui-line); border-radius: var(--ui-radius-sm); background: var(--ui-surface); min-width: 0; overflow-wrap: anywhere; }
+.tb75-key h3 { margin: 0 0 var(--ui-space-2); font-size: var(--ui-text); }
+.tb75-pre { margin: var(--ui-space-2) 0; padding: var(--ui-space-2); background: var(--ui-surface-2); color: var(--ui-ink); border-radius: var(--ui-radius-sm); overflow-x: auto; font-size: var(--ui-text-xs); }
+.tb75-dl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--ui-space-1) var(--ui-space-3); margin: 0; }
+.tb75-dl dd { margin: 0; }
+.tb75-round, .rv75-range { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-2); margin: var(--ui-space-2) 0 var(--ui-space-3); }
+.tb75-round input, .rv75-range input { width: 6.5rem; }
+.lv75-lessons { display: grid; gap: var(--ui-space-2); }
+.lv75-lesson { padding: var(--ui-space-2) var(--ui-space-3); border: 1px solid var(--ui-line); border-radius: var(--ui-radius-sm); background: var(--ui-surface); }
+.lv75-lesson summary { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-2); min-height: 44px; cursor: pointer; }
+.lv75-levels { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: var(--ui-space-1) var(--ui-space-3); margin: var(--ui-space-2) 0; }
+.lv75-levels dt { font-weight: 600; }
+.lv75-levels dd { margin: 0; }
+.lv75-return { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-2); }
+.lv75-bars { display: flex; width: 9rem; height: 12px; border-radius: var(--ui-radius-pill); overflow: hidden; background: var(--ui-track, var(--ui-surface-2)); }
+.lv75-bar { display: block; height: 100%; }
+.lv75-zaklad { background: var(--ui-warn-ink); }
+.lv75-standard { background: var(--ui-accent); }
+.lv75-vyzva { background: var(--ui-ok-ink); }
+.pf75-students { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--ui-space-1) var(--ui-space-3); }
+.pf75-students a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ui-accent-ink, var(--ui-accent)); }
+.pf75-students a[aria-current] { font-weight: 700; }
+.pf75-list, .rv75-list { margin: var(--ui-space-2) 0; padding-left: 1.4em; display: grid; gap: var(--ui-space-3); }
+.pf75-pin h3 { margin: 0 0 var(--ui-space-1); font-size: var(--ui-text); overflow-wrap: anywhere; }
+.pf75-url { display: block; color: var(--ui-muted); font-size: var(--ui-text-xs); font-weight: 400; overflow-wrap: anywhere; }
+.pf75-comment { padding: var(--ui-space-2) var(--ui-space-3); border-left: 4px solid var(--ui-accent); background: var(--ui-surface-2); border-radius: var(--ui-radius-sm); }
+.rv75-correct { font-weight: 600; color: var(--ui-ok-ink); }
+.kp75-table a:focus-visible, .kp75-form :is(textarea, input, button):focus-visible, .lv75-lesson :is(summary, button, input):focus-visible, .pf75-students a:focus-visible,
+.tb75-round :is(input, button):focus-visible, .rv75-range :is(input, button):focus-visible { outline: 3px solid var(--ui-focus, var(--ui-accent)); outline-offset: 2px; }
+@media (max-width: 480px) { .lv75-levels, .tb75-dl { grid-template-columns: 1fr; } }

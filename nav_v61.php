@@ -156,8 +156,23 @@ function nav61_group_learn(string $view, ?string $classId = null): array
         nav61_entry('?view=prikazy', trm('Linux příkazy'), ['prikazy'], $view),
         nav61_entry('?view=vysledky', trm('Výsledky'), ['vysledky', 'skills'], $view),
         ...$grading,
+        ...nav61_v75_items($view, $classId),
         nav61_entry('?view=study_loop', trm('Potřebuju pomoct'), ['study_loop', 'study', 'mistakes'], $view),
     ]];
+}
+
+/**
+ * v75: Úlohy s variantami (sady sítí a Linuxu mají 3.A a 4.A – TB75_CLASS_SETS) a Opakování před písemkou (jen když učitel třídy
+ * balíček zveřejnil; malý soubor storage/review_v75.json.php čtený s pamětí požadavku). @return list<array>
+ */
+function nav61_v75_items(string $view, ?string $classId): array
+{
+    if ($classId === null) return [];
+    $items = [];
+    if (in_array($classId, ['class_3a', 'class_4a'], true)) $items[] = nav61_entry('?view=ulohy', trm('Úlohy s variantami'), ['ulohy'], $view);
+    $packs = defined('STORAGE_DIR') && function_exists('storage_read_request') && is_file(STORAGE_DIR . '/review_v75.json.php') ? (storage_read_request(STORAGE_DIR . '/review_v75.json.php', false)['packs'] ?? []) : [];
+    if ((string)($packs[$classId]['status'] ?? '') === 'published') $items[] = nav61_entry('?view=opakovani', trm('Opakování před písemkou'), ['opakovani'], $view);
+    return $items;
 }
 
 /** Skupina Hry a aréna (jen když je lab pro třídu zapnutý nebo běží živá aktivita). */

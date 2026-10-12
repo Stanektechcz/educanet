@@ -66,10 +66,12 @@ unset($post['lc72_approve'], $post['lc72_return']);   // v72: nové akce v nové
 unset($post['lc72_svp_approve'], $post['lc72_svp_return'], $post['tp721_self_names'], $post['tp721_class_exit']);   // v72.1: vazba na ŠVP (modul `schvalovani`) a Nastavení výuky (nový modul `nastaveni_vyuky`) – vyjmuté ze snímku stejně jako v72 (změna limitu auditu, BUILD_MANIFEST_V72_1.md)
 unset($post['lr73_save']);   // v73: reflexe hodiny (nový modul `reflexe73`) – vyjmutá ze snímku stejně jako v72/v72.1 (změna limitu auditu, BUILD_MANIFEST_V73.md)
 unset($post['mat74_add'], $post['mat74_update'], $post['mat74_verify'], $post['mat74_retire'], $post['mat74_attach'], $post['mat74_restore'], $post['ba74_approve']);   // v74: knihovna materiálů (modul `materialy74`) a hromadné schválení (modul `hromadne74`) – vyjmuté ze snímku stejně jako v73 (změna limitu auditu, BUILD_MANIFEST_V74.md)
+unset($post['kp75_approve'], $post['kp75_return'], $post['lv75_approve'], $post['lv75_return'], $post['pf75_comment'], $post['op75_publish'], $post['op75_close']);   // v75: kompetence 2.A/4.A, úrovně, portfolia a opakování (nové moduly kompetence75 / urovne75 / portfolia75 / opakovani75) – vyjmuté ze snímku stejně jako v74 (změna limitu auditu, BUILD_MANIFEST_V75.md)
 ksort($post);
 $get = teacher59_get_policies();
 foreach (['kompetence', 'cesty', 'projekty65', 'hodnoceni66', 'labdata'] as $t) unset($get[$t . '|student']);
 unset($get['tyden74|paleta']);   // v74: JSON žáků pro rychlé hledání (modul `tyden74`) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V74.md)
+unset($get['portfolia75|tisk'], $get['opakovani75|tisk']);   // v75: stránky k tisku (moduly portfolia75 / opakovani75) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V75.md)
 ksort($get);
 $check('politiky teacher59: POST i GET tabulka beze změny (v71 nepřidává akci ani GET parametr)', hash('sha256', (string)json_encode($post)) === V71A_POST_POLICY_SHA && hash('sha256', (string)json_encode($get)) === V71A_GET_POLICY_SHA);
 $check('deny-by-default: neznámé akce lt71_*/lm71_*/cd71_* jsou zakázané', teacher59_action_policy('lt71_x')['deny'] === true && teacher59_action_policy('lm71_x')['deny'] === true && teacher59_action_policy('cd71_x')['deny'] === true);
