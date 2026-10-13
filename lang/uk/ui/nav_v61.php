@@ -50,4 +50,6 @@ return [
     // v75 · Učení: úlohy s variantami a opakování před písemkou
     'Úlohy s variantami' => 'Завдання з варіантами',
     'Opakování před písemkou' => 'Повторення перед контрольною',
+    // v78.1 · spodní lišta žáka: Domů · Dnes · Úlohy · Profil
+    'Úlohy' => 'Завдання',
 ];

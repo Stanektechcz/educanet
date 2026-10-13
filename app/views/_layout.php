@@ -50,6 +50,7 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
     <link rel="stylesheet" href="<?= e(asset_url('assets/learning-v56.css?v=56.1')) ?>">
     <link rel="stylesheet" href="<?= e(asset_url('assets/components-v61.css?v=61.0')) ?>">
     <link rel="stylesheet" href="<?= e(asset_url('assets/nav-v61.css?v=61.1')) ?>">
+    <?php if ($module !== null): /* v78.1: spodní lišta žáka Domů · Dnes · Úlohy · Profil na tokenech v78 */ ?><link rel="stylesheet" href="<?= e(asset_url('assets/tokens-v78.css?v=78.1')) ?>"><link rel="stylesheet" href="<?= e(asset_url('assets/nav-student-v78-1.css?v=78.1')) ?>"><?php endif; ?>
     <?= ui67_assets_html((string)$view) ?>
     <?= ui67_dark_link_html((string)$view) /* v67: tmavé tokeny jen pro ověřené pohledy a jen při volbě „tmavý“/„podle systému“ */ ?>
     <?php if ($module !== null): ?><script src="<?= e(asset_url('assets/nav-v61.js?v=61.1')) ?>" defer></script><?php endif; ?>

@@ -34,7 +34,8 @@ $state = audit_counter();
 $check = audit_checker($state);
 $read = static fn(string $rel): string => (string)@file_get_contents($ROOT . '/' . $rel);
 /** 20 KB původní rozpočet části C + 8 KB pro assets/nav-v61.css (nová horní navigace se skupinami a podmenu; viz CHANGELOG nav). */
-const V61D_CSS_BUDGET_BYTES = 28672;
+/** v78.1 (změna limitu auditu, BUILD_MANIFEST_V78_1.md): + 9 KB pro design systém v78 na stránkách žáka (assets/tokens-v78.css + assets/nav-student-v78-1.css – spodní lišta Domů · Dnes · Úlohy · Profil). */
+const V61D_CSS_BUDGET_BYTES = 28672 + 9216;
 /** Součet linkovaných CSS souborů na stránku těsně před částí C (měřeno 2026-10-04, dev server, třída 3.A). */
 const V61D_CSS_BASELINE = [
     'dashboard' => 723577, 'materialy' => 706085, 'calendar' => 706085, 'vysledky' => 706085, 'lab' => 748297,
@@ -170,12 +171,13 @@ $cssPerPage = [];
 try {
     $login = audit_login_student($h, $fx['class'], $fx['label']);
     $pages = ['dashboard' => 'dashboard', 'materialy' => 'materialy', 'calendar' => 'calendar', 'vysledky' => 'vysledky', 'lab' => 'lab', 'obchod' => 'obchod', 'projekty' => 'projekty', 'hlaseni' => 'hlaseni', 'profile' => 'profile', 'study' => 'study'];
-    $active = ['dashboard' => '?view=dashboard', 'materialy' => '?view=materialy', 'vysledky' => '?view=vysledky', 'profile' => '?view=profile', 'lab' => '?view=lab'];
+    // v78.1 (změna limitu auditu, BUILD_MANIFEST_V78_1.md): lišta je Domů · Dnes · Úlohy · Profil – Materiály, Výsledky a Lab jsou v menu účtu (bez aktivní položky v liště).
+    $active = ['dashboard' => '?view=dashboard', 'profile' => '?view=profile'];
     foreach ($pages as $id => $view) {
         $r = $h->request('GET', '/?view=' . $view);
         $body = (string)$r['body'];
         $check('stránka ' . $id . ': HTTP 200 bez chyby', $r['status'] === 200 && audit_response_clean($r));
-        $hasBar = preg_match('~<nav class="ui-bottomnav" aria-label="[^"]+" data-ui61-bottomnav><ul>(.*?)</ul></nav>~s', $body, $bar) === 1;
+        $hasBar = preg_match('~<nav class="ui-bottomnav(?: ds78 n781-sbar)?" aria-label="[^"]+" data-ui61-bottomnav><ul>(.*?)</ul></nav>~s', $body, $bar) === 1;
         $links = $hasBar ? preg_match_all('~<li><a[^>]*href="(\?view=[a-z_]+[^"]*)"[^>]*>~', $bar[1], $lm) : 0;
         $currents = $hasBar ? preg_match_all('/aria-current="page"/', $bar[1]) : 0;
         $check('stránka ' . $id . ': spodní lišta má 4–5 odkazů (' . $links . ') a třídu body ui61-has-bottomnav', $hasBar && $links >= 4 && $links <= 5 && str_contains($body, ' ui61-has-bottomnav'));
@@ -228,7 +230,7 @@ $_GET = $saved;
 $check('lab: spodní lišta se skryje v otevřeném terminálu (?uroven, ?zavod), na rozcestníku labu zůstává', $hiddenTerminal === true && $hiddenRace === true && $shownHub === false);
 $GLOBALS['ui61_primary_nav'] = null;
 $items = nav61_bottom_items(null, 'materialy');
-$check('nav61_bottom_items: Přehled, Materiály, … Výsledky, Profil; aktivní je právě Materiály', count($items) >= 4 && $items[0]['href'] === '?view=dashboard' && array_values(array_filter($items, static fn(array $i): bool => $i['active']))[0]['href'] === '?view=materialy');
+$check('nav61_bottom_items (v78.1): Domů, Dnes, Úlohy, Profil; na Materiálech není aktivní žádná', count($items) === 4 && $items[0]['href'] === '?view=dashboard' && $items[2]['href'] === '?view=ulohy' && $items[3]['href'] === '?view=profile' && array_filter($items, static fn(array $i): bool => $i['active']) === []);
 $navItem = static fn(string $href, string $label, string $mark, array $views, string $class, bool $active): array => ['href' => $href, 'label' => $label, 'mark' => $mark, 'views' => $views, 'class' => $class, 'active' => $active];
 $scenario = static function (string $view, bool $lessonOpen, bool $labOn) use ($navItem): array {
     $items = [$navItem('?view=hodina', 'Dnešní hodina', '●', ['hodina', 'intake'], $lessonOpen ? 'is-today' : 'is-muted', $view === 'hodina'), $navItem('?view=materialy', 'Materiály', '◫', ['materialy'], $view === 'materialy' ? 'is-active' : '', $view === 'materialy'), $navItem('?view=calendar', 'Kalendář', '◷', ['calendar'], '', false), $navItem('?view=vysledky', 'Výsledky', '✓', ['vysledky'], '', false), $navItem('?view=profile', 'Profil', '◆', ['profile'], '', false)];
@@ -236,10 +238,10 @@ $scenario = static function (string $view, bool $lessonOpen, bool $labOn) use ($
     $GLOBALS['ui61_primary_nav'] = ['view' => $view, 'cid' => null, 'items' => $items];
     return array_map(static fn(array $i): string => $i['href'] . ($i['active'] ? '*' : ''), nav61_bottom_items(null, $view));
 };
-$check('spodní lišta: běží hodina → Dnešní hodina na 3. místě (5 položek)', $scenario('materialy', true, true) === ['?view=dashboard', '?view=materialy*', '?view=hodina', '?view=vysledky', '?view=profile']);
-$check('spodní lišta: v labu je 3. místo Linux Lab a je aktivní, i když běží hodina', $scenario('lab', true, true) === ['?view=dashboard', '?view=materialy', '?view=lab*', '?view=vysledky', '?view=profile']);
-$check('spodní lišta: bez hodiny je 3. místo Linux Lab', $scenario('dashboard', false, true) === ['?view=dashboard*', '?view=materialy', '?view=lab', '?view=vysledky', '?view=profile']);
-$check('spodní lišta: bez hodiny a bez labu jsou 4 položky (ne mrtvá „Dnešní hodina“)', $scenario('dashboard', false, false) === ['?view=dashboard*', '?view=materialy', '?view=vysledky', '?view=profile']);
+$check('spodní lišta (v78.1): běží hodina → „Dnes“ vede do Dnešní hodiny (4 položky)', $scenario('materialy', true, true) === ['?view=dashboard', '?view=hodina', '?view=ulohy', '?view=profile']);
+$check('spodní lišta (v78.1): v labu žádná aktivní položka, Lab je v menu účtu a v horním panelu', $scenario('lab', true, true) === ['?view=dashboard', '?view=hodina', '?view=ulohy', '?view=profile']);
+$check('spodní lišta (v78.1): bez hodiny vede „Dnes“ do kalendáře', $scenario('dashboard', false, true) === ['?view=dashboard*', '?view=calendar', '?view=ulohy', '?view=profile']);
+$check('spodní lišta (v78.1): bez hodiny a bez labu 4 položky (ne mrtvá „Dnešní hodina“)', $scenario('dashboard', false, false) === ['?view=dashboard*', '?view=calendar', '?view=ulohy', '?view=profile']);
 $GLOBALS['ui61_primary_nav'] = null;
 $navGroups = nav61_groups(null, 'materialy');
 $activeGroups = array_values(array_filter($navGroups, static fn(array $g): bool => $g['active']));

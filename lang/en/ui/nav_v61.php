@@ -50,4 +50,6 @@ return [
     // v75 · Učení: úlohy s variantami a opakování před písemkou
     'Úlohy s variantami' => 'Tasks with variants',
     'Opakování před písemkou' => 'Review before the test',
+    // v78.1 · spodní lišta žáka: Domů · Dnes · Úlohy · Profil
+    'Úlohy' => 'Tasks',
 ];

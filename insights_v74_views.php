@@ -21,8 +21,11 @@ function in74_card_html(array $m, ?int $now = null): string
         return '';
     }
     $hidden = function_exists('tp721_names_hidden') && tp721_names_hidden();
+    $helpN = count($c['rows']);   // v78.1: odznak „Komu pomoct“ v navigaci – jen počet a třída (bez jmen), cache v relaci
+    if (function_exists('nav781_help_store')) nav781_help_store((string)($m['class'] ?? ''), $helpN);
+    $helpLabel = function_exists('nav781_plural') ? 'Komu dnes pomoct: ' . $helpN . ' ' . nav781_plural($helpN, 'žák', 'žáci', 'žáků') : '';
     $html = '<link rel="stylesheet" href="' . e(function_exists('teacher68_css_href') ? teacher68_css_href('assets/cockpit-v74.css') : 'assets/cockpit-v74.css') . '">'
-        . '<section class="c70-card c70-wide in74-card" aria-labelledby="in74-h"><div class="in74-head"><h2 id="in74-h">Komu dnes pomoct</h2>'
+        . '<section class="c70-card c70-wide in74-card" aria-labelledby="in74-h" data-n781-help="' . $helpN . '" data-n781-help-label="' . e($helpLabel) . '"><div class="in74-head"><h2 id="in74-h">Komu dnes pomoct</h2>'
         . '<details class="in74-why-all"><summary>Jak vybíráme?</summary><p>Nejvýš ' . IN74_MAX . ' žáků s nejsilnějšími signály: 2× chybný exit ticket, klesající výsledky ve třech lekcích, '
         . 'chybění v minulé hodině s kódem, 7 a více dní bez aktivity, nízké zvládnutí, úkol po termínu, nedokončená minulá lekce (pod ' . IN74_UNFINISHED_PCT . ' %), '
         . 'chybějící exit ticket schválené lekce a váš otevřený follow-up. Žáci bez jakýchkoli dat se nevybírají – „bez dat“ neznamená „zaostává“.</p>'

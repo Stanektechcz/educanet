@@ -1,0 +1,100 @@
+/* EDUCANET v78.1 · navigace cockpitu: 4 sekce (Dnes · Výuka · Žáci · Správa).
+   Mobile-first: xs/sm spodní lišta (4 sekce + Více) a drawer, md drawer z tlačítka Menu, lg+ boční panel. Jen tokeny v78 (uvnitř .ds78)
+   a --ui-* rámce v68; breakpointy jen z tokens-v78.css (768, 1024). Aktivní položka = barva + tvar (proužek, podklad, tučné písmo). */
+
+/* ---------- ikony, odznak ---------- */
+.n781-ico { width: 24px; height: 24px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ds78 .t68-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 1.75em; padding: 0 var(--space-2); border-radius: var(--radius-pill); background: var(--highlight); color: var(--on-highlight); font-size: var(--fs-sm); font-weight: var(--fw-bold); font-style: normal; line-height: 1.6; white-space: nowrap; }
+
+/* ---------- horní lišta ---------- */
+.t68-top.n781-top { flex-wrap: nowrap; }
+.n781-top .t68-tools { flex: 0 1 auto; order: 3; margin-left: auto; flex-wrap: nowrap; }
+.n781-top .teacher-command-button, .n781-menu, .n781-toptools { display: none; }
+.n781-menu { gap: 8px; order: 2; }
+.n781-toptools { align-items: center; flex-wrap: wrap; gap: 8px; }
+
+/* ---------- strom menu (obsah <aside id="t68-side">) ---------- */
+.t68-side .ds78.n781-tree { background: transparent; font-size: var(--fs-base); }
+.n781-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3); border-bottom: var(--border-width) solid var(--line); }
+.n781-head strong { font-size: var(--fs-lg); color: var(--text); }
+.ds78 .n781-iconbtn { display: inline-grid; place-items: center; min-width: var(--target-min); min-height: var(--target-min); border-radius: var(--radius); color: var(--text); }
+.ds78 .n781-iconbtn:hover { background: var(--surface-2); color: var(--text); }
+.ds78 .n781-search { display: flex; align-items: center; gap: var(--space-2); width: calc(100% - 2 * var(--space-3)); min-height: var(--target-min); margin: var(--space-3); padding: 0 var(--space-3); border: var(--border-width) solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--muted); font: inherit; font-size: var(--fs-base); text-align: left; cursor: pointer; }
+.ds78 .n781-search:hover { color: var(--text); background: var(--surface-2); }
+.n781-nav { padding: 0 var(--space-2) var(--space-2); }
+.ds78 .n781-sec > summary { display: flex; align-items: center; gap: var(--space-3); min-height: var(--target-min); padding: var(--space-1) var(--space-3); border-radius: var(--radius); color: var(--text); font-weight: var(--fw-bold); cursor: pointer; list-style: none; }
+.ds78 .n781-sec > summary::-webkit-details-marker { display: none; }
+.ds78 .n781-sec > summary::after { content: ""; width: 8px; height: 8px; margin-left: auto; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); }
+.ds78 .n781-sec[open] > summary::after { transform: rotate(-135deg); }
+.ds78 .n781-sec > summary:hover { background: var(--surface-2); }
+.ds78 .n781-sec > summary.is-active { color: var(--accent); box-shadow: inset 4px 0 0 var(--accent); }
+.n781-sec-label { flex: 0 1 auto; }
+.ds78 .n781-sec > summary .t68-badge { margin-left: auto; }
+.ds78 .n781-sec > summary .t68-badge + * { margin-left: 0; }
+.ds78 .n781-hublink { display: flex; align-items: center; min-height: var(--target-min); padding: 0 var(--space-3) 0 calc(var(--space-3) + 36px); border-radius: var(--radius); color: var(--accent); font-size: var(--fs-sm); font-weight: var(--fw-medium); text-decoration: none; }
+.ds78 .n781-hublink:hover { background: var(--surface-2); color: var(--accent-hover); }
+.ds78 .n781-hublink[aria-current="page"] { background: var(--accent-soft); color: var(--text); box-shadow: inset 4px 0 0 var(--accent); font-weight: var(--fw-bold); }
+.ds78 .n781-group { margin: var(--space-2) 0 0; padding: 0 var(--space-3) 0 calc(var(--space-3) + 36px); color: var(--muted); font-size: var(--fs-sm); font-weight: var(--fw-bold); }
+.n781-list { list-style: none; margin: 0 0 var(--space-2); padding: 0 0 0 var(--space-6); display: grid; gap: 2px; }
+.ds78 .n781-list .ds-navlink { justify-content: space-between; padding-block: var(--space-1); font-size: var(--fs-sm); }
+.ds78 .n781-list .ds-navlink[aria-current="page"]::before { content: ""; width: 8px; height: 8px; flex: 0 0 auto; margin-right: calc(-1 * var(--space-1)); border-radius: 50%; background: var(--accent); order: -1; }
+.n781-list .ds-navlink > span { flex: 1 1 auto; }
+.n781-tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); padding: var(--space-3); border-top: var(--border-width) solid var(--line); }
+.n781-tools form { margin: 0; }
+.n781-tools .t68-account { color: var(--muted); }
+
+/* ---------- drawer (pod 1024 px): JS přidá html.n781-open (fokus uvnitř, Esc, inert), bez JS :target ---------- */
+.ds78.n781-scrim { display: none; }
+html.n781-open { overflow: hidden; }
+@media not all and (min-width: 1024px) {
+  html.n781-open .ds78.n781-scrim { display: block; position: fixed; inset: 0; z-index: 89; background: var(--backdrop); }
+  html.n781-open .t68-frame .t68-side, .t68-frame .t68-side:target { display: block; position: fixed; inset: 0 auto 0 0; z-index: 90; width: min(22rem, 88vw); height: 100%; margin: 0; padding: 0; overflow-y: auto; overscroll-behavior: contain; border-right: 1px solid var(--ui-line); background: var(--ui-surface); box-sizing: border-box; }
+  html.n781-open .t68-side .ds78.n781-tree, .t68-side:target .ds78.n781-tree { min-height: 100%; background: var(--surface); }
+}
+@media (prefers-reduced-motion: no-preference) { html.n781-open .t68-frame .t68-side { animation: n781-in var(--ui-dur, 180ms) ease-out; } }
+@keyframes n781-in { from { transform: translateX(-100%); } to { transform: none; } }
+
+/* ---------- spodní lišta (xs/sm) ---------- */
+.ds78 .n781-bottom { font-size: var(--fs-base); }
+.ds78 .n781-bottom a[aria-current] { color: var(--accent); font-weight: var(--fw-bold); }
+.ds78 .n781-bottom a[aria-current]::before { content: ""; position: absolute; top: 0; inset-inline: 25%; height: 4px; border-radius: 0 0 var(--radius-sm) var(--radius-sm); background: var(--accent); }
+.ds78 .n781-bottom a[aria-current] .n781-ico { background: var(--accent-soft); border-radius: var(--radius-pill); box-shadow: 0 0 0 4px var(--accent-soft); }
+.ds78 .n781-bottom .t68-badge { position: absolute; top: var(--space-1); left: 55%; }
+@media not all and (min-width: 768px) {
+  body.t68 { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+  html:has(.n781-bottom) { scroll-padding-bottom: 76px; }
+}
+
+/* ---------- drobečky, Zpět, rozcestník ---------- */
+.t68-crumbs .ds78.n781-crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-3); margin: 0 0 var(--space-2); background: transparent; font-size: var(--fs-sm); }
+.t68-crumbs .n781-crumbs ol { margin: 0; }
+.ds78 .n781-back { display: inline-flex; align-items: center; gap: var(--space-1); min-height: var(--target-min); padding: 0 var(--space-3) 0 var(--space-2); border: var(--border-width) solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font-weight: var(--fw-medium); text-decoration: none; }
+.ds78 .n781-back:hover { background: var(--surface-2); color: var(--text); }
+.ds78.n781-hubhead { margin: 0 0 var(--space-4); background: transparent; }
+.ds78.n781-hubhead p:last-child { color: var(--muted); font-size: var(--fs-base); }
+.ds78.n781-hub { background: transparent; }
+.ds78 .n781-hub-h { margin: var(--space-5) 0 0; font-size: var(--fs-lg); }
+.ds78.n781-hub .t68-cards a { position: relative; display: grid; gap: var(--space-1); border-color: var(--line); background: var(--surface); color: var(--text); border-radius: var(--radius-lg); }
+.ds78.n781-hub .t68-cards a:hover { border-color: var(--accent); }
+.ds78.n781-hub .t68-cards small { font-size: var(--fs-sm); color: var(--muted); }
+.ds78.n781-hub .t68-cards .t68-badge { position: absolute; top: var(--space-3); right: var(--space-3); }
+.ds78.n781-hub .t68-cards .n781-badgetext { color: var(--text); font-weight: var(--fw-medium); }
+/* Starší vrstva (app.css) dává odstavci záhlaví stránky 12 px – v cockpitu nejméně 14 px. */
+.t68-main .teacher-page-head p { font-size: .875rem; }
+
+/* ---------- md: tlačítko Menu a ⌘K v horní liště ---------- */
+@media (min-width: 768px) {
+  .n781-menu, .n781-top .teacher-command-button { display: inline-flex; }
+}
+
+/* ---------- lg+: boční panel, nástroje v horní liště ---------- */
+@media (min-width: 1024px) {
+  .n781-menu, .n781-head, .ds78 .n781-search, .n781-tools, .ds78.n781-scrim { display: none; }
+  .n781-toptools { display: flex; }
+  .n781-top .t68-tools { flex-wrap: wrap; }
+  .t68-side .ds78 .n781-nav { padding: 0; }
+}
+
+@media print { .n781-bar, .n781-bottom, .n781-scrim, .n781-back, .n781-menu { display: none !important; } body.t68 { padding-bottom: 0; } }
+@media (forced-colors: active) { .ds78 .t68-badge { border: 1px solid; } .ds78 .n781-sec > summary.is-active { outline: 2px solid; } }
+.t68-crumbs .n781-crumbs ol a { min-width: 44px; justify-content: center; }

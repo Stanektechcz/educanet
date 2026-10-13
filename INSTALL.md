@@ -736,3 +736,15 @@ Podrobnosti: `CHANGELOG_V78.md`, `BUILD_MANIFEST_V78.md`, popis systému `docs/D
 - **Změna limitu auditu:** `tools/v61_followups_audit.php` nekontroluje proti bílé tmavé sady tokenů v78 (viz `BUILD_MANIFEST_V78.md`).
 - **Rollback vydání:** nasadit v77 (`ee3dd53`); nové soubory v78 nic jiného nenačítá, lze je ponechat nebo smazat.
 - **Kontrola po nasazení:** `php tools/v78_design_tokens_audit.php` → `V78_DESIGN_TOKENS_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v78.1 · navigace: 4 sekce, spodní lišta, drobečky se „Zpět“
+
+Podrobnosti: `CHANGELOG_V78_1.md`, `BUILD_MANIFEST_V78_1.md` (tabulka ≤ 3 klepnutí, změny limitů auditů), návod `docs/NAVOD_V78_1.md`. Nové PHP rozšíření ani migraci nevyžaduje, úložiště beze změny.
+
+- **Nové soubory:** `nav_v78_1.php` (logika: 4 sekce, odznaky, drobečky, model klepnutí), `nav_v78_1_views.php` (vykreslení), `assets/nav-v78-1.css`, `assets/nav-v78-1.js`, `assets/nav-student-v78-1.css`.
+- **Cockpit:** menu Dnes · Výuka · Žáci · Správa; od 1024 px levý panel, 768–1023 px drawer (Menu), do 767 px spodní lišta + Více. Každá stránka cockpitu nově načítá `assets/tokens-v78.css` a `assets/components-v78.css` (navigace je na design systému v78).
+- **Žák:** spodní lišta Domů · Dnes · Úlohy · Profil do 767 px; stránky žáka načítají `assets/tokens-v78.css` a `assets/nav-student-v78-1.css` (i v seznamu `?view=precache` pro service worker).
+- **Beze změny:** URL záložek, oprávnění, politiky teacher59, POST akce; staré odkazy rozcestníku `?tab=sekce&sekce=trida|hodnoceni|hry` vedou na novou sekci.
+- **Odznaky:** počty v relaci (T-14, neschválené lekce do 4 týdnů, Komu pomoct z poslední Dnešní hodiny, nepřečtená upozornění), přepočet po změně schválení nebo nejpozději po 5 minutách; žádná jména žáků.
+- **Rollback vydání:** nasadit v78 (`3a015dc`). Nové soubory v78.1 načítá jen rámec cockpitu a layout žáka z tohoto vydání.
+- **Kontrola po nasazení:** `php tools/v78_1_nav_audit.php` → `V78_1_NAV_AUDIT_OK` (prohlížečová část jen s Chrome + `playwright-core` v `NODE_PATH`, jinak SKIP; vynutit `EDUCANET_NAV_BROWSER=require`); celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.

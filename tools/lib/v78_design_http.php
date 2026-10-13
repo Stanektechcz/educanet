@@ -48,7 +48,8 @@ try {
             static fn(string $n): bool => str_contains($d, $n))) === 21);
     $check('design78: ukázka nic neodesílá (žádný <form>, žádné name= u polí) a GET nezapíše do dočasného úložiště', !str_contains($d, '<form') && !preg_match('~<(?:input|textarea|select)[^>]*\sname=~', $d) && $before === $after && $before !== '');
     $hod = (string)$h->request('GET', '/teacher.php', ['tab' => 'hodina', 'class' => 'class_3a'])['body'];
-    $check('ostatní záložky CSS/JS v78 nenačítají (Dnešní hodina beze změny vzhledu)', !str_contains($hod, 'tokens-v78.css') && !str_contains($hod, 'components-v78'));
+    // v78.1 (změna limitu auditu, BUILD_MANIFEST_V78_1.md): navigace cockpitu je na tokenech a komponentách v78 – načítají se na každé záložce; ukázková CSS/JS (design-v78.css, components-v78.js) dál jen na design78.
+    $check('ostatní záložky: tokeny a komponenty v78 jen pro navigaci v78.1 (nav-v78-1.css), ukázka design-v78.css a components-v78.js jen na design78', str_contains($hod, 'tokens-v78.css') && str_contains($hod, 'assets/nav-v78-1.css') && !str_contains($hod, 'design-v78.css') && !str_contains($hod, 'components-v78.js'));
     $csrf = (string)$h->csrfToken($body);
     $h->request('POST', '/teacher.php', ['action' => 'teacher68_theme_set', 'theme' => 'dark', 'return' => '?tab=design78', 'csrf' => $csrf], ['follow_redirects' => false]);
     $dark = (string)$h->request('GET', '/teacher.php', ['tab' => 'design78'])['body'];

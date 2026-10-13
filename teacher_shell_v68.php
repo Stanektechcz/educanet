@@ -10,6 +10,7 @@ declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
 require_once __DIR__ . '/teacher_nav_v68.php';
+require_once __DIR__ . '/nav_v78_1_views.php';   // v78.1: navigace 4 sekce, drawer, spodní lišta, drobečky se Zpět
 
 const TEACHER68_ASSET_VERSION = '68.0';
 
@@ -76,7 +77,8 @@ function teacher68_stylesheets_html(string $tab): string
 /** CSS rámce se načítá jako poslední (po starších vrstvách), JS jen v těle stránky. */
 function teacher68_shell_css_html(string $tab): string
 {
-    return teacher68_link_html('assets/teacher-shell-v68.css') . teacher68_link_html('assets/teacher-contrast-v69.css') . teacher68_link_html('assets/cockpit-v70.css') . teacher68_dark_html($tab);   // v69: kontrast malých popisků (AA)
+    return teacher68_link_html('assets/teacher-shell-v68.css') . teacher68_link_html('assets/teacher-contrast-v69.css') . teacher68_link_html('assets/cockpit-v70.css') . teacher68_dark_html($tab)   // v69: kontrast malých popisků (AA)
+        . nav781_css_html($tab);   // v78.1: tokeny a komponenty v78 + navigace (4 sekce, drawer, spodní lišta)
 }
 
 /** Tři tlačítka vzhledu (POST s CSRF, funguje bez JS, aria-pressed = aktuální volba). */
@@ -94,30 +96,10 @@ function teacher68_theme_switch_html(string $tab, string $classId): string
     return $html . '</form>';
 }
 
-/** Seznam sekcí s odkazy (jednou pro boční panel, podruhé pro menu na mobilu). */
-function teacher68_nav_html(string $tab, string $classId, array $visibleTabs, string $sectionParam, string $label): string
+/** Menu cockpitu (obsah <aside id="t68-side">): od v78.1 4 sekce se skupinami, jednotné odznaky, drawer pod 1024 px – nav781_tree_html. */
+function teacher68_nav_html(string $tab, string $classId, array $visibleTabs, string $sectionParam, string $label = 'Hlavní navigace'): string
 {
-    $map = teacher68_tab_map();
-    $sections = teacher68_sections();
-    $activeSection = teacher68_section_of($tab, $sectionParam);
-    static $unread = null;
-    $unread ??= function_exists('teacher_ops_notifications_for_current_teacher') ? count(teacher_ops_notifications_for_current_teacher(true)) : 0;
-    static $t14 = null;   // v77: lekce po termínu T-14 (odznak u „Středa: T-14“ i u sekce, aby byl vidět i ve sbaleném menu)
-    if ($t14 === null) $t14 = teacher77_t14_badge_count($visibleTabs);
-    $html = '<nav class="t68-nav" aria-label="' . e($label) . '">';
-    foreach (teacher68_visible_sections($visibleTabs) as $sectionId => $tabs) {
-        $open = $sectionId === $activeSection ? ' open' : '';
-        $secBadge = $t14 > 0 && in_array('streda77', $tabs, true) ? ' <b class="t68-badge" aria-label="' . $t14 . ' ' . ($t14 === 1 ? 'lekce' : 'lekcí') . ' po termínu T-14">' . $t14 . '</b>' : '';
-        $html .= '<details class="t68-sec"' . $open . '><summary>' . e($sections[$sectionId]['label']) . $secBadge . '</summary><ul>';
-        foreach ($tabs as $t) {
-            $current = $t === $tab ? ' aria-current="page"' : '';
-            $badge = $t === 'attention' && $unread > 0 ? '<b class="t68-badge" aria-label="' . $unread . ' nepřečtených">' . $unread . '</b>' : '';
-            if ($t === 'streda77' && $t14 > 0) $badge = '<b class="t68-badge" aria-label="' . $t14 . ' ' . ($t14 === 1 ? 'lekce' : 'lekcí') . ' po termínu T-14">' . $t14 . '</b>';
-            $html .= '<li><a href="' . e(teacher68_tab_url($t, $classId)) . '"' . $current . '><span>' . e($map[$t]['label']) . '</span>' . $badge . '</a></li>';
-        }
-        $html .= '</ul></details>';
-    }
-    return $html . '</nav>';
+    return nav781_tree_html($tab, $classId, $visibleTabs, $sectionParam);
 }
 
 /** v77: počet lekcí po termínu T-14 pro odznak v menu (jen když učitel vidí „Středa: T-14“; chyba výpočtu menu nerozbije). */
@@ -135,26 +117,13 @@ function teacher77_t14_badge_count(array $visibleTabs): int
 
 function teacher68_breadcrumb_html(string $tab, string $classId, string $sectionParam): string
 {
-    $crumbs = teacher68_breadcrumb($tab, $classId, $sectionParam);
-    $html = '<nav class="t68-crumbs" aria-label="Drobečková navigace"><ol>';
-    foreach ($crumbs as $i => [$label, $url]) {
-        $last = $i === count($crumbs) - 1;
-        $html .= '<li>' . ($url !== null && !$last ? '<a href="' . e($url) . '">' . e($label) . '</a>' : '<span aria-current="page">' . e($label) . '</span>') . '</li>';
-    }
-    return $html . '</ol></nav>';
+    return nav781_crumbs_html($tab, $classId, $sectionParam);   // v78.1: Cockpit › sekce › záložka + Zpět
 }
 
-/** Horní lišta: logo, menu (mobil), nástroje (vzhled, účet, odhlášení). */
+/** Horní lišta: logo, Menu (drawer na tabletu), ⌘K, nástroje (vzhled, účet, odhlášení) – od v78.1 nav781_topbar_html. */
 function teacher68_topbar_html(string $tab, string $classId, array $visibleTabs, string $sectionParam): string
 {
-    $account = '<span class="t68-user">' . e(teacher_display_name()) . '</span><span class="ops-role-badge">' . e(teacher_role_label()) . '</span>';
-    if (teacher59_mode() !== 'legacy') $account .= '<a class="t68-link" href="?tab=ucet">Můj účet</a>';
-    $logout = '<form method="post" action="teacher.php"><input type="hidden" name="csrf" value="' . e(csrf_token()) . '"><input type="hidden" name="action" value="teacher_logout"><button type="submit" class="t68-btn">Odhlásit</button></form>';
-    return '<header class="t68-top"><a class="t68-logo" href="teacher.php"><i aria-hidden="true">ED</i><span><strong>EDUCANET</strong><small>Cockpit</small></span></a>'
-        . '<details class="t68-menu"><summary>Menu</summary>' . teacher68_nav_html($tab, $classId, $visibleTabs, $sectionParam, 'Hlavní navigace (mobil)') . '</details>'
-        . '<div class="t68-tools">' . teacher68_theme_switch_html($tab, $classId) . '<button type="button" class="t68-btn t68-collapse" data-t68-collapse aria-pressed="false" aria-controls="t68-side" hidden>Sbalit panel</button>'
-        . (!function_exists('pal74_enabled') || pal74_enabled($tab) ? '<button type="button" class="t68-btn teacher-command-button" data-command-open title="Rychlé hledání Ctrl/⌘+K" aria-label="Rychlé hledání (Ctrl+K)">⌘K</button>' : '')   // v74: na projektoru, tisku a zástupu bez palety
-        . '<div class="t68-account">' . $account . '</div>' . $logout . '</div></header>';
+    return nav781_topbar_html($tab, $classId, !function_exists('pal74_enabled') || pal74_enabled($tab));   // v74: na projektoru, tisku a zástupu bez palety
 }
 
 /** Další kroky (kontextový panel s odkazy, ne tlačítka akcí). */
@@ -177,23 +146,10 @@ function teacher68_student_hub_html(string $classId, string $studentKey, array $
     return $html . '</ul></section>';
 }
 
-/** Rozcestník sekce (?tab=sekce&sekce=…): karty záložek, které role vidí. */
+/** Rozcestník sekce (?tab=sekce&sekce=…): od v78.1 4 sekce (staré id skupin trida/hodnoceni/hry vedou na svou sekci). */
 function teacher68_render_section_hub(string $sectionId, array $visibleTabs, string $classId): void
 {
-    $sections = teacher68_sections();
-    $map = teacher68_tab_map();
-    $visible = teacher68_visible_sections($visibleTabs);
-    if (!isset($sections[$sectionId]) || !isset($visible[$sectionId])) {
-        echo '<section class="teacher-empty wide">Tato sekce není pro vaši roli dostupná. <a href="teacher.php?tab=attention">Přejít na Dnes</a></section>';
-        return;
-    }
-    echo '<section class="teacher-page-head"><div><div class="eyebrow">Sekce</div><h1>' . e($sections[$sectionId]['label']) . '</h1><p>' . e($sections[$sectionId]['hint']) . '</p></div></section>';
-    if (function_exists('c70_hub_html')) echo c70_hub_html($sectionId);   // v70: souhrn sekce (dnešní výuka, třídy, stav správy)
-    echo '<h2 class="c70-sr">Záložky sekce</h2><ul class="t68-cards">';
-    foreach ($visible[$sectionId] as $t) {
-        echo '<li><a href="' . e(teacher68_tab_url($t, $classId)) . '"><strong>' . e($map[$t]['label']) . '</strong><small>' . e($map[$t]['hint']) . '</small></a></li>';
-    }
-    echo '</ul>';
+    nav781_render_section_hub($sectionId, $visibleTabs, $classId);
 }
 
 /** Výběr třídy pod záhlavím (jen u záložek, které třídu používají a nemají vlastní přepínač). */

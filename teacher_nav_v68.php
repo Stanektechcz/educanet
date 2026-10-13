@@ -5,7 +5,8 @@ declare(strict_types=1);
 /**
  * EDUCANET v68 · navigace cockpitu učitele a administrátora (logika bez výstupu, čisté funkce).
  *
- * Šest sekcí: Dnes / Třída a žáci / Výuka / Hodnocení / Hry a motivace / Správa. Každá záložka je v mapě právě jednou
+ * Šest skupin: Dnes / Třída a žáci / Výuka / Hodnocení / Hry a motivace / Správa (od v78.1 seskupené do 4 sekcí menu v nav_v78_1.php:
+ * Dnes · Výuka (+ Hodnocení) · Žáci (Třída a žáci + Hry a motivace) · Správa; pořadí mapy = pořadí menu). Každá záložka je v mapě právě jednou
  * (teacher68_tab_map). Menu ukazuje jen záložky, které role smí (teacher68_visible_tabs); prázdná sekce se nevykreslí.
  * Staré záložky (control, class_overview, growth, skills, mastery, filters, automations) z menu zmizely a vrací 302
  * na novou sekci (teacher68_redirect_url). Oprávnění POST akcí a politiky teacher59 se tím nemění – menu je jen pohled.
@@ -56,15 +57,6 @@ function teacher68_tab_map(): array
         'streda77' => $t('dnes', 'Středa: T-14', 'Co schválit do 14 dní a co je po termínu', false),   // v77 (odznak = lekce po termínu T-14)
         'prehled' => $t('dnes', 'Přehled třídy', 'Kdo zaostává a co čeká na schválení'),
         'hlaseni' => $t('dnes', 'Hlášení', 'Chyby a návrhy od žáků'),
-        'student360' => $t('trida', 'Detail žáka', 'Výsledky, dovednosti, úkoly a časová osa'),
-        'class_results' => $t('trida', 'Výsledky třídy', 'Známky, testy, laboratoře a mastery'),
-        'analytics' => $t('trida', 'Analytika třídy', 'Trendy, heatmapy a analýza lekcí'),
-        'interventions' => $t('trida', 'Intervence', 'Plány podpory a jejich výsledek'),
-        'communications' => $t('trida', 'Komunikace', 'Šablony a bezpečné koncepty'),
-        'intake' => $t('trida', 'Dotazník', 'Seznamovací dotazník a aktivační kódy', false, 'students.manage'),
-        'pristupy' => $t('trida', 'Přístupy', 'Jednorázová hesla a kartičky žáků', true, 'students.manage'),
-        'groups' => $t('trida', 'Týmy', 'Členství, lobby a role v týmech'),
-        'portfolia75' => $t('trida', 'Portfolia žáků', 'Připnuté práce, reflexe a komentáře'),   // v75
         'cesty' => $t('vyuka', 'Výukové cesty', 'Přiřazení cest, trychtýř kroků a kalibrace'),
         'urovne75' => $t('vyuka', 'Úrovně v hodině', 'Základ, Standard, Výzva: schválení a volby žáků'),   // v75
         'ulohy75' => $t('vyuka', 'Úlohy s variantami', 'Úspěšnost třídy a klíč k variantě žáka'),   // v75
@@ -90,6 +82,15 @@ function teacher68_tab_map(): array
         'projekty' => $t('hodnoceni', 'Nabídky projektů', 'Projekty podle levelu a přihlášky'),
         'workspace' => $t('hodnoceni', 'Workspace týmů', 'Průběh, role a retrospektiva'),
         'history' => $t('hodnoceni', 'Historie změn', 'Záznam změn hodnocení'),
+        'student360' => $t('trida', 'Detail žáka', 'Výsledky, dovednosti, úkoly a časová osa'),
+        'class_results' => $t('trida', 'Výsledky třídy', 'Známky, testy, laboratoře a mastery'),
+        'analytics' => $t('trida', 'Analytika třídy', 'Trendy, heatmapy a analýza lekcí'),
+        'interventions' => $t('trida', 'Intervence', 'Plány podpory a jejich výsledek'),
+        'communications' => $t('trida', 'Komunikace', 'Šablony a bezpečné koncepty'),
+        'intake' => $t('trida', 'Dotazník', 'Seznamovací dotazník a aktivační kódy', false, 'students.manage'),
+        'pristupy' => $t('trida', 'Přístupy', 'Jednorázová hesla a kartičky žáků', true, 'students.manage'),
+        'groups' => $t('trida', 'Týmy', 'Členství, lobby a role v týmech'),
+        'portfolia75' => $t('trida', 'Portfolia žáků', 'Připnuté práce, reflexe a komentáře'),   // v75
         'arena' => $t('hry', 'Aréna', 'Závody třídy, týdenní hádanka a záznam', false),
         'roboti' => $t('hry', 'Robotí liga', 'Zápasy programovatelných robotů'),
         'hry' => $t('hry', 'Týmové hry', 'Štafeta, bingo, Riskuj! a další'),
@@ -192,19 +193,11 @@ function teacher68_redirect_url(string $rawTab, array $get, array $visibleTabs):
     return 'teacher.php' . teacher68_tab_url($target, $class);
 }
 
-/** Drobečková navigace: [popisek, url|null][] – Cockpit › sekce › záložka (poslední bez odkazu). */
+/** Drobečková navigace: [popisek, url|null][] – od v78.1 podle 4 sekcí: Cockpit › sekce › záložka (nav781_breadcrumb, odkaz na sekci nese třídu). */
 function teacher68_breadcrumb(string $tab, string $classId = '', string $sectionParam = ''): array
 {
-    $crumbs = [['Cockpit', 'teacher.php']];
-    $sections = teacher68_sections();
-    $section = teacher68_section_of($tab, $sectionParam);
-    if ($tab === 'ucet') return array_merge($crumbs, [['Můj účet', null]]);
-    if ($section === '') return $crumbs;
-    if ($tab === 'sekce') return array_merge($crumbs, [[$sections[$section]['label'], null]]);
-    $def = teacher68_tab_map()[$tab] ?? null;
-    $crumbs[] = [$sections[$section]['label'], 'teacher.php?tab=sekce&sekce=' . rawurlencode($section)];
-    if ($def !== null) $crumbs[] = [$def['label'], null];
-    return $crumbs;
+    require_once __DIR__ . '/nav_v78_1.php';
+    return nav781_breadcrumb($tab, $classId, $sectionParam);
 }
 
 /** Kontextové „další kroky“ (jen záložky, které role vidí a které nejsou aktuální). @return list<array{tab:string,label:string,why:string,url:string}> */

@@ -42,13 +42,13 @@ function pal74_static_entries(string $classId): array
 {
     if (!function_exists('teacher68_tab_map') || !function_exists('teacher68_visible_tabs_current')) return [];
     $map = teacher68_tab_map();
-    $sections = teacher68_sections();
+    $sections = function_exists('nav781_sections') ? nav781_sections() : [];   // v78.1: nápověda = sekce menu (Dnes · Výuka · Žáci · Správa)
     $visible = function_exists('c70_visible_tabs') ? c70_visible_tabs() : teacher68_visible_tabs_current();   // c70 drží výsledek na požadavek
     $out = [];
     foreach ($visible as $tab) {
         $def = $map[$tab] ?? null;
         if ($def === null) continue;
-        $out[] = ['label' => $def['label'], 'hint' => ($sections[$def['section']]['label'] ?? '') . ' · ' . $def['hint'], 'url' => 'teacher.php' . teacher68_tab_url($tab, $classId)];
+        $out[] = ['label' => $def['label'], 'hint' => ($sections[function_exists('nav781_section_of_group') ? nav781_section_of_group($def['section']) : '']['label'] ?? '') . ' · ' . $def['hint'], 'url' => 'teacher.php' . teacher68_tab_url($tab, $classId)];
     }
     $classes = function_exists('c70_classes') ? c70_classes() : [];
     $names = $GLOBALS['modules'] ?? [];

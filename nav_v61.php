@@ -35,34 +35,25 @@ function nav61_bottom_hidden(string $view): bool
 }
 
 /**
- * Položky spodní lišty: Přehled, Materiály, Dnešní hodina (jen když běží) nebo Linux Lab, Výsledky, Profil.
+ * Položky spodní lišty (v78.1): Domů · Dnes · Úlohy · Profil. „Dnes“ vede do Dnešní hodiny, když je hodina otevřená
+ * (štítek „právě běží“), jinak do kalendáře. Ostatní cíle (Materiály, Výsledky, Lab, Projekty …) zůstávají v menu účtu (drawer).
  *
  * @return list<array{href:string,label:string,mark:string,active:bool,class:string}>
  */
 function nav61_bottom_items(?string $classId, string $view): array
 {
-    $byKey = [];
+    $lesson = null;
     foreach (nav61_primary_items($classId, $view) as $item) {
-        $views = (array)($item['views'] ?? []);
-        $key = in_array('hodina', $views, true) ? 'hodina' : (in_array('lab', $views, true) ? 'lab' : basename((string)$item['href']));
-        $byKey[$key] = $item;
+        if (in_array('hodina', (array)($item['views'] ?? []), true)) { $lesson = $item; break; }
     }
-    $home = ['href' => '?view=dashboard', 'label' => trm('Přehled'), 'mark' => '⌂', 'active' => $view === 'dashboard', 'class' => ''];
-    $out = [$home];
-    $lessonOpen = isset($byKey['hodina']) && ((string)($byKey['hodina']['class'] ?? '') === 'is-today' || !empty($byKey['hodina']['active']));
-    // Třetí místo: běží-li hodina, je tam „Dnešní hodina“; v labu samotném a bez hodiny „Linux Lab“.
-    $slot3 = ($lessonOpen && empty($byKey['lab']['active'])) || !isset($byKey['lab']) ? 'hodina' : 'lab';
-    if ($slot3 === 'hodina' && !$lessonOpen) $slot3 = 'none';
-    foreach (['?view=materialy', $slot3, '?view=vysledky', '?view=profile'] as $want) {
-        $key = str_starts_with($want, '?view=') ? basename($want) : $want;
-        $item = $byKey[$key] ?? null;
-        if (!is_array($item)) continue;
-        $out[] = [
-            'href' => (string)$item['href'], 'label' => (string)$item['label'], 'mark' => (string)$item['mark'],
-            'active' => !empty($item['active']), 'class' => (string)($item['class'] === 'is-today' ? 'is-today' : ''),
-        ];
-    }
-    return $out;
+    $lessonOpen = is_array($lesson) && ((string)($lesson['class'] ?? '') === 'is-today' || !empty($lesson['active']));
+    $todayActive = in_array($view, ['hodina', 'intake', 'calendar'], true);
+    return [
+        ['href' => '?view=dashboard', 'label' => trm('Domů'), 'mark' => '⌂', 'active' => $view === 'dashboard', 'class' => ''],
+        ['href' => $lessonOpen ? '?view=hodina' : '?view=calendar', 'label' => trm('Dnes'), 'mark' => '●', 'active' => $todayActive, 'class' => $lessonOpen && !$todayActive ? 'is-today' : ''],
+        ['href' => '?view=ulohy', 'label' => trm('Úlohy'), 'mark' => '✓', 'active' => in_array($view, ['ulohy', 'opakovani'], true), 'class' => ''],
+        ['href' => '?view=profile', 'label' => trm('Profil'), 'mark' => '◆', 'active' => in_array($view, ['profile', 'community'], true), 'class' => ''],
+    ];
 }
 
 /** HTML spodní lišty (prázdný řetězec, když se nemá zobrazit). */
@@ -75,7 +66,7 @@ function nav61_bottom_html(?string $classId, string $view): string
         $html .= '<li><a' . ($item['class'] !== '' ? ' class="' . e($item['class']) . '"' : '') . ' href="' . e($item['href']) . '"'
             . ($item['active'] ? ' aria-current="page"' : '') . '><i aria-hidden="true">' . nav61_bottom_icon($item['href']) . '</i><span>' . e(tr($label)) . '</span>' . ($item['class'] === 'is-today' ? '<span class="nav61-sr"> – ' . e(tr('právě běží')) . '</span>' : '') . '</a></li>';
     }
-    return '<nav class="ui-bottomnav" aria-label="' . e(tr('Hlavní cíle')) . '" data-ui61-bottomnav><ul>' . $html . '</ul></nav>';
+    return '<nav class="ui-bottomnav ds78 n781-sbar" aria-label="' . e(tr('Hlavní cíle')) . '" data-ui61-bottomnav><ul>' . $html . '</ul></nav>';   // v78.1: tokeny v78
 }
 
 /**
@@ -119,10 +110,10 @@ function nav61_icon(string $name): string
     return '<span class="nav61-ico nav61-ico--' . (in_array($name, $known, true) ? $name : 'home') . '" aria-hidden="true"></span>';
 }
 
-/** Ikona položky spodní lišty podle cíle (dashboard/materialy/lab/hodina/vysledky/profile). */
+/** Ikona položky spodní lišty podle cíle (dashboard, hodina/kalendář = dnes, úlohy, profil; starší materialy/lab/vysledky). */
 function nav61_bottom_icon(string $href): string
 {
-    $map = ['dashboard' => 'home', 'materialy' => 'learn', 'lab' => 'terminal', 'hodina' => 'clock', 'vysledky' => 'chart', 'profile' => 'profile'];
+    $map = ['dashboard' => 'home', 'materialy' => 'learn', 'lab' => 'terminal', 'hodina' => 'today', 'calendar' => 'today', 'ulohy' => 'projects', 'vysledky' => 'chart', 'profile' => 'profile'];
     parse_str((string)substr($href, (int)strpos($href, '?') + 1), $q);
     return nav61_icon($map[(string)($q['view'] ?? '')] ?? 'home');
 }

@@ -90,7 +90,8 @@ $check('rozcestník žáka: kompetence, cesty, projekty, návrhy hodnocení, int
     $labels === ['Kompetence', 'Výukové cesty', 'Projekty', 'Návrhy hodnocení', 'Intervence', 'Linux Lab'] && array_reduce($hub, static fn(bool $c, array $l): bool => $c && str_contains($l['url'], 'class=class_3a') && str_contains($l['url'], 'student=class_3a%3Astudent%3Aabc'), true)
     && teacher68_student_hub_links('class_3a&x', 'k', $admin) === [] && count(teacher68_student_hub_links('class_3a', 'k', $assistant)) < count($hub) + 1);
 $crumbs = teacher68_breadcrumb('kompetence', 'class_3a');
-$check('drobečky: Cockpit › Hodnocení › Kompetence (poslední bez odkazu), neznámá záložka jen Cockpit', array_column($crumbs, 0) === ['Cockpit', 'Hodnocení', 'Kompetence'] && $crumbs[2][1] === null && count(teacher68_breadcrumb('neexistuje')) === 1);
+// v78.1 (změna limitu auditu, BUILD_MANIFEST_V78_1.md): drobečky podle 4 sekcí menu – skupina Hodnocení patří do sekce Výuka (tools/v78_1_nav_audit.php).
+$check('drobečky: Cockpit › Výuka › Kompetence (od v78.1 4 sekce; poslední bez odkazu), neznámá záložka jen Cockpit', array_column($crumbs, 0) === ['Cockpit', 'Výuka', 'Kompetence'] && $crumbs[2][1] === null && count(teacher68_breadcrumb('neexistuje')) === 1);
 
 // ---------------------------------------------------------------- 4) politiky teacher59 (snapshot)
 $post = teacher59_action_policies();
