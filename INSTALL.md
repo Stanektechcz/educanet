@@ -748,3 +748,14 @@ Podrobnosti: `CHANGELOG_V78_1.md`, `BUILD_MANIFEST_V78_1.md` (tabulka ≤ 3 klep
 - **Odznaky:** počty v relaci (T-14, neschválené lekce do 4 týdnů, Komu pomoct z poslední Dnešní hodiny, nepřečtená upozornění), přepočet po změně schválení nebo nejpozději po 5 minutách; žádná jména žáků.
 - **Rollback vydání:** nasadit v78 (`3a015dc`). Nové soubory v78.1 načítá jen rámec cockpitu a layout žáka z tohoto vydání.
 - **Kontrola po nasazení:** `php tools/v78_1_nav_audit.php` → `V78_1_NAV_AUDIT_OK` (prohlížečová část jen s Chrome + `playwright-core` v `NODE_PATH`, jinak SKIP; vynutit `EDUCANET_NAV_BROWSER=require`); celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v79 · krokové postupy: stepper pro 7 toků
+
+Podrobnosti: `CHANGELOG_V79.md`, `BUILD_MANIFEST_V79.md` (soubory, změny limitů auditů, výkon), návod `docs/NAVOD_V79.md`. Nové PHP rozšíření ani migraci nevyžaduje, úložiště beze změny (rozpracované kroky jsou jen v relaci PHP).
+
+- **Nové soubory:** `stepper_v79.php` (koncept v relaci, validace kroků, POST `sp79_*`), `stepper_v79_views.php` (pruh kroků, souhrn chyb, Zpět/Další, souhrn), `stepper_v79_student.php` (úloha s variantou), toky `priprava_v79.php`, `lesson_reflect_v79.php`, `bulk_approval_v79.php`, `review_v79.php`, `identity_v79.php`, `portfolio_v79.php`, `app/actions/stepper_v79.php`, `assets/stepper-v79.css`, `assets/stepper-v79.js`, katalogy `lang/<en|uk>/ui/stepper_v79.php`.
+- **Cockpit:** nová záložka **Příprava hodiny** (`?tab=priprava79`, sekce Dnes, jen čtení). Reflexe, Hromadné schválení, Opakování a Identita mají kroky (`?krok=1…4`); poslední krok volá stejnou akci jako dřív.
+- **Nové POST akce (jen relace):** učitel `sp79_next` / `sp79_back` / `sp79_reset` (politika: třída nepovinná, je-li uvedená, musí být v rozsahu; oprávnění view + oprávnění toku v handleru), žák `sp79_s_next` / `sp79_s_back` / `sp79_s_reset` (router `actions_class`, CSRF z index.php). GET `?krok=` je zapsaný v `teacher59_get_policies()` jako informativní.
+- **Žák:** Úlohy (`?view=ulohy&uloha=…`) a připnutí práce v Portfoliu po krocích; stránky načítají `assets/components-v78.css` a `assets/stepper-v79.css` (v těle stránky jako ostatní CSS v75).
+- **Rollback vydání:** nasadit v78.1 (`19a2a3d`). Rozpracované koncepty v relaci tím jen zaniknou, data se nemění.
+- **Kontrola po nasazení:** `php tools/v79_stepper_audit.php` → `V79_STEPPER_AUDIT_OK` (prohlížečová část jen s Chrome + `playwright-core` v `NODE_PATH`, jinak SKIP; vynutit `EDUCANET_STEPPER_BROWSER=require`); celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.

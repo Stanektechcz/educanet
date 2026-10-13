@@ -74,6 +74,7 @@ function lx72_render_ticket(string $classId, int $lessonNo, string $studentKey, 
             . tr_html('Tvoje odpověď: {answer}', ['answer' => edu_cs($chosen)]) . '</p>';
         if (!$ok) echo '<p>' . tr_html('Správná odpověď: {answer}', ['answer' => edu_cs((string)$variant['options'][$variant['correct']])]) . '</p>';
         if ($variant['explanation'] !== '') echo '<p class="lx72-muted"' . edu_content_lang_attr() . '>' . e($variant['explanation']) . '</p>';
+        echo '<p class="lx72-next">' . e(tr('Chceš si práci z dnešní hodiny schovat?')) . ' <a href="?view=portfolio#sp79-top">' . e(tr('Připnout do portfolia (odkaz → reflexe → uložit)')) . '</a></p>';   // v79
         echo '</div>';
         return;
     }

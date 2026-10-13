@@ -310,6 +310,13 @@ return [
             'app/views/opakovani_v75.php',
             'app/actions/v75.php',
         ],
+        // v79 · krokové postupy žáka (stepper): úloha s variantou a připnutí práce do portfolia (zadání úloh zůstává česky).
+        'stepper_v79' => [
+            'stepper_v79.php',
+            'stepper_v79_student.php',
+            'portfolio_v79.php',
+            'app/actions/stepper_v79.php',
+        ],
         // Integrátor – sdílené soubory, dokončí se až po B1–B6 (F2).
         'shared' => [
             'bootstrap.php',

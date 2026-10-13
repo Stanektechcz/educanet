@@ -6,7 +6,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 require_once __DIR__ . '/review_v75.php';
 
 /**
- * EDUCANET v75 · záložka cockpitu `opakovani75` (česky): výběr rozsahu lekcí (?od=, ?do=), náhled balíčku z chyb třídy,
+ * EDUCANET v75 · záložka cockpitu `opakovani75` (česky): výběr rozsahu lekcí (?od=, ?do=; v79 po krocích ?krok=, review_v79.php), náhled balíčku z chyb třídy,
  * zveřejnění / skrytí (POST op75_publish / op75_close, content.manage) a verze k tisku s klíčem (GET opakovani75|tisk).
  */
 
@@ -21,43 +21,15 @@ function rv75_render_teacher_tab(array $modules, string $classId, string $csrf):
     $requested = is_string($_GET['class'] ?? null) ? (string)$_GET['class'] : $classId;
     $class = in_array($requested, $classes, true) ? $requested : ($classes[0] ?? '');
     echo '<section class="teacher-page-head c70-head"><div><div class="eyebrow">Výuka · před písemkou</div><h1>Opakování před písemkou</h1>'
-        . '<p>Vyberte rozsah lekcí. Balíček se složí sám: otázky z exit ticketů, ve kterých třída chybovala (aspoň ' . RV75_MIN_ERROR_PCT . ' % špatně), a úlohy s variantami k tématům rozsahu, '
+        . '<p>Tři kroky: témata (rozsah lekcí) → náhled balíčku → zveřejnění. Balíček se složí sám: otázky z exit ticketů, ve kterých třída chybovala (aspoň ' . RV75_MIN_ERROR_PCT . ' % špatně), a úlohy s variantami k tématům rozsahu, '
         . 'které třída zatím nezkusila nebo v nich má pod ' . RV75_TASK_WEAK_PCT . ' % správně. Žák dostane vlastní varianty úloh; jména se nikde neukazují.</p></div></section>';
     if ($class === '') { echo function_exists('c70_empty_html') ? c70_empty_html('Nemáte přiřazenou žádnou třídu.', 'Opakování se ukáže, jakmile vám administrátor přidělí třídu.', []) : ''; return; }
     echo '<nav class="c70-picker" aria-label="Třída"><ul class="c70-classes">';
     foreach ($classes as $cid) echo '<li><a href="' . e(rv75_tab_url($cid)) . '"' . ($cid === $class ? ' aria-current="page"' : '') . '><strong>' . e((string)($modules[$cid]['name'] ?? $cid)) . '</strong></a></li>';
     echo '</ul></nav>';
-    $current = rv75_pack($class);
-    [$from, $to] = rv75_range($_GET);
-    if ($from < 1 && $current !== null) [$from, $to] = [(int)$current['from'], (int)$current['to']];
-    $can = function_exists('teacher_permission') && teacher_permission('content.manage');
-    echo '<section class="c70-card c70-wide" aria-labelledby="rv75-t-pick"><h2 id="rv75-t-pick">1. Rozsah lekcí</h2>'
-        . ($current !== null ? '<p role="status"><strong>Zveřejněno:</strong> L' . (int)$current['from'] . '–L' . (int)$current['to'] . ' (' . e(date('j. n. Y', (int)strtotime((string)$current['created_at']))) . ', ' . e((string)$current['by']) . ').</p>' : '<p class="c70-muted">Třída teď nemá zveřejněné opakování.</p>')
-        . '<form method="get" class="rv75-range"><input type="hidden" name="tab" value="opakovani75"><input type="hidden" name="class" value="' . e($class) . '">'
-        . '<label for="rv75-od">Od lekce</label><input id="rv75-od" name="od" type="number" min="1" max="28" value="' . ($from > 0 ? $from : '') . '" required>'
-        . '<label for="rv75-do">Do lekce</label><input id="rv75-do" name="do" type="number" min="1" max="28" value="' . ($to > 0 ? max($from, $to) : '') . '" required>'
-        . '<button class="btn secondary" type="submit">Sestavit náhled</button></form></section>';
-    if ($from < 1) return;
-    $pack = rv75_build($class, is_array($modules[$class] ?? null) ? $modules[$class] : [], $from, max($from, $to));
-    echo '<section class="c70-card c70-wide" aria-labelledby="rv75-t-prev"><h2 id="rv75-t-prev">2. Náhled balíčku L' . $pack['from'] . '–L' . $pack['to'] . '</h2>'
-        . '<p class="c70-muted">Podklad: ' . $pack['answers'] . ' odpovědí z exit ticketů v rozsahu.</p>';
-    echo rv75_exits_html($pack['exits'], $pack['answers'], true);
-    echo '<h3>Úlohy k procvičení</h3>';
-    if ($pack['tasks'] === []) echo '<p class="c70-muted">' . (tb75_tasks_for_class($class) === [] ? 'Tahle třída zatím nemá banku úloh (začínáme sítěmi a Linuxem pro 3.A a 4.A).' : 'K tématům rozsahu není slabé místo v bance úloh (třída má ≥ ' . RV75_TASK_WEAK_PCT . ' % správně), nebo se témata úloh v rozsahu neprobírají.') . '</p>';
-    else {
-        echo '<ul class="kp75-paths">';
-        foreach ($pack['tasks'] as $t) echo '<li>' . e(TB75_TASKS[$t['task']]['title']) . ' – ' . e($t['untried'] ? 'třída zatím nezkusila' : $t['rate'] . ' % správně z ' . $t['attempts'] . ' pokusů') . '</li>';
-        echo '</ul>';
-    }
-    echo '</section><section class="c70-card c70-wide" aria-labelledby="rv75-t-pub"><h2 id="rv75-t-pub">3. Zveřejnit a vytisknout</h2>'
-        . '<p><a class="btn secondary" href="' . e(rv75_tab_url($class, ['od' => (string)$pack['from'], 'do' => (string)$pack['to'], 'tisk' => '1'])) . '">Verze k tisku s klíčem</a></p>';
-    if (!$can) { echo '<p class="c70-muted">Zveřejnit může učitel s oprávněním ke správě obsahu (asistent jen čte).</p></section>'; return; }
-    $hidden = '<input type="hidden" name="csrf" value="' . e($csrf) . '"><input type="hidden" name="class_id" value="' . e($class) . '"><input type="hidden" name="return_tab" value="opakovani75">'
-        . '<input type="hidden" name="od" value="' . $pack['from'] . '"><input type="hidden" name="do" value="' . $pack['to'] . '">';
-    if ($pack['exits'] !== [] || $pack['tasks'] !== []) echo '<form method="post" class="kp75-form">' . $hidden . '<input type="hidden" name="action" value="op75_publish"><button class="btn primary" type="submit">' . ($current !== null ? 'Nahradit zveřejněné opakování' : 'Zveřejnit žákům') . '</button></form>';
-    else echo '<p class="c70-muted" role="status">Balíček je prázdný – není co zveřejnit. Zkuste širší rozsah, nebo počkejte na odpovědi z exit ticketů.</p>';
-    if ($current !== null) echo '<form method="post" class="kp75-form">' . $hidden . '<input type="hidden" name="action" value="op75_close"><button class="btn secondary" type="submit">Skrýt opakování</button></form>';
-    echo '</section>';
+    // v79: Témata → Náhled balíčku → Zveřejnit (review_v79.php); akce op75_publish / op75_close beze změny.
+    require_once __DIR__ . '/review_v79.php';
+    rv79_render($modules, $class, $csrf);
 }
 
 function rv75_exits_html(array $exits, int $answers, bool $withStats): string

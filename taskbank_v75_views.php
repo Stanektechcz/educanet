@@ -65,6 +65,11 @@ function tb75_render_page(string $classId, string $studentKey, string $task): vo
 
 function tb75_render_task(string $classId, string $studentKey, string $task, string $returnView = 'ulohy'): void
 {
+    if ($returnView === 'ulohy') {
+        require_once __DIR__ . '/stepper_v79_student.php';   // v79: Zadání → Řešení → Kontrola → Co dál (tb75_answer / tb75_next beze změny)
+        tb79_render_task($classId, $studentKey, $task);
+        return;
+    }
     $ref = tb75_student_ref($classId, $studentKey);
     $cur = tb75_current($classId, $ref, $task);
     $e = $cur['entry'];

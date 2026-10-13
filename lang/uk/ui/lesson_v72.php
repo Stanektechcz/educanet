@@ -32,4 +32,7 @@ return [
     'Režim: podklad ke známce' => 'Режим: враховується в оцінку',
     'Režim: jen zpětná vazba' => 'Режим: лише зворотний зв’язок',
     'Jedna rychlá otázka na konec hodiny. Učitel ji tentokrát použije jako podklad ke známce – rozmysli si odpověď, poslat ji jde jen jednou.' => 'Одне коротке запитання наприкінці уроку. Цього разу вчитель використає відповідь як підставу для оцінки – добре подумай, надіслати її можна лише один раз.',
+    // v79: odkaz z exit ticketu na připnutí práce do portfolia (stepper)
+    'Chceš si práci z dnešní hodiny schovat?' => 'Хочеш зберегти роботу з сьогоднішнього уроку?',
+    'Připnout do portfolia (odkaz → reflexe → uložit)' => 'Закріпити в портфоліо (посилання → рефлексія → зберегти)',
 ];

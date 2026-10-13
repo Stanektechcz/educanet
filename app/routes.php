@@ -86,13 +86,16 @@ return [
         'dashboard' => ['motivation_v61_views.php', 'competencies_v62.php', 'evidence_v62.php', 'competency_v62_views.php', 'challenges_v64.php', 'paths_v63.php', 'paths_v63_flow.php', 'paths_v63_views.php', 'teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'mastery_learning_views_v41.php', 'learning_studio_views_v44.php', 'skill_views.php', 'project_workspace_views.php'],
         // v65 · cyklus projektu, peer review a portfolio (?view=projekt65, ?view=portfolio, akce proj65_s_*).
         'projects65' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'projects_v60.php', 'projects_v65.php', 'projects_v65_rubrics.php', 'projects_v65_peer.php', 'projects_v65_team.php', 'projects_v65_evidence.php', 'portfolio_v65.php', 'projects_v65_views.php', 'projects_v65_detail_views.php', 'portfolio_v65_views.php',
-            'taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'taskbank_v75_views.php', 'portfolio_v75.php', 'portfolio_v75_views.php'],   // v75: připnuté práce v portfoliu
+            'taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'taskbank_v75_views.php', 'portfolio_v75.php', 'portfolio_v75_views.php',   // v75: připnuté práce v portfoliu
+            'stepper_v79.php', 'stepper_v79_views.php', 'stepper_v79_student.php', 'portfolio_v79.php'],   // v79: připnutí po krocích
         // v66 · Moje hodnocení (?view=hodnoceni): řetězec důkazů a převzatá známka; CSS jen na tomto pohledu.
         'grading66' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'projects_v65.php', 'assessment_v66.php', 'grading_v66.php', 'competency_v62_views.php', 'grading_v66_views.php'],
         // v67 · profil: cíle žáka a sdílení (akce grow67_*); jádro growth_v67.php čte důkazy, cesty a projekty jen pro časovou osu.
         'growth' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'paths_v63.php', 'projects_v60.php', 'projects_v65.php', 'challenges_v64.php', 'growth_v67.php'],
         // v75 · úlohy s variantami (?view=ulohy, akce tb75_*) a opakování před písemkou (?view=opakovani; čte exit tickety v72).
         'taskbank75' => ['taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'taskbank_v75_views.php'],
+        // v79 · krokové postupy (stepper): jádro, vykreslení a žákovské toky (úloha s variantou; portfolio_v79.php je ve skupině projects65).
+        'stepper79' => ['stepper_v79.php', 'stepper_v79_views.php', 'stepper_v79_student.php'],
         'review75' => ['lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'taskbank_v75_views.php', 'review_v75.php', 'review_v75_views.php'],
         // v75 · POST žáka: úlohy, úroveň aktivity (doporučení čte exit tickety) a portfolio (kandidáti projektů v65).
         'v75_actions' => ['taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'taskbank_v75_views.php', 'levels_v75.php', 'levels_v75_views.php', 'portfolio_v75.php', 'portfolio_v75_views.php'],
@@ -146,8 +149,8 @@ return [
         ['match' => ['projekt65'], 'file' => 'views/projects_v65.php', 'libs' => ['layout', 'projects65']],
         ['match' => ['portfolio', 'portfolio_export'], 'file' => 'views/portfolio.php', 'libs' => ['layout', 'projects65']],
         // v75: úlohy s variantami a opakování před písemkou.
-        ['match' => ['ulohy'], 'file' => 'views/ulohy_v75.php', 'libs' => ['layout', 'taskbank75']],
-        ['match' => ['opakovani'], 'file' => 'views/opakovani_v75.php', 'libs' => ['layout', 'review75']],
+        ['match' => ['ulohy'], 'file' => 'views/ulohy_v75.php', 'libs' => ['layout', 'taskbank75', 'stepper79']],
+        ['match' => ['opakovani'], 'file' => 'views/opakovani_v75.php', 'libs' => ['layout', 'review75', 'stepper79']],
         // v63: výukové cesty žáka (seznam a krok; třída bez cest dostane 404).
         ['match' => ['cesty', 'cesta'], 'file' => 'views/paths.php', 'libs' => ['layout', 'paths']],
         // v66: Moje hodnocení (návrh hodnocení se zobrazí jen ve třídách, kde ho zapnul administrátor).
@@ -211,6 +214,8 @@ return [
         ['match' => ['lx72_answer'], 'file' => 'actions/lesson_exit_v72.php', 'libs' => ['lesson_exit']],
         // v75 · úlohy s variantami, úroveň aktivity v lekci a portfolio (identita ze session, lekce ověřená kalendářem).
         ['match' => ['tb75_answer', 'tb75_next', 'dif75_pick', 'pf75_s_pin', 'pf75_s_reflect', 'pf75_s_unpin'], 'file' => 'actions/v75.php', 'libs' => ['lesson_exit', 'projects65', 'v75_actions']],
+        // v79 · krokové postupy žáka: Zpět / Další / Zahodit ukládají jen koncept do relace (identita ze session); uložení = původní akce (pf75_s_pin).
+        ['match' => ['sp79_s_next', 'sp79_s_back', 'sp79_s_reset'], 'file' => 'actions/stepper_v79.php', 'libs' => ['projects65', 'v75_actions']],
         // v67 · profil: cíle žáka (přidat, týdenní kontrola, odebrat) a sdílení se spolužáky (identita ze session).
         ['match' => ['grow67_*'], 'file' => 'actions/growth_v67.php', 'libs' => ['growth']],
         // v64 · retrospektiva týmové hry (tři otázky po dohrané hře; identita ze session).

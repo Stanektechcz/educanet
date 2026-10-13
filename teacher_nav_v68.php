@@ -18,7 +18,7 @@ require_once __DIR__ . '/ui_v67.php';
 
 /** Záložky cockpitu s tmavým režimem (po převodu CSS na tokeny a kontrole kontrastu; ostatní zůstanou světlé). */
 const UI68_TEACHER_DARK_TABS = [
-    'attention', 'hodina', 'hodina_projektor', 'hodina_tisk', 'hodina_zastup', 'reflexe73', 'tyden74', 'streda77', 'prehled', 'hlaseni', 'student360', 'class_results', 'analytics', 'interventions', 'communications', 'intake', 'pristupy', 'groups',
+    'attention', 'hodina', 'priprava79', 'hodina_projektor', 'hodina_tisk', 'hodina_zastup', 'reflexe73', 'tyden74', 'streda77', 'prehled', 'hlaseni', 'student360', 'class_results', 'analytics', 'interventions', 'communications', 'intake', 'pristupy', 'groups',
     'cesty', 'schvalovani', 'hromadne74', 'materialy74', 'urovne75', 'ulohy75', 'opakovani75', 'kompetence75', 'portfolia75', 'plan76', 'svp76', 'nastaveni_vyuky', 'curriculum', 'teach', 'session', 'calendar', 'authoring', 'editor', 'labdata',
     'hodnoceni66', 'kompetence', 'projekty65', 'grade', 'projekty', 'workspace', 'history',
     'arena', 'roboti', 'hry', 'ctf', 'incidenty', 'souboje', 'ekonomika', 'obchod',
@@ -49,6 +49,7 @@ function teacher68_tab_map(): array
     return [
         'attention' => $t('dnes', 'Co řešit dnes', 'Upozornění, úkoly a nedávné zásahy'),
         'hodina' => $t('dnes', 'Dnešní hodina', 'Téma, materiály, úkoly a postup žáků'),   // v70
+        'priprava79' => $t('dnes', 'Příprava hodiny', 'Třída, plán, materiály, pak tisk nebo projektor'),   // v79 (stepper)
         'hodina_projektor' => $t('dnes', 'Projektor', 'Úsek hodiny, cíl, kód a zadání velkým písmem'),   // v73 (nástupce Režimu hodiny)
         'hodina_tisk' => $t('dnes', 'Tisk hodiny', 'A4 plán hodiny a pracovní list'),   // v73
         'hodina_zastup' => $t('dnes', 'Zástup', 'List pro zastupujícího bez jmen žáků'),   // v73

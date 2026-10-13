@@ -5,7 +5,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 
 /**
  * EDUCANET v73 · záložka „Reflexe hodiny“ (`reflexe73`) a karta „Minule“ v Dnešní hodině. Každý výstup přes e(); jediný formulář
- * je lr73_save s CSRF (asistent bez content.manage formulář nedostane). GET jen obecné ?class= a ?lesson=. Texty česky.
+ * je lr73_save s CSRF (v79: po krocích, lesson_reflect_v79.php) (asistent bez content.manage formulář nedostane). GET jen obecné ?class= a ?lesson=. Texty česky.
  */
 
 function lr73_state_label(string $state): string
@@ -13,46 +13,7 @@ function lr73_state_label(string $state): string
     return LR73_STATES[$state] ?? 'neuvedeno';
 }
 
-/** Volby (checkboxy) rychlých odpovědí. */
-function lr73_picks_html(string $name, array $options, string $legend): string
-{
-    $html = '<fieldset class="c70-fieldset lr73-picks"><legend>' . e($legend) . '</legend>';
-    foreach ($options as $key => $label) {
-        $id = 'lr73-' . $name . '-' . $key;
-        $html .= '<label class="lr73-pick" for="' . e($id) . '"><input type="checkbox" id="' . e($id) . '" name="' . e($name) . '[]" value="' . e((string)$key) . '"> ' . e((string)$label) . '</label>';
-    }
-    return $html . '</fieldset>';
-}
-
-function lr73_textarea_html(string $name, string $label, string $hint): string
-{
-    return '<label class="lr73-field" for="lr73-' . e($name) . '"><span>' . e($label) . '</span><textarea id="lr73-' . e($name) . '" name="' . e($name) . '" maxlength="' . LR73_TEXT_MAX
-        . '" rows="2" aria-describedby="lr73-privacy">' . '</textarea><small>' . e($hint) . ' Nejvýš ' . LR73_TEXT_MAX . ' znaků.</small></label>';
-}
-
-/** Formulář reflexe jedné lekce. */
-function lr73_form_html(string $classId, array $lesson, string $date, string $csrf): string
-{
-    $html = '<form method="post" action="teacher.php" class="c70-form lr73-form"><input type="hidden" name="csrf" value="' . e($csrf) . '">'
-        . '<input type="hidden" name="action" value="lr73_save"><input type="hidden" name="return_tab" value="reflexe73">'
-        . '<input type="hidden" name="class_id" value="' . e($classId) . '"><input type="hidden" name="lesson" value="' . (int)$lesson['number'] . '">'
-        . '<fieldset class="c70-fieldset lr73-state"><legend>Jak hodina proběhla? <span class="c70-muted">(povinné, stačí jedno klepnutí)</span></legend>';
-    foreach (LR73_STATES as $key => $label) {
-        $html .= '<label class="lr73-choice" for="lr73-state-' . $key . '"><input type="radio" id="lr73-state-' . $key . '" name="state" value="' . $key . '" required> ' . e($label) . '</label>';
-    }
-    $html .= '</fieldset><div class="lr73-row"><label class="lr73-field" for="lr73-stop-seg"><span>Kde jsme skončili – úsek plánu</span><select id="lr73-stop-seg" name="stop_seg"><option value="">— nevyplněno —</option>';
-    foreach (array_values($lesson['timeline']) as $i => $s) $html .= '<option value="' . $i . '">' . (int)$s['from'] . '–' . (int)$s['to'] . ' min · ' . e(mb_strimwidth((string)$s['phase'], 0, 60, '…')) . '</option>';
-    $html .= '</select></label><label class="lr73-field" for="lr73-stop-task"><span>… nebo úkol</span><select id="lr73-stop-task" name="stop_task"><option value="">— nevyplněno —</option>';
-    foreach (array_values($lesson['tasks']) as $i => $t) $html .= '<option value="' . $i . '">' . ($i + 1) . '. ' . e(mb_strimwidth((string)$t['text'], 0, 70, '…')) . '</option>';
-    $html .= '</select></label></div>'
-        . '<p class="c70-note" id="lr73-privacy">Reflexe je o hodině, ne o žácích: <strong>nepište jména žáků ani známky.</strong> Text s celým jménem žáka ze seznamu třídy se neuloží.</p>'
-        . lr73_picks_html('picks_worked', LR73_PICKS_WORKED, 'Co fungovalo') . lr73_textarea_html('worked', 'Co fungovalo – vlastními slovy (nepovinné)', 'Např. „ukázka dig +short pomohla“.')
-        . lr73_picks_html('picks_adjust', LR73_PICKS_ADJUST, 'Co upravit') . lr73_textarea_html('adjust', 'Co upravit – vlastními slovy (nepovinné)', 'Např. „úkol 3 zkrátit o 5 min“.')
-        . lr73_textarea_html('next', 'Poznámka na příště (nepovinné)', 'Ukáže se v Dnešní hodině jako „Minule“.')
-        . '<p class="c70-muted">Datum hodiny: ' . e(lt70_date($date)) . ' (podle kalendáře). Stejnou lekci můžete uložit znovu – přepíše se vaše poslední reflexe.</p>'
-        . '<button type="submit" class="btn lr73-submit">Uložit reflexi</button></form>';
-    return $html;
-}
+// v79: formulář reflexe po krocích je v lesson_reflect_v79.php (lr79_form_html); dřívější lr73_form_html vyřazena.
 
 /** Jeden uložený záznam (bez jmen; autor jen „vy“ / „jiný učitel“). */
 function lr73_entry_html(array $row, string $authorHash): string
@@ -99,7 +60,17 @@ function lr73_render_tab(array $modules, string $csrf): void
     ], 'Pokrytí reflexemi');
     echo '<div class="c70-grid"><div class="c70-col"><section class="c70-card" aria-labelledby="lr73-form-h"><h2 id="lr73-form-h">Reflexe lekce ' . $n . '</h2>';
     if (function_exists('teacher_permission') && teacher_permission('content.manage')) {
-        echo lr73_form_html($classId, $lesson, lr73_lesson_date($classId, $n, $today), $csrf);
+        // v79: stepper Stav → Kde jsme skončili → Co upravit → Hotovo (stejná akce lr73_save; koncept v relaci). Načítá se jen tady, ne v Dnešní hodině.
+        require_once __DIR__ . '/lesson_reflect_v79.php';
+        $st = lr79_state($classId, $n);
+        $other = sp79_draft('reflexe');
+        if ($lessonParam === 0 && $other['data'] !== [] && str_starts_with((string)$other['scope'], $classId . '|') && (string)$other['scope'] !== $classId . '|' . $n) {
+            $ln = (int)substr((string)$other['scope'], strlen($classId) + 1);
+            echo sp79_resume_html('Máte rozpracovanou reflexi lekce ' . $ln . ' (krok ' . (int)$other['step'] . ' ze 4).', lr79_url($classId, $ln, (int)$other['step']), 'Pokračovat v reflexi lekce ' . $ln);
+        }
+        echo lr79_bar_html($classId, $n, $st);
+        if ($st['failed']) echo sp79_status_html('danger', 'Reflexi se nepodařilo uložit.', 'Údaje zůstaly zachované – opravte krok, kterého se chyba týká, a uložte znovu.');
+        echo $st['done'] ? lr79_done_html($classId, $n) : lr79_form_html($classId, $lesson, lr73_lesson_date($classId, $n, $today), $csrf, $st);
     } else {
         echo '<p class="c70-note" role="status">Máte jen čtení – reflexi zapisuje učitel třídy.</p>';
     }

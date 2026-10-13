@@ -61,7 +61,7 @@ try {
     preg_match_all('~name="items\[\]" value="([^"]+)"~', $pb, $mm);
     $items = array_slice($mm[1] ?? [], 0, 2);
     $check('HTTP: náhled hromadného schválení – kroky 1–3, ukazatele (T-14), tabulka s otisky, povinné potvrzení a tlačítko; bez jmen žáků',
-        audit_response_clean($prev) && str_contains($pb, 'Náhled a potvrzení') && str_contains($pb, 'name="confirm" value="1" required') && str_contains($pb, 'value="ba74_approve"')
+        audit_response_clean($prev) && str_contains($pb, 'Náhled změn') /* v79: kroky Náhled změn → Potvrzení (dříve „Náhled a potvrzení“), BUILD_MANIFEST_V79.md */ && str_contains($pb, 'name="confirm" value="1" required') && str_contains($pb, 'value="ba74_approve"')
         && str_contains($pb, 'name="class_ids[]" value="class_3a"') && count($items) === 2 && str_contains($pb, 'Učí se do 14 dní') && $noNames($pb));
     $csrf = (string)$h->csrfToken($pb);
     $post = ['action' => 'ba74_approve', 'class_ids' => ['class_3a'], 'items' => $items, 'return_tab' => 'hromadne74', 'return_class' => 'class_3a'];

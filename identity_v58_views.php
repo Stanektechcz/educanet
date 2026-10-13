@@ -8,6 +8,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * v58 · F6 – učitelská záložka „Identita a nový rok“ (?tab=identita). Jen náhled: registr, kolize jmen a plán
  * přechodu roku. Zápisy (sestavení s --apply, rozlišení jmenovců, přechod roku) běží jen z CLI.
  * POST: identity58_plan (CSRF) → přesměrování na ?tab=identita&plan=<rok> (plán se počítá jen v paměti).
+ * v79: po krocích (identity_v79.php) – Registr a kolize → Školní rok → Souhrn → Plán a účty; ?krok= a koncept roku v relaci.
  */
 
 require_once __DIR__ . '/identity_v58_rollover.php';
@@ -58,12 +59,20 @@ function identity58_render_teacher_tab(string $csrf): void
     $dups = identity58_duplicates($reg);
     $planYear = isset($_GET['plan']) && preg_match('/^\d{4}$/', (string)$_GET['plan']) ? (int)$_GET['plan'] : null;
     $defaultYear = identity58_default_year($reg);
+    require_once __DIR__ . '/identity_v79.php';   // v79: stepper Registr a kolize → Školní rok → Souhrn → Plán a účty
+    $st = id79_state($planYear, $defaultYear);
+    $cur = (int)$st['cur'];
     ?>
 <section class="teacher-page-head"><div><div class="eyebrow">Podpora · identita žáků</div><h1>Identita a nový školní rok</h1>
-<p>Jen náhled. Každý žák má stálé <code>student_id</code>; staré klíče (třída + jméno, účty, Linux Lab) na něj jen ukazují, historická data se nepřepisují. Zápisy se spouští z příkazové řádky: <code>tools/v58_identity.php</code> a <code>tools/v58_rollover.php</code>.</p></div></section>
-<section class="idt58-grid">
+<p>Jen náhled. Každý žák má stálé <code>student_id</code>; staré klíče (třída + jméno, účty, Linux Lab) na něj jen ukazují, historická data se nepřepisují. Zápisy se spouští z příkazové řádky: <code>tools/v58_identity.php</code> a <code>tools/v58_rollover.php</code>. Postup má čtyři kroky: registr a kolize → školní rok → souhrn → plán a účty.</p></div></section>
+<?php echo id79_bar_html($st) . sp79_errors_html($st['errors'], sp79_words()); ?>
+<form method="post" action="teacher.php?tab=identita" class="idt58-form sp79-form" data-sp79>
+  <input type="hidden" name="csrf" value="<?= e($csrf) ?>">
+  <input type="hidden" name="action" value="identity58_plan">
+  <?php echo sp79_hidden_html('identita', $cur) . sp79_panel_open(1, $cur, ID79_LABELS[0]); ?>
+<div class="idt58-grid">
   <article class="teacher-panel idt58-card" aria-labelledby="idt58-reg">
-    <div class="teacher-panel-head"><div><span>Registr</span><h2 id="idt58-reg"><?= count($reg['students']) ?> žáků</h2></div></div>
+    <div class="teacher-panel-head"><div><span>Registr</span><h3 id="idt58-reg"><?= count($reg['students']) ?> žáků</h3></div></div>
     <ul class="idt58-stats">
       <li><span>Aktivní</span><b><?= (int)$byStatus['active'] ?></b></li>
       <li><span>Archivovaní (absolventi)</span><b><?= (int)$byStatus['archived'] ?></b></li>
@@ -81,7 +90,7 @@ function identity58_render_teacher_tab(string $csrf): void
     <?php endif; ?>
   </article>
   <article class="teacher-panel idt58-card" aria-labelledby="idt58-dups">
-    <div class="teacher-panel-head"><div><span>Kolize jmen</span><h2 id="idt58-dups"><?= e($dups ? count($dups) . ' ke kontrole' : 'Bez kolizí') ?></h2></div></div>
+    <div class="teacher-panel-head"><div><span>Kolize jmen</span><h3 id="idt58-dups"><?= e($dups ? count($dups) . ' ke kontrole' : 'Bez kolizí') ?></h3></div></div>
     <?php if (!$dups): ?>
       <p class="idt58-note">Žádní jmenovci ani sdílené klíče. Registr se kontroluje při každé změně seznamu žáků nebo účtů.</p>
     <?php else: ?>
@@ -105,18 +114,25 @@ function identity58_render_teacher_tab(string $csrf): void
       <p class="idt58-note">Řešení: jmenovce rozliš (např. „Jan Novák (B)“) příkazem <code>php tools/v58_identity.php --split=&lt;student_id&gt; --label="…" --account=&lt;klíč účtu&gt; --apply</code>. Nový žák dostane nové ID; dosud sloučená data zůstávají u původního ID a automaticky rozdělit nejdou.</p>
     <?php endif; ?>
   </article>
+</div>
 </section>
-<section class="teacher-panel idt58-card" aria-labelledby="idt58-plan">
-  <div class="teacher-panel-head"><div><span>Přechod školního roku</span><h2 id="idt58-plan">Plán přechodu</h2></div></div>
-  <form method="post" action="teacher.php?tab=identita" class="idt58-form">
-    <input type="hidden" name="csrf" value="<?= e($csrf) ?>">
-    <input type="hidden" name="action" value="identity58_plan">
-    <label for="idt58-year">Nový školní rok začíná v roce</label>
-    <input id="idt58-year" name="year" type="number" inputmode="numeric" min="2000" max="2100" value="<?= (int)($planYear ?? $defaultYear) ?>" required>
-    <button type="submit" class="button primary">Zobrazit plán</button>
-  </form>
-  <?php if ($planYear !== null) identity58_render_plan($planYear, $reg); ?>
+<?php echo sp79_panel_open(2, $cur, ID79_LABELS[1]); ?>
+  <p>Zadejte rok, kdy nový školní rok začíná (září). Výchozí je příští školní rok.</p>
+  <label for="idt58-year">Nový školní rok začíná v roce</label>
+  <input id="idt58-year" name="year" type="number" inputmode="numeric" min="2000" max="2100" value="<?= (int)$st['year'] ?>" required data-sp79-msg="Zadejte rok začátku nového školního roku (2000–2100)."<?php echo sp79_aria($st['errors'], 'idt58-year'); ?>>
+  <?php echo sp79_field_error($st['errors'], 'idt58-year'); ?>
 </section>
+<?php echo sp79_panel_open(3, $cur, ID79_LABELS[2]) . id79_summary_html($st, count($reg['students']), count($dups)) . '</section>'
+    . ($cur < 4 ? sp79_nav_html('teacher', $cur, 3, ID79_LABELS, sp79_words(), '<button type="submit" class="ds-btn ds-btn--primary" data-sp79-validate>Sestavit plán přechodu</button>') : ''); ?>
+</form>
+<?php if ($planYear !== null): ?>
+<?php echo sp79_panel_open(4, $cur, ID79_LABELS[3]); ?>
+<div class="teacher-panel idt58-card" aria-labelledby="idt58-plan">
+  <div class="teacher-panel-head"><div><span>Přechod školního roku</span><h3 id="idt58-plan">Plán přechodu</h3></div></div>
+  <?php identity58_render_plan($planYear, $reg); ?>
+</div>
+<?php echo id79_next_steps_html($planYear) . '<p class="c70-links"><a href="' . e(id79_url(2)) . '">Jiný školní rok</a></p></section>'; ?>
+<?php endif; ?>
 <?php
 }
 

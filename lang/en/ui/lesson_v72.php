@@ -32,4 +32,7 @@ return [
     'Režim: podklad ke známce' => 'Mode: counts towards your grade',
     'Režim: jen zpětná vazba' => 'Mode: feedback only',
     'Jedna rychlá otázka na konec hodiny. Učitel ji tentokrát použije jako podklad ke známce – rozmysli si odpověď, poslat ji jde jen jednou.' => 'One quick question at the end of the lesson. This time your teacher will use it as evidence for your grade – think it through, you can only send it once.',
+    // v79: odkaz z exit ticketu na připnutí práce do portfolia (stepper)
+    'Chceš si práci z dnešní hodiny schovat?' => 'Want to keep your work from today’s lesson?',
+    'Připnout do portfolia (odkaz → reflexe → uložit)' => 'Pin it to your portfolio (link → reflection → save)',
 ];

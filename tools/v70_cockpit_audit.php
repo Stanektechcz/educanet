@@ -71,12 +71,14 @@ unset($post['lr73_save']);   // v73: reflexe hodiny (nový modul `reflexe73`) �
 unset($post['mat74_add'], $post['mat74_update'], $post['mat74_verify'], $post['mat74_retire'], $post['mat74_attach'], $post['mat74_restore'], $post['ba74_approve']);   // v74: knihovna materiálů (modul `materialy74`) a hromadné schválení (modul `hromadne74`) – vyjmuté ze snímku stejně jako v73 (změna limitu auditu, BUILD_MANIFEST_V74.md)
 unset($post['kp75_approve'], $post['kp75_return'], $post['lv75_approve'], $post['lv75_return'], $post['pf75_comment'], $post['op75_publish'], $post['op75_close']);   // v75: kompetence 2.A/4.A, úrovně, portfolia a opakování (nové moduly kompetence75 / urovne75 / portfolia75 / opakovani75) – vyjmuté ze snímku stejně jako v74 (změna limitu auditu, BUILD_MANIFEST_V75.md)
 unset($post['ob76_add']);   // v76: ruční pozorování kompetence (modul kompetence, prefix ob76_) – vyjmuto ze snímku stejně jako v75 (změna limitu auditu, BUILD_MANIFEST_V76.md)
+unset($post['sp79_next'], $post['sp79_back'], $post['sp79_reset']);   // v79: koncepty krokových postupů (jen relace, prefix sp79_ v novém modulu priprava79) – vyjmuto ze snímku stejně jako v76 (změna limitu auditu, BUILD_MANIFEST_V79.md)
 ksort($post);
 $get = teacher59_get_policies();
 foreach (['kompetence', 'cesty', 'projekty65', 'hodnoceni66', 'labdata'] as $t) unset($get[$t . '|student']);
 unset($get['tyden74|paleta']);   // v74: JSON žáků pro rychlé hledání (modul `tyden74`) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V74.md)
 unset($get['portfolia75|tisk'], $get['opakovani75|tisk']);   // v75: stránky k tisku (moduly portfolia75 / opakovani75) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V75.md)
 unset($get['plan76|tisk'], $get['svp76|tisk'], $get['svp76|csv']);   // v76: tisk Plánu vs. skutečnosti a tisk/CSV Plnění ŠVP (moduly plan76 / svp76) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V76.md)
+unset($get['priprava79|krok'], $get['reflexe73|krok'], $get['hromadne74|krok'], $get['opakovani75|krok'], $get['identita|krok']);   // v79: číslo kroku stepperu (jen přepíná zobrazení) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V79.md)
 ksort($get);
 $check('politiky teacher59: POST i GET tabulka beze změny proti v69 (v70 nepřidává akci ani GET parametr registru)',
     hash('sha256', (string)json_encode($post)) === V70C_POST_POLICY_SHA && hash('sha256', (string)json_encode($get)) === V70C_GET_POLICY_SHA);

@@ -77,11 +77,21 @@ function teacher58_modules(): array
             'css' => ['assets/lesson-print-v73.css'], 'js' => ['assets/lesson-v73.js'],
             'render' => static function (array $m, string $c): void { lp73_render_substitution($m); },
         ],
+        // v79 · Příprava hodiny: stepper Třída → Plán → Materiály → Tisk/Projektor (jen čtení; ?class=, ?lesson=, ?krok= jako u Tisku/Projektoru).
+        // POST prefix sp79_ = koncepty krokových postupů všech toků v79 (sp79_next / sp79_back / sp79_reset: jen relace, žádný zápis do úložiště;
+        // exact politiky v teacher_scope_v59.php, oprávnění view + oprávnění toku v handleru). Poslední krok každého toku volá původní akci modulu.
+        'priprava79' => [
+            'label' => 'Příprava hodiny', 'hint' => 'Třída, plán, materiály, pak tisk nebo projektor', 'group' => 'podpora',
+            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['lesson_print_v73_views.php', 'materials_v74.php', 'materials_v74_views.php', 'stepper_v79.php', 'stepper_v79_views.php', 'priprava_v79.php']),
+            'css' => ['assets/cockpit-v71.css', 'assets/lesson-print-v73.css', 'assets/stepper-v79.css'], 'js' => ['assets/stepper-v79.js'],
+            'post' => ['sp79_' => 'sp79_teacher_handle_post'],
+            'render' => static function (array $m, string $c): void { pp79_render_tab($m, $c); },
+        ],
         // v73 · Reflexe hodiny: POST lr73_save (exact politika: třída povinná a v rozsahu, content.manage – asistent jen čte). GET jen ?class= a ?lesson=.
         'reflexe73' => [
             'label' => 'Reflexe hodiny', 'hint' => 'Jak hodina proběhla a co příště', 'group' => 'podpora',
-            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['lesson_reflect_v73.php', 'lesson_reflect_v73_views.php']),
-            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v73.css'],
+            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['lesson_reflect_v73.php', 'lesson_reflect_v73_views.php', 'stepper_v79.php', 'stepper_v79_views.php', 'lesson_reflect_v79.php']),   // v79: stepper
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v73.css', 'assets/stepper-v79.css'], 'js' => ['assets/stepper-v79.js'],
             'post' => ['lr73_' => 'lr73_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { lr73_render_tab($m, $csrf()); },
         ],
@@ -90,8 +100,8 @@ function teacher58_modules(): array
         'hromadne74' => [
             'label' => 'Hromadné schválení', 'hint' => 'Lekce a vazby na ŠVP po týdnech, třídách nebo za rok', 'group' => 'podpora',
             'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php',
-                'svp_v72.php', 'svp_v72_map.php', 'bulk_approval_v74.php', 'bulk_approval_v74_views.php'],
-            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v72.css', 'assets/cockpit-v74.css'],
+                'svp_v72.php', 'svp_v72_map.php', 'bulk_approval_v74.php', 'bulk_approval_v74_views.php', 'stepper_v79.php', 'stepper_v79_views.php', 'bulk_approval_v79.php'],   // v79: stepper
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v72.css', 'assets/cockpit-v74.css', 'assets/stepper-v79.css'], 'js' => ['assets/stepper-v79.js'],
             'post' => ['ba74_' => 'ba74_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { ba74_render_tab($m, $c, $csrf()); },
         ],
@@ -168,8 +178,8 @@ function teacher58_modules(): array
         'opakovani75' => [
             'label' => 'Opakování před písemkou', 'hint' => 'Balíček z chyb třídy, zveřejnění a tisk', 'group' => 'podpora',
             'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php',
-                'taskbank_v75_gen.php', 'taskbank_v75.php', 'review_v75.php', 'review_v75_teacher_views.php'],
-            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v75.css'],
+                'taskbank_v75_gen.php', 'taskbank_v75.php', 'review_v75.php', 'review_v75_teacher_views.php', 'stepper_v79.php', 'stepper_v79_views.php', 'review_v79.php'],   // v79: stepper
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v75.css', 'assets/stepper-v79.css'], 'js' => ['assets/stepper-v79.js'],
             'post' => ['op75_' => 'rv75_teacher_handle_post'],
             'get' => [
                 'tisk' => static function (array $m): void { rv75_print_page(); },
@@ -266,7 +276,7 @@ function teacher58_modules(): array
         ],
         'identita' => [
             'label' => 'Identita a nový rok', 'hint' => 'student_id, kolize jmen, plán přechodu roku (náhled)', 'group' => 'podpora',
-            'files' => ['identity_v58.php', 'identity_v58_rollover.php', 'identity_v58_views.php'], 'css' => ['assets/identity-v58.css'], 'admin' => true,
+            'files' => ['identity_v58.php', 'identity_v58_rollover.php', 'identity_v58_views.php', 'stepper_v79.php', 'stepper_v79_views.php', 'identity_v79.php'], 'css' => ['assets/identity-v58.css', 'assets/stepper-v79.css'], 'js' => ['assets/stepper-v79.js'], 'admin' => true,   // v79: stepper
             'post' => ['identity58_' => 'identity58_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { identity58_render_teacher_tab($csrf()); },
         ],
