@@ -206,6 +206,13 @@ function teacher58_modules(): array
             'files' => ['ops_v58.php', 'identity_v58.php', 'cockpit_v70.php', 'admin_overview_v70.php', 'admin_overview_v70_views.php'],
             'render' => static function (array $m, string $c): void { ad70_render_tab(); },
         ],
+        // v78 · Design systém: ukázka tokenů a komponent v78 (jen administrátor, jen čtení, fiktivní data, bez POST a bez GET parametru registru).
+        'design78' => [
+            'label' => 'Design systém', 'hint' => 'Tokeny, komponenty a kontrast (ukázka v78)', 'group' => 'podpora', 'admin' => true,
+            'files' => ['design_v78.php', 'design_v78_views.php'],
+            'css' => ['assets/tokens-v78.css', 'assets/components-v78.css', 'assets/design-v78.css'], 'js' => ['assets/components-v78.js'],
+            'render' => static function (array $m, string $c): void { ds78_render_tab($m, $c); },
+        ],
         'roboti' => [
             'label' => 'Robotí liga', 'hint' => 'Programovatelná aréna – zápasy robotů', 'group' => 'hry',
             'files' => ['robots_v58.php', 'robots_v58_views.php'],

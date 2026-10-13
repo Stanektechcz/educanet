@@ -1,0 +1,14 @@
+/* EDUCANET v78 · jen ukázková záložka design78 (vzorky tokenů a schémata). Barvy výhradně z tokenů v78. */
+.ds78.ds-demo { padding-bottom: var(--space-4); }
+.ds78 .ds-demo-head { margin-bottom: var(--space-5); }
+.ds78 .ds-demo-swatches { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); }
+.ds78 .ds-demo-swatch { display: flex; gap: var(--space-3); align-items: flex-start; font-size: var(--fs-sm); }
+.ds78 .ds-demo-swatch__chip { flex: none; width: 3rem; height: 3rem; border-radius: var(--radius); background: var(--sw); border: var(--border-width) solid var(--border); }
+.ds78 .ds-demo-type { margin: 0 0 var(--space-2); line-height: var(--lh-tight); }
+.ds78 .ds-demo-spaces { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); font-size: var(--fs-sm); }
+.ds78 .ds-demo-space { display: inline-block; height: var(--space-3); margin-right: var(--space-2); vertical-align: middle; background: var(--accent); border-radius: var(--radius-sm); }
+.ds78 .ds-demo-shape { display: inline-block; width: 2.5rem; height: 2.5rem; vertical-align: middle; background: var(--accent-soft); border: 2px solid var(--accent); }
+.ds78 .ds-demo-phone { max-width: 26rem; border: var(--border-width) solid var(--line); border-radius: var(--radius-lg); overflow: hidden; background: var(--bg); padding-top: var(--space-6); }
+.ds78 .ds-demo-layout { margin-top: var(--space-4); }
+.ds78 .ds-demo-layout > .ds-card { min-height: 5rem; color: var(--muted); }
+.ds78 .ds-demo-sticky { display: grid; gap: var(--space-4); min-height: 16rem; align-content: space-between; }

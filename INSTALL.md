@@ -724,3 +724,15 @@ Podrobnosti: `CHANGELOG_V77.md`, `BUILD_MANIFEST_V77.md`, návod pro učitele `d
 - **Změna limitů auditů:** viz `BUILD_MANIFEST_V77.md` (v42 kity, v68 snímek CSS žáka, v71 model, v72 schvalování, v72.1 AI prompty, v75 opakování, v76 obsah).
 - **Rollback vydání:** nasadit v76 (`a177828`) – vrátí i vyřazené kity; záznamy schválení L1–L4 starší verze ignoruje (lekce bez overlaye), relace s odznakem T-14 nic nerozbije.
 - **Kontrola po nasazení:** `php tools/v77_content_audit.php`, `php tools/v77_http_audit.php` → `*_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v78 · design systém: tokeny, komponenty, inventura CSS
+
+Podrobnosti: `CHANGELOG_V78.md`, `BUILD_MANIFEST_V78.md`, popis systému `docs/DESIGN_SYSTEM_V78.md`, inventura `docs/CSS_INVENTORY_V78.md`. Nové PHP rozšíření ani migraci nevyžaduje, úložiště beze změny.
+
+- **Nové soubory:** `assets/tokens-v78.css`, `assets/components-v78.css`, `assets/design-v78.css`, `assets/components-v78.js`, `design_v78.php`, `design_v78_views.php`. Existující stránky je nenačítají – vzhled cockpitu i žáka je beze změny.
+- **Nová záložka:** `teacher.php?tab=design78` (Správa › Design systém) – jen administrátor (učitel a asistent 403), jen čtení, fiktivní data. Žádná nová POST akce ani GET politika.
+- **Barvy školy:** tokeny vycházejí z identity `brno.educanet.cz` (upravené na WCAG AA); akcent se mění jen v `assets/tokens-v78.css`, po změně spusťte `php tools/v78_design_tokens_audit.php`.
+- **Inventura CSS:** `php tools/v78_css_inventory.php --out=docs/CSS_INVENTORY_V78.md` (jen čtení assets/, nic nemaže).
+- **Změna limitu auditu:** `tools/v61_followups_audit.php` nekontroluje proti bílé tmavé sady tokenů v78 (viz `BUILD_MANIFEST_V78.md`).
+- **Rollback vydání:** nasadit v77 (`ee3dd53`); nové soubory v78 nic jiného nenačítá, lze je ponechat nebo smazat.
+- **Kontrola po nasazení:** `php tools/v78_design_tokens_audit.php` → `V78_DESIGN_TOKENS_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.

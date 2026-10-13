@@ -209,7 +209,10 @@ $check('globální focus: !important a odsazení ≥ 2 px (viditelný i na barev
 $accents = [];
 foreach (glob($ROOT . '/assets/*.css') ?: [] as $cssFile) {
     if (str_contains(basename($cssFile), '-dark-')) continue;   // v68: tmavé vrstvy se posuzují proti tmavému pozadí (v68_theme_audit), ne proti bílé
-    if (preg_match_all('~--accent:\s*(#[0-9a-fA-F]{6})\b~', (string)file_get_contents($cssFile), $am)) foreach ($am[1] as $c) $accents[strtolower($c)] = true;
+    $cssSrc = (string)file_get_contents($cssFile);
+    // v78: tokens-v78.css nese i tmavé sady (:root[data-theme="dark"] .ds78 a @media prefers-color-scheme: dark) – posuzují se proti tmavému pozadí v tools/v78_design_tokens_audit.php (změna limitu auditu, BUILD_MANIFEST_V78.md)
+    if (basename($cssFile) === 'tokens-v78.css') $cssSrc = (string)preg_replace(['~:root\[data-theme="dark"\][^{]*\{[^}]*\}~', '~@media \(prefers-color-scheme: dark\)\s*\{[^{]*\{[^}]*\}\s*\}~'], '', $cssSrc);
+    if (preg_match_all('~--accent:\s*(#[0-9a-fA-F]{6})\b~', $cssSrc, $am)) foreach ($am[1] as $c) $accents[strtolower($c)] = true;
 }
 $low = [];
 foreach (array_keys($accents) as $c) if ((audit_contrast_ratio($c, '#ffffff') ?? 0) < 3.0) $low[] = $c;

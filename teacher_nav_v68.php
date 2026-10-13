@@ -21,7 +21,7 @@ const UI68_TEACHER_DARK_TABS = [
     'cesty', 'schvalovani', 'hromadne74', 'materialy74', 'urovne75', 'ulohy75', 'opakovani75', 'kompetence75', 'portfolia75', 'plan76', 'svp76', 'nastaveni_vyuky', 'curriculum', 'teach', 'session', 'calendar', 'authoring', 'editor', 'labdata',
     'hodnoceni66', 'kompetence', 'projekty65', 'grade', 'projekty', 'workspace', 'history',
     'arena', 'roboti', 'hry', 'ctf', 'incidenty', 'souboje', 'ekonomika', 'obchod',
-    'sprava_prehled', 'ucitele', 'identita', 'provoz', 'quality', 'ops_audit', 'team_admin', 'demo_accounts', 'overview', 'reports', 'ucet', 'sekce',
+    'sprava_prehled', 'design78', 'ucitele', 'identita', 'provoz', 'quality', 'ops_audit', 'team_admin', 'demo_accounts', 'overview', 'reports', 'ucet', 'sekce',
 ];
 
 /** @return array<string, array{label:string, hint:string}> pořadí = pořadí v menu */
@@ -99,6 +99,7 @@ function teacher68_tab_map(): array
         'ekonomika' => $t('hry', 'Ekonomika', 'Strop XP, žebříčky a retrospektivy', true, 'students.manage'),
         'obchod' => $t('hry', 'Obchod', 'Katalog obchodu bodů a nákupy'),
         'sprava_prehled' => $t('sprava', 'Přehled správy', 'Účty, role, provoz a doporučení', false, 'view', true),   // v70
+        'design78' => $t('sprava', 'Design systém', 'Tokeny, komponenty a kontrast (v78)', false, 'view', true),   // v78 (ukázka, jen admin)
         'ucitele' => $t('sprava', 'Učitelé', 'Účty, třídy a předměty', false, 'view', true),
         'identita' => $t('sprava', 'Identita a nový rok', 'Stabilní identita žáků a přechod roku', false, 'view', true),
         'provoz' => $t('sprava', 'Provoz', 'Zdraví úložiště a zálohy', false, 'view', true),

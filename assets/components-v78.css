@@ -1,0 +1,207 @@
+/* EDUCANET v78 · design systém – komponenty. Jen tokeny z assets/tokens-v78.css (žádné pevné barvy; px jen u tenkých čar a breakpointů).
+   Mobile-first. Media dotazy jen pro rozvržení stránky, karty a tabulky přes @container. Interaktivní prvky ≥ var(--target-min) (44 px).
+   Třídy .ds-* fungují uvnitř .ds78 (tam jsou tokeny). Ukázka: teacher.php?tab=design78 (jen administrátor). */
+
+/* ---------- základ ---------- */
+.ds78 { font-family: var(--font-sans); font-size: var(--fs-base); line-height: var(--lh); color: var(--text); background: var(--bg); overflow-wrap: anywhere; }
+.ds78 *, .ds78 *::before, .ds78 *::after { box-sizing: border-box; }
+.ds78 h1, .ds78 h2, .ds78 h3, .ds78 h4 { color: var(--text); line-height: var(--lh-tight); margin: 0 0 var(--space-3); }
+.ds78 h1 { font-size: var(--fs-2xl); }
+.ds78 h2 { font-size: var(--fs-xl); }
+.ds78 h3 { font-size: var(--fs-lg); }
+.ds78 p { margin: 0 0 var(--space-3); max-width: var(--measure); }
+.ds78 a { color: var(--accent); text-underline-offset: .2em; }
+.ds78 a:hover { color: var(--accent-hover); }
+.ds78 code, .ds78 kbd { font-family: var(--font-mono); font-size: var(--fs-sm); background: var(--surface-2); border-radius: var(--radius-sm); padding: 0 var(--space-1); }
+.ds78 :focus-visible { outline: var(--focus-width) solid var(--focus); outline-offset: 2px; }
+/* most ke starším vrstvám (jen uvnitř .ds78; vyřadit ve fázi F): ui-v51 nastavuje pole a fokus s !important přes --u-* */
+.ds78 { --u-text: var(--text); --u-surface: var(--surface); --u-accent: var(--accent); --u-faint: var(--muted); }
+:root .ds78 :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: var(--focus-width) solid var(--focus) !important; outline-offset: 2px !important; }
+.ds78 .ds-sr { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.ds78 .ds-muted { color: var(--muted); }
+.ds78 .ds-small { font-size: var(--fs-sm); }
+.ds78 .ds-eyebrow { margin: 0 0 var(--space-1); color: var(--muted); font-size: var(--fs-sm); font-weight: var(--fw-bold); letter-spacing: .04em; text-transform: uppercase; }
+
+/* ---------- rozvržení ---------- */
+.ds78 .ds-container { width: 100%; max-width: var(--content-max); margin-inline: auto; padding-inline: var(--space-4); }
+.ds78 .ds-stack { display: flex; flex-direction: column; gap: var(--space-4); }
+.ds78 .ds-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
+.ds78 .ds-grid { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); }
+.ds78 .ds-section { margin-block: var(--space-6); }
+.ds78 .ds-section > h2 { padding-bottom: var(--space-2); border-bottom: var(--border-width) solid var(--line); }
+/* stránka: xs/sm 1 sloupec · md 2 sloupce (navigace v draweru) · lg boční navigace + obsah · xl + kontextový panel */
+.ds78 .ds-layout { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); grid-template-areas: "main" "aside"; }
+.ds78 .ds-layout__nav { grid-area: nav; display: none; }
+.ds78 .ds-layout__main { grid-area: main; min-width: 0; }
+.ds78 .ds-layout__aside { grid-area: aside; min-width: 0; }
+@media (min-width: 768px) { .ds-layout { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); grid-template-areas: "main aside"; } }
+@media (min-width: 1024px) { .ds-layout { grid-template-columns: var(--sidebar-w) minmax(0, 1fr); grid-template-areas: "nav main" "nav aside"; } .ds-layout__nav { display: block; } }
+@media (min-width: 1366px) { .ds-layout { grid-template-columns: var(--sidebar-w) minmax(0, 1fr) var(--aside-w); grid-template-areas: "nav main aside"; } }
+
+/* ---------- karta a stavová karta (container query) ---------- */
+.ds78 .ds-card { container-type: inline-size; background: var(--surface); color: var(--text); border: var(--border-width) solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-1); padding: var(--space-4); min-width: 0; }
+.ds78 .ds-card > :last-child { margin-bottom: 0; }
+.ds78 .ds-card__title { font-size: var(--fs-lg); margin: 0 0 var(--space-2); }
+.ds78 .ds-card__meta { color: var(--muted); font-size: var(--fs-sm); margin: 0 0 var(--space-3); }
+.ds78 .ds-card__body { display: grid; gap: var(--space-3); }
+.ds78 .ds-card__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-4); }
+.ds78 .ds-card__actions > .ds-btn { flex: 1 1 100%; }
+@container (min-width: 480px) {
+  .ds78 .ds-card__body--split { grid-template-columns: minmax(0, 1fr) auto; align-items: start; }
+  .ds78 .ds-card__actions > .ds-btn { flex: 0 1 auto; }
+}
+.ds78 .ds-status { --tone: var(--info); --tone-soft: var(--info-soft); border-left: 6px solid var(--tone); }
+.ds78 .ds-status.is-ok { --tone: var(--ok); --tone-soft: var(--ok-soft); }
+.ds78 .ds-status.is-warn { --tone: var(--warn); --tone-soft: var(--warn-soft); }
+.ds78 .ds-status.is-danger { --tone: var(--danger); --tone-soft: var(--danger-soft); }
+.ds78 .ds-status__label { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--tone); font-weight: var(--fw-bold); font-size: var(--fs-sm); margin: 0 0 var(--space-2); }
+.ds78 .ds-status__label svg { width: 1.25em; height: 1.25em; flex: none; }
+
+/* ---------- tlačítka ---------- */
+.ds78 .ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: var(--target-min); min-width: var(--target-min); padding: var(--space-2) var(--space-4); border: var(--border-width) solid transparent; border-radius: var(--radius); font: inherit; font-weight: var(--fw-medium); line-height: var(--lh-tight); text-align: center; text-decoration: none; cursor: pointer; transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease); }
+.ds78 .ds-btn svg { width: 1.25em; height: 1.25em; flex: none; }
+.ds78 .ds-btn--primary { background: var(--accent); color: var(--on-accent); }
+.ds78 .ds-btn--primary:hover { background: var(--accent-hover); color: var(--on-accent); }
+.ds78 .ds-btn--secondary { background: var(--surface); color: var(--text); border-color: var(--border); }
+.ds78 .ds-btn--secondary:hover { background: var(--surface-2); color: var(--text); }
+.ds78 .ds-btn--danger { background: var(--danger); color: var(--on-danger); }
+.ds78 .ds-btn--danger:hover { background: var(--danger-hover); color: var(--on-danger); }
+.ds78 .ds-btn--ghost { background: transparent; color: var(--accent); }
+.ds78 .ds-btn--ghost:hover { background: var(--accent-soft); color: var(--accent); }
+.ds78 .ds-btn--icon { padding: 0; width: var(--target-min); }
+.ds78 .ds-btn--block { width: 100%; }
+.ds78 .ds-btn:disabled, .ds78 .ds-btn[aria-disabled="true"] { opacity: .6; cursor: not-allowed; }
+
+/* ---------- odznak ---------- */
+.ds78 .ds-badge { display: inline-flex; align-items: center; justify-self: start; gap: var(--space-1); padding: 0 var(--space-2); border-radius: var(--radius-pill); background: var(--surface-2); color: var(--text); font-size: var(--fs-sm); font-weight: var(--fw-medium); line-height: 1.6; white-space: nowrap; }
+.ds78 .ds-badge.is-ok { background: var(--ok-soft); color: var(--ok); }
+.ds78 .ds-badge.is-warn { background: var(--warn-soft); color: var(--warn); }
+.ds78 .ds-badge.is-danger { background: var(--danger-soft); color: var(--danger); }
+.ds78 .ds-badge.is-info { background: var(--info-soft); color: var(--info); }
+.ds78 .ds-badge.is-accent { background: var(--accent-soft); color: var(--accent); }
+.ds78 .ds-badge--count { min-width: 1.75em; justify-content: center; background: var(--highlight); color: var(--on-highlight); }
+
+/* ---------- stepper (kompaktní při úzkém kontejneru) ---------- */
+.ds78 .ds-stepper-wrap { container-type: inline-size; }
+.ds78 .ds-stepper__count { margin: 0 0 var(--space-2); color: var(--muted); font-size: var(--fs-sm); font-weight: var(--fw-medium); }
+.ds78 .ds-stepper { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--space-2); counter-reset: ds-step; }
+.ds78 .ds-step { counter-increment: ds-step; flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: var(--space-2); padding-top: var(--space-2); border-top: 4px solid var(--line); color: var(--muted); font-size: var(--fs-sm); }
+.ds78 .ds-step::before { content: counter(ds-step); flex: none; display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: var(--radius-pill); border: 2px solid var(--border); background: var(--surface); color: var(--text); font-weight: var(--fw-bold); }
+.ds78 .ds-step.is-done { border-top-color: var(--ok); color: var(--text); }
+.ds78 .ds-step.is-done::before { content: "✓"; background: var(--ok); border-color: var(--ok); color: var(--surface); }
+.ds78 .ds-step.is-current { border-top-color: var(--accent); color: var(--text); font-weight: var(--fw-bold); }
+.ds78 .ds-step.is-current::before { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.ds78 .ds-step__state { display: block; font-weight: var(--fw-normal); color: var(--muted); }
+@container (width < 480px) {
+  .ds78 .ds-step:not(.is-current) { flex: 0 0 auto; }
+  .ds78 .ds-step:not(.is-current) .ds-step__text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+
+/* ---------- záložky ---------- */
+.ds78 .ds-tabs__list { display: flex; gap: var(--space-1); overflow-x: auto; border-bottom: var(--border-width) solid var(--line); scrollbar-width: thin; }
+.ds78 .ds-tab { flex: none; min-height: var(--target-min); padding: var(--space-2) var(--space-4); border: 0; border-bottom: 3px solid transparent; background: transparent; color: var(--muted); font: inherit; font-weight: var(--fw-medium); cursor: pointer; }
+.ds78 .ds-tab:hover { color: var(--text); background: var(--surface-2); }
+.ds78 .ds-tab[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
+.ds78 .ds-tabs__panel { padding: var(--space-4) 0; }
+
+/* ---------- akordeon ---------- */
+.ds78 .ds-acc { border: var(--border-width) solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.ds78 .ds-acc + .ds-acc { margin-top: var(--space-2); }
+.ds78 .ds-acc > summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: var(--target-min); padding: var(--space-2) var(--space-4); cursor: pointer; font-weight: var(--fw-medium); list-style: none; }
+.ds78 .ds-acc > summary::-webkit-details-marker { display: none; }
+.ds78 .ds-acc > summary::after { content: ""; flex: none; width: .6em; height: .6em; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); transition: transform var(--dur) var(--ease); }
+.ds78 .ds-acc[open] > summary::after { transform: rotate(-135deg); }
+.ds78 .ds-acc__body { padding: 0 var(--space-4) var(--space-4); }
+
+/* ---------- tabulka → karty (container query) ---------- */
+.ds78 .ds-table-wrap { container-type: inline-size; max-width: 100%; }
+.ds78 .ds-table { width: 100%; border-collapse: collapse; background: var(--surface); color: var(--text); font-size: var(--fs-sm); }
+.ds78 .ds-table caption { text-align: left; font-weight: var(--fw-bold); padding: 0 0 var(--space-2); }
+.ds78 .ds-table th, .ds78 .ds-table td { padding: var(--space-3); text-align: left; vertical-align: top; border-bottom: var(--border-width) solid var(--line); }
+.ds78 .ds-table thead th { background: var(--surface-2); color: var(--text); font-weight: var(--fw-bold); position: sticky; top: 0; z-index: 1; }
+.ds78 .ds-table tbody tr:hover { background: var(--surface-2); }
+@container (width < 768px) {
+  .ds78 .ds-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .ds78 .ds-table, .ds78 .ds-table tbody, .ds78 .ds-table tr, .ds78 .ds-table td, .ds78 .ds-table tbody th { display: block; width: 100%; }
+  .ds78 .ds-table { background: transparent; }
+  .ds78 .ds-table caption { display: block; }
+  .ds78 .ds-table td > *, .ds78 .ds-table tbody th > * { justify-self: start; }
+  .ds78 .ds-table tr { background: var(--surface); border: var(--border-width) solid var(--line); border-radius: var(--radius); padding: var(--space-2) var(--space-3); margin-bottom: var(--space-3); }
+  .ds78 .ds-table td, .ds78 .ds-table tbody th { display: grid; grid-template-columns: minmax(6rem, 40%) minmax(0, 1fr); gap: var(--space-3); padding: var(--space-2) 0; }
+  .ds78 .ds-table tr > :last-child { border-bottom: 0; }
+  .ds78 .ds-table td::before, .ds78 .ds-table tbody th::before { content: attr(data-label); color: var(--muted); font-weight: var(--fw-medium); }
+}
+
+/* ---------- pole formuláře ---------- */
+.ds78 .ds-field { display: grid; gap: var(--space-1); margin-bottom: var(--space-4); }
+.ds78 .ds-label { font-weight: var(--fw-medium); }
+.ds78 .ds-req { color: var(--danger); }
+.ds78 .ds-input { width: 100%; min-height: var(--target-min); padding: var(--space-2) var(--space-3); border: var(--border-width) solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font: inherit; }
+.ds78 textarea.ds-input { min-height: 6rem; resize: vertical; }
+.ds78 .ds-input:hover { border-color: var(--text); }
+.ds78 .ds-input[aria-invalid="true"] { border: 2px solid var(--danger); }
+.ds78 .ds-help { color: var(--muted); font-size: var(--fs-sm); margin: 0; }
+.ds78 .ds-error { display: flex; gap: var(--space-1); color: var(--danger); font-size: var(--fs-sm); font-weight: var(--fw-medium); margin: 0; }
+.ds78 .ds-error::before { content: "!"; flex: none; display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; border-radius: var(--radius-pill); background: var(--danger); color: var(--on-danger); font-weight: var(--fw-bold); }
+.ds78 .ds-check { display: flex; align-items: center; gap: var(--space-3); min-height: var(--target-min); cursor: pointer; }
+.ds78 .ds-check input { width: 1.25rem; height: 1.25rem; margin: 0; accent-color: var(--accent); }
+.ds78 .ds-errors { border: 2px solid var(--danger); background: var(--danger-soft); color: var(--text); border-radius: var(--radius); padding: var(--space-3) var(--space-4); margin-bottom: var(--space-4); }
+
+/* ---------- prázdný stav ---------- */
+.ds78 .ds-empty { display: grid; justify-items: center; gap: var(--space-2); text-align: center; padding: var(--space-6) var(--space-4); border: 2px dashed var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.ds78 .ds-empty__icon { width: 3rem; height: 3rem; color: var(--muted); }
+.ds78 .ds-empty p { margin-inline: auto; color: var(--muted); }
+
+/* ---------- toast ---------- */
+.ds78 .ds-toasts { position: fixed; z-index: var(--z-toast); inset-inline: var(--space-4); bottom: calc(var(--bottomnav-h) + var(--space-4)); display: grid; gap: var(--space-2); justify-items: end; pointer-events: none; }
+.ds78 .ds-toast { pointer-events: auto; display: flex; align-items: center; gap: var(--space-3); max-width: min(28rem, 100%); padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4); border-radius: var(--radius); background: var(--brand); color: var(--on-brand); box-shadow: var(--shadow-2); animation: ds-in var(--dur) var(--ease); }
+.ds78 .ds-toast .ds-btn, .ds78 .ds-toast .ds-btn:hover { color: var(--on-brand); background: transparent; }
+.ds78 .ds-toast .ds-btn:hover { outline: 2px solid currentColor; outline-offset: -4px; }
+@media (min-width: 768px) { .ds-toasts { bottom: var(--space-5); inset-inline: auto var(--space-5); } }
+@keyframes ds-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ---------- dialog a drawer (<dialog>) ---------- */
+.ds78 .ds-dialog { width: min(32rem, 100% - 2 * var(--space-4)); max-height: calc(100% - 2 * var(--space-4)); padding: 0; border: var(--border-width) solid var(--line); border-radius: var(--radius-lg); background: var(--surface); color: var(--text); box-shadow: var(--shadow-2); }
+.ds78 .ds-dialog::backdrop, .ds78 .ds-drawer::backdrop { background: var(--backdrop); }
+.ds78 .ds-dialog__head, .ds78 .ds-drawer__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) var(--space-3) var(--space-3) var(--space-5); border-bottom: var(--border-width) solid var(--line); }
+.ds78 .ds-dialog__head h2, .ds78 .ds-drawer__head h2 { margin: 0; font-size: var(--fs-lg); }
+.ds78 .ds-dialog__body { padding: var(--space-4) var(--space-5); }
+.ds78 .ds-dialog__foot { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2); padding: var(--space-3) var(--space-5) var(--space-4); }
+.ds78 .ds-drawer { position: fixed; inset: 0 auto 0 0; width: var(--drawer-w); max-width: 100%; height: 100%; max-height: none; margin: 0; padding: 0; border: 0; border-right: var(--border-width) solid var(--line); background: var(--surface); color: var(--text); box-shadow: var(--shadow-2); }
+.ds78 .ds-drawer[open] { animation: ds-slide var(--dur) var(--ease); }
+.ds78 .ds-drawer__nav { list-style: none; margin: 0; padding: var(--space-2); display: grid; gap: var(--space-1); }
+@keyframes ds-slide { from { transform: translateX(-100%); } to { transform: none; } }
+
+/* ---------- skeleton ---------- */
+.ds78 .ds-skeleton { display: block; height: 1rem; border-radius: var(--radius-sm); background: linear-gradient(90deg, var(--surface-2) 25%, var(--line) 50%, var(--surface-2) 75%); background-size: 200% 100%; animation: ds-shimmer 1.4s linear infinite; }
+.ds78 .ds-skeleton--title { height: 1.5rem; width: 60%; }
+.ds78 .ds-skeleton--short { width: 40%; }
+@keyframes ds-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .ds-skeleton, .ds-toast, .ds-drawer[open] { animation: none; } }
+
+/* ---------- drobečky ---------- */
+.ds78 .ds-breadcrumb ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; font-size: var(--fs-sm); }
+.ds78 .ds-breadcrumb li { display: inline-flex; align-items: center; }
+.ds78 .ds-breadcrumb li + li::before { content: "/" / ""; color: var(--muted); padding-inline: var(--space-1); }
+.ds78 .ds-breadcrumb a { display: inline-flex; align-items: center; min-height: var(--target-min); padding-inline: var(--space-1); }
+.ds78 .ds-breadcrumb [aria-current="page"] { color: var(--text); font-weight: var(--fw-medium); padding-inline: var(--space-1); }
+
+/* ---------- navigace: spodní lišta (xs/sm) a položky menu ---------- */
+.ds78 .ds-navlink { display: flex; align-items: center; gap: var(--space-3); min-height: var(--target-min); padding: var(--space-2) var(--space-3); border-radius: var(--radius); color: var(--text); text-decoration: none; border-left: 4px solid transparent; }
+.ds78 .ds-navlink:hover { background: var(--surface-2); color: var(--text); }
+.ds78 .ds-navlink[aria-current="page"] { background: var(--accent-soft); color: var(--text); border-left-color: var(--accent); font-weight: var(--fw-bold); }
+.ds78 .ds-bottomnav { background: var(--surface); border-top: var(--border-width) solid var(--line); box-shadow: var(--shadow-up); padding-bottom: env(safe-area-inset-bottom, 0); }
+.ds78 .ds-bottomnav ul { list-style: none; margin: 0; padding: 0; display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; }
+.ds78 .ds-bottomnav a { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: var(--bottomnav-h); padding: var(--space-1); color: var(--muted); font-size: var(--fs-sm); text-decoration: none; text-align: center; line-height: var(--lh-tight); }
+.ds78 .ds-bottomnav a svg { width: 1.5rem; height: 1.5rem; }
+.ds78 .ds-bottomnav a:hover { color: var(--text); background: var(--surface-2); }
+.ds78 .ds-bottomnav a[aria-current="page"] { color: var(--accent); font-weight: var(--fw-bold); }
+.ds78 .ds-bottomnav a[aria-current="page"]::before { content: ""; position: absolute; top: 0; inset-inline: 25%; height: 4px; border-radius: 0 0 var(--radius-sm) var(--radius-sm); background: var(--accent); }
+.ds78 .ds-bottomnav .ds-badge--count { position: absolute; top: var(--space-1); left: 55%; }
+.ds78 .ds-bottomnav--fixed { position: fixed; z-index: var(--z-nav); inset: auto 0 0 0; }
+@media (min-width: 768px) { .ds-bottomnav--fixed { display: none; } }
+
+/* ---------- lepicí akční lišta ---------- */
+.ds78 .ds-actionbar { position: sticky; bottom: 0; z-index: var(--z-sticky); display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--space-2); padding: var(--space-3) var(--space-4); background: var(--surface); border-top: var(--border-width) solid var(--line); box-shadow: var(--shadow-up); }
+.ds78 .ds-actionbar__info { margin-right: auto; color: var(--muted); font-size: var(--fs-sm); }
+@media (forced-colors: active) { .ds-btn, .ds-tab, .ds-badge, .ds-step::before { border: var(--border-width) solid; } }

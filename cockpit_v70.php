@@ -106,6 +106,7 @@ function c70_related_rules(): array
         'ctf' => [['labdata', 'Analytika Labu']], 'incidenty' => [['labdata', 'Analytika Labu']], 'souboje' => [['arena', 'Aréna']],
         'ekonomika' => [['obchod', 'Obchod bodů']], 'obchod' => [['ekonomika', 'Ekonomika her']],
         'sprava_prehled' => [['ucitele', 'Učitelské účty'], ['provoz', 'Provoz a zálohy'], ['quality', 'Kvalita dat']],
+        'design78' => [['sprava_prehled', 'Přehled správy']],   // v78
         'ucitele' => [['sprava_prehled', 'Přehled správy'], ['team_admin', 'Tým a role']],
         'identita' => [['sprava_prehled', 'Přehled správy'], ['pristupy', 'Přístupy žáků']],
         'provoz' => [['sprava_prehled', 'Přehled správy'], ['quality', 'Kvalita dat']],

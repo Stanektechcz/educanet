@@ -1,0 +1,195 @@
+/* EDUCANET v78 · design systém – tokeny (jediný soubor s barvami, rozměry a breakpointy).
+   Rozsah: tokeny platí uvnitř prvku s třídou .ds78 (starší vrstvy mají vlastní --bg/--text/--accent s jinými hodnotami,
+   proto nejsou na :root). Fáze B přidá .ds78 na <body> stránek převedených na v78.
+   Motiv řídí <html data-theme="light|dark|system"> stejně jako v67/v68: „dark“ = vždy tmavý, „system“ (a chybějící atribut)
+   = podle prefers-color-scheme, „light“ = vždy světlý. Obě tmavé sady níže musí být shodné (hlídá tools/v78_design_tokens_audit.php).
+   Barvy: identita školy (brno.educanet.cz – tmavě modrá #0c113f, tyrkysová #00a8b9, žlutá #fbb900, oranžová #ec6b10),
+   odstíny upravené na WCAG 2.2 AA (text ≥ 4,5 : 1, prvky UI ≥ 3 : 1). Akcent se mění jen tady (--accent*).
+   Breakpointy (CSS proměnné nejdou použít v @media/@container – hodnoty níže jsou jediné povolené v souborech v78):
+   xs 320 · sm 480 · md 768 · lg 1024 · xl 1366 · xxl 1920. */
+.ds78 {
+  color-scheme: light;
+  /* barvy – světlý režim */
+  --bg: #f5f6fa;
+  --surface: #ffffff;
+  --surface-2: #eceef4;
+  --text: #0c113f;
+  --muted: #4b5070;
+  --line: #d3d6e0;
+  --border: #737896;
+  --accent: #00707d;
+  --accent-hover: #005a65;
+  --on-accent: #ffffff;
+  --accent-soft: #e1f3f5;
+  --brand: #0c113f;
+  --brand-2: #3d3c66;
+  --on-brand: #ffffff;
+  --highlight: #fbb900;
+  --on-highlight: #0c113f;
+  --ok: #1d6b3a;
+  --ok-soft: #e3f3e8;
+  --warn: #8f4500;
+  --warn-soft: #fdf0e1;
+  --danger: #b02a1e;
+  --danger-hover: #8e2018;
+  --on-danger: #ffffff;
+  --danger-soft: #fbe7e5;
+  --info: #2a4f9c;
+  --info-soft: #e6edf9;
+  --focus: #00707d;
+  --backdrop: rgba(12, 17, 63, .55);
+  --shadow-1: 0 1px 2px rgba(12, 17, 63, .08), 0 1px 3px rgba(12, 17, 63, .06);
+  --shadow-2: 0 8px 24px rgba(12, 17, 63, .14);
+  --shadow-up: 0 -4px 16px rgba(12, 17, 63, .10);
+  /* mezery po 4 px */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  /* tvar */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+  --border-width: 1px;
+  --focus-width: 3px;
+  /* typografie: text 16–18 px, nikdy pod 14 px; systémová písma (žádný cizí webfont) */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+  --fs-sm: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
+  --fs-base: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --fs-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+  --fs-xl: clamp(1.375rem, 1.2rem + 0.75vw, 1.75rem);
+  --fs-2xl: clamp(1.75rem, 1.45rem + 1.3vw, 2.5rem);
+  --lh: 1.5;
+  --lh-tight: 1.25;
+  --fw-normal: 400;
+  --fw-medium: 600;
+  --fw-bold: 700;
+  /* rozvržení a breakpointy (informativní hodnoty pro JS a dokumentaci) */
+  --bp-xs: 320px;
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1366px;
+  --bp-xxl: 1920px;
+  --content-max: 1600px;
+  --measure: 70ch;
+  --sidebar-w: 16rem;
+  --aside-w: 20rem;
+  --drawer-w: min(20rem, 85vw);
+  --target-min: 44px;
+  --bottomnav-h: 64px;
+  /* pohyb (prefers-reduced-motion = 0) */
+  --dur-fast: 120ms;
+  --dur: 200ms;
+  --ease: cubic-bezier(.2, 0, 0, 1);
+  /* vrstvy */
+  --z-sticky: 10;
+  --z-nav: 20;
+  --z-toast: 50;
+}
+
+/* tmavý režim – volba „tmavý“ */
+:root[data-theme="dark"] .ds78 {
+  color-scheme: dark;
+  --bg: #0a0e2a;
+  --surface: #121838;
+  --surface-2: #1b2249;
+  --text: #eef0f8;
+  --muted: #b4b9d3;
+  --line: #2e3561;
+  --border: #8a90b8;
+  --accent: #3cc8d6;
+  --accent-hover: #6fd8e3;
+  --on-accent: #03262b;
+  --accent-soft: #0e3540;
+  --brand: #1b2249;
+  --brand-2: #b9b8e6;
+  --on-brand: #ffffff;
+  --highlight: #fbb900;
+  --on-highlight: #0c113f;
+  --ok: #6fd69a;
+  --ok-soft: #12331f;
+  --warn: #f6b45c;
+  --warn-soft: #3a2810;
+  --danger: #ff9a8f;
+  --danger-hover: #ffbab2;
+  --on-danger: #2a0605;
+  --danger-soft: #3d1717;
+  --info: #9dbcff;
+  --info-soft: #172a4d;
+  --focus: #3cc8d6;
+  --backdrop: rgba(0, 0, 0, .7);
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, .45);
+  --shadow-2: 0 12px 32px rgba(0, 0, 0, .55);
+  --shadow-up: 0 -4px 16px rgba(0, 0, 0, .5);
+}
+
+/* tmavý režim – volba „podle systému“ (i bez atributu data-theme) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .ds78 {
+    color-scheme: dark;
+    --bg: #0a0e2a;
+    --surface: #121838;
+    --surface-2: #1b2249;
+    --text: #eef0f8;
+    --muted: #b4b9d3;
+    --line: #2e3561;
+    --border: #8a90b8;
+    --accent: #3cc8d6;
+    --accent-hover: #6fd8e3;
+    --on-accent: #03262b;
+    --accent-soft: #0e3540;
+    --brand: #1b2249;
+    --brand-2: #b9b8e6;
+    --on-brand: #ffffff;
+    --highlight: #fbb900;
+    --on-highlight: #0c113f;
+    --ok: #6fd69a;
+    --ok-soft: #12331f;
+    --warn: #f6b45c;
+    --warn-soft: #3a2810;
+    --danger: #ff9a8f;
+    --danger-hover: #ffbab2;
+    --on-danger: #2a0605;
+    --danger-soft: #3d1717;
+    --info: #9dbcff;
+    --info-soft: #172a4d;
+    --focus: #3cc8d6;
+    --backdrop: rgba(0, 0, 0, .7);
+    --shadow-1: 0 1px 3px rgba(0, 0, 0, .45);
+    --shadow-2: 0 12px 32px rgba(0, 0, 0, .55);
+    --shadow-up: 0 -4px 16px rgba(0, 0, 0, .5);
+  }
+}
+
+/* xxl (≥ 1920 px): projektor a velký monitor – větší typografie */
+@media (min-width: 1920px) {
+  .ds78 {
+    --fs-sm: 1rem;
+    --fs-base: 1.25rem;
+    --fs-lg: 1.5rem;
+    --fs-xl: 2rem;
+    --fs-2xl: 2.75rem;
+  }
+}
+
+/* omezený pohyb */
+@media (prefers-reduced-motion: reduce) {
+  .ds78 {
+    --dur-fast: 0ms;
+    --dur: 0ms;
+  }
+}
+
+/* vysoký kontrast Windows: rámečky a fokus systémovými barvami */
+@media (forced-colors: active) {
+  .ds78 {
+    --focus: CanvasText;
+    --border: CanvasText;
+  }
+}
