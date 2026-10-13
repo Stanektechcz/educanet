@@ -32,7 +32,8 @@ const V68T_SIZES = ['teacher.css' => 29613, 'teacher-ops-v46.css' => 18875, 'tea
 const V68T_STUDENT_SHA = [
     'app.css' => '9a16b9b98494f2a343a7e363a6559bed551b43b41b2c981664d74460447f1bed', 'mastery.css' => '27355d611cef59fe7aa0da58ebdf876d940f8424ec166d3220a8cf38fe7a44a1',
     'student-ui-v50-7-7.css' => '71ade236237a47aac7a06a97f7654b75e644884bf0bc2412310ccef7286e0ba6', 'brand-v54.css' => '0b4348884a0c8b111933a546309500661afac0919ca5ff3ede80f1d4d16d5eea',
-    'login-v63.css' => 'f7c02db8a26c46afb2fc146a31bd60227e65bea0b8984261a85e967dc5061931', 'student-v55.css' => 'af6c6f2f69ca14f7690a4e4d1bd5a3e28f7c9025f907a00e6efd83845d6e8309',
+    'login-v63.css' => 'f7c02db8a26c46afb2fc146a31bd60227e65bea0b8984261a85e967dc5061931', 'student-v55.css' => '3663155bc3a77d1211a269606fbd390e61bb7b6f6b565a18f4c9ab8a93dacb9b',   // v77: kontrast LVL/XP přes tokeny (změna limitu, BUILD_MANIFEST_V77.md)
+   
     'ui-v51.css' => 'c33d507419aa3097e1573108ce0f1d3bd54856dc00c6090666d7b816afcf3fcf', 'session-v53.css' => 'f1f7b4ed2ab8fc8a21b54d6ea8c99af33537ddfc4c84d28f711cb5007793bc91',
     'learning-v56.css' => '8acf4703d512ce50c9d25badb92a2010c223185618bd20bc39382826d68497fd', 'profile-v60.css' => '2c80cbe4b0f6eaa83df6a32fbd33e0a50a241b79786324e9fff13cdb09832fec',
     'components-v61.css' => 'b760f9084777b6c04bba3aebdc30bf9bdc200ab5a03cbfafd210725febf1f237', 'nav-v61.css' => '8afd79e49431e65bdd518bfcf43a7dfb67282d868688186e67cd191f114eb0ff',

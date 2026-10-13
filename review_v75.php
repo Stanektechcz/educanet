@@ -22,6 +22,12 @@ const RV75_TASK_TOPICS = [
     'net_ports' => ['ports', 'service-matrix', 'binding', 'linux-firewall', 'reverse-proxy'], 'net_route' => ['routing', 'cidr', 'nat', 'vlan-basics', 'troubleshooting'],
     'lnx_path' => ['linux-filesystem', 'automation-shell'], 'lnx_chmod' => ['users-permissions', 'ssh-hardening'],
     'lnx_grep' => ['journal-logs', 'logs-monitoring', 'linux-file-troubleshooting', 'http-observability'],
+    // v77: grafické úlohy 1.A a 2.A (taskbank_v76_gen.php) → témata lekcí grafiky a webu (klíče témat z lm71_bundle)
+    'gfx_color' => ['contrast-color', 'color', 'color-harmony', 'accessibility-design', 'accessibility-audit-ii', 'design-tokens-ii', 'design-system-i', 'forms-a11y-i', 'interaction-accessibility'],
+    'web_units' => ['spacing', 'ui-spacing-system', 'layout-rhythm-i', 'web-layout-basics-i', 'responsive-layout-i', 'responsive-series', 'web-typography-i', 'responsive-type-ii',
+        'css-responsive-ii', 'auto-layout-ii', 'responsive-adaptation', 'content-first-layout'],
+    'css_spec' => ['components-i', 'design-system-i', 'component-consistency', 'html-css-handoff-ii', 'css-responsive-ii', 'design-qa-handoff-ii', 'design-handoff-qa', 'form-states-ii'],
+    'img_dpi' => ['image-crop', 'export', 'preflight', 'production-preflight-i', 'image-web-i', 'image-composition', 'photo-treatment', 'responsive-art-direction', 'portfolio-presentation'],
 ];
 
 function rv75_path(): string

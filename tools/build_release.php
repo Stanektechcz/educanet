@@ -72,6 +72,7 @@ const BUILD_EXCLUDE_DIRS = [
 const BUILD_EXCLUDE_TOOLS_SUBDIR = 'tools/legacy';
 const BUILD_EXCLUDE_FILES = [
     'private/educanet.secrets.php',
+    'cache/lesson_model/_overlay_files.json',   // v77: seznam overlaye pro tento kořen (md5 cesty) – na serveru vznikne sám
 ];
 const BUILD_EXCLUDE_GLOBS = [
     '*.lock', '*.bak', '*.tmp', '*.log',

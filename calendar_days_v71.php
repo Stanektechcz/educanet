@@ -11,6 +11,9 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Karta = zjednodušený model dne: cíl, průběh (90 min), co mají žáci mít, co učitel kontroluje, vazba na
  * `class_tail_focus` (téma závěru roku třídy) a na projekty v65. Ve v71 jde o základní karty; plný obsah přijde
  * s obsahovou stopou (vlna 2) jako overlay `days` v lesson_content_v7N_*.php.
+ * v77: plný obsah 11 dnů × 4 třídy v lesson_content_v77_days_<třída>.php – průběh s učitelem i žáky, úkoly s výstupem,
+ * diferenciace, poznámky pro učitele, zástup a bezpečnost. Den bez lekce vidí jen učitel (žák ho jako lekci nedostává),
+ * proto nepotřebuje schválení jako obsah lekce; stav overlaye je „navrh“ (připravený obsah pro učitele).
  */
 
 const CD71_DAY_KINDS = ['intro', 'project', 'mastery', 'assessment', 'reflection', 'portfolio', 'close'];
@@ -162,6 +165,7 @@ function cd71_day_card(string $classId, array $row, ?array $schoolYear = null): 
         'description' => trim((string)($row['description'] ?? '')), 'goal' => $tpl['goal'], 'flow' => $flow, 'bring' => $tpl['bring'], 'check' => $tpl['check'],
         'focus' => $focus, 'capstone' => trim((string)explode('·', $focus)[0]),
         'projects' => in_array($kind, ['project', 'assessment', 'portfolio'], true),
+        'tasks' => [], 'differentiation' => [], 'teacher_notes' => [], 'substitution' => [], 'safety' => [],   // v77: plný obsah z overlaye
         'meta' => ['source' => 'calendar_days_v71.php', 'status' => 'zakladni', 'overlay' => ''],
     ];
 }
@@ -178,10 +182,27 @@ function cd71_apply_overlay(array $card, array $ov): array
         $flow = [];
         foreach ($ov['timeline'] as $seg) {
             if (!is_array($seg) || !isset($seg['from'], $seg['to']) || (int)$seg['to'] <= (int)$seg['from']) continue;
-            $flow[] = ['from' => (int)$seg['from'], 'to' => (int)$seg['to'], 'minutes' => (int)$seg['to'] - (int)$seg['from'], 'phase' => (string)($seg['phase'] ?? ''), 'text' => (string)($seg['teacher'] ?? ($seg['text'] ?? ''))];
+            $flow[] = ['from' => (int)$seg['from'], 'to' => (int)$seg['to'], 'minutes' => (int)$seg['to'] - (int)$seg['from'], 'phase' => (string)($seg['phase'] ?? ''), 'text' => (string)($seg['teacher'] ?? ($seg['text'] ?? '')),
+                'student' => trim((string)($seg['student'] ?? '')), 'form' => trim((string)($seg['form'] ?? ''))];   // v77: i co dělají žáci a forma
         }
         if ($flow !== []) $card['flow'] = $flow;
     }
+    return cd77_apply_overlay_extra($card, $ov);
+}
+
+/** v77: úkoly s výstupem, diferenciace, poznámky, zástup a bezpečnost dne z overlaye (čistá funkce; neznámé tvary se zahodí). */
+function cd77_apply_overlay_extra(array $card, array $ov): array
+{
+    $texts = static fn($list): array => array_values(array_filter(array_map(static fn($v): string => trim(is_string($v) ? $v : ''), is_array($list) ? $list : []), static fn(string $v): bool => $v !== ''));
+    $tasks = [];
+    foreach ((array)($ov['tasks'] ?? []) as $t) {
+        if (!is_array($t) || trim((string)($t['text'] ?? '')) === '') continue;
+        $tasks[] = ['text' => trim((string)$t['text']), 'output' => trim((string)($t['output'] ?? '')), 'time' => trim((string)($t['time'] ?? ''))];
+    }
+    if ($tasks !== []) $card['tasks'] = $tasks;
+    $diff = array_filter(array_intersect_key((array)($ov['differentiation'] ?? []), array_flip(['support', 'standard', 'challenge'])), static fn($v): bool => is_string($v) && trim($v) !== '');
+    if ($diff !== []) $card['differentiation'] = array_map('trim', $diff);
+    foreach (['teacher_notes', 'substitution', 'safety'] as $key) if ($texts($ov[$key] ?? null) !== []) $card[$key] = $texts($ov[$key]);
     $card['meta']['status'] = in_array((string)($ov['status'] ?? ''), ['navrh', 'schvaleno'], true) ? (string)$ov['status'] : 'navrh';
     $card['meta']['overlay'] = (string)($ov['_file'] ?? '');
     return $card;

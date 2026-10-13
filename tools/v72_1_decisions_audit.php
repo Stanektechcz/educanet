@@ -11,7 +11,7 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  *   3) jména žáků: výchozí zobrazená, osobní volba učitele, „Žák N“,
  *   4) exit ticket: výchozí „jen zpětná vazba“, režim u každé odpovědi, do návrhu v66 (sumativní testy) jen odpovědi v režimu „podklad ke známce“,
  *      váhy 40/40/20 beze změny; žák vidí režim před odpovědí; domácí příprava „dobrovolné“,
- *   5) AI prompty: 112 kitů × 6 promptů, upozornění na soukromí, bez duplicit, překlepů „..“, URL a identity školy, generátor idempotentní,
+ *   5) AI prompty: 112 lekcí × 6 promptů (v77 za běhu, dřív lesson kity), upozornění na soukromí, bez duplicit, překlepů „..“, URL a identity školy,
  *      žákovský blok bez JS s tr() (en/uk), náhled pro učitele,
  *   6) HTTP: záložka Nastavení výuky, CSRF (419), vlastní volba jmen, režim exit ticketu; v režimu účtů cizí třída 403, asistent jen čte.
  *   php tools/v72_1_decisions_audit.php     Dočasné úložiště i cache modelu. Konec: V72_1_DECISIONS_AUDIT_OK checks=N failed=0.
@@ -39,7 +39,7 @@ $mods = teacher58_modules();
 foreach (array_unique(array_merge((array)$mods['hodina']['files'], (array)$mods['schvalovani']['files'], (array)$mods['nastaveni_vyuky']['files'])) as $f) require_once $ROOT . '/' . $f;
 require_once $ROOT . '/lesson_exit_v72_views.php';
 require_once $ROOT . '/grading_v66_views.php';
-require_once __DIR__ . '/lib/ai_prompts_v72_1_build.php';
+require_once $ROOT . '/ai_prompts_v77.php';   // v77: generátor promptů běží za běhu (lesson kity vyřazené – změna limitu auditu, BUILD_MANIFEST_V77.md)
 require_once __DIR__ . '/lib/v59_scope_fixtures.php';
 
 $state = audit_counter();
@@ -49,9 +49,9 @@ $throws = static function (callable $fn): bool { try { $fn(); return false; } ca
 $check('úložiště auditu i cache modelu jsou dočasné (ne ostrá storage/ ani cache/ projektu)', STORAGE_DIR === $tmp && str_contains($tmp, 'educanet-audit-') && !str_starts_with(lm71_cache_dir(), $ROOT));
 
 // ---------------------------------------------------------------- 1) soubory, registr, politiky
-$libs = ['svp_v72.php', 'svp_v72_map.php', 'svp_v72_views.php', 'teacher_prefs_v72_1.php', 'teacher_prefs_v72_1_views.php', 'ai_prompts_v72_1.php', 'tools/lib/ai_prompts_v72_1_build.php',
+$libs = ['svp_v72.php', 'svp_v72_map.php', 'svp_v72_views.php', 'teacher_prefs_v72_1.php', 'teacher_prefs_v72_1_views.php', 'ai_prompts_v72_1.php', 'ai_prompts_v77.php',
     'lang/en/ui/lesson_v72_1.php', 'lang/uk/ui/lesson_v72_1.php'];
-$cli = ['tools/v72_1_decisions_audit.php', 'tools/v72_1_ai_prompts_build.php'];
+$cli = ['tools/v72_1_decisions_audit.php'];
 $bad = [];
 foreach (array_merge($libs, $cli) as $f) {
     $s = $read($f);
@@ -158,20 +158,20 @@ $check('učitel: souhrn exit ticketu nese režim třídy; prefs soubor bez dat �
 $aipBad = [];
 $seen = [];
 foreach (LM71_CLASSES as $c) for ($n = 1; $n <= 28; $n++) {
-    $md = (string)file_get_contents(aip721_kit_path($c, $n));
-    $prompts = aip721_parse($md);
+    $prompts = aip77_original_prompts($c, $n);   // v77: původní lekce (bez schválení) – dřív sekce 6 lesson kitu
     $id = $c . ' L' . $n;
     if (count($prompts) !== 6) $aipBad[] = $id . ' počet';
-    if (!str_contains($md, 'Nevkládej osobní údaje') || !str_contains($md, 'přihlašovací údaje školy') || !str_contains($md, 'Výstup AI vždy ověř') || !str_contains($md, 'napiš to: jaký nástroj')) $aipBad[] = $id . ' upozornění';
-    if (aip721b_replace($md, aip721b_section($c, $n)) !== $md) $aipBad[] = $id . ' generátor';
+    if (aip721_prompts($c, $n) !== $prompts) $aipBad[] = $id . ' zdroj';
     foreach ($prompts as $p) {
         if (preg_match('/(?<!\.)\.\.(?!\.)|https?:|www\.|EDUCANET|chatgpt|<script/iu', $p['text'] . $p['title']) === 1) $aipBad[] = $id . ' text';
         if (isset($seen[sha1($p['text'])])) $aipBad[] = $id . ' duplicita';
         $seen[sha1($p['text'])] = true;
     }
 }
-$check('AI prompty: 112 kitů × 6 promptů s upozorněním na soukromí, bez duplicit, „..“, URL a identity školy; sekce = výstup generátoru' . ($aipBad ? ' [' . implode(', ', array_slice($aipBad, 0, 5)) . ']' : ''),
-    $aipBad === [] && count($seen) === 672 && LC72_LINK_AI_PROMPTS === true);
+$privacy = implode(' ', aip721_privacy_lines());
+$check('AI prompty: 112 lekcí × 6 promptů (v77 za běhu místo lesson kitů), upozornění na soukromí v bloku, bez duplicit, „..“, URL a identity školy' . ($aipBad ? ' [' . implode(', ', array_slice($aipBad, 0, 5)) . ']' : ''),
+    $aipBad === [] && count($seen) === 672 && LC72_LINK_AI_PROMPTS === true && str_contains($privacy, 'Nevkládej osobní údaje') && str_contains($privacy, 'přihlašovací údaje školy')
+    && str_contains($privacy, 'Výstup AI vždy ověř') && str_contains($privacy, 'napiš to: jaký nástroj'));
 $aiBlock = audit_capture(static fn() => aip721_render_student_block('class_4a', 9));
 $check('žák: blok „Procvič si s AI (dobrovolné)“ v <details>, 5 bodů upozornění (tr), 6 promptů česky, bez JS, odkazů a formulářů; v lekci se volá pod exit ticketem',
     str_contains($aiBlock, '<details class="lx72-card lx72-ai" id="ai-prompty">') && str_contains($aiBlock, 'Procvič si s AI (dobrovolné)') && substr_count($aiBlock, '<pre class="lx72-prompt"') === 6

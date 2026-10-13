@@ -20,6 +20,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 const LM71_LESSONS = 28;
 const LM71_CLASSES = ['class_1a', 'class_2a', 'class_3a', 'class_4a'];
 const LM71_OVERLAY_GLOB = 'lesson_content_v7[2-9]_*.php';
+const LM77_OVERLAY_LIST_SETTLE = 2;   // s – seznam overlaye z cache jen když se kořen projektu naposledy změnil dřív (v77, výkon)
 /** Verze tvaru cache a modelu – zvýšit při změně struktury (stará cache se tím zneplatní). */
 const LM71_MODEL_VERSION = 2;   // v72: overlay nese i `glossary` a `assessment.formative`
 
@@ -42,11 +43,28 @@ function lm71_sources(): array
     ];
 }
 
-/** Soubory overlaye obsahové stopy (relativní cesty, seřazené podle názvu). @return list<string> */
+/**
+ * Soubory overlaye obsahové stopy (relativní cesty, seřazené podle názvu). @return list<string>
+ * v77 (výkon): glob prochází celý kořen projektu (pracovní složka ~700 položek ≈ 1 ms, vydání ~400 ≈ 0,5 ms) při každém
+ * požadavku s modelem lekce. Seznam se proto pamatuje v cache modelu (JSON) spolu s časem změny kořenového adresáře –
+ * přidání, smazání i přejmenování souboru čas adresáře změní a seznam se sestaví znovu globem. Seznam se ukládá a používá jen
+ * tehdy, když je změna adresáře starší než LM77_OVERLAY_LIST_SETTLE s (filemtime má rozlišení 1 s). Bez zapisovatelné cache = glob.
+ */
 function lm71_overlay_files(): array
 {
-    static $memo = null;   // jednou za požadavek (glob prochází celý kořen projektu)
+    static $memo = null;   // jednou za požadavek
     if ($memo !== null) return $memo;
+    clearstatcache(true, __DIR__);
+    $dirMtime = @filemtime(__DIR__);
+    $settled = $dirMtime !== false && time() - $dirMtime >= LM77_OVERLAY_LIST_SETTLE;
+    $listFile = function_exists('lm71_cache_dir') ? lm71_cache_dir() . '/_overlay_files.json' : '';
+    if ($settled && $listFile !== '' && is_file($listFile)) {
+        $cached = json_decode((string)@file_get_contents($listFile), true);
+        if (is_array($cached) && ($cached['dir_mtime'] ?? null) === $dirMtime && ($cached['root'] ?? null) === md5(__DIR__) && is_array($cached['files'] ?? null)) {
+            $list = array_values(array_filter($cached['files'], static fn($b): bool => is_string($b) && preg_match('/^lesson_content_v7[2-9]_[a-z0-9_]{1,40}\.php$/D', $b) === 1));
+            if (count($list) === count($cached['files'])) return $memo = $list;
+        }
+    }
     $files = glob(__DIR__ . '/' . LM71_OVERLAY_GLOB) ?: [];
     $out = [];
     foreach ($files as $f) {
@@ -54,6 +72,10 @@ function lm71_overlay_files(): array
         if (preg_match('/^lesson_content_v7[2-9]_[a-z0-9_]{1,40}\.php$/D', $base) === 1) $out[] = $base;
     }
     sort($out, SORT_STRING);
+    if ($settled && $listFile !== '' && is_dir(dirname($listFile))) {
+        $tmp = $listFile . '.' . bin2hex(random_bytes(4)) . '.tmp';
+        if (@file_put_contents($tmp, (string)json_encode(['dir_mtime' => $dirMtime, 'root' => md5(__DIR__), 'files' => $out]), LOCK_EX) === false || !@rename($tmp, $listFile)) @unlink($tmp);
+    }
     return $memo = $out;
 }
 
@@ -84,12 +106,15 @@ function lm71_runtime_cache_files(): array
 /** Levný podpis souborů (velikost + čas změny) – rychlá cesta při čtení cache. */
 function lm71_files_signature(array $relFiles): string
 {
+    static $memo = [];   // v77: stejný seznam souborů pro všechny třídy – stat() jednou za požadavek, ne za každou třídu
+    $key = implode('|', $relFiles);
+    if (isset($memo[$key])) return $memo[$key];
     $parts = [];
     foreach ($relFiles as $rel) {
         $st = @stat(__DIR__ . '/' . $rel);   // jedno volání stat() na soubor (výkon: běží při každém zobrazení)
         $parts[] = $rel . '|' . (is_array($st) ? $st['size'] . '|' . $st['mtime'] : 'missing');
     }
-    return sha1(LM71_MODEL_VERSION . "\n" . implode("\n", $parts));
+    return $memo[$key] = sha1(LM71_MODEL_VERSION . "\n" . implode("\n", $parts));
 }
 
 /** Obsahový hash souborů (SHA-256 obsahu) – platí i po git checkoutu, kdy se změní časy souborů. */

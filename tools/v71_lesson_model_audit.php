@@ -132,12 +132,15 @@ $check('overlay: pozdější soubor vyhrává pole po poli, neznámé pole / ciz
     $ov['lessons']['class_3a'][5]['title'] === 'Nový titulek lekce' && $ov['lessons']['class_3a'][5]['safety'] === ['Jen simulátor.'] && !isset($ov['lessons']['class_3a'][5]['hack'])
     && !isset($ov['lessons']['class_3a'][40]) && !isset($ov['lessons']['bad id']) && $ov['days']['class_3a'][29]['goal'] === 'Cíl dne'
     && $full['title'] === 'Nový titulek lekce' && $full['meta']['status'] === 'navrh' && $full['steps'] === $l5['steps'] && $full['topics'] === $l5['topics']);
-$lBase = lm71_lesson('class_3a', 2);   // v72: L5–L16 mají overlay obsahové stopy (úplné) – výchozí stav ukazuje lekce bez overlaye (změna auditu, BUILD_MANIFEST_V72.md)
-$check('úplnost: plně vyplněný model = 12/12, lekce bez overlaye (L2) není úplná a uvádí, co chybí', $full['completeness']['complete'] && $full['completeness']['score'] === 12
-    && !$lBase['completeness']['complete'] && in_array('kritéria úspěchu (2–4)', $lBase['completeness']['missing'], true) && $lBase['completeness']['total'] === 12);
-$check('plán po minutách: souvislý 0–90 platí, mezera / dopočet z kroků / součet ≠ 90 neplatí; L1 je dopočtená z kroků',
+// v72: L5–L16 mají overlay; v77 mají overlay všechny lekce L1–L28 – „lekce bez overlaye“ je model bez kritérií a diferenciace
+// (změna limitu auditu, BUILD_MANIFEST_V77.md), stejná funkce úplnosti lm71_completeness.
+$lBase = lm71_completeness(array_replace($full, ['goal' => ['student' => (string)$full['goal']['student'], 'success_criteria' => []], 'differentiation' => []]));
+$check('úplnost: plně vyplněný model = 12/12, model bez kritérií a diferenciace (dřív L2 bez overlaye) není úplný a uvádí, co chybí', $full['completeness']['complete'] && $full['completeness']['score'] === 12
+    && !$lBase['complete'] && in_array('kritéria úspěchu (2–4)', $lBase['missing'], true) && $lBase['total'] === 12);
+$l1 = lm71_lesson('class_1a', 1);   // v77: L1 má overlay s plánem; dopočet z kroků zdroje se ověřuje na krocích L1 (změna limitu auditu, BUILD_MANIFEST_V77.md)
+$check('plán po minutách: souvislý 0–90 platí, mezera / dopočet z kroků / součet ≠ 90 neplatí; plán z kroků L1 je dopočtený (derived), overlay L1 (v77) platí',
     lm71_timeline_ok($full['timeline']) && !lm71_timeline_ok(lm71_timeline([], [], [['time' => '0–10'], ['time' => '20–50'], ['time' => '50–90']]))
-    && !lm71_timeline_ok(lm71_timeline([], [], [['time' => '0–10'], ['time' => '10–50'], ['time' => '50–80']])) && !empty(lm71_lesson('class_1a', 1)['timeline'][0]['derived']));
+    && !lm71_timeline_ok(lm71_timeline([], [], [['time' => '0–10'], ['time' => '10–50'], ['time' => '50–80']])) && !empty(lm71_timeline([], $l1['steps'])[0]['derived']) && !lm71_timeline_ok(lm71_timeline([], $l1['steps'])) && lm71_timeline_ok($l1['timeline']));
 $check('anglické titulky (heuristika reportu): „Filesystem incident“ ano, „Anatomie webu: hierarchie…“ a „SSH klíče“ ne',
     lm71_is_english_title('Lekce 19 · Filesystem incident') && !lm71_is_english_title('Anatomie webu: hierarchie od plakátu k obrazovce') && !lm71_is_english_title('SSH klíče') && !lm71_is_english_title('Mini vizuální identita'));
 $l19 = lm71_lesson('class_3a', 19);

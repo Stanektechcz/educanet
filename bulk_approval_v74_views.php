@@ -49,7 +49,7 @@ function ba74_render_tab(array $modules, string $classId, string $csrf): void
     }
     $pick = $scope === 'rok' ? ($class !== '' ? [$class] : $classes) : ($class !== '' ? [$class] : $classes);
     try {
-        $cand = ba74_candidates($pick, $scope === 'tyden' ? 'tyden' : 'vse', $week, $lessons, $svp, $today);
+        $cand = ba74_candidates($pick, in_array($scope, ['tyden', 't14'], true) ? $scope : 'vse', $week, $lessons, $svp, $today);   // v77: t14
     } catch (Throwable $e) {
         error_log('EDUCANET v74 hromadné schválení: ' . get_class($e));
         echo '<section class="c70-empty" role="status"><h2>Náhled se teď nepodařilo sestavit.</h2><p>Zkuste stránku obnovit.</p></section>';

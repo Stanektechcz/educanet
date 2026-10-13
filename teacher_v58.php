@@ -43,7 +43,7 @@ function teacher58_modules(): array
         'schvalovani' => [
             'label' => 'Schvalování lekcí', 'hint' => 'Návrhy obsahu lekcí: náhled, schválení a vrácení', 'group' => 'podpora',
             'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php',
-                'svp_v72.php', 'svp_v72_map.php', 'svp_v72_views.php', 'ai_prompts_v72_1.php', 'lesson_approval_v72_views.php', 'bulk_approval_v74.php', 'bulk_approval_v74_views.php'],   // v72.1: vazba na ŠVP + náhled AI promptů; v74: karta „Hromadné schválení“ (jen čtení)
+                'svp_v72.php', 'svp_v72_map.php', 'svp_v72_views.php', 'ai_prompts_v72_1.php', 'ai_prompts_v76.php', 'ai_prompts_v77.php', 'lesson_approval_v72_views.php', 'bulk_approval_v74.php', 'bulk_approval_v74_views.php'],   // v72.1: vazba na ŠVP + náhled AI promptů; v74: karta „Hromadné schválení“ (jen čtení)
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v72.css'],
             'post' => ['lc72_' => 'lc72_teacher_handle_post'],   // v72.1: lc72_svp_approve / lc72_svp_return předává handler do svp72_teacher_handle_post
             'render' => static function (array $m, string $c) use ($csrf): void { lc72_render_tab($m, $c, $csrf()); },
@@ -117,6 +117,14 @@ function teacher58_modules(): array
                 'paleta' => static function (array $m): void { pal74_json(); },
             ],
             'render' => static function (array $m, string $c): void { wk74_render_tab($m, $c); },
+        ],
+        // v77 · Středa: T-14 – co schválit do 14 dní po třídách (jen čtení, bez POST a bez GET parametru registru; jen ?class=). Odkaz do Hromadného
+        // schválení s rozsahem t14. Odznak „po termínu“ v menu: t1477_overdue_count() z teacher_shell_v68.php.
+        'streda77' => [
+            'label' => 'Středa: T-14', 'hint' => 'Co schválit do 14 dní a co je po termínu', 'group' => 'podpora',
+            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_approval_v72.php', 'svp_v72.php', 'svp_v72_map.php', 't14_v77.php', 't14_v77_views.php'],
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v77.css'],
+            'render' => static function (array $m, string $c): void { t1477_render_tab($m, $c); },
         ],
         // v75 · Kompetence a cesty 2.A a 4.A (fáze E): návrh katalogu, pokrytí témat, vazba na ŠVP, náhled cest; POST kp75_approve / kp75_return
         // (exact politiky v teacher_scope_v59.php: třída povinná a v rozsahu; oprávnění kp75_ = content.manage, asistent jen čte). GET jen ?class=.

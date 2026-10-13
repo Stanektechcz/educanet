@@ -80,12 +80,12 @@ $check('otisk obsahu: 16 hex, stabilní, nezávisí na stavu a souboru, změní 
 $lightSame = true;
 foreach (LM71_CLASSES as $c) foreach (range(1, LM71_LESSONS) as $n) $lightSame = $lightSame && lc72_overlay_light($c, $n) === lc72_overlay($c, $n);
 $check('rychlá cesta žáka: overlay jen ze souborů třídy je shodný s modelem lm71 u všech 4 × 28 lekcí (stejný otisk)', $lightSame);
-$check('výchozí stav: L5 3.A je návrh (žák nevidí, exit ticket nedostupný), L2 je původní obsah bez návrhu', lc72_status('class_3a', 5)['status'] === 'navrh' && lc72_student_overlay('class_3a', 5) === null
-    && lx72_ticket('class_3a', 5) === null && lc72_status('class_3a', 2)['status'] === 'puvodni' && lc72_overlay_lessons('class_3a') === range(5, 28));   // v76: vlna 2 (L17–L28) – změna limitu, viz BUILD_MANIFEST_V76.md
+$check('výchozí stav: L5 3.A je návrh (žák nevidí, exit ticket nedostupný), v77 i L2 je návrh (L1–L28 mají obsah), mimo rozsah = původní obsah', lc72_status('class_3a', 5)['status'] === 'navrh' && lc72_student_overlay('class_3a', 5) === null
+    && lx72_ticket('class_3a', 5) === null && lc72_status('class_3a', 2)['status'] === 'navrh' && lc72_status('class_3a', 29)['status'] === 'puvodni' && lc72_overlay_lessons('class_3a') === range(1, 28));   // v76: vlna 2, v77: L1–L4 – změna limitu, viz BUILD_MANIFEST_V76.md a V77.md
 $throws = static function (callable $fn): bool { try { $fn(); } catch (RuntimeException $e) { return true; } return false; };
 $check('validace: cizí otisk, vrácení bez důvodu, důvod > 300 znaků, lekce bez návrhu i neznámá akce se odmítnou a nic nezapíšou',
     $throws(static fn() => lc72_decide('lc72_approve', 'class_3a', 5, str_repeat('0', 16), '', 'Audit')) && $throws(static fn() => lc72_decide('lc72_return', 'class_3a', 5, $h5, '   ', 'Audit'))
-    && $throws(static fn() => lc72_decide('lc72_return', 'class_3a', 5, $h5, str_repeat('a', 301), 'Audit')) && $throws(static fn() => lc72_decide('lc72_approve', 'class_3a', 2, $h5, '', 'Audit'))
+    && $throws(static fn() => lc72_decide('lc72_return', 'class_3a', 5, $h5, str_repeat('a', 301), 'Audit')) && $throws(static fn() => lc72_decide('lc72_approve', 'class_3a', 29, $h5, '', 'Audit'))
     && $throws(static fn() => lc72_decide('lc72_delete', 'class_3a', 5, $h5, '', 'Audit')) && !is_file(lc72_path()));
 lc72_decide('lc72_approve', 'class_3a', 5, $h5, '', 'Audit Učitel');
 $st = lc72_status('class_3a', 5);
@@ -99,7 +99,7 @@ $log = (array)(storage_read(lc72_path())['log'] ?? []);
 $check('vrácení: stav „vráceno“ s důvodem (normalizované mezery), žák nevidí; log je append-only (2 záznamy, bez dat žáků)', lc72_status('class_3a', 6)['status'] === 'vraceno'
     && lc72_status('class_3a', 6)['note'] === 'Zkraťte úvod.' && lc72_student_overlay('class_3a', 6) === null && count($log) === 2 && array_keys($log[0]) === ['class', 'lesson', 'status', 'hash', 'at', 'by']);
 $ovw = lc72_overview('class_3a', '2026-10-08');
-$check('přehled třídy: 24 lekcí (v76: vlna 1 + vlna 2), datum výuky z kalendáře, T-14 jen u neschválených lekcí v příštích 14 dnech', count($ovw) === 24 && $ovw[0]['date'] !== ''
+$check('přehled třídy: 28 lekcí (v76: vlna 1 + vlna 2, v77: L1–L4 – změna limitu), datum výuky z kalendáře, T-14 jen u neschválených lekcí v příštích 14 dnech', count($ovw) === 28 && $ovw[0]['date'] !== ''
     && array_reduce($ovw, static fn(bool $ok, array $r): bool => $ok && ($r['t14'] === ($r['days'] !== null && $r['days'] >= 0 && $r['days'] <= LC72_T14_DAYS && $r['status']['status'] !== 'schvaleno')), true));
 
 // ---------------------------------------------------------------- 3) exit ticket

@@ -34,9 +34,9 @@ $hash20 = lc72_overlay_hash(lc72_overlay('class_3a', 20));
 $before = lc72_student_overlay('class_3a', 20) === null && lx72_ticket('class_3a', 20) === null && lc72_status('class_3a', 20)['status'] === 'navrh';
 lc72_decide('lc72_approve', 'class_3a', 20, $hash20, '', 'Audit Učitel');
 $ticket = lx72_ticket('class_3a', 20);
-$check('schvalování vlny 2: návrh L20 3.A žák nevidí (ani exit ticket); po lc72_approve vidí schválený obsah a exit ticket se 3 variantami; přehled třídy má 24 lekcí',
+$check('schvalování vlny 2: návrh L20 3.A žák nevidí (ani exit ticket); po lc72_approve vidí schválený obsah a exit ticket se 3 variantami; přehled třídy má 28 lekcí (v77: + L1–L4)',
     $before && lc72_status('class_3a', 20)['status'] === 'schvaleno' && is_array(lc72_student_overlay('class_3a', 20)) && is_array($ticket) && count((array)($ticket['variants'] ?? [])) === 3
-    && count(lc72_overview('class_3a', '2026-10-12')) === 24 && lc72_overlay_lessons('class_1a') === range(5, 28));
+    && count(lc72_overview('class_3a', '2026-10-12')) === 28 && lc72_overlay_lessons('class_1a') === range(1, 28));   // v77: L1–L4 (změna limitu, BUILD_MANIFEST_V77.md)
 
 // ---------------------------------------------------------------- 7) AI prompty vlny 2
 $promptBad = [];
@@ -51,10 +51,10 @@ foreach ($rawOv as $c => $rows) foreach ($rows as $n => $ov) {
 }
 $check('AI prompty vlny 2 (styl v72.1): 6 různých promptů na lekci z názvu, cíle, kritérií, úkolů a glosáře; bez odkazů, e-mailů, identity školy a bez vysvětlení exit ticketu'
     . ($promptBad ? ' [' . implode(', ', array_slice($promptBad, 0, 5)) . ']' : ''), $promptBad === []);
-$kit21 = aip721_parse((string)file_get_contents(aip721_kit_path('class_3a', 21)));
+$kit21 = aip77_original_prompts('class_3a', 21);   // v77: prompty původní lekce za běhu (lesson kity vyřazené – změna limitu, BUILD_MANIFEST_V77.md)
 $student20 = aip721_prompts('class_3a', 20);
 $block = audit_capture(static fn() => aip721_render_student_block('class_3a', 20));
-$check('AI prompty žáka: schválená L20 3.A = prompty ze schváleného obsahu (blok s 5 body upozornění na soukromí, 6 promptů, bez odkazů a skriptů); neschválená L21 = prompty z lesson kitu',
+$check('AI prompty žáka: schválená L20 3.A = prompty ze schváleného obsahu (blok s 5 body upozornění na soukromí, 6 promptů, bez odkazů a skriptů); neschválená L21 = prompty původní lekce (v77 za běhu, dřív lesson kit)',
     $student20 === aip76_prompts('class_3a', lc72_student_overlay('class_3a', 20)) && str_contains($student20[0]['title'], 'Služby a jejich závislosti')
     && aip721_prompts('class_3a', 21) === $kit21 && $kit21 !== [] && substr_count($block, '<li>') === 5 && substr_count($block, '<pre class="lx72-prompt"') === 6
     && preg_match('/<script|<a\s|<form|on[a-z]+=/i', $block) !== 1);

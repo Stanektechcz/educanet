@@ -10262,9 +10262,2325 @@ return array (
         ),
         '_file' => 'lesson_content_v76_4a_b.php',
       ),
+      1 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 1 · Start: řízený rozbor výpadku od vrstvy k vrstvě',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím projít výpadek webu od linky po službu, ke každé hypotéze najít jeden ověřovací příkaz a příčinu doložit výstupem.',
+          'success_criteria' => 
+          array (
+            0 => 'Sestavím aspoň tři hypotézy seřazené od nejnižší vrstvy.',
+            1 => 'Ke každé hypotéze uvedu příkaz a výstup, který ji potvrdil nebo vyloučil.',
+            2 => 'Příčinu popíšu jednou větou s opravou a prevencí.',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'ops_network_diag',
+            'level' => 2,
+          ),
+          1 => 
+          array (
+            'id' => 'ops_incident',
+            'level' => 2,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Hlášení výpadku',
+            'teacher' => 'Přečte hlášení uživatele „intranet nejde“ a rozdá role řešitel a zapisovatel.',
+            'student' => 'Zapíší příznak, čas a rozsah dopadu.',
+            'form' => 've dvojicích',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 22,
+            'phase' => 'Hypotézy po vrstvách',
+            'teacher' => 'Připomene pořadí linka → adresace → směrování → DNS → služba.',
+            'student' => 'Sepíší tři hypotézy a ke každé jeden ověřovací příkaz.',
+            'form' => 've dvojicích',
+          ),
+          2 => 
+          array (
+            'from' => 22,
+            'to' => 45,
+            'phase' => 'Spodní vrstvy',
+            'teacher' => 'Hlídá, aby každý závěr měl výstup.',
+            'student' => 'Ověří adresu, trasu, bránu a překlad jména.',
+            'form' => 've dvojicích',
+          ),
+          3 => 
+          array (
+            'from' => 45,
+            'to' => 65,
+            'phase' => 'Služba',
+            'teacher' => 'Nasimuluje výpadek služby a nechá dvojice najít důkaz.',
+            'student' => 'Najdou příčinu, službu obnoví a ověří odpověď.',
+            'form' => 've dvojicích',
+          ),
+          4 => 
+          array (
+            'from' => 65,
+            'to' => 82,
+            'phase' => 'Rozbor bez obviňování',
+            'teacher' => 'Ukáže osnovu rozboru: příznak, příčina, důkaz, oprava, prevence.',
+            'student' => 'Sepíší krátký rozbor výpadku.',
+            'form' => 'jednotlivě',
+          ),
+          5 => 
+          array (
+            'from' => 82,
+            'to' => 90,
+            'phase' => 'Exit ticket',
+            'teacher' => 'Shrne: hypotéza bez důkazu se nepočítá.',
+            'student' => 'Odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Zapiš příznak výpadku tak, jak ho nahlásil uživatel, urči rozsah dopadu a sestav tři hypotézy od nejnižší vrstvy nahoru, každou s jedním ověřovacím příkazem.',
+            'output' => 'Tabulka hypotéza → vrstva → příkaz → co výstup potvrdí nebo vyloučí.',
+            'time' => '12 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Ověř spodní vrstvy: trasu a výchozí bránu – gateway (ip r) a dosažitelnost brány (ping -c 2); zapiš, kterou hypotézu výstupy vyloučily.',
+            'output' => 'Výstupy s default via 10.0.0.1 a 0 % ztrát a vyškrtnutá hypotéza o síti.',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'ip r',
+                'expect' => 'default via 10.0.0.1',
+              ),
+              1 => 
+              array (
+                'cmd' => 'ping -c 2 10.0.0.1',
+                'expect' => '0% packet loss',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Ověř překlad jména a odpověď služby: dig +short intranet.skola.test a curl -v http://localhost; u každého výstupu napiš, co dokazuje.',
+            'output' => 'Adresa 10.0.0.10 a odpověď HTTP/1.1 200 OK s komentářem.',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'dig +short intranet.skola.test',
+                'expect' => '10.0.0.10',
+              ),
+              1 => 
+              array (
+                'cmd' => 'curl -v http://localhost',
+                'expect' => 'HTTP/1.1 200 OK',
+              ),
+            ),
+          ),
+          3 => 
+          array (
+            'text' => 'Nasimuluj výpadek: zastav nginx, ukaž důkaz příčiny (spojení na port 80 selže), službu znovu spusť a ověř, že je aktivní; pak sepiš krátký postmortem.',
+            'output' => 'Výstup „Couldn\'t connect to server“, po startu stav active a rozbor: příznak, příčina, důkaz, oprava, prevence.',
+            'time' => '25 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo systemctl stop nginx; curl -I http://localhost',
+                'expect' => 'Couldn\'t connect to server',
+              ),
+              1 => 
+              array (
+                'cmd' => 'sudo systemctl stop nginx; sudo systemctl start nginx; systemctl is-active nginx',
+                'expect' => 'active',
+              ),
+            ),
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane tabulku hypotéz s předvyplněnými vrstvami a seznam příkazů k výběru.',
+          'standard' => 'Hypotézy po vrstvách, ověření sítě, DNS a služby, nácvik výpadku a rozbor.',
+          'challenge' => 'Doplní do rozboru metriku, která by výpadek odhalila dřív než uživatel, a práh upozornění.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Rychlá otázka: DNS odpovídá a brána také – kam pokračuješ?',
+            1 => 'Kontrola souseda: má každá hypotéza výstup, který ji rozhodl?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Hypotézy',
+              'levels' => 
+              array (
+                0 => 'Bez hypotéz.',
+                1 => 'Hypotézy bez pořadí.',
+                2 => 'Tři hypotézy od nejnižší vrstvy.',
+                3 => 'U každé předem napíše, co ji vyvrátí.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Důkazy',
+              'levels' => 
+              array (
+                0 => 'Bez výstupů.',
+                1 => 'Výstupy bez závěru.',
+                2 => 'Ke každé hypotéze výstup a závěr.',
+                3 => 'Rozliší potvrzení a vyloučení hypotézy.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Rozbor',
+              'levels' => 
+              array (
+                0 => 'Chybí.',
+                1 => 'Jen popis příznaku.',
+                2 => 'Příznak, příčina, důkaz, oprava, prevence.',
+                3 => 'Prevence je měřitelná (metrika, práh).',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'ops_incident',
+          'competence_label' => 'Provoz: vedení incidentu a rozbor',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Brána odpovídá a jméno se přeloží. Kterou vrstvu ověříš jako další?',
+              'options' => 
+              array (
+                0 => 'Kabel ke stanici.',
+                1 => 'Masku sítě.',
+                2 => 'Službu: jestli naslouchá na portu a odpovídá.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Spodní vrstvy jsou vyloučené – zbývá služba.',
+            ),
+            1 => 
+            array (
+              'question' => 'curl na port 80 vrací „Couldn\'t connect to server“. Co je nejsilnější hypotéza?',
+              'options' => 
+              array (
+                0 => 'Na portu 80 nic nenaslouchá – služba neběží.',
+                1 => 'Chybí záznam DNS.',
+                2 => 'Server má málo paměti.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Odmítnuté spojení znamená, že na portu není služba.',
+            ),
+            2 => 
+            array (
+              'question' => 'Co do rozboru výpadku nepatří?',
+              'options' => 
+              array (
+                0 => 'Důkaz, který potvrdil příčinu.',
+                1 => 'Jméno člověka, který udělal chybu.',
+                2 => 'Opatření, aby se výpadek neopakoval.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Rozbor je bez obviňování – řeší systém, ne viníka.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: vyber výpadek známé služby z médií a podle osnovy z hodiny odhadni hypotézy po vrstvách (bez jmen lidí).',
+            'minutes' => 15,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Výpadek simulujeme jen v Linux Labu; na školních serverech služby nezastavujeme.',
+          1 => 'Rozbory píšeme bez jmen a bez obviňování.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: skok rovnou na restart služby bez důkazu – trvej na výstupu před opravou.',
+          1 => 'Otázka do třídy: Jak poznáš, že hypotéza je vyloučená, a ne jen neověřená?',
+          2 => 'Tempo: nácvik výpadku je nejdelší úsek; rozbor lze dopsat doma.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 2–4 v Linux Labu podle zadání (očekávané výstupy jsou v zadání), úkol 1 na papír.',
+          1 => 'Plán B offline: vytištěné výstupy příkazů, žáci podle nich rozhodují hypotézy.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'postmortem',
+          1 => 'gateway',
+        ),
+        '_file' => 'lesson_content_v77_4a.php',
+      ),
+      2 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 2 · Změnové okno: proxy, TLS, logy a plán návratu',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím připravit řízenou změnu webového serveru: zálohu a kontrolu konfigurace, reload bez výpadku, ověření a jednoznačný krok návratu.',
+          'success_criteria' => 
+          array (
+            0 => 'Před změnou zálohuji konfiguraci a ověřím syntaxi.',
+            1 => 'Rozliším reload od restartu a po změně ověřím službu z pohledu uživatele.',
+            2 => 'Plán návratu má jeden jednoznačný krok a podmínku, kdy ho použiji.',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'ops_change',
+            'level' => 2,
+          ),
+          1 => 
+          array (
+            'id' => 'ops_proxy_tls',
+            'level' => 2,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 12,
+            'phase' => 'Změnový plán',
+            'teacher' => 'Ukáže vzor změnového tiketu: rozsah, prechecky, kritéria úspěchu, návrat.',
+            'student' => 'Doplní tiket pro změnu „web za reverzní proxy“.',
+            'form' => 've dvojicích',
+          ),
+          1 => 
+          array (
+            'from' => 12,
+            'to' => 27,
+            'phase' => 'Záloha a syntaxe',
+            'teacher' => 'Předvede zálohu konfigurace a nginx -t.',
+            'student' => 'Zálohují konfiguraci a ověří syntaxi.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 27,
+            'to' => 42,
+            'phase' => 'Reverzní proxy',
+            'teacher' => 'Rozebere server blok a location s proxy_pass na upstream.',
+            'student' => 'Navrhnou blok location pro aplikaci na 127.0.0.1:8080.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 42,
+            'to' => 58,
+            'phase' => 'Reload a ověření',
+            'teacher' => 'Vysvětlí, proč reload nepřeruší spojení.',
+            'student' => 'Provedou reload a ověří stav služby a odpověď 200.',
+            'form' => 'jednotlivě',
+          ),
+          4 => 
+          array (
+            'from' => 58,
+            'to' => 80,
+            'phase' => 'Logy a TLS',
+            'teacher' => 'Ukáže korelaci access a error logu a kontrolu certifikátu (platnost, SAN).',
+            'student' => 'Najdou chybové požadavky a sepíší kontrolu certifikátu a krok návratu.',
+            'form' => 've dvojicích',
+          ),
+          5 => 
+          array (
+            'from' => 80,
+            'to' => 90,
+            'phase' => 'Exit ticket',
+            'teacher' => 'Shrne: změna bez plánu návratu není připravená.',
+            'student' => 'Odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Před změnou zazálohuj konfiguraci nginx do souboru .bak a ověř syntaxi příkazem nginx -t.',
+            'output' => 'Soubor nginx.conf.bak ve výpisu /etc/nginx a hláška „syntax is ok“.',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak; ls /etc/nginx',
+                'expect' => 'nginx.conf.bak',
+              ),
+              1 => 
+              array (
+                'cmd' => 'nginx -t',
+                'expect' => 'syntax is ok',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Přečti konfiguraci webu v sites-enabled/default a navrhni blok location s proxy_pass, který pošle požadavky na upstream aplikace na 127.0.0.1:8080.',
+            'output' => 'Blok location / { proxy_pass http://127.0.0.1:8080; } a věta, co se změní pro uživatele (reverse proxy).',
+            'time' => '18 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'cat /etc/nginx/sites-enabled/default',
+                'expect' => 'try_files',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Proveď reload služby, ověř, že je aktivní, a že web odpovídá stavem 200; vysvětli, proč jsi nepoužil/a restart.',
+            'output' => 'Stav active, HTTP 200 a věta o rozdílu reload / restart.',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo systemctl reload nginx; systemctl is-active nginx',
+                'expect' => 'active',
+              ),
+              1 => 
+              array (
+                'cmd' => 'curl -I http://localhost',
+                'expect' => '200 OK',
+              ),
+            ),
+          ),
+          3 => 
+          array (
+            'text' => 'Najdi v access logu požadavky s chybou 404 a v error logu poslední záznam; sepiš kontrolu certifikátu TLS (platnost, SAN pro app.example.cz) a jednoznačný krok rollback.',
+            'output' => 'Chybné požadavky s časem, poslední řádek error logu, kontrolní seznam TLS a krok návratu „obnov nginx.conf.bak, nginx -t, reload“.',
+            'time' => '25 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo grep 404 /var/log/nginx/access.log',
+                'expect' => '404 162',
+              ),
+              1 => 
+              array (
+                'cmd' => 'sudo tail -n 3 /var/log/nginx/error.log',
+                'expect' => 'signal process started',
+              ),
+            ),
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane předvyplněný změnový tiket a vzor bloku location; doplňuje adresu upstreamu a kroky ověření.',
+          'standard' => 'Záloha a kontrola syntaxe, návrh proxy, reload s ověřením, logy, kontrola TLS a návrat.',
+          'challenge' => 'Doplní do tiketu kritérium úspěchu s číslem (chybovost, doba odpovědi) a podmínku, kdy návrat spustí.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Rychlá otázka: nginx -t hlásí chybu – smíš udělat reload?',
+            1 => 'Kontrola souseda: dá se krok návratu provést bez přemýšlení?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Příprava změny',
+              'levels' => 
+              array (
+                0 => 'Bez zálohy.',
+                1 => 'Záloha bez kontroly syntaxe.',
+                2 => 'Záloha i kontrola syntaxe.',
+                3 => 'Prechecky s očekávaným výsledkem.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Provedení a ověření',
+              'levels' => 
+              array (
+                0 => 'Restart bez ověření.',
+                1 => 'Reload bez ověření.',
+                2 => 'Reload, stav služby a HTTP 200.',
+                3 => 'Ověří i z pohledu uživatele a logu.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Plán návratu',
+              'levels' => 
+              array (
+                0 => 'Chybí.',
+                1 => 'Obecný („vrátit to“).',
+                2 => 'Jednoznačný krok.',
+                3 => 'Krok s podmínkou spuštění a ověřením.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'ops_change',
+          'competence_label' => 'Provoz: řízená změna s plánem návratu',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'nginx -t po úpravě hlásí chybu syntaxe. Co uděláš?',
+              'options' => 
+              array (
+                0 => 'Přesto provedu reload, nginx chybu opraví.',
+                1 => 'Restartuji server.',
+                2 => 'Změnu neprovedu, opravím konfiguraci nebo vrátím zálohu.',
+              ),
+              'correct' => 2,
+              'explanation' => 'S chybnou konfigurací se služba nemusí znovu spustit.',
+            ),
+            1 => 
+            array (
+              'question' => 'Proč při změně konfigurace volíš reload místo restartu?',
+              'options' => 
+              array (
+                0 => 'Reload načte konfiguraci bez přerušení běžících spojení.',
+                1 => 'Reload smaže logy.',
+                2 => 'Restart nejde vrátit.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Reload je šetrnější – uživatelé výpadek nepoznají.',
+            ),
+            2 => 
+            array (
+              'question' => 'Který krok návratu je dobře napsaný?',
+              'options' => 
+              array (
+                0 => '„Když se něco pokazí, vrátíme to.“',
+                1 => '„Obnov nginx.conf.bak, ověř nginx -t a proveď reload.“',
+                2 => '„Zavolej správce.“',
+              ),
+              'correct' => 1,
+              'explanation' => 'Krok návratu musí jít provést přesně a bez přemýšlení.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: napiš změnový tiket pro libovolnou změnu, kterou jsi doma dělal/a (aktualizace, nový router) – rozsah, kontrola a krok návratu.',
+            'minutes' => 15,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Konfiguraci měníme jen v simulátoru Linux Labu; adresy a domény jsou ukázkové.',
+          1 => 'Soukromé klíče certifikátů nikdy nekopírujeme do sešitu ani do chatu.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: „reload a restart jsou totéž“ – ukaž rozdíl na běžícím spojení.',
+          1 => 'Otázka do třídy: Kdy je správné rozhodnutí změnu vůbec neprovést?',
+          2 => 'Tempo: proxy_pass jen navrhují na papír – simulátor upstream na 8080 nespouští.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 1, 3 a 4 v Linux Labu podle zadání, úkol 2 na papír podle vzoru.',
+          1 => 'Plán B offline: vytištěný změnový tiket a výpis konfigurace k doplnění.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'reverse-proxy',
+          1 => 'upstream',
+          2 => 'reload',
+          3 => 'rollback',
+          4 => 'tls',
+        ),
+        '_file' => 'lesson_content_v77_4a.php',
+      ),
+      3 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 3 · Pozorovatelnost: logy, metriky a kontrola zdraví',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím z logů a kontroly zdraví sestavit důkaz o stavu služby, spočítat chybovost a navrhnout tři ukazatele s cílem SLO.',
+          'success_criteria' => 
+          array (
+            0 => 'Ke třem ukazatelům (latence, chybovost, dostupnost) zapíšu výchozí hodnotu a cíl.',
+            1 => 'Z access logu spočítám podíl chybových odpovědí.',
+            2 => 'Navrhnu endpoint /health a rozhodnu, kdo ho smí vidět.',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'ops_observability',
+            'level' => 2,
+          ),
+          1 => 
+          array (
+            'id' => 'ops_incident',
+            'level' => 1,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 12,
+            'phase' => 'Start: pocit vs. důkaz',
+            'teacher' => 'Ukáže dvě hlášení „web je pomalý“ – jedno s čísly, jedno bez – a zeptá se, se kterým se dá pracovat.',
+            'student' => 'Navrhnou, co by měli měřit.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 12,
+            'to' => 28,
+            'phase' => 'SLI a SLO',
+            'teacher' => 'Vysvětlí ukazatel (SLI), cíl (SLO) a výchozí hodnotu.',
+            'student' => 'Zapíší tři ukazatele s výchozí hodnotou a cílem.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 28,
+            'to' => 48,
+            'phase' => 'Chybovost z logu',
+            'teacher' => 'Předvede počítání stavových kódů jedním řádkem.',
+            'student' => 'Spočítají podíl odpovědí jiných než 200.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 48,
+            'to' => 65,
+            'phase' => 'Kontrola zdraví',
+            'teacher' => 'Ukáže, že / vrací 200, ale /health zatím neexistuje.',
+            'student' => 'Navrhnou /health a jeho odpověď a zabezpečení.',
+            'form' => 've dvojicích',
+          ),
+          4 => 
+          array (
+            'from' => 65,
+            'to' => 82,
+            'phase' => 'Korelace',
+            'teacher' => 'Ukáže, jak spojit čas chyby v access logu se záznamem služby.',
+            'student' => 'Najdou opakovanou chybu 403 a porovnají ji s žurnálem služby.',
+            'form' => 've dvojicích',
+          ),
+          5 => 
+          array (
+            'from' => 82,
+            'to' => 90,
+            'phase' => 'Exit ticket',
+            'teacher' => 'Shrne: měříme, než začneme opravovat.',
+            'student' => 'Odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Vyber tři ukazatele (latence, chybovost, dostupnost), ke každému zapiš výchozí hodnotu a cíl SLO a vysvětli, čím se liší SLI od SLO.',
+            'output' => 'Tabulka ukazatel → výchozí hodnota → cíl (např. 99,5 % dostupnost za měsíc) a věta o SLI a SLO.',
+            'time' => '15 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Spočítej v access logu stavové kódy (sudo awk … | sort | uniq -c) a urči podíl odpovědí jiných než 200.',
+            'output' => 'Počty 200: 15, 403: 6, 404: 9 → 15 z 30 požadavků (50 %) není úspěšných, s komentářem, které chyby jsou „naše“.',
+            'time' => '18 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo awk \'{print $9}\' /var/log/nginx/access.log | sort | uniq -c',
+                'expect' => '15 200',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Ověř kontrolu zdraví: curl na / vrací 200, ale /health vrací 404; navrhni, co má /health vracet a proč nesmí být veřejný s detaily.',
+            'output' => 'Dva výstupy (200 a 404 Not Found) a návrh health check: stav 200 a krátký text, detaily jen pro monitoring.',
+            'time' => '15 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'curl -I http://localhost',
+                'expect' => '200 OK',
+              ),
+              1 => 
+              array (
+                'cmd' => 'curl -s http://localhost/health',
+                'expect' => '404 Not Found',
+              ),
+            ),
+          ),
+          3 => 
+          array (
+            'text' => 'Najdi v access logu opakované požadavky s chybou 403, zapiš jejich časy a porovnej je se žurnálem služby; rozhodni, zda jde o chybu služby, nebo o zamítnutý přístup.',
+            'output' => 'Šest požadavků GET /admin se stavem 403 a závěr: služba běží, jde o zamítnutý přístup, ne výpadek.',
+            'time' => '20 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo grep 403 /var/log/nginx/access.log',
+                'expect' => 'GET /admin',
+              ),
+              1 => 
+              array (
+                'cmd' => 'journalctl -u nginx -n 5',
+                'expect' => 'Started nginx.service',
+              ),
+            ),
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane tabulku ukazatelů s vyplněnými názvy a kalkulačku podílu; doplňuje čísla.',
+          'standard' => 'Tři ukazatele s cílem, chybovost z logu, návrh /health a korelace chyb.',
+          'challenge' => 'Spočítá rozpočet chyb pro cíl 99,5 % za 30 dní v minutách a navrhne práh upozornění.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Rychlá otázka: 403 a 404 – jsou to výpadky služby?',
+            1 => 'Kartičky: je „web je pomalý“ ukazatel, nebo pocit?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Ukazatele a cíle',
+              'levels' => 
+              array (
+                0 => 'Bez ukazatelů.',
+                1 => 'Ukazatele bez cíle.',
+                2 => 'Tři ukazatele s výchozí hodnotou a cílem.',
+                3 => 'Vysvětlí volbu cíle a rozpočet chyb.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Chybovost z logu',
+              'levels' => 
+              array (
+                0 => 'Nespočítá.',
+                1 => 'Spočítá kódy.',
+                2 => 'Spočítá podíl chybových odpovědí.',
+                3 => 'Rozliší chyby klienta a serveru.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Kontrola zdraví',
+              'levels' => 
+              array (
+                0 => 'Chybí.',
+                1 => 'Jen ping.',
+                2 => 'Návrh /health s odpovědí.',
+                3 => 'Návrh i se zabezpečením a tím, co /health nekontroluje.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'ops_observability',
+          'competence_label' => 'Provoz: logy, metriky a cíle SLO',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Z 30 požadavků v logu je 15 se stavem 200. Jaká je chybovost?',
+              'options' => 
+              array (
+                0 => '15 %',
+                1 => '50 %',
+                2 => '30 %',
+              ),
+              'correct' => 1,
+              'explanation' => '15 z 30 požadavků nebylo úspěšných = 50 %.',
+            ),
+            1 => 
+            array (
+              'question' => 'Co je SLO?',
+              'options' => 
+              array (
+                0 => 'Cílová hodnota ukazatele, např. 99,5 % dostupnost za měsíc.',
+                1 => 'Program, který sbírá logy.',
+                2 => 'Chybová hláška serveru.',
+              ),
+              'correct' => 0,
+              'explanation' => 'SLI je měřený ukazatel, SLO jeho cíl.',
+            ),
+            2 => 
+            array (
+              'question' => 'V logu je šestkrát 403 pro /admin a služba běží. Co z toho plyne?',
+              'options' => 
+              array (
+                0 => 'Služba padá a je třeba ji restartovat.',
+                1 => 'Došlo místo na disku.',
+                2 => 'Přístup byl zamítnut – nejde o výpadek, ale ověř, kdo se o /admin pokouší.',
+              ),
+              'correct' => 2,
+              'explanation' => '403 = zakázáno; služba funguje, zamítla přístup.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: vyber aplikaci, kterou používáš, a navrhni pro ni tři ukazatele a cíl SLO (bez přihlašování a osobních údajů).',
+            'minutes' => 15,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Logy čteme jen v Linux Labu; ve skutečných logech jsou osobní údaje a ty bez důvodu neprocházíme ani nesdílíme.',
+          1 => 'Endpoint /health nesmí veřejně ukazovat verze, cesty ani hesla.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: každá chyba v logu = výpadek – rozliš 4xx (klient) a 5xx (server).',
+          1 => 'Otázka do třídy: Proč je cíl 100 % dostupnosti špatný cíl?',
+          2 => 'Tempo: pojem observability stačí ukázat na příkladu, definice až na konci.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 2–4 v Linux Labu podle zadání (očekávané výstupy jsou v zadání), úkol 1 na papír.',
+          1 => 'Plán B offline: vytištěný výřez access logu, žáci počítají chybovost ručně.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'observability',
+          1 => 'sli',
+          2 => 'slo',
+          3 => 'health-check',
+        ),
+        '_file' => 'lesson_content_v77_4a.php',
+      ),
+      4 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Lekce 4 · Nácvik vydání: kanárek, ověření a rozhodnutí o návratu',
+        'goal' => 
+        array (
+          'student' => 'Na konci hodiny umím provést vydání jako řízenou změnu: prechecky, postupné nasazení na část provozu, ověření podle podmínek zastavení a rozhodnutí pokračovat nebo vrátit.',
+          'success_criteria' => 
+          array (
+            0 => 'Změnový tiket má rozsah, kritéria úspěchu, dvě podmínky zastavení a krok návratu.',
+            1 => 'Prechecky ověřím výstupy (syntaxe, disk, paměť) před nasazením.',
+            2 => 'Rozhodnutí pokračovat / vrátit podložím čísly z ověření.',
+          ),
+        ),
+        'competencies' => 
+        array (
+          0 => 
+          array (
+            'id' => 'ops_change',
+            'level' => 3,
+          ),
+          1 => 
+          array (
+            'id' => 'ops_observability',
+            'level' => 2,
+          ),
+        ),
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 12,
+            'phase' => 'Změnový tiket',
+            'teacher' => 'Zadá vydání nové verze webu a ukáže tiket s podmínkami zastavení.',
+            'student' => 'Doplní rozsah, kritéria úspěchu a dvě podmínky zastavení.',
+            'form' => 've dvojicích',
+          ),
+          1 => 
+          array (
+            'from' => 12,
+            'to' => 28,
+            'phase' => 'Prechecky',
+            'teacher' => 'Předvede kontrolu syntaxe, disku a paměti.',
+            'student' => 'Spustí prechecky a zapíší výchozí stav.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 28,
+            'to' => 45,
+            'phase' => 'Kanárek',
+            'teacher' => 'Vysvětlí nasazení na 10 % provozu (canary) a proč se nespouští na všechny najednou.',
+            'student' => 'Spočítají, kolik požadavků jde na novou verzi a kdy se překročí podmínka zastavení.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 45,
+            'to' => 62,
+            'phase' => 'Ověření',
+            'teacher' => 'Ukáže pořadí ověření: DNS, HTTP, služba, cesta uživatele.',
+            'student' => 'Ověří nasazení z pohledu uživatele.',
+            'form' => 've dvojicích',
+          ),
+          4 => 
+          array (
+            'from' => 62,
+            'to' => 80,
+            'phase' => 'Nácvik návratu',
+            'teacher' => 'Vyhlásí „chybovost kanárka 12 %“ a nechá dvojice rozhodnout.',
+            'student' => 'Provedou návrat konfigurace a ověří syntaxi i službu.',
+            'form' => 've dvojicích',
+          ),
+          5 => 
+          array (
+            'from' => 80,
+            'to' => 90,
+            'phase' => 'Rozhodnutí a exit ticket',
+            'teacher' => 'Shrne: rozhoduje předem dané číslo, ne nálada.',
+            'student' => 'Zapíší rozhodnutí s důkazem a odpoví na exit ticket.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Napiš změnový tiket vydání: rozsah, tři kritéria úspěchu, dvě podmínky zastavení (např. chybovost nad 3 %) a jednoznačný krok rollback.',
+            'output' => 'Tiket s čísly v kritériích i podmínkách zastavení a krokem návratu.',
+            'time' => '15 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Spusť prechecky před nasazením: syntaxe konfigurace, volné místo na disku a paměť; zapiš výchozí hodnoty do tiketu.',
+            'output' => 'Výstupy „test is successful“, využití disku 31 % a volná paměť v MB.',
+            'time' => '12 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'nginx -t',
+                'expect' => 'test is successful',
+              ),
+              1 => 
+              array (
+                'cmd' => 'df -h',
+                'expect' => '/dev/sda1',
+              ),
+              2 => 
+              array (
+                'cmd' => 'free -m',
+                'expect' => 'Mem:',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Kanárek dostane 10 % z 2 000 požadavků; 24 z nich skončí chybou. Spočítej chybovost kanárka, porovnej ji s podmínkou zastavení 3 % a rozhodni.',
+            'output' => '200 požadavků, chybovost 12 % > 3 % → zastavit a vrátit; zápis rozhodnutí s čísly.',
+            'time' => '13 min',
+          ),
+          3 => 
+          array (
+            'text' => 'Ověř nasazení z pohledu uživatele (DNS, HTTP stav intranetu) a pak nacvič návrat: obnov konfiguraci ze zálohy a ověř syntaxi.',
+            'output' => 'Adresa 10.0.0.10, HTTP 200 a po návratu „syntax is ok“.',
+            'time' => '25 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'dig +short intranet.skola.test',
+                'expect' => '10.0.0.10',
+              ),
+              1 => 
+              array (
+                'cmd' => 'curl -I http://intranet.skola.test',
+                'expect' => '200 OK',
+              ),
+              2 => 
+              array (
+                'cmd' => 'sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak; sudo cp /etc/nginx/nginx.conf.bak /etc/nginx/nginx.conf; nginx -t',
+                'expect' => 'syntax is ok',
+              ),
+            ),
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Dostane tiket s vyplněným rozsahem a vzorec pro výpočet chybovosti.',
+          'standard' => 'Tiket, prechecky, výpočet kanárka, ověření a nácvik návratu.',
+          'challenge' => 'Navrhne druhý stupeň kanárka (25 %) a podmínku, kdy smí pokračovat, a zdůvodní dobu sledování.',
+        ),
+        'assessment' => 
+        array (
+          'formative' => 
+          array (
+            0 => 'Rychlá otázka: chybovost kanárka je 2,5 % a podmínka zastavení 3 % – co uděláš?',
+            1 => 'Kontrola souseda: dá se každá podmínka v tiketu změřit?',
+          ),
+          'rubric' => 
+          array (
+            0 => 
+            array (
+              'criterion' => 'Tiket',
+              'levels' => 
+              array (
+                0 => 'Chybí.',
+                1 => 'Bez čísel.',
+                2 => 'Kritéria a podmínky zastavení s čísly.',
+                3 => 'Podmínky odvozené z výchozího stavu.',
+              ),
+            ),
+            1 => 
+            array (
+              'criterion' => 'Prechecky a ověření',
+              'levels' => 
+              array (
+                0 => 'Bez kontroly.',
+                1 => 'Jen syntaxe.',
+                2 => 'Syntaxe, disk, paměť a ověření uživatele.',
+                3 => 'Zapíše výchozí stav pro srovnání.',
+              ),
+            ),
+            2 => 
+            array (
+              'criterion' => 'Rozhodnutí',
+              'levels' => 
+              array (
+                0 => 'Bez rozhodnutí.',
+                1 => 'Rozhodnutí bez důkazu.',
+                2 => 'Rozhodnutí podle podmínky s čísly.',
+                3 => 'Návrat provede a ověří.',
+              ),
+            ),
+          ),
+        ),
+        'exit_ticket' => 
+        array (
+          'competence' => 'ops_change',
+          'competence_label' => 'Provoz: řízené vydání a návrat',
+          'variants' => 
+          array (
+            0 => 
+            array (
+              'question' => 'Chybovost kanárka vzroste na 12 %, podmínka zastavení je 3 %. Co uděláš?',
+              'options' => 
+              array (
+                0 => 'Počkám, jestli se to samo zlepší.',
+                1 => 'Nasadím na všechny, ať je víc dat.',
+                2 => 'Zastavím vydání a provedu návrat podle tiketu.',
+              ),
+              'correct' => 2,
+              'explanation' => 'Překročená podmínka zastavení = návrat, bez diskuse.',
+            ),
+            1 => 
+            array (
+              'question' => 'Proč se nová verze nejdřív nasazuje jen na část provozu?',
+              'options' => 
+              array (
+                0 => 'Chyba zasáhne jen malou část uživatelů a dá se včas zastavit.',
+                1 => 'Je to rychlejší než nasazení na všechny.',
+                2 => 'Server nezvládne víc verzí.',
+              ),
+              'correct' => 0,
+              'explanation' => 'Kanárek omezuje dosah případné chyby.',
+            ),
+            2 => 
+            array (
+              'question' => 'Který precheck patří před nasazení nové konfigurace?',
+              'options' => 
+              array (
+                0 => 'Smazání starých logů.',
+                1 => 'Kontrola syntaxe konfigurace (nginx -t).',
+                2 => 'Restart celého serveru.',
+              ),
+              'correct' => 1,
+              'explanation' => 'Chybnou konfiguraci odhalíš dřív, než způsobí výpadek.',
+            ),
+          ),
+        ),
+        'homework' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Volitelné: navrhni podmínky zastavení pro vydání aplikace, kterou znáš (chybovost, doba odpovědi), a zdůvodni čísla.',
+            'minutes' => 15,
+            'optional' => true,
+          ),
+        ),
+        'safety' => 
+        array (
+          0 => 'Vydání i návrat zkoušíme jen v simulátoru Linux Labu.',
+          1 => 'Čísla a domény v úlohách jsou vymyšlené; skutečné provozní údaje školy nepoužíváme.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Častý omyl: „počkáme, ono se to zlepší“ – podmínka zastavení se dodržuje vždy.',
+          1 => 'Otázka do třídy: Kdo smí rozhodnout o návratu a musí se ptát?',
+          2 => 'Tempo: výpočet kanárka je krátký; čas nech na ověření a návrat.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup bez odborníka: úkoly 2 a 4 v Linux Labu podle zadání, úkoly 1 a 3 na papír (výsledek výpočtu je v zadání).',
+          1 => 'Plán B offline: kartičky s čísly z ověření, dvojice rozhodují „pokračovat / vrátit“.',
+        ),
+        'glossary' => 
+        array (
+          0 => 'canary',
+          1 => 'rollback',
+        ),
+        '_file' => 'lesson_content_v77_4a.php',
+      ),
     ),
     'days' => 
     array (
+      0 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Seznamovací blok · provoz, pravidla změn a diagnostika',
+        'goal' => 'Žáci znají pravidla posledního ročníku (změny jen řízeně, incidenty bez obviňování), přihlásí se do aplikace a Linux Labu a ve vstupní diagnostice ukážou, jak postupují při výpadku.',
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 15,
+            'phase' => 'Pravidla',
+            'teacher' => 'Představí rok: změnová okna, pozorovatelnost, zálohy, incidenty; vše jen v simulátoru.',
+            'student' => 'Zapíší tři pravidla provozu.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 15,
+            'to' => 30,
+            'phase' => 'Přihlášení',
+            'teacher' => 'Rozdá kartičky s heslem.',
+            'student' => 'Přihlásí se do aplikace a Linux Labu.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 30,
+            'to' => 65,
+            'phase' => 'Diagnostika',
+            'teacher' => 'Zadá mini incident: zjisti stav webové služby a zapiš důkaz.',
+            'student' => 'Vyplní dotazník a mini incident v Linux Labu.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 65,
+            'to' => 82,
+            'phase' => 'Sdílení',
+            'teacher' => 'Ukáže nejčastější postupy bez jmen.',
+            'student' => 'Porovnají postup se sousedem.',
+            'form' => 've dvojicích',
+          ),
+          4 => 
+          array (
+            'from' => 82,
+            'to' => 90,
+            'phase' => 'Domluva',
+            'teacher' => 'Řekne, co bude na lekci 1.',
+            'student' => 'Zapíší si první krok.',
+            'form' => 'frontálně',
+          ),
+        ),
+        'materials' => 
+        array (
+          0 => 'Kartičku s jednorázovým heslem.',
+          1 => 'Notebook nebo místo v učebně.',
+        ),
+        'assessment' => 
+        array (
+          0 => 'Všichni se přihlásili.',
+          1 => 'Mini incident má zapsaný důkaz.',
+          2 => 'Mám přehled, kdo potřebuje podporu v diagnostice.',
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Přihlas se a v Linux Labu zjisti stav webové služby.',
+            'output' => 'Výstup se stavem active (running).',
+            'time' => '10 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'systemctl status nginx',
+                'expect' => 'active (running)',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Ověř odpověď webu z pohledu uživatele a zapiš, co výstup dokazuje.',
+            'output' => 'HTTP 200 a jedna věta.',
+            'time' => '10 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'curl -I http://localhost',
+                'expect' => '200 OK',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Vyplň seznamovací dotazník.',
+            'output' => 'Odeslaný dotazník.',
+            'time' => '15 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Karta s příkazy diagnostiky služby.',
+          'standard' => 'Přihlášení, mini incident a dotazník.',
+          'challenge' => 'Doplní k mini incidentu log služby a co v něm hledat.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Pravidlo „jen simulátor“ platí i pro maturanty – zopakuj ho.',
+          1 => 'Diagnostika je bez známky.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup: přihlášení a dotazník podle návodu; mini incident v Linux Labu podle zadání.',
+          1 => 'Plán B offline: výpisy příkazů na kartičkách.',
+        ),
+        'safety' => 
+        array (
+          0 => 'Hesla nikomu neukazujeme; příkazy jen v Linux Labu.',
+        ),
+        '_file' => 'lesson_content_v77_days_4a.php',
+      ),
+      29 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Projektový checkpoint 1 · cvičení spolehlivosti: rozsah, role a SLO',
+        'goal' => 'Tým má zadání cvičení spolehlivosti (služba, uživatelé, cíl SLO), rozdělené role a první runbook s kroky obnovy.',
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Stand-up',
+            'teacher' => 'Představí cíl checkpointu.',
+            'student' => 'Týmy si zopakují zadání.',
+            'form' => 'v týmech',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 35,
+            'phase' => 'Služba a cíl',
+            'teacher' => 'Ptá se: Co je pro uživatele „funguje“ a jak to změříte?',
+            'student' => 'Sepíší službu, ukazatele (SLI) a cíl (SLO).',
+            'form' => 'v týmech',
+          ),
+          2 => 
+          array (
+            'from' => 35,
+            'to' => 50,
+            'phase' => 'Role',
+            'teacher' => 'Vysvětlí role: vedoucí incidentu, řešitel, komunikace, zapisovatel.',
+            'student' => 'Rozdělí role a definici hotovo.',
+            'form' => 'v týmech',
+          ),
+          3 => 
+          array (
+            'from' => 50,
+            'to' => 80,
+            'phase' => 'Runbook obnovy',
+            'teacher' => 'Ukáže runbook s kroky, příkazy a očekávaným výstupem.',
+            'student' => 'Sepíší runbook obnovy a ověří kroky v Linux Labu.',
+            'form' => 'v týmech',
+          ),
+          4 => 
+          array (
+            'from' => 80,
+            'to' => 90,
+            'phase' => 'Checkpoint',
+            'teacher' => 'Projde zadání, cíl a runbook.',
+            'student' => 'Zapíší další krok.',
+            'form' => 'v týmech',
+          ),
+        ),
+        'materials' => 
+        array (
+          0 => 'Zadání projektu ze záložky Projekty.',
+          1 => 'Poznámky z lekcí o pozorovatelnosti a změnách.',
+        ),
+        'assessment' => 
+        array (
+          0 => 'Zadání má službu, ukazatele a cíl SLO.',
+          1 => 'Role jsou rozdělené.',
+          2 => 'Runbook má kroky s příkazem a očekávaným výstupem.',
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Sepište službu, tři ukazatele (SLI) a cíl spolehlivosti (SLO) včetně rozpočtu chyb za 30 dní.',
+            'output' => 'Tabulka ukazatelů a cíle.',
+            'time' => '25 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Napište runbook obnovy webové služby: kontrola konfigurace, stav, naslouchající port, odpověď.',
+            'output' => 'Runbook se 4–6 kroky.',
+            'time' => '25 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'nginx -t',
+                'expect' => 'test is successful',
+              ),
+              1 => 
+              array (
+                'cmd' => 'ss -tlnp',
+                'expect' => '0.0.0.0:80',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Ověřte runbook v Linux Labu krok za krokem.',
+            'output' => 'Ověřený runbook.',
+            'time' => '10 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'curl -I http://localhost',
+                'expect' => '200 OK',
+              ),
+            ),
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Vzor tabulky SLI/SLO a runbooku.',
+          'standard' => 'Zadání, role, cíl a ověřený runbook.',
+          'challenge' => 'Spočítá rozpočet chyb v minutách a navrhne práh upozornění.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Cíl 100 % odmítni – nechte tým zdůvodnit realistické číslo.',
+          1 => 'Runbook musí jít použít bez autora.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup: zadání a runbook podle šablony; ověření v Linux Labu podle příkazů.',
+          1 => 'Plán B offline: runbook na papír.',
+        ),
+        'safety' => 
+        array (
+          0 => 'Cvičení jen v Linux Labu.',
+        ),
+        '_file' => 'lesson_content_v77_days_4a.php',
+      ),
+      30 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Projektový checkpoint 2 · nácvik výpadku a obnovy ze zálohy',
+        'goal' => 'Tým provede nácvik výpadku: zálohu konfigurace, chybu, obnovu ze zálohy a ověření; zápis má časovou osu a dobu obnovy.',
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Stand-up',
+            'teacher' => 'Připomene cíl: měřit dobu obnovy.',
+            'student' => 'Každý řekne stav a blokace.',
+            'form' => 'v týmech',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 30,
+            'phase' => 'Záloha',
+            'teacher' => 'Hlídá, aby záloha vznikla před změnou.',
+            'student' => 'Zazálohují konfiguraci a ověří zálohu.',
+            'form' => 'v týmech',
+          ),
+          2 => 
+          array (
+            'from' => 30,
+            'to' => 65,
+            'phase' => 'Výpadek a obnova',
+            'teacher' => 'Spustí výpadek a měří čas.',
+            'student' => 'Najdou příčinu, obnoví službu a ověří ji.',
+            'form' => 'v týmech',
+          ),
+          3 => 
+          array (
+            'from' => 65,
+            'to' => 80,
+            'phase' => 'Doba obnovy',
+            'teacher' => 'Ukáže porovnání s cílem RTO.',
+            'student' => 'Zapíší skutečnou dobu obnovy a porovnají s cílem.',
+            'form' => 'v týmech',
+          ),
+          4 => 
+          array (
+            'from' => 80,
+            'to' => 90,
+            'phase' => 'Checkpoint',
+            'teacher' => 'Zkontroluje časovou osu.',
+            'student' => 'Zapíší, co zrychlí obnovu.',
+            'form' => 'v týmech',
+          ),
+        ),
+        'materials' => 
+        array (
+          0 => 'Runbook z checkpointu 1.',
+          1 => 'Šablonu časové osy.',
+        ),
+        'assessment' => 
+        array (
+          0 => 'Záloha vznikla před změnou a je ověřená.',
+          1 => 'Časová osa má dobu obnovy.',
+          2 => 'Oprava je ověřená z pohledu uživatele.',
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Zazálohujte konfiguraci a ověřte, že záloha existuje.',
+            'output' => 'Soubor nginx.conf.bak ve výpisu.',
+            'time' => '10 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak; ls /etc/nginx',
+                'expect' => 'nginx.conf.bak',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Při výpadku najděte důkaz příčiny, obnovte službu a ověřte stav a odpověď.',
+            'output' => 'Důkaz výpadku, stav active a HTTP 200.',
+            'time' => '30 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo systemctl stop nginx; curl -I http://localhost',
+                'expect' => 'Couldn\'t connect to server',
+              ),
+              1 => 
+              array (
+                'cmd' => 'sudo systemctl stop nginx; sudo systemctl start nginx; systemctl is-active nginx',
+                'expect' => 'active',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Zapište dobu obnovy (RTO skutečnost) a porovnejte ji s cílem; navrhněte jedno zrychlení.',
+            'output' => 'Časová osa s dobou obnovy a návrh.',
+            'time' => '15 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Časová osa s předvyplněnými kroky.',
+          'standard' => 'Záloha, nácvik, obnova a doba obnovy.',
+          'challenge' => 'Navrhne ověřování zálohy obnovou na zkušebním stroji.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Záloha, která nebyla ověřená, se nepočítá.',
+          1 => 'Měřte čas od hlášení po ověření, ne po restart.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup: nácvik podle runbooku v Linux Labu; zastupující měří čas.',
+          1 => 'Plán B offline: incident na kartičkách s výpisy.',
+        ),
+        'safety' => 
+        array (
+          0 => 'Služby zastavujeme a obnovujeme jen v simulátoru.',
+        ),
+        '_file' => 'lesson_content_v77_days_4a.php',
+      ),
+      31 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Projektový checkpoint 3 · peer review runbooku a rozboru',
+        'goal' => 'Runbook a rozbor incidentu jsou hotové na úrovni „hotovo, ale neuhlazené“; jiný tým je otestuje a dá připomínky.',
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Pravidla review',
+            'teacher' => 'Vysvětlí test runbooku cizím týmem.',
+            'student' => 'Vymění si runbooky a rozbory.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 45,
+            'phase' => 'Test runbooku',
+            'teacher' => 'Sleduje, kde se týmy zaseknou.',
+            'student' => 'Projdou cizí runbook v Linux Labu a přečtou rozbor.',
+            'form' => 've dvojicích týmů',
+          ),
+          2 => 
+          array (
+            'from' => 45,
+            'to' => 82,
+            'phase' => 'Opravy',
+            'teacher' => 'Koučuje opravy.',
+            'student' => 'Opraví runbook a rozbor podle připomínek.',
+            'form' => 'v týmech',
+          ),
+          3 => 
+          array (
+            'from' => 82,
+            'to' => 90,
+            'phase' => 'Checkpoint',
+            'teacher' => 'Zkontroluje opravy.',
+            'student' => 'Odškrtnou opravené body.',
+            'form' => 'v týmech',
+          ),
+        ),
+        'materials' => 
+        array (
+          0 => 'Runbook a rozbor incidentu (postmortem).',
+        ),
+        'assessment' => 
+        array (
+          0 => 'Cizí tým runbook použil.',
+          1 => 'Rozbor je bez obviňování a má prevenci.',
+          2 => 'Připomínky jsou opravené.',
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Projděte cizí runbook v Linux Labu přesně podle zápisu a zapište, kde nešel použít.',
+            'output' => 'Seznam míst se selháním a návrh opravy.',
+            'time' => '35 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo systemctl reload nginx; systemctl is-active nginx',
+                'expect' => 'active',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Přečtěte cizí postmortem a ověřte: příznak, příčina, důkaz, oprava, prevence, bez jmen.',
+            'output' => 'Připomínky k rozboru.',
+            'time' => '10 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Opravte vlastní runbook a rozbor podle připomínek.',
+            'output' => 'Opravené dokumenty.',
+            'time' => '30 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Kontrolní seznam runbooku a rozboru.',
+          'standard' => 'Test, připomínky a opravy.',
+          'challenge' => 'Doplní runbook o větev „když obnova selže“.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Rozbor se jmény vrať – bez obviňování je pravidlo.',
+          1 => 'Runbook je dobrý, když ho použije jiný tým.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup: výměna dokumentů a test v Linux Labu.',
+          1 => 'Plán B offline: kontrola dokumentů podle seznamu.',
+        ),
+        'safety' => 
+        array (
+          0 => 'Jen simulátor; rozbory bez jmen.',
+        ),
+        '_file' => 'lesson_content_v77_days_4a.php',
+      ),
+      32 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Mastery clinic · dorovnání kompetencí provozu',
+        'goal' => 'Každý žák dorovná jednu kompetenci provozu (směrování, proxy a TLS, diagnostika, zabezpečení, pozorovatelnost, změna, záloha) a doloží ji důkazem.',
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Mapa mezer',
+            'teacher' => 'Ukáže stav kompetencí v profilu.',
+            'student' => 'Vyberou kompetenci k dorovnání.',
+            'form' => 'jednotlivě',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 65,
+            'phase' => 'Stanoviště',
+            'teacher' => 'Vede stanoviště s nejvíc žáky.',
+            'student' => 'Procvičují: podsítě a směrování, logy a chybovost, změna s návratem, záloha a obnova.',
+            'form' => 've skupinách',
+          ),
+          2 => 
+          array (
+            'from' => 65,
+            'to' => 82,
+            'phase' => 'Ověření',
+            'teacher' => 'Zadá krátkou zkoušku.',
+            'student' => 'Splní zkoušku a uloží výstup.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 82,
+            'to' => 90,
+            'phase' => 'Zápis',
+            'teacher' => 'Ukáže zápis důkazu.',
+            'student' => 'Zapíší, co dorovnali.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'materials' => 
+        array (
+          0 => 'Profil s kompetencemi.',
+        ),
+        'assessment' => 
+        array (
+          0 => 'Každý má vybranou kompetenci.',
+          1 => 'Ověření má výstup nebo výpočet.',
+          2 => 'Pozorování zapisuji, jen když je katalog 4.A schválený.',
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Vyber kompetenci se stavem „učím se“ nebo „zatím ne“.',
+            'output' => 'Vybraná kompetence.',
+            'time' => '8 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Vyřeš kolo úloh s variantami (podsíť, maska, směrování, porty) nebo úkol stanoviště.',
+            'output' => 'Dokončené kolo úlohy.',
+            'time' => '40 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Splň zkoušku: spočítej z access logu stavové kódy a urči chybovost.',
+            'output' => 'Počty kódů a chybovost v procentech.',
+            'time' => '15 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo awk \'{print $9}\' /var/log/nginx/access.log | sort | uniq -c',
+                'expect' => '200',
+              ),
+            ),
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Stanoviště s nápovědou.',
+          'standard' => 'Úloha a zkouška.',
+          'challenge' => 'Tutor na stanovišti.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Katalog 4.A je návrh – důkazy se počítají až po schválení.',
+          1 => 'Ukaž skutečnou mezeru, ne nejlehčí stanoviště.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup: úlohy s variantami podle profilu.',
+          1 => 'Plán B offline: karty stanovišť.',
+        ),
+        'safety' => 
+        array (
+          0 => 'Příkazy jen v Linux Labu.',
+        ),
+        '_file' => 'lesson_content_v77_days_4a.php',
+      ),
+      33 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Capstone sprint 1 · cvičení spolehlivosti: scénáře a měření',
+        'goal' => 'Týmy souvisle pracují na cvičení spolehlivosti, připravují scénáře výpadků s měřením a rizika zapisují včas.',
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Plán sprintu',
+            'teacher' => 'Připomene termín obhajob.',
+            'student' => 'Zapíší cíl sprintu a úkoly.',
+            'form' => 'v týmech',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 75,
+            'phase' => 'Souvislá práce',
+            'teacher' => 'Koučuje podle potřeby.',
+            'student' => 'Připravují scénáře (výpadek služby, chybná změna, plný disk) s měřením.',
+            'form' => 'v týmech',
+          ),
+          2 => 
+          array (
+            'from' => 75,
+            'to' => 85,
+            'phase' => 'Stav a rizika',
+            'teacher' => 'Projde posun a rizika.',
+            'student' => 'Ukážou posun a rizika.',
+            'form' => 'v týmech',
+          ),
+          3 => 
+          array (
+            'from' => 85,
+            'to' => 90,
+            'phase' => 'Úklid',
+            'teacher' => 'Připomene uložení.',
+            'student' => 'Uloží práci.',
+            'form' => 'v týmech',
+          ),
+        ),
+        'materials' => 
+        array (
+          0 => 'Runbook, rozbor a připomínky z checkpointu 3.',
+        ),
+        'assessment' => 
+        array (
+          0 => 'Každý scénář má měření (čas, chybovost) a krok návratu.',
+          1 => 'Rizika mají vlastníka.',
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Zapište cíl sprintu a úkoly s vlastníkem.',
+            'output' => 'Plán sprintu.',
+            'time' => '10 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Připravte scénář „chybná změna konfigurace“ s kontrolou syntaxe a návratem ze zálohy.',
+            'output' => 'Scénář s kroky a ověřením.',
+            'time' => '30 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak; sudo cp /etc/nginx/nginx.conf.bak /etc/nginx/nginx.conf; nginx -t',
+                'expect' => 'syntax is ok',
+              ),
+            ),
+          ),
+          2 => 
+          array (
+            'text' => 'Připravte scénář „málo místa na disku“ s výchozím stavem a prahem upozornění.',
+            'output' => 'Scénář s výstupem využití disku a prahem.',
+            'time' => '30 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'df -h',
+                'expect' => 'Use%',
+              ),
+            ),
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Jeden scénář místo dvou.',
+          'standard' => 'Plán sprintu a dva scénáře.',
+          'challenge' => 'Třetí scénář s kanárkovým nasazením a podmínkou zastavení.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Ptej se: Jak poznáte, že je scénář vyřešený – podle čísla?',
+          1 => 'Rizika kontroluj v polovině hodiny.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup: práce podle plánu sprintu v Linux Labu.',
+          1 => 'Plán B offline: scénáře na papír.',
+        ),
+        'safety' => 
+        array (
+          0 => 'Jen simulátor; čísla a domény jsou vymyšlené.',
+        ),
+        '_file' => 'lesson_content_v77_days_4a.php',
+      ),
+      34 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Capstone sprint 2 · kontrola, dokumentace a příprava obhajoby',
+        'goal' => 'Cvičení spolehlivosti prošlo kontrolou (scénáře jdou zopakovat), má dokumentaci a postmortem a tým má připravenou obhajobu.',
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Stand-up',
+            'teacher' => 'Ukáže kontrolní seznam a osnovu obhajoby.',
+            'student' => 'Rozdělí práci.',
+            'form' => 'v týmech',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 45,
+            'phase' => 'Kontrola',
+            'teacher' => 'Ověřuje opakovatelnost scénářů.',
+            'student' => 'Zopakují scénáře podle dokumentace a opraví rozdíly.',
+            'form' => 'v týmech',
+          ),
+          2 => 
+          array (
+            'from' => 45,
+            'to' => 65,
+            'phase' => 'Dokumentace',
+            'teacher' => 'Ukáže osnovu.',
+            'student' => 'Sepíší dokumentaci a postmortem nejzávažnějšího scénáře.',
+            'form' => 'v týmech',
+          ),
+          3 => 
+          array (
+            'from' => 65,
+            'to' => 85,
+            'phase' => 'Zkouška obhajoby',
+            'teacher' => 'Poslouchá a radí.',
+            'student' => 'Předvedou scénář nanečisto.',
+            'form' => 've dvojicích týmů',
+          ),
+          4 => 
+          array (
+            'from' => 85,
+            'to' => 90,
+            'phase' => 'Odevzdání',
+            'teacher' => 'Zkontroluje odevzdání.',
+            'student' => 'Odevzdají dokumentaci.',
+            'form' => 'v týmech',
+          ),
+        ),
+        'materials' => 
+        array (
+          0 => 'Scénáře, runbook a měření.',
+        ),
+        'assessment' => 
+        array (
+          0 => 'Scénáře jdou zopakovat.',
+          1 => 'Postmortem je bez obviňování a má prevenci.',
+          2 => 'Obhajoba se vejde do času.',
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Zopakujte scénáře podle dokumentace a zapište rozdíly.',
+            'output' => 'Odškrtnutý seznam scénářů.',
+            'time' => '35 min',
+            'sim' => 
+            array (
+              0 => 
+              array (
+                'cmd' => 'curl -I http://intranet.skola.test',
+                'expect' => '200 OK',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'text' => 'Sepište dokumentaci a postmortem nejzávažnějšího scénáře (příznak, dopad, příčina, důkaz, oprava, prevence).',
+            'output' => 'Dokumentace a postmortem.',
+            'time' => '20 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Předveďte scénář nanečisto do 5 minut.',
+            'output' => 'Odzkoušená obhajoba.',
+            'time' => '20 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Šablona postmortemu.',
+          'standard' => 'Kontrola, dokumentace a zkouška.',
+          'challenge' => 'Doplní dopad na cíl SLO a čerpání rozpočtu chyb.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Scénář, který nejde zopakovat, do obhajoby nepatří.',
+          1 => 'Postmortem bez prevence je neúplný.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup: kontrola scénářů v Linux Labu podle dokumentace.',
+          1 => 'Plán B offline: postmortem na papír.',
+        ),
+        'safety' => 
+        array (
+          0 => 'Dokumentace bez hesel a skutečných adres.',
+        ),
+        '_file' => 'lesson_content_v77_days_4a.php',
+      ),
+      35 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Obhajoby / demo · výpadek, obnova a postmortem',
+        'goal' => 'Týmy předvedou výpadek, obnovu a rozbor bez obviňování; hodnotí se důkazy, měření a role podle známé rubriky.',
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Pravidla obhajob',
+            'teacher' => 'Představí pořadí, čas, rubriku a otázky publika.',
+            'student' => 'Připraví se.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 75,
+            'phase' => 'Obhajoby',
+            'teacher' => 'Hodnotí podle rubriky.',
+            'student' => 'Týmy předvádějí scénář a postmortem; publikum se ptá.',
+            'form' => 'frontálně',
+          ),
+          2 => 
+          array (
+            'from' => 75,
+            'to' => 90,
+            'phase' => 'Zpětná vazba',
+            'teacher' => 'Silná stránka a další krok pro každý tým.',
+            'student' => 'Zapíší zpětnou vazbu.',
+            'form' => 'frontálně',
+          ),
+        ),
+        'materials' => 
+        array (
+          0 => 'Scénáře, měření, dokumentaci a postmortem.',
+        ),
+        'assessment' => 
+        array (
+          0 => 'Každý člen týmu mluví o své roli.',
+          1 => 'Doba obnovy a dopad jsou změřené.',
+          2 => 'Rubrika je u všech stejná.',
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Předveďte výpadek, obnovu a postmortem s měřením (doba obnovy, dopad).',
+            'output' => 'Obhajoba do 5 minut.',
+            'time' => '5 min na tým',
+          ),
+          1 => 
+          array (
+            'text' => 'Jako publikum se zeptej: Jak víte, že se to nebude opakovat?',
+            'output' => 'Otázka pro tým.',
+            'time' => 'průběžně',
+          ),
+          2 => 
+          array (
+            'text' => 'Zapiš zpětnou vazbu a další krok svého týmu.',
+            'output' => 'Zápis zpětné vazby.',
+            'time' => '10 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Možnost představit svou část u stolu před učitelem.',
+          'standard' => 'Obhajoba a otázka.',
+          'challenge' => 'Odpoví s odkazem na měření.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Rubriku promítni předem.',
+          1 => 'Hodnotí se důkazy a postup, ne „hrdinství“.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Obhajoby bez učitele předmětu přesunout výjimkou v Kalendáři.',
+          1 => 'Plán B offline: obhajoba nad vytištěnými výpisy.',
+        ),
+        'safety' => 
+        array (
+          0 => 'Na projektoru jen laboratorní adresy, žádná hesla.',
+        ),
+        '_file' => 'lesson_content_v77_days_4a.php',
+      ),
+      36 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Retrospektiva + peer feedback · provoz bez obviňování',
+        'goal' => 'Žáci pojmenují, co se naučili o provozu a incidentech, co týmu pomohlo a co příště změní; dají si konkrétní zpětnou vazbu.',
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 15,
+            'phase' => 'Osobní ohlédnutí',
+            'teacher' => 'Ukáže první a poslední incident roku (bez jmen).',
+            'student' => 'Zapíší tři posuny.',
+            'form' => 'jednotlivě',
+          ),
+          1 => 
+          array (
+            'from' => 15,
+            'to' => 45,
+            'phase' => 'Týmová retrospektiva',
+            'teacher' => 'Vede Keep / Improve / Try.',
+            'student' => 'Sepíší body retrospektivy.',
+            'form' => 'v týmech',
+          ),
+          2 => 
+          array (
+            'from' => 45,
+            'to' => 80,
+            'phase' => 'Peer feedback',
+            'teacher' => 'Ukáže vzor zpětné vazby.',
+            'student' => 'Napíší zpětnou vazbu dvěma spolužákům.',
+            'form' => 've dvojicích',
+          ),
+          3 => 
+          array (
+            'from' => 80,
+            'to' => 90,
+            'phase' => 'Shrnutí',
+            'teacher' => 'Sesbírá nejčastější „Try“.',
+            'student' => 'Vyberou jednu věc pro sebe.',
+            'form' => 'frontálně',
+          ),
+        ),
+        'materials' => 
+        array (
+          0 => 'Své výstupy z roku a postmortemy.',
+        ),
+        'assessment' => 
+        array (
+          0 => 'Zpětná vazba je konkrétní a respektující.',
+          1 => 'Každý tým má Keep / Improve / Try.',
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Zapiš tři posuny roku a výstup, který každý dokazuje.',
+            'output' => 'Tři posuny.',
+            'time' => '12 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Sepište Keep / Improve / Try k vedení incidentu a změnám.',
+            'output' => 'Tabulka retrospektivy.',
+            'time' => '25 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Napiš dvěma spolužákům zpětnou vazbu: co se povedlo a jeden tip.',
+            'output' => 'Dvě zpětné vazby.',
+            'time' => '30 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Začátky vět pro zpětnou vazbu.',
+          'standard' => 'Ohlédnutí, retrospektiva a zpětná vazba.',
+          'challenge' => 'Vede retrospektivu týmu.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Retrospektiva nevstupuje do hodnocení.',
+          1 => 'Bez obviňování platí i tady.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup: retrospektiva podle osnovy.',
+          1 => 'Plán B offline: lístečky.',
+        ),
+        'safety' => 
+        array (
+          0 => 'Zpětnou vazbu dostane jen adresát.',
+        ),
+        '_file' => 'lesson_content_v77_days_4a.php',
+      ),
+      37 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Portfolio & showcase · postmortem a runbook pro budoucí praxi',
+        'goal' => 'Každý žák vybere 2–3 ověřené výstupy (runbook, postmortem, změnový tiket), popíše svůj podíl a krátce je ukáže.',
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 10,
+            'phase' => 'Kritéria',
+            'teacher' => 'Ukáže, co zaměstnavatele zajímá: postup, důkaz, prevence.',
+            'student' => 'Vyberou kandidáty.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 10,
+            'to' => 60,
+            'phase' => 'Výběr a popis',
+            'teacher' => 'Ptá se na důkaz a roli.',
+            'student' => 'Připnou výstupy a napíší roli, rozhodnutí a důkaz.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 60,
+            'to' => 85,
+            'phase' => 'Showcase',
+            'teacher' => 'Organizuje ukázky ve dvojicích.',
+            'student' => 'Ukážou portfolio a odpoví na otázku.',
+            'form' => 've dvojicích',
+          ),
+          3 => 
+          array (
+            'from' => 85,
+            'to' => 90,
+            'phase' => 'Export',
+            'teacher' => 'Připomene stažení.',
+            'student' => 'Stáhnou portfolio jako HTML.',
+            'form' => 'jednotlivě',
+          ),
+        ),
+        'materials' => 
+        array (
+          0 => 'Projekty, runbooky a postmortemy.',
+        ),
+        'assessment' => 
+        array (
+          0 => 'Výstupy jsou ověřené.',
+          1 => 'Popis role je pravdivý.',
+          2 => 'V portfoliu nejsou hesla ani skutečné adresy.',
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Připni 2–3 výstupy a ke každému napiš roli, rozhodnutí a důkaz.',
+            'output' => 'Připnuté výstupy s reflexí.',
+            'time' => '45 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Zkontroluj, že ve výstupech nejsou hesla, klíče ani skutečné adresy.',
+            'output' => 'Odškrtnutá kontrola.',
+            'time' => '5 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Ukaž portfolio spolužákovi a stáhni ho jako HTML.',
+            'output' => 'Ukázka a stažený soubor.',
+            'time' => '25 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Vzor popisu role.',
+          'standard' => 'Výběr, popis a showcase.',
+          'challenge' => 'Případová studie incidentu s měřením.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Postmortem v portfoliu ukazuje zralost víc než seznam nástrojů.',
+          1 => 'Ověř popis role u týmových výstupů.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup: výběr a popis podle návodu v Moje portfolio.',
+          1 => 'Plán B offline: popis na papír.',
+        ),
+        'safety' => 
+        array (
+          0 => 'Žádná hesla, klíče ani skutečné adresy v portfoliu.',
+        ),
+        '_file' => 'lesson_content_v77_days_4a.php',
+      ),
+      38 => 
+      array (
+        'status' => 'navrh',
+        'version' => 1,
+        'title' => 'Uzavření roku · kompetence provozu a další cesta',
+        'goal' => 'Uzavřít rok: přehled zvládnutých kompetencí provozu, osobní souhrn růstu, anonymní zpětná vazba a doporučení pro další studium nebo praxi.',
+        'timeline' => 
+        array (
+          0 => 
+          array (
+            'from' => 0,
+            'to' => 20,
+            'phase' => 'Přehled roku',
+            'teacher' => 'Projde, co třída zvládla: od rozboru výpadku po cvičení spolehlivosti.',
+            'student' => 'Najdou zvládnuté kompetence v profilu.',
+            'form' => 'frontálně',
+          ),
+          1 => 
+          array (
+            'from' => 20,
+            'to' => 50,
+            'phase' => 'Osobní souhrn',
+            'teacher' => 'Ukáže osnovu souhrnu.',
+            'student' => 'Zapíší tři posuny a další krok po škole.',
+            'form' => 'jednotlivě',
+          ),
+          2 => 
+          array (
+            'from' => 50,
+            'to' => 75,
+            'phase' => 'Zpětná vazba ke kurzu',
+            'teacher' => 'Vysvětlí anonymitu.',
+            'student' => 'Vyplní anonymní zpětnou vazbu.',
+            'form' => 'jednotlivě',
+          ),
+          3 => 
+          array (
+            'from' => 75,
+            'to' => 90,
+            'phase' => 'Uzavření',
+            'teacher' => 'Poděkuje a doporučí cesty dál (studium, certifikace, praxe).',
+            'student' => 'Zapíší jeden konkrétní další krok.',
+            'form' => 'frontálně',
+          ),
+        ),
+        'materials' => 
+        array (
+          0 => 'Profil s kompetencemi a portfoliem.',
+        ),
+        'assessment' => 
+        array (
+          0 => 'Zpětnou vazbu odevzdala většina třídy.',
+          1 => 'Každý má osobní souhrn a další krok.',
+        ),
+        'tasks' => 
+        array (
+          0 => 
+          array (
+            'text' => 'Zapiš tři největší posuny roku s výstupem, který je dokazuje.',
+            'output' => 'Osobní souhrn.',
+            'time' => '20 min',
+          ),
+          1 => 
+          array (
+            'text' => 'Napiš jeden konkrétní další krok po škole (studium, praxe, certifikace).',
+            'output' => 'Další krok.',
+            'time' => '10 min',
+          ),
+          2 => 
+          array (
+            'text' => 'Vyplň anonymní zpětnou vazbu ke kurzu.',
+            'output' => 'Odeslaná zpětná vazba.',
+            'time' => '20 min',
+          ),
+        ),
+        'differentiation' => 
+        array (
+          'support' => 'Osnova souhrnu.',
+          'standard' => 'Souhrn, další krok a zpětná vazba.',
+          'challenge' => 'Plán vlastní laboratoře ve virtuálu s cílem a měřením.',
+        ),
+        'teacher_notes' => 
+        array (
+          0 => 'Zpětnou vazbu shrň pro další ročník.',
+          1 => 'Kdo chyběl, dostane souhrn jako dobrovolný úkol.',
+        ),
+        'substitution' => 
+        array (
+          0 => 'Zástup: souhrn a zpětná vazba podle osnovy.',
+          1 => 'Plán B offline: souhrn na papír.',
+        ),
+        'safety' => 
+        array (
+          0 => 'Zpětná vazba je anonymní; doma jen vlastní virtuál, žádné cizí sítě.',
+        ),
+        '_file' => 'lesson_content_v77_days_4a.php',
+      ),
     ),
     'files' => 
     array (
@@ -10284,9 +12600,17 @@ return array (
       13 => 'lesson_content_v76_3a_b.php',
       14 => 'lesson_content_v76_4a_a.php',
       15 => 'lesson_content_v76_4a_b.php',
+      16 => 'lesson_content_v77_1a.php',
+      17 => 'lesson_content_v77_2a.php',
+      18 => 'lesson_content_v77_3a.php',
+      19 => 'lesson_content_v77_4a.php',
+      20 => 'lesson_content_v77_days_1a.php',
+      21 => 'lesson_content_v77_days_2a.php',
+      22 => 'lesson_content_v77_days_3a.php',
+      23 => 'lesson_content_v77_days_4a.php',
     ),
   ),
-  'sig' => '2d75c86284779fb9b76df1d5328dfa465a4d5c6c',
-  'hash' => 'b6839f22ed2e37169161256429f65bbfb5d3a98c87d9959be325e99dbd7acf8a',
-  'built_at' => '2026-10-12T21:50:40+02:00',
+  'sig' => '6e69cead0b8f06220a2c21cfa85e8b5ddfca90e7',
+  'hash' => '9fe86c35b73f946cdd9ffff592c0c40d82af8be9198f8bd14ca40bc22adb8ab1',
+  'built_at' => '2026-10-13T04:15:44+02:00',
 );

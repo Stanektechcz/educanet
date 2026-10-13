@@ -712,3 +712,15 @@ Podrobnosti: `CHANGELOG_V76.md`, `BUILD_MANIFEST_V76.md`, návod pro učitele `d
 - **Změna limitů auditů:** viz `BUILD_MANIFEST_V76.md` (snímky politik v68/v70/v71, katalog cest v63, vlna 1 v72, sady úloh v75, zdroje důkazů v62).
 - **Rollback vydání:** nasadit v75 (`b982204`); důkazy zdrojů `task` a `observation` starší verze při výpočtu stavu přeskočí (neznámý zdroj má váhu 0), ostatní nová data ignoruje.
 - **Kontrola po nasazení:** `php tools/v76_content_audit.php`, `php tools/v76_learning_audit.php`, `php tools/v76_http_audit.php` → `*_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v77 · obsah lekcí 1–4, dny bez lekce, Středa T-14, úklid lesson kitů
+
+Podrobnosti: `CHANGELOG_V77.md`, `BUILD_MANIFEST_V77.md`, návod pro učitele `docs/NAVOD_V77.md`. Nové PHP rozšíření ani migraci nevyžaduje, úložiště beze změny tvaru.
+
+- **Obsah (návrh):** lekce 1–4 všech tříd (`lesson_content_v77_{1a,2a,3a,4a}.php`) žáci nevidí, dokud je učitel neschválí; plány 11 dnů bez lekce (`lesson_content_v77_days_*.php`) vidí jen učitel v Dnešní hodině. Model lekce se po nasazení přestaví sám při prvním čtení (nebo `php tools/build_runtime_cache.php`).
+- **Nová záložka:** `?tab=streda77` (Středa: T-14, sekce Dnes) – jen čtení, volitelně `&class=`; odznak „po termínu“ v menu. Hromadné schválení má nový rozsah `?tab=hromadne74&f=1&rozsah=t14&class=…`. Žádná nová POST akce ani GET politika.
+- **Vyřazené soubory (kopie → SHA-256 → unlink):** `materials/lesson_kits/` (112 MD kitů, `LESSON_KITS_INDEX.csv`, `README.md`), `tools/generate_v42_lesson_kits.php`, `tools/v72_1_ai_prompts_build.php`, `tools/lib/ai_prompts_v72_1_build.php`. Pokud nasazení jen kopíruje soubory a nemaže smazané, adresář `materials/lesson_kits/` na serveru zůstane – aplikace ho už nečte, lze ho smazat (nejdřív záloha). AI prompty původních lekcí skládá `ai_prompts_v77.php` za běhu se stejným výsledkem.
+- **Cache:** `cache/lesson_model/_overlay_files.json` (seznam souborů overlaye pro daný kořen) vzniká za běhu a do vydání nepatří (`tools/build_release.php` ho vynechá).
+- **Změna limitů auditů:** viz `BUILD_MANIFEST_V77.md` (v42 kity, v68 snímek CSS žáka, v71 model, v72 schvalování, v72.1 AI prompty, v75 opakování, v76 obsah).
+- **Rollback vydání:** nasadit v76 (`a177828`) – vrátí i vyřazené kity; záznamy schválení L1–L4 starší verze ignoruje (lekce bez overlaye), relace s odznakem T-14 nic nerozbije.
+- **Kontrola po nasazení:** `php tools/v77_content_audit.php`, `php tools/v77_http_audit.php` → `*_AUDIT_OK`; celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.

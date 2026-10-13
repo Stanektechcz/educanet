@@ -18,7 +18,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  */
 
 const BA74_MAX = 250;
-const BA74_SCOPES = ['tyden' => 'týden výuky', 'trida' => 'jedna třída (celý rok)', 'rok' => 'celý školní rok – všechny moje třídy'];
+const BA74_SCOPES = ['tyden' => 'týden výuky', 't14' => 'termín T-14: výuka do 4 týdnů (schválit do 14 dní)', 'trida' => 'jedna třída (celý rok)', 'rok' => 'celý školní rok – všechny moje třídy'];   // v77: t14 (odkaz ze Středy)
+const BA77_T14_HORIZON_DAYS = 28;   // výuka do 28 dní = termín schválení (výuka − 14 dní) do 14 dní
 const BA74_PENDING = ['navrh', 'zmeneno'];
 
 /** Model lekce jednou za požadavek (náhled roku sahá na desítky položek). */
@@ -56,6 +57,7 @@ function ba74_candidates(array $classes, string $scope, string $weekStart, bool 
         foreach (array_values(array_unique($numbers)) as $n) {
             $date = (string)($dates[$n] ?? '');
             if ($scope === 'tyden' && ($date === '' || $date < $weekStart || $date > $weekEnd)) continue;
+            if ($scope === 't14' && ($date === '' || $date < $today || $date > date('Y-m-d', (int)strtotime($today . ' +' . BA77_T14_HORIZON_DAYS . ' days')))) continue;   // v77
             $days = $date !== '' ? (int)floor(((int)strtotime($date) - (int)strtotime($today)) / 86400) : null;
             $kinds = [];
             if ($lessons && lc72_overlay($class, $n) !== []) $kinds['lesson'] = lc72_status($class, $n, $records);

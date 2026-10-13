@@ -15,16 +15,17 @@
 .v55-right { display: flex; align-items: center; gap: 10px; margin-left: auto; }
 
 /* LVL prstenec */
-.v55-lvl { display: inline-flex; align-items: center; gap: 10px; padding: 5px 12px 5px 5px; border: 1px solid var(--u-line, #e3e6eb); border-radius: 999px; background: #fff; text-decoration: none; color: var(--edu-ink); }
+/* v77: barvy z tokenů (světlý i tmavý režim) – popisek LVL a nápověda XP mají kontrast ≥ 4,5 : 1 (dřív --u-faint ≈ 3,07 : 1) */
+.v55-lvl { display: inline-flex; align-items: center; gap: 10px; padding: 5px 12px 5px 5px; border: 1px solid var(--ui-line, var(--u-line, #e3e6eb)); border-radius: 999px; background: var(--ui-surface, #fff); text-decoration: none; color: var(--ui-ink, var(--edu-ink)); }
 .v55-lvl:hover { border-color: var(--edu-teal); }
 .v55-lvl-ring { position: relative; flex: 0 0 42px; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--edu-teal) calc(var(--v55-lvl-percent, 0) * 1%), var(--u-soft, #eef1f4) 0); }
-.v55-lvl-ring::after { content: ''; position: absolute; inset: 4px; border-radius: 50%; background: #fff; }
+.v55-lvl-ring::after { content: ''; position: absolute; inset: 4px; border-radius: 50%; background: var(--ui-surface, #fff); }
 .v55-lvl-ring b, .v55-lvl-ring i { position: relative; z-index: 1; font-style: normal; line-height: 1; }
-.v55-lvl-ring b { font-size: .42rem; letter-spacing: .1em; color: var(--u-faint, #8a94a3); margin-bottom: 1px; }
-.v55-lvl-ring i { font-size: .95rem; font-weight: 800; color: var(--edu-teal-dark); }
+.v55-lvl-ring b { font-size: .5rem; letter-spacing: .08em; color: var(--ui-muted, #4d5b68); margin-bottom: 1px; }
+.v55-lvl-ring i { font-size: .95rem; font-weight: 800; color: var(--ui-accent-ink, #05616c); }
 .v55-lvl-meta { display: grid; line-height: 1.25; }
 .v55-lvl-meta strong { font-size: .78rem; }
-.v55-lvl-meta small { font-size: .68rem; color: var(--u-faint, #8a94a3); }
+.v55-lvl-meta small { font-size: .68rem; color: var(--ui-muted, #4d5b68); }
 @media (max-width: 1080px) { .v55-lvl-meta { display: none; } .v55-lvl { padding: 4px; } }
 
 /* ---------- CTA na konci stránky ---------- */

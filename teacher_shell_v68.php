@@ -102,18 +102,35 @@ function teacher68_nav_html(string $tab, string $classId, array $visibleTabs, st
     $activeSection = teacher68_section_of($tab, $sectionParam);
     static $unread = null;
     $unread ??= function_exists('teacher_ops_notifications_for_current_teacher') ? count(teacher_ops_notifications_for_current_teacher(true)) : 0;
+    static $t14 = null;   // v77: lekce po termínu T-14 (odznak u „Středa: T-14“ i u sekce, aby byl vidět i ve sbaleném menu)
+    if ($t14 === null) $t14 = teacher77_t14_badge_count($visibleTabs);
     $html = '<nav class="t68-nav" aria-label="' . e($label) . '">';
     foreach (teacher68_visible_sections($visibleTabs) as $sectionId => $tabs) {
         $open = $sectionId === $activeSection ? ' open' : '';
-        $html .= '<details class="t68-sec"' . $open . '><summary>' . e($sections[$sectionId]['label']) . '</summary><ul>';
+        $secBadge = $t14 > 0 && in_array('streda77', $tabs, true) ? ' <b class="t68-badge" aria-label="' . $t14 . ' ' . ($t14 === 1 ? 'lekce' : 'lekcí') . ' po termínu T-14">' . $t14 . '</b>' : '';
+        $html .= '<details class="t68-sec"' . $open . '><summary>' . e($sections[$sectionId]['label']) . $secBadge . '</summary><ul>';
         foreach ($tabs as $t) {
             $current = $t === $tab ? ' aria-current="page"' : '';
             $badge = $t === 'attention' && $unread > 0 ? '<b class="t68-badge" aria-label="' . $unread . ' nepřečtených">' . $unread . '</b>' : '';
+            if ($t === 'streda77' && $t14 > 0) $badge = '<b class="t68-badge" aria-label="' . $t14 . ' ' . ($t14 === 1 ? 'lekce' : 'lekcí') . ' po termínu T-14">' . $t14 . '</b>';
             $html .= '<li><a href="' . e(teacher68_tab_url($t, $classId)) . '"' . $current . '><span>' . e($map[$t]['label']) . '</span>' . $badge . '</a></li>';
         }
         $html .= '</ul></details>';
     }
     return $html . '</nav>';
+}
+
+/** v77: počet lekcí po termínu T-14 pro odznak v menu (jen když učitel vidí „Středa: T-14“; chyba výpočtu menu nerozbije). */
+function teacher77_t14_badge_count(array $visibleTabs): int
+{
+    if (!in_array('streda77', $visibleTabs, true) || !is_file(__DIR__ . '/t14_v77.php')) return 0;
+    try {
+        require_once __DIR__ . '/t14_v77.php';
+        return t1477_overdue_count();
+    } catch (Throwable $e) {
+        error_log('EDUCANET v77 odznak T-14: ' . get_class($e));
+        return 0;
+    }
 }
 
 function teacher68_breadcrumb_html(string $tab, string $classId, string $sectionParam): string

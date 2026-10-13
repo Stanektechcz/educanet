@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
+
+/**
+ * EDUCANET v77 · otisky AI promptů vyřazených lesson kitů (sekce 6 v materials/lesson_kits/<třída>/lesson_NN.md, stav 13. 10. 2026).
+ * Hodnota = prvních 16 hex SHA-256 z json_encode(aip721_parse(kit), JSON_UNESCAPED_UNICODE). tools/v77_content_audit.php
+ * ověřuje, že aip77_original_prompts() vrací pro všech 112 lekcí totéž – žák po vyřazení kitů vidí stejné prompty.
+ */
+
+return [
+    'class_1a' => [1 => '31809e2a2de9b15d', 2 => 'e5fb335864b91d09', 3 => '337ccdbdc575dafa', 4 => '1945bcbbba12da7d', 5 => 'eb35ad51e7ef6e51', 6 => '1d9a939cf0127c85', 7 => 'ba9ee0057e6264de', 8 => 'cf95e7d1a504ee08', 9 => 'fdbba31a54c27d45', 10 => 'c2eba108d34944ab', 11 => 'b7dc31647e51ec87', 12 => '9ac0e9675107814d', 13 => '17908ac5f35be786', 14 => 'a53f2bc4ade98513', 15 => 'fd0a1e681027da69', 16 => '5e06adfc612ca892', 17 => '6d65616b4b68ebf3', 18 => '7cf15b22f288ed8c', 19 => 'af95d2759bbd5a00', 20 => 'cb04cbe67d306d86', 21 => '6a93274763908807', 22 => '83db1c0a69a44a31', 23 => 'c025f9848df19353', 24 => 'dd2bd45de86c2c42', 25 => '455827f978eeeaa8', 26 => '406775c4b1eca536', 27 => '36af86b90eb97560', 28 => 'e30078c670349a66'],
+    'class_2a' => [1 => '413fd4038175c0b1', 2 => '3398374832139474', 3 => 'a9508ca3249d16b3', 4 => '0be84d8c10466107', 5 => 'ec3cc3372569115e', 6 => '51e1d9853cd71e60', 7 => '9d5cb5db82f50f4f', 8 => '5fd64966105ae8f5', 9 => '0bf5b237cebc0304', 10 => '80c8b63a6421035d', 11 => 'b73f21e0bfe91b67', 12 => '818a0bc906f2b51e', 13 => '4051a6fbe92f3ee3', 14 => 'a460af8bd965f34f', 15 => '15cc8002953c6448', 16 => 'dbdd1d42ce3d8c88', 17 => 'c58996ccdb5c0887', 18 => 'df73283123974327', 19 => 'c841c8b27fc59a21', 20 => '6e46971213b3598e', 21 => '1c137abc586a0871', 22 => 'a3d11170d37bfdef', 23 => '0f33b768e3d6e2ce', 24 => '72a61e78dbbfd03b', 25 => '225fe01587121cd9', 26 => 'ef49ce44d4d2af6c', 27 => '17ab6d69f13abc88', 28 => '9b7af89fd1ed8566'],
+    'class_3a' => [1 => 'b7b578920763b516', 2 => '3154b835547b678f', 3 => '4de9fa2cbe90e280', 4 => 'a433d66900ba0032', 5 => '435c23807a88aa15', 6 => 'db8e8abf71ba79c7', 7 => '2177c539dab0d4bc', 8 => '809a48bc14d43e22', 9 => '5bc435a8d6eb1ee9', 10 => 'b7c8ebedb6f19bb2', 11 => 'c638c304b14d3474', 12 => '3187973524d9c5d9', 13 => '2e601d03ce6e871a', 14 => 'b0192b84cab57bf5', 15 => 'b36e67da00940b11', 16 => '8ddc64aa76eb555a', 17 => '9b6414a84db27eb4', 18 => '539911e7ef6e2f39', 19 => 'ec7069bb2cfd6a69', 20 => '4e66cc166ff9e151', 21 => 'b724f528d5104151', 22 => '2f9880abe245fbfd', 23 => '3179e820e4560ac8', 24 => 'e682dba25b804b45', 25 => 'ca960c1f6f05e1cc', 26 => 'a59e5ee1d18c11c0', 27 => 'ddf4cfdd4f74f11a', 28 => '5b481b67950cb4d9'],
+    'class_4a' => [1 => '69255f4c54cf8448', 2 => '2116ac9aa4a42f20', 3 => 'cd89873de44a0271', 4 => '431abf6b4712632f', 5 => '2016b3ce6093988c', 6 => 'e0719d338ab4864a', 7 => '7fbe8657c801d866', 8 => '56ea4b02c706fece', 9 => 'a09936004885efba', 10 => '0b809ec121e7409c', 11 => 'cde5ec67b1e8584e', 12 => 'a0beb172d5809fe6', 13 => '187e27f7caaa51f2', 14 => '1289a3711d04fd05', 15 => 'fd62730871371ecc', 16 => 'a60f9f4755fc7c8f', 17 => 'b77b54d9e0b91eda', 18 => 'a996543e4a67545d', 19 => '84a885cf8d6bf5be', 20 => 'bfc8e56563a34111', 21 => 'a870b316e9018231', 22 => 'e3bae7bf4fef7a2b', 23 => '2963e0a9e5c94d17', 24 => '412294f53fef060f', 25 => '98e2ccc121beb20a', 26 => '1d30697c35abc9f4', 27 => 'b437555a478e4253', 28 => '04c01dcccebdff2f'],
+];

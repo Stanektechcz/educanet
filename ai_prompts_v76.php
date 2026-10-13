@@ -10,12 +10,20 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * a obecných úkolech. Proto se u lekce vlny 2 se SCHVÁLENÝM obsahem (lc72_student_overlay) prompty skládají ze schváleného
  * obsahu: název, cíl, kritéria úspěchu, první konkrétní úkol a termíny glosáře. Neschválený návrh žák nikdy nevidí;
  * učitel vidí v náhledu Schvalování lekcí prompty z návrhu, které žák dostane po schválení.
- * Bez schválení (nebo pro L1–L16) zůstávají prompty z lesson kitu (ai_prompts_v72_1.php beze změny chování).
+ * Bez schválení (nebo pro L5–L16) zůstávají prompty původní lekce (v77: ai_prompts_v77.php, shodné s dřívějšími lesson kity).
+ * v77: stejně se chovají i L1–L4, které dostaly obsah (lesson_content_v77_*) – aip76_lesson_in_scope().
  * Upozornění na soukromí vykresluje aip721_render_student_block() (tr(), en/uk); prompty jsou výukový obsah (česky).
  * Prompty neobsahují odpovědi exit ticketu ani klíč – jen to, co žák v lekci vidí. Výstup je deterministický.
  */
 
 const AIP76_FIRST_LESSON = 17;
+const AIP76_EARLY_LESSONS = [1, 4];   // v77: L1–L4 s obsahem (lesson_content_v77_*)
+
+/** Lekce, u kterých se prompty skládají ze (schváleného) obsahu: L1–L4 (v77) a L17–L28 (v76). */
+function aip76_lesson_in_scope(int $number): bool
+{
+    return ($number >= AIP76_EARLY_LESSONS[0] && $number <= AIP76_EARLY_LESSONS[1]) || ($number >= AIP76_FIRST_LESSON && $number <= 28);
+}
 
 /** Úklid textu pro vložení do věty (mezery, koncová tečka, délka). */
 function aip76_clean(string $text, int $max = 240): string
@@ -73,13 +81,13 @@ function aip76_prompts(string $classId, array $ov): array
 }
 
 /**
- * Prompty lekce vlny 2: žák jen ze schváleného obsahu ($draft = false), učitel z návrhu ($draft = true).
- * null = lekce není ve vlně 2 nebo nemá (schválený) obsah – použijí se prompty z lesson kitu.
+ * Prompty lekce L1–L4 / L17–L28: žák jen ze schváleného obsahu ($draft = false), učitel z návrhu ($draft = true).
+ * null = lekce není v rozsahu nebo nemá (schválený) obsah – použijí se prompty původní lekce (ai_prompts_v77.php).
  * @return list<array{title:string,text:string}>|null
  */
 function aip76_prompts_for(string $classId, int $number, bool $draft = false): ?array
 {
-    if ($number < AIP76_FIRST_LESSON || $number > 28) return null;
+    if (!aip76_lesson_in_scope($number)) return null;
     if (!function_exists('lc72_student_overlay')) {
         if (!is_file(__DIR__ . '/lesson_approval_v72.php')) return null;
         require_once __DIR__ . '/lesson_approval_v72.php';

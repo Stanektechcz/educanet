@@ -15,7 +15,7 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  * témata bez materiálu, chybějící ŠVP, materiály bez metadat, šablonové MD v materials/, karty dnů, T-14, stav cache.
  * v72: úplnost vlny 1 (L5–L16), stav schválení (z --storage, jinak vše „návrh“), T-14 podle schválení, exit ticket
  * (počet odpovědí a % správně po kompetencích – jen souhrnné počty z --storage, žádné hashe ani jména).
- * v72.1: vazba na ŠVP (s vazbou / chybí, stav schválení z --storage, výsledky jiného ročníku), AI prompty v lesson kitech,
+ * v72.1: vazba na ŠVP (s vazbou / chybí, stav schválení z --storage, výsledky jiného ročníku), AI prompty (v77 za běhu, dřív lesson kity),
  * exit ticket v režimu „podklad ke známce“ (jen počet odpovědí).
  */
 
@@ -237,17 +237,17 @@ $svp = ['s_vazbou' => 0, 'chybi' => 0, 'navrh' => 0, 'schvaleno' => 0, 'vraceno'
 $svpUsed = [];
 $aip = ['kitu' => 0, 's_prompty' => 0, 'promptu' => 0, 's_upozornenim' => 0, 'duplicitnich_promptu' => 0, 'zdvojenych_tecek' => 0];
 $aipSeen = [];
+$aipPrivacy = implode(' ', aip721_privacy_lines());   // upozornění vykresluje blok AI promptů u každé lekce s prompty
 foreach (LM71_CLASSES as $c) for ($n = 1; $n <= LM71_LESSONS; $n++) {
     $st = svp72_status($c, $n, $svpRecords)['status'];
     $svp[$st === 'chybi' ? 'chybi' : 's_vazbou']++;
     if ($st !== 'chybi') $svp[$st]++;
     foreach ((array)(svp72_curriculum($c, $n)['outcomes'] ?? []) as $o) { $svpUsed[$o['id']] = true; $svp['vazeb_jiny_rocnik'] += (int)$o['year'] !== (SVP72_CLASS_YEAR[$c] ?? 0) ? 1 : 0; }
-    $aip['kitu']++;
-    $md = (string)@file_get_contents(aip721_kit_path($c, $n));
-    $prompts = aip721_parse($md);
+    $aip['kitu']++;   // v77: počet lekcí (prompty za běhu – lesson kity vyřazené; klíč JSON zůstává kvůli srovnání s dřívějšími reporty)
+    $prompts = aip721_prompts($c, $n);
     $aip['s_prompty'] += $prompts !== [] ? 1 : 0;
     $aip['promptu'] += count($prompts);
-    $aip['s_upozornenim'] += str_contains($md, 'Nevkládej osobní údaje') && str_contains($md, 'přihlašovací údaje školy') ? 1 : 0;
+    $aip['s_upozornenim'] += $prompts !== [] && str_contains($aipPrivacy, 'Nevkládej osobní údaje') && str_contains($aipPrivacy, 'přihlašovací údaje školy') ? 1 : 0;
     foreach ($prompts as $p) { $k = sha1($p['text']); $aip['duplicitnich_promptu'] += isset($aipSeen[$k]) ? 1 : 0; $aipSeen[$k] = true; $aip['zdvojenych_tecek'] += preg_match('/(?<!\.)\.\.(?!\.)/u', $p['text']); }
 }
 $svp['vysledku_pouzito'] = count($svpUsed);
@@ -287,7 +287,7 @@ $lines = [
     'Chybí vazba na ŠVP: ' . $svpMissing . ' lekcí',
     sprintf('ŠVP (v72.1, %s, ověřeno %s): s vazbou %d, chybí %d · schváleno %d, návrh %d, vráceno %d, změněno %d · výsledků použito %d z %d · vazeb na jiný ročník %d',
         $svp['zdroj'], $svp['overeno'], $svp['s_vazbou'], $svp['chybi'], $svp['schvaleno'], $svp['navrh'], $svp['vraceno'], $svp['zmeneno'], $svp['vysledku_pouzito'], $svp['vysledku_v_katalogu'], $svp['vazeb_jiny_rocnik']),
-    sprintf('AI prompty (v72.1): kitů %d, s prompty %d, promptů %d, s upozorněním na soukromí %d, duplicitních %d, zdvojených teček %d', $aip['kitu'], $aip['s_prompty'], $aip['promptu'], $aip['s_upozornenim'], $aip['duplicitnich_promptu'], $aip['zdvojenych_tecek']),
+    sprintf('AI prompty (v72.1, v77 za běhu): lekcí %d, s prompty %d, promptů %d, s upozorněním na soukromí %d, duplicitních %d, zdvojených teček %d', $aip['kitu'], $aip['s_prompty'], $aip['promptu'], $aip['s_upozornenim'], $aip['duplicitnich_promptu'], $aip['zdvojenych_tecek']),
     'Exit ticket v režimu podklad ke známce: ' . ($storageArg === null ? 'nezjišťováno (bez --storage)' : $exitGraded . ' odpovědí'),
     'materials/ MD: ' . implode(' · ', array_map(static fn(string $f, array $r): string => $f . ' ' . $r['souboru'] . ' souborů, šablonový podíl ' . $r['sablonovy_podil_radku'] . ' %, AI prompty ' . $r['se_sekci_ai_prompty'] . ', dupl. otázka ' . $r['s_duplicitni_otazkou'], array_keys($mdFamilies), $mdFamilies)),
     'Dny bez lekce: ' . count($calendarDays) . ' v kalendáři, karet ' . $dayCards . ' z ' . count($calendarDays) * count(LM71_CLASSES),

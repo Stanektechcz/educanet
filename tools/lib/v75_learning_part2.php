@@ -168,7 +168,8 @@ $check('opakování: z odpovědí exit ticketů vybere otázky s ≥ 30 % chyb (
     count($ticketLessons) === 2 && $pack['answers'] === 12 && count($pack['exits']) === 1 && $pack['exits'][0]['lesson'] === $ticketLessons[0] && $pack['exits'][0]['pct'] === 83 && isset($pack['exits'][0]['options'][$pack['exits'][0]['correct']]));
 $taskIds = array_column($pack['tasks'], 'task');
 $check('opakování: úlohy k tématům rozsahu (3.A L5–L16: podsítě, porty, cesty, chmod, grep…), slabé a nezkoušené první, žádná úloha mimo témata', $taskIds !== [] && in_array('net_subnet', $taskIds, true)
-    && array_diff($taskIds, tb75_tasks_for_class($C3)) === [] && rv75_build('class_1a', (array)($modules['class_1a'] ?? []), 1, 4)['tasks'] === [] && rv75_build($C3, [], 30, 2)['from'] === 28);
+    && array_diff($taskIds, tb75_tasks_for_class($C3)) === [] && ($gfx = array_column(rv75_build('class_1a', (array)($modules['class_1a'] ?? []), 1, 4)['tasks'], 'task')) !== [] && array_diff($gfx, tb75_tasks_for_class('class_1a')) === [] &&   // v77: 1.A dostává grafické úlohy (dřív žádné) – změna limitu, BUILD_MANIFEST_V77.md
+    rv75_build($C3, [], 30, 2)['from'] === 28);
 rv75_publish($C3, $pack, 'Audit Učitel');
 $pub = rv75_pack($C3);
 $check('opakování: zveřejnění uloží snímek (rozsah, otázky, úlohy, bez jmen), skrytí ho schová; 2.A bez balíčku', is_array($pub) && $pub['from'] === 5 && $pub['tasks'] === $taskIds && rv75_pack('class_2a') === null

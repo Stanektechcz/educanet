@@ -13,7 +13,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 require_once __DIR__ . '/lesson_today_v70_views.php';
 require_once __DIR__ . '/calendar_days_v71.php';
 
-/** Model stránky: v70 + den bez lekce (jen bez ručního ?lesson=) + lesson kit. */
+/** Model stránky: v70 + den bez lekce (jen bez ručního ?lesson=). v77: lesson kit je jen v aplikaci (Režim hodiny), MD kity vyřazené. */
 function lt71_model(array $modules, string $requestedClass, int $lessonParam, ?int $now = null): array
 {
     $m = lt70_model($modules, $requestedClass, $lessonParam, $now);
@@ -23,7 +23,6 @@ function lt71_model(array $modules, string $requestedClass, int $lessonParam, ?i
     $n = (int)$m['lesson']['number'];
     // v72: stav návrhu podle schválení učitelem (schváleno / vráceno / změněno po schválení), jen čtení.
     if (function_exists('lc72_status') && (string)($m['lesson']['meta']['status'] ?? '') !== 'puvodni') $m['lesson']['meta']['status'] = lc72_status($m['class'], $n)['status'];
-    $m['kit'] = ['exists' => is_file(__DIR__ . '/materials/lesson_kits/' . $m['class'] . '/lesson_' . str_pad((string)$n, 2, '0', STR_PAD_LEFT) . '.md')];
     return $m;
 }
 
@@ -96,14 +95,34 @@ function lt71_day_html(array $m): string
 {
     $d = $m['day'];
     $html = '<section class="c70-card c71-day" aria-labelledby="c71-day"><h2 id="c71-day">' . e(($d['is_today'] ? 'Dnes: ' : 'Další výukový den: ') . (string)$d['title']) . '</h2>'
-        . '<p><span class="c70-chip c70-chip-accent">den bez lekce</span> <span class="c70-chip">' . e($d['meta']['status'] === 'zakladni' ? 'základní karta' : ($d['meta']['status'] === 'schvaleno' ? 'schváleno' : 'návrh')) . '</span></p>'
+        . '<p><span class="c70-chip c70-chip-accent">den bez lekce</span> <span class="c70-chip">' . e($d['meta']['status'] === 'zakladni' ? 'základní karta' : ($d['meta']['status'] === 'schvaleno' ? 'schváleno' : 'plán dne pro učitele (návrh)')) . '</span></p>'
         . '<p class="c70-lead">' . e((string)$d['goal']) . '</p>';
     if ((string)$d['description'] !== '') $html .= '<p class="c70-muted">' . e((string)$d['description']) . '</p>';
     if ((string)$d['focus'] !== '') $html .= '<p><strong>Zaměření závěru roku:</strong> ' . e((string)$d['focus']) . '</p>';
     $html .= '<div class="c71-cols"><div><h3>Průběh (90 min)</h3>' . lt71_timeline_list($d['flow'], 'Průběh dne') . '</div><div><h3>Co mají žáci mít</h3>' . lt71_list($d['bring'])
         . '<h3>Co kontroluji</h3>' . lt71_list($d['check']) . '</div></div>';
+    $html .= lt77_day_extra_html($d);   // v77: úkoly, diferenciace, poznámky, zástup (lesson_content_v77_days_*)
     $link = $d['projects'] ? lt70_tab_link('projekty65', $m['class'], 'Projekty třídy (týmy, odevzdání, rubriky) →') : '';
     return $html . ($link !== '' ? '<p>' . $link . '</p>' : '') . '<p class="c70-muted">Níže je lekce, která je podle kalendáře na řadě, a postup žáků.</p></section>';
+}
+
+/** v77: plný obsah dne bez lekce – úkoly s výstupem, diferenciace, poznámky pro učitele, bezpečnost a zástup (prázdné části se vynechají). */
+function lt77_day_extra_html(array $d): string
+{
+    $html = '';
+    if ((array)($d['tasks'] ?? []) !== []) {
+        $items = array_map(static fn(array $t): string => $t['text'] . ($t['output'] !== '' ? ' → ' . $t['output'] : '') . ($t['time'] !== '' ? ' (' . $t['time'] . ')' : ''), (array)$d['tasks']);
+        $html .= '<h3>Úkoly a výstupy dne</h3>' . lt71_list($items);
+    }
+    $diff = (array)($d['differentiation'] ?? []);
+    if ($diff !== []) {
+        $labels = ['support' => 'Podpora', 'standard' => 'Standard', 'challenge' => 'Výzva'];
+        $html .= '<h3>Diferenciace</h3>' . lt71_list(array_values(array_map(static fn(string $k, string $v): string => ($labels[$k] ?? $k) . ': ' . $v, array_keys($diff), $diff)));
+    }
+    if ((array)($d['teacher_notes'] ?? []) !== []) $html .= '<h3>Poznámky pro učitele</h3>' . lt71_list((array)$d['teacher_notes']);
+    if ((array)($d['safety'] ?? []) !== []) $html .= '<h3>Bezpečnost a soukromí</h3>' . lt71_list((array)$d['safety']);
+    if ((array)($d['substitution'] ?? []) !== []) $html .= '<details class="c71-missing"><summary>Pro zástup a plán B offline</summary>' . lt71_list((array)$d['substitution']) . '</details>';
+    return $html;
 }
 
 function lt71_kpis_html(array $m): string
@@ -192,7 +211,7 @@ function lt71_notes_html(array $m): string
     return $html . '</section>';
 }
 
-/** Materiály v70 + odkaz na lesson kit v Režimu hodiny (soubory materials/ jsou z webu zakázané, kit se zobrazí v aplikaci). */
+/** Materiály v70 + odkaz na lesson kit v Režimu hodiny (kit skládá aplikace z obsahu lekce – v77 bez souborů v materials/). */
 function lt71_materials_html(array $m): string
 {
     // v74: má-li třída knihovnu materiálů, karta ukazuje knihovnu (povinné a ověřené první, vyřazené nikdy); jinak zdroje v70 jako dosud.
@@ -200,8 +219,7 @@ function lt71_materials_html(array $m): string
     if (!c70_tab_visible('teach')) return $html;
     $n = (int)$m['lesson']['number'];
     $url = (function_exists('teacher68_tab_url') ? teacher68_tab_url('teach', $m['class']) : '?tab=teach&class=' . rawurlencode($m['class'])) . '&lesson=' . $n . '#lesson-kit';
-    $kit = '<p class="c71-kit"><a class="c70-link" href="' . e($url) . '">Lesson kit lekce ' . $n . ' (video, prezentace, podklady) →</a>'
-        . ($m['kit']['exists'] ? '' : ' <span class="c70-muted">Podklad v materiálech pro tuto lekci chybí.</span>') . '</p>';
+    $kit = '<p class="c71-kit"><a class="c70-link" href="' . e($url) . '">Lesson kit lekce ' . $n . ' (video, prezentace, podklady) →</a></p>';
     $pos = strrpos($html, '</section>');
     return $pos === false ? $html . $kit : substr($html, 0, $pos) . $kit . '</section>';
 }

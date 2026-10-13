@@ -79,7 +79,8 @@ function c70_related_rules(): array
         'hodina_zastup' => [['hodina_tisk', 'Tisk: pracovní list pro plán B'], ['hodina', 'Dnešní hodina']],   // v73
         'reflexe73' => [['hodina', 'Dnešní hodina: „Minule“'], ['schvalovani', 'Schvalování lekcí']],   // v73
         'tyden74' => [['hodina', 'Dnešní hodina: komu dnes pomoct'], ['hromadne74', 'Hromadné schválení'], ['reflexe73', 'Zapsat reflexi hodiny']],   // v74
-        'hromadne74' => [['schvalovani', 'Schvalování lekcí: náhled jedné lekce'], ['tyden74', 'Týdenní souhrn: termíny T-14']],   // v74
+        'hromadne74' => [['schvalovani', 'Schvalování lekcí: náhled jedné lekce'], ['streda77', 'Středa: T-14 po třídách'], ['tyden74', 'Týdenní souhrn: termíny T-14']],   // v74, v77
+        'streda77' => [['hromadne74', 'Hromadné schválení'], ['schvalovani', 'Schvalování lekcí: náhled jedné lekce'], ['tyden74', 'Týdenní souhrn']],   // v77
         'materialy74' => [['hodina', 'Dnešní hodina: materiály k lekci'], ['curriculum', 'Plán a kurikulum']],   // v74
         'kompetence75' => [['kompetence', 'Kompetence 1.A a 3.A'], ['cesty', 'Výukové cesty']],   // v75
         'ulohy75' => [['opakovani75', 'Opakování před písemkou'], ['urovne75', 'Úrovně v hodině']],   // v75

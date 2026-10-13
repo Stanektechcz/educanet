@@ -1,0 +1,10 @@
+/* EDUCANET v77 · Středa: T-14 (modul streda77). Jen rozvržení – barvy z tokenů v61/v67 (světlý i tmavý režim). */
+.t1477-filter { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.t1477-filter .btn { min-height: 44px; display: inline-flex; align-items: center; }
+.t1477-filter .btn[aria-current="page"] { border-color: var(--ui-accent); color: var(--ui-accent-ink); box-shadow: inset 0 -3px 0 var(--ui-accent); }
+.t1477-class-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin-bottom: 12px; }
+.t1477-class-head h2 { margin: 0; }
+.t1477-class-head .btn { margin-left: auto; min-height: 44px; display: inline-flex; align-items: center; }
+.t1477-class.is-warn { border-left: 4px solid var(--ui-warn-ink); }
+.t1477-table td .c70-chip { margin-right: 4px; }
+@media (max-width: 600px) { .t1477-class-head .btn { margin-left: 0; width: 100%; justify-content: center; } }

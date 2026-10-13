@@ -31,7 +31,7 @@ register_shutdown_function(static function () use ($cacheDir): void {
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 foreach (['tutorial_v52.php', 'learning_v56.php', 'lesson_model_v71.php', 'lesson_glossary_v72.php', 'competencies_v62.php', 'competencies_v75.php', 'lesson_approval_v72.php',
-    'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'ai_prompts_v72_1.php', 'ai_prompts_v76.php', 'svp_v72.php', 'taskbank_v75_gen.php', 'taskbank_v75.php', 'levels_v75.php',
+    'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'ai_prompts_v72_1.php', 'ai_prompts_v76.php', 'ai_prompts_v77.php', 'svp_v72.php', 'taskbank_v75_gen.php', 'taskbank_v75.php', 'levels_v75.php',
     'linux_v57_core.php', 'linux_v57_world.php', 'linux_v57_shell.php', 'linux_v57_cmd_files.php', 'linux_v57_cmd_shell.php', 'linux_v57_cmd_text.php',
     'linux_v57_cmd_sys.php', 'linux_v57_cmd_net.php', 'linux_v57_manual.php', 'linux_v57_levels.php', 'linux_v57_levels_ops.php', 'linux_v57_lab.php'] as $lib) require_once $ROOT . '/' . $lib;
 
@@ -54,7 +54,7 @@ foreach (array_merge($contentFiles, $levelFiles, ['ai_prompts_v76.php']) as $f) 
 }
 $check('soubory vlny 2 (8 obsahu, 4 úrovní, AI prompty): strict_types, guard, ≤ 800 řádků, PHP 8.1' . ($bad ? ' [' . implode(', ', $bad) . ']' : ''), $bad === []);
 $check('overlay lm71 načítá právě 8 souborů vlny 2 (lesson_content_v76_*) po souborech vlny 1', array_values(array_filter(lm71_overlay_files(), static fn(string $f): bool => str_starts_with($f, 'lesson_content_v76_'))) === $contentFiles
-    && count(lm71_overlay_files()) === 16);
+    && count(array_filter(lm71_overlay_files(), static fn(string $f): bool => preg_match('/^lesson_content_v7[26]_/', $f) === 1)) === 16);   // v77: + lesson_content_v77_* (změna limitu, BUILD_MANIFEST_V77.md)
 
 // ---------------------------------------------------------------- 2) povinná pole a úplnost
 $rawOv = [];
