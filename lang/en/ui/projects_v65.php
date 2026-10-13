@@ -127,4 +127,6 @@ return [
     'Průběh projektů' => 'Project progress',
     'Zatím nemáš žádný projekt' => 'You have no project yet',
     'Vyber si z nabídky níže a napiš krátký návrh.' => 'Pick one from the list below and write a short proposal.',
+    'Vyber ohodnocený projekt výše, nebo připni odkaz na svou práci níže.' => 'Choose a graded project above, or pin a link to your work below.',   // v79.1
+    'Připnout práci' => 'Pin a work',   // v79.1
 ];

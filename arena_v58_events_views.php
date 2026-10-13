@@ -207,7 +207,7 @@ function arena58_ctf_render_create_form(string $csrf, array $classes): void
           <?php foreach ($classes as $cid): ?><label class="arn58e-check"><input type="checkbox" name="class_ids[]" value="<?= arn58ev_h($cid) ?>"> <?= arn58ev_h(arn58ev_class_label($cid)) ?></label><?php endforeach; ?>
         </fieldset>
         <div class="arn58e-fields">
-          <label>Délka (dní)<input type="number" name="duration_days" min="<?= ARENA58_CTF_DAYS_MIN ?>" max="<?= ARENA58_CTF_DAYS_MAX ?>" value="<?= ARENA58_CTF_DAYS_DEFAULT ?>"></label>
+          <label>Délka (dní)<input type="number" inputmode="numeric" name="duration_days" min="<?= ARENA58_CTF_DAYS_MIN ?>" max="<?= ARENA58_CTF_DAYS_MAX ?>" value="<?= ARENA58_CTF_DAYS_DEFAULT ?>"></label>
           <label>Režim<select name="mode"><option value="solo">Každý sám</option><option value="teams">Týmy (vyrovnané)</option></select></label>
           <label>Velikost týmu<select name="team_size"><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option></select></label>
           <label>Srážka za nápovědu<select name="hint_penalty"><?php foreach ([0.1, 0.2, 0.3, 0.4, 0.5] as $p): ?><option value="<?= $p ?>"<?= $p === 0.2 ? ' selected' : '' ?>><?= (int)round($p * 100) ?> %</option><?php endforeach; ?></select></label>
@@ -409,7 +409,7 @@ function arena58_inc_render_create_form(string $classId, string $csrf): void
         <?php arn58ev_hidden($csrf, 'arena58_inc_create', $classId); ?>
         <label>Název<input name="title" maxlength="80" placeholder="např. Opravárenská směna"></label>
         <div class="arn58e-fields">
-          <label>Délka okna (hodin)<input type="number" name="duration_hours" min="<?= ARENA58_INC_HOURS_MIN ?>" max="<?= ARENA58_INC_HOURS_MAX ?>" value="<?= ARENA58_INC_HOURS_DEFAULT ?>"></label>
+          <label>Délka okna (hodin)<input type="number" inputmode="numeric" name="duration_hours" min="<?= ARENA58_INC_HOURS_MIN ?>" max="<?= ARENA58_INC_HOURS_MAX ?>" value="<?= ARENA58_INC_HOURS_DEFAULT ?>"></label>
           <label>Režim<select name="mode"><option value="solo">Každý sám</option><option value="teams">Týmy (vyrovnané)</option></select></label>
           <label>Velikost týmu<select name="team_size"><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option></select></label>
           <label>Srážka za nápovědu<select name="hint_penalty"><?php foreach ([0.1, 0.2, 0.3, 0.4, 0.5] as $p): ?><option value="<?= $p ?>"<?= $p === 0.2 ? ' selected' : '' ?>><?= (int)round($p * 100) ?> %</option><?php endforeach; ?></select></label>

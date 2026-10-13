@@ -91,10 +91,10 @@ function proj60_render_item_form(string $id, array $item, array $allowed, string
         . '<label>' . e(tr('Detail (jen po dosažení levelu)')) . ' <textarea name="detail_private">' . e((string)($item['detail_private'] ?? '')) . '</textarea></label>'
         . '<label>' . e(tr('Dovednosti (oddělené čárkou)')) . ' <input type="text" name="skills" value="' . e(implode(', ', (array)($item['skills'] ?? []))) . '"></label>'
         . proj60_render_required_fields((array)($item['required_competencies'] ?? []))
-        . '<label>' . e(tr('Minimální úroveň')) . ' <input type="number" name="min_level" min="1" required value="' . (int)($item['min_level'] ?? 1) . '"></label>'
+        . '<label>' . e(tr('Minimální úroveň')) . ' <input type="number" inputmode="numeric" name="min_level" min="1" required value="' . (int)($item['min_level'] ?? 1) . '"></label>'
         . '<label>' . e(tr('Typ odměny')) . ' <select name="reward_type"><option value="kc">' . e(tr('Peníze (Kč)')) . '</option><option value="portfolio">' . e(tr('Do portfolia')) . '</option><option value="certificate">' . e(tr('Certifikát')) . '</option><option value="other">' . e(tr('Jiné')) . '</option></select></label>'
         . '<label>' . e(tr('Poznámka k odměně (bez konkrétních částek do systému)')) . ' <input type="text" name="reward_note" value="' . e((string)($item['reward_note'] ?? '')) . '"></label>'
-        . '<label>' . e(tr('Kapacita (počet míst)')) . ' <input type="number" name="capacity" min="1" value="' . (int)($item['capacity'] ?? 1) . '"></label>'
+        . '<label>' . e(tr('Kapacita (počet míst)')) . ' <input type="number" inputmode="numeric" name="capacity" min="1" value="' . (int)($item['capacity'] ?? 1) . '"></label>'
         . '<label>' . e(tr('Termín (RRRR-MM-DD, nepovinné)')) . ' <input type="text" name="deadline" value="' . e((string)($item['deadline'] ?? '')) . '"></label>'
         . '<fieldset><legend>' . e(tr('Třídy, kterým se projekt nabízí')) . '</legend>';
     foreach ($allowed as $c) {

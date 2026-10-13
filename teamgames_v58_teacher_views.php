@@ -167,14 +167,14 @@ function tg58_render_create_form(string $classId, string $csrf, bool $liveExists
         <label>Název (nepovinné)<input name="title" maxlength="80" placeholder="např. Páteční štafeta"></label>
         <label>Linie<select name="line"><option value="networks">Sítě (3.A/4.A)</option><option value="graphics">Grafika a web (1.A/2.A)</option></select></label>
         <label>Sestavení týmů<select name="team_mode"><option value="snake">Vyrovnaně podle bodů</option><option value="random">Náhodně</option></select></label>
-        <label>Počet týmů<input type="number" name="team_count" min="2" max="8" value="4"></label>
+        <label>Počet týmů<input type="number" inputmode="numeric" name="team_count" min="2" max="8" value="4"></label>
         <label>Jména na projektoru<select name="names"><option value="initials">Jméno + iniciála</option><option value="full">Celá jména</option><option value="anon">Anonymně</option></select></label>
-        <label>Délka (min, 0 = bez limitu)<input type="number" name="duration_min" min="0" max="180" value="25"></label>
-        <fieldset data-tg58-type-field="relay"><legend>Štafeta</legend><label>Počet úseků (3–5)<input type="number" name="legs" min="3" max="5" value="4"></label></fieldset>
+        <label>Délka (min, 0 = bez limitu)<input type="number" inputmode="numeric" name="duration_min" min="0" max="180" value="25"></label>
+        <fieldset data-tg58-type-field="relay"><legend>Štafeta</legend><label>Počet úseků (3–5)<input type="number" inputmode="numeric" name="legs" min="3" max="5" value="4"></label></fieldset>
         <fieldset data-tg58-type-field="bingo"><legend>Bingo</legend><label>Velikost karty<select name="size"><option value="4">4×4</option><option value="5">5×5</option></select></label></fieldset>
-        <fieldset data-tg58-type-field="jeopardy"><legend>Riskuj!</legend><label>Velikost tabule<select name="size"><option value="5">5×5</option><option value="4">4×4</option></select></label><label>Okno na odpověď (s)<input type="number" name="window_s" min="20" max="60" value="35"></label></fieldset>
-        <fieldset data-tg58-type-field="tug"><legend>Přetahovaná</legend><label>Počet kol<input type="number" name="rounds" min="1" max="5" value="3"></label><p class="tg58-muted small">Vždy přesně 2 týmy (celá třída).</p></fieldset>
-        <fieldset data-tg58-type-field="netadmin"><legend>Správci sítě/webu</legend><label>Počet uzlů (16–24)<input type="number" name="node_count" min="16" max="24" value="20"></label><label>Vlna nových závad (min)<input type="number" name="wave_minutes" min="3" max="15" value="5"></label></fieldset>
+        <fieldset data-tg58-type-field="jeopardy"><legend>Riskuj!</legend><label>Velikost tabule<select name="size"><option value="5">5×5</option><option value="4">4×4</option></select></label><label>Okno na odpověď (s)<input type="number" inputmode="numeric" name="window_s" min="20" max="60" value="35"></label></fieldset>
+        <fieldset data-tg58-type-field="tug"><legend>Přetahovaná</legend><label>Počet kol<input type="number" inputmode="numeric" name="rounds" min="1" max="5" value="3"></label><p class="tg58-muted small">Vždy přesně 2 týmy (celá třída).</p></fieldset>
+        <fieldset data-tg58-type-field="netadmin"><legend>Správci sítě/webu</legend><label>Počet uzlů (16–24)<input type="number" inputmode="numeric" name="node_count" min="16" max="24" value="20"></label><label>Vlna nových závad (min)<input type="number" inputmode="numeric" name="wave_minutes" min="3" max="15" value="5"></label></fieldset>
         <div class="tg58-actions"><button class="btn primary" type="submit">Vytvořit hru</button></div>
       </form>
     </section>

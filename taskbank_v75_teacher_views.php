@@ -100,7 +100,7 @@ function tb75_key_html(string $class, array $student, int $index, array $tasks, 
     $html = '<section class="c70-card c70-wide" aria-labelledby="tb75-t-key"><h2 id="tb75-t-key">Klíč k variantám: ' . e($label) . '</h2>'
         . '<p class="c70-muted">' . ($round > 0 ? 'Kolo ' . $round . ' u všech úloh. ' : 'Aktuální kolo každé úlohy (to, co žák právě vidí). ') . 'Varianta je pevně daná pseudonymem žáka a kolem – stejný klíč dostanete i příště.</p>'
         . '<form method="get" class="tb75-round"><input type="hidden" name="tab" value="ulohy75"><input type="hidden" name="class" value="' . e($class) . '"><input type="hidden" name="zak" value="' . $index . '">'
-        . '<label for="tb75-kolo">Jiné kolo</label><input id="tb75-kolo" name="kolo" type="number" min="1" max="999" value="' . ($round > 0 ? $round : '') . '"><button class="btn secondary" type="submit">Ukázat</button></form><div class="tb75-keys">';
+        . '<label for="tb75-kolo">Jiné kolo</label><input id="tb75-kolo" name="kolo" type="number" inputmode="numeric" min="1" max="999" value="' . ($round > 0 ? $round : '') . '"><button class="btn secondary" type="submit">Ukázat</button></form><div class="tb75-keys">';
     foreach ($tasks as $t) {
         $e = tb75_entry(tb75_student_state($class, $ref, $data), $t);
         $r = $round > 0 ? $round : $e['round'];

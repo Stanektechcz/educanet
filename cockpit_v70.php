@@ -29,7 +29,9 @@ function c70_kpis_html(array $items, string $label): string
 {
     $html = '<section class="c70-kpis" aria-label="' . e($label) . '">';
     foreach ($items as [$name, $value, $hint, $tone]) {
-        $html .= '<article class="c70-kpi' . ($tone !== '' ? ' is-' . e($tone) : '') . '"><span>' . e($name) . '</span><strong>' . e($value) . '</strong><small>' . e($hint) . '</small></article>';
+        $toneText = ['warn' => 'Pozor', 'ok' => 'V pořádku'][$tone] ?? '';   // v79.1: tón i textem (barva nenese informaci sama)
+        $html .= '<article class="c70-kpi' . ($tone !== '' ? ' is-' . e($tone) : '') . '"><span>' . e($name) . '</span><strong>' . e($value) . '</strong><small>' . e($hint) . '</small>'
+            . ($toneText !== '' ? '<em class="c791-tone">' . e($toneText) . '</em>' : '') . '</article>';
     }
     return $html . '</section>';
 }
@@ -43,6 +45,8 @@ function c70_empty_html(string $title, string $text, array $next, string $classI
         $url = function_exists('teacher68_tab_url') ? teacher68_tab_url($tab, $classId) : '?tab=' . rawurlencode($tab);
         $links[] = '<a class="btn secondary" href="' . e($url) . '">' . e($label) . '</a>';
     }
+    // v79.1: prázdný stav má vždy akci – když žádná z navržených záložek není vidět, nabídne návrat na „Co řešit dnes“.
+    if ($links === [] && c70_tab_visible('attention')) $links[] = '<a class="btn secondary" href="' . e(function_exists('teacher68_tab_url') ? teacher68_tab_url('attention', '') : '?tab=attention') . '">Otevřít Co řešit dnes</a>';
     return '<section class="c70-empty" role="status"><h2>' . e($title) . '</h2><p>' . e($text) . '</p>' . ($links !== [] ? '<p class="c70-actions">' . implode('', $links) . '</p>' : '') . '</section>';
 }
 

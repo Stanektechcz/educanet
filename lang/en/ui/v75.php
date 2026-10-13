@@ -99,4 +99,6 @@ return [
     'Procvič si' => 'Practise',
     'K těmto lekcím teď nejsou úlohy s variantami.' => 'There are no tasks with variants for these lessons right now.',
     'Úroveň si vybereš v den, kdy lekci budete mít.' => 'You can choose the level on the day you have the lesson.',
+    'Zpět na přehled' => 'Back to overview',   // v79.1
+    'Připnout první práci' => 'Pin your first work',   // v79.1
 ];

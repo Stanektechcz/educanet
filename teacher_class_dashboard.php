@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
+if (is_file(__DIR__ . '/ux_v79_1.php')) require_once __DIR__ . '/ux_v79_1.php';   // v79.1: řazení a stránkování výsledků, ukazatele s textem
+
 function teacher_class_pct(?float $value, int $decimals = 0): string
 {
     return $value === null ? '—' : number_format($value, $decimals, ',', ' ') . ' %';
@@ -330,6 +332,17 @@ function teacher_render_class_results(string $classId): void
     $projects = (array)$results['projects'];
     $gradeCounts = (array)$results['grade_counts'];
     $maxGradeCount = max(1, ...array_values($gradeCounts ?: [1]));
+    // v79.1: řazení a stránkování po 50 na serveru (GET ?razeni/?smer/?strana, jen čtení); filtrovací lišta (JS) beze změny filtruje zobrazenou stranu.
+    $dtState = function_exists('dt791_state') ? dt791_state(['poradi', 'student', 'prumer', 'znamka', 'mastery', 'priorita', 'stav', 'ukoly'], 'poradi') : null;
+    $dtRows = [];
+    foreach (array_values($students) as $dtI => $dtStudent) {
+        $dtRows[] = ['row' => $dtStudent, 'text' => (string)($dtStudent['label'] ?? ''), 'sort' => ['poradi' => $dtI, 'student' => (string)($dtStudent['label'] ?? ''), 'prumer' => $dtStudent['avg_project_pct'] ?? null,
+            'znamka' => $dtStudent['avg_grade'] ?? null, 'mastery' => $dtStudent['mastery'] ?? null, 'priorita' => ['high' => 0, 'medium' => 1, 'normal' => 2][(string)($dtStudent['priority'] ?? 'normal')] ?? 3,
+            'stav' => (string)($dtStudent['status_key'] ?? ''), 'ukoly' => (int)($dtStudent['active_tasks'] ?? 0)]];
+    }
+    $dtRes = $dtState !== null ? dt791_apply($dtRows, $dtState) : ['rows' => $dtRows, 'total' => count($dtRows), 'matched' => count($dtRows), 'page' => 1, 'pages' => 1, 'from' => 1, 'to' => count($dtRows)];
+    $dtBase = ['tab' => 'class_results', 'class' => $classId];
+    $dtTh = static fn(string $key, string $label, string $cls = ''): string => $dtState !== null ? str_replace('<th scope="col"', '<th scope="col"' . ($cls !== '' ? ' class="' . $cls . '"' : ''), dt791_th(['key' => $key, 'label' => $label, 'sort' => true], $dtBase, $dtState, 'class-results-table')) : '<th' . ($cls !== '' ? ' class="' . $cls . '"' : '') . '>' . e($label) . '</th>';
     $filterState=teacher_class_filter_state($classId,'class_results');$filterStatus=(string)$filterState['status'];$filterPriority=(string)$filterState['priority'];$filterTaskStatus=(string)$filterState['task_status'];$filterTaskDue=(string)$filterState['task_due'];$filterRules=(array)($filterState['rules']??[]);$filterRuleMode=(string)($filterState['rule_mode']??'all');$filterPresetId=(string)($filterState['preset_id']??'');
     ?>
     <section class="teacher-page-head class-results-head"><div><div class="eyebrow">Výsledky třídy · <?=e(teacher_class_label($classId))?></div><h1>Výsledky, progres a signály studentů</h1><p>Jeden přehled spojuje publikovaná projektová hodnocení, testy, dokončené laboratoře, prestižní zkoušky a Skill Mastery. Koncepty nejsou zahrnuté do třídních průměrů.</p></div><div class="teacher-hero-actions"><a class="btn secondary" href="?tab=class_overview&class=<?=e($classId)?>">Přehled třídy</a><button class="btn primary" type="button" onclick="window.print()">Tisk / PDF</button></div></section>
@@ -344,7 +357,7 @@ function teacher_render_class_results(string $classId): void
     </section>
 
     <div class="class-results-top-grid">
-      <section class="teacher-panel"><div class="teacher-panel-head"><div><span>Distribuce</span><h2>Průměrná projektová známka studentů</h2></div></div><div class="grade-distribution"><?php for($grade=1;$grade<=5;$grade++): $count=(int)($gradeCounts[$grade]??0); $width=(int)round($count/$maxGradeCount*100); ?><div><span><?=$grade?></span><progress max="100" value="<?=$width?>"></progress><b><?=$count?></b></div><?php endfor; ?></div></section>
+      <section class="teacher-panel"><div class="teacher-panel-head"><div><span>Distribuce</span><h2>Průměrná projektová známka studentů</h2></div></div><?php if(function_exists('ind791_bars_html')): /* v79.1: pruhy s textovými popisky + tabulka pro čtečky */ $gradeBars=[]; for($grade=1;$grade<=5;$grade++){ $count=(int)($gradeCounts[$grade]??0); $gradeBars[]=['Známka '.$grade,$count,$count.' '.($count===1?'žák':($count>=2&&$count<=4?'žáci':'žáků'))]; } echo ind791_bars_html('Průměrná projektová známka studentů – počet žáků podle známky',$gradeBars,'Počet žáků',(float)$maxGradeCount); else: ?><div class="grade-distribution"><?php for($grade=1;$grade<=5;$grade++): $count=(int)($gradeCounts[$grade]??0); $width=(int)round($count/$maxGradeCount*100); ?><div><span><?=$grade?></span><progress max="100" value="<?=$width?>"></progress><b><?=$count?></b></div><?php endfor; ?></div><?php endif; ?></section>
       <section class="teacher-panel"><div class="teacher-panel-head"><div><span>Projekty</span><h2>Výkon po projektech</h2></div></div><div class="project-result-mini-list"><?php foreach($projects as $project): ?><a href="?tab=grade&class=<?=e($classId)?>&project=<?=e((string)$project['id'])?>"><div><strong><?=e((string)$project['title'])?></strong><span><?= (int)$project['published'] ?> publikováno · <?= (int)$project['returned'] ?> vráceno</span></div><b><?=teacher_class_pct($project['avg_pct'],0)?></b><i>→</i></a><?php endforeach; ?></div></section>
     </div>
 
@@ -368,7 +381,7 @@ function teacher_render_class_results(string $classId): void
 
         <div class="class-bulk-actionbar" data-bulk-actionbar>
           <label class="bulk-select-visible"><input type="checkbox" data-select-visible> <span>Vybrat viditelné</span></label>
-          <div class="bulk-selection-summary"><strong data-bulk-count>0</strong><span>vybráno</span><small><b data-visible-count><?=count($students)?></b> z <?=count($students)?> viditelných</small></div>
+          <div class="bulk-selection-summary"><strong data-bulk-count>0</strong><span>vybráno</span><small><b data-visible-count><?=count($dtRes['rows'])?></b> z <?=count($students)?> viditelných</small></div>
           <div class="bulk-actions">
             <details class="bulk-action-menu"><summary>Označit <i>⌄</i></summary><div class="bulk-action-popover"><label>Označení<select name="marker"><option value="urgent">Urgentní</option><option value="watch">Sledovat</option><option value="resolved">Vyřešeno</option><option value="none">Zrušit označení</option></select></label><p>Označení je interní pro učitele a mění prioritu v tomto přehledu.</p><button class="btn secondary small" type="submit" name="action" value="teacher_bulk_mark" data-requires-selection disabled>Použít na vybrané</button></div></details>
             <button class="btn secondary small" type="submit" name="action" value="teacher_bulk_export" data-requires-selection disabled>Export CSV</button>
@@ -379,25 +392,27 @@ function teacher_render_class_results(string $classId): void
           </div>
         </div>
 
-        <div class="class-results-table-wrap"><table class="class-results-table class-results-table-v45-4" data-class-results-table><thead><tr><th class="result-check-col"><span class="sr-only">Vybrat</span></th><th>Student</th><th>Projekty</th><th>Průměr</th><th>Známka</th><th>Testy</th><th>Laboratoře</th><th>Prestige</th><th>Mastery</th><th>Priorita</th><th>Stav</th><th>Úkoly</th><th></th></tr></thead><tbody>
-        <?php foreach($students as $row): $activity=(array)($row['activity']??[]); $last=(int)($row['last_activity']??0); $status=(string)($row['status_key']??teacher_student_result_status($row)); $priority=(string)($row['priority']??'normal'); $marker=(string)($row['marker']??'none'); $taskSummary=(array)($row['task_summary']??[]); ?>
+        <?php if($students===[] && function_exists('ux791_empty_html')): /* v79.1: vysvětlený prázdný stav */ echo ux791_empty_html('Třída zatím nemá žáky','Výsledky se ukážou, jakmile budou žáci v seznamu třídy (seznamovací dotazník nebo účty v záložce Přístupy).',[['?'.http_build_query(['tab'=>'pristupy','class'=>$classId]),'Otevřít Přístupy'],['?'.http_build_query(['tab'=>'intake','class'=>$classId]),'Otevřít Dotazník']]); endif; ?>
+        <div class="class-results-table-wrap" id="class-results-table" role="region" tabindex="0" aria-label="Tabulka výsledků (posuvná)"><table class="class-results-table class-results-table-v45-4" data-class-results-table><caption class="sr-only">Kompletní tabulka výsledků<?php if($dtRes['pages']>1): ?> – strana <?= (int)$dtRes['page'] ?> z <?= (int)$dtRes['pages'] ?><?php endif; ?></caption><thead><tr><th class="result-check-col" scope="col"><span class="sr-only">Vybrat</span></th><?=$dtTh('student','Student','result-student')?><th scope="col">Projekty</th><?=$dtTh('prumer','Průměr')?><?=$dtTh('znamka','Známka')?><th scope="col">Testy</th><th scope="col">Laboratoře</th><th scope="col">Prestige</th><?=$dtTh('mastery','Mastery')?><?=$dtTh('priorita','Priorita')?><?=$dtTh('stav','Stav')?><?=$dtTh('ukoly','Úkoly')?><th scope="col"><span class="sr-only">Odkazy</span></th></tr></thead><tbody>
+        <?php foreach($dtRes['rows'] as $dtRow): $row=$dtRow['row']; $activity=(array)($row['activity']??[]); $last=(int)($row['last_activity']??0); $status=(string)($row['status_key']??teacher_student_result_status($row)); $priority=(string)($row['priority']??'normal'); $marker=(string)($row['marker']??'none'); $taskSummary=(array)($row['task_summary']??[]); ?>
           <tr data-result-row data-name="<?=e(normalized_person_name((string)$row['label']))?>" data-search="<?=e(normalized_person_name((string)$row['label'].' '.(string)($row['seat_label']??'').' '.(string)($row['email']??'')))?>" data-attention="<?=!empty($row['attention'])?'1':'0'?>" data-status="<?=e($status)?>" data-priority="<?=e($priority)?>" data-marker="<?=e($marker)?>" data-project="<?=e($row['avg_project_pct']===null?'-1':(string)$row['avg_project_pct'])?>" data-grade="<?=e($row['avg_grade']===null?'99':(string)$row['avg_grade'])?>" data-mastery="<?=e($row['mastery']===null?'-1':(string)$row['mastery'])?>" data-activity="<?=$last?>" data-task-active="<?= (int)($taskSummary['active']??0) ?>" data-task-done="<?= (int)($taskSummary['done']??0) ?>" data-task-total="<?= (int)($taskSummary['total']??0) ?>" data-task-overdue="<?= (int)($taskSummary['overdue']??0) ?>" data-task-today="<?= (int)($taskSummary['due_today']??0) ?>" data-task-next3="<?= (int)($taskSummary['due_3']??0) ?>" data-task-next7="<?= (int)($taskSummary['due_7']??0) ?>" data-task-no-due="<?= (int)($taskSummary['no_due_active']??0) ?>" data-inactive-days="<?=e($row['inactive_days']===null?'-1':(string)$row['inactive_days'])?>" data-score-drop="<?=e($row['score_drop']===null?'999':(string)$row['score_drop'])?>" data-returned="<?= (int)($row['returned']??0) ?>" data-published="<?= (int)($row['published']??0) ?>" data-tests="<?= (int)($activity['tests']??0) ?>" data-labs="<?= (int)($activity['labs']??0) ?>">
-            <td class="result-check-col"><input type="checkbox" name="student_keys[]" value="<?=e((string)$row['key'])?>" data-row-select aria-label="Vybrat <?=e((string)$row['label'])?>"></td>
-            <td><div class="result-student-cell"><span class="teacher-avatar"><?=e(strtoupper(u_substr((string)$row['label'],0,1)))?></span><div><strong><?=e((string)$row['label'])?></strong><small><?=e((string)($row['seat_label']?:$row['email']?:'bez doplňujících údajů'))?></small><?php if($marker!=='none'): ?><em class="result-marker marker-<?=e($marker)?>"><?=e(teacher_student_marker_label($marker))?></em><?php endif; ?></div></div></td>
-            <td><strong><?= (int)$row['published'] ?></strong><small><?= (int)$row['drafts'] ?> koncept · <?= (int)$row['returned'] ?> vráceno</small></td>
-            <td><b><?=teacher_class_pct($row['avg_project_pct'],0)?></b></td>
-            <td><?php if($row['avg_grade']===null): ?>—<?php else: ?><span class="grade-pill grade-<?=max(1,min(5,(int)round((float)$row['avg_grade'])))?>"><?=teacher_class_grade($row['avg_grade'])?></span><?php endif; ?></td>
-            <td><strong><?= (int)($activity['tests']??0) ?>×</strong><small>best <?=teacher_class_pct(isset($activity['best_test'])&&$activity['best_test']!==null?(float)$activity['best_test']:null,0)?></small></td>
-            <td><strong><?= (int)($activity['labs']??0) ?>×</strong><small>dokončeno</small></td>
-            <td><strong><?= (int)($activity['prestige_passed']??0) ?> / <?= (int)($activity['prestige_attempts']??0) ?></strong><small>úspěšně / pokusy</small></td>
-            <td><b><?=teacher_class_pct($row['mastery'],0)?></b></td>
-            <td><span class="result-priority priority-<?=e($priority)?>"><i></i><?=e(teacher_student_priority_label($priority))?></span></td>
-            <td><span class="result-status <?=e($status==='ok'?'ok':($status==='no_result'?'neutral':'attention'))?>"><?=e(teacher_student_status_label($status))?></span><?php if($last>0): ?><small><?=e(date('d.m.Y',$last))?></small><?php endif; ?></td>
-            <td><strong><?= (int)($row['active_tasks']??0) ?></strong><small>aktivní · <?= (int)($row['done_tasks']??0) ?> hotovo</small><?php if((int)($row['active_tasks']??0)>0): ?><em class="task-deadline <?=((int)($taskSummary['overdue']??0)>0?'overdue':((int)($taskSummary['due_3']??0)>0?'soon':''))?>"><?=e(teacher_task_deadline_label($taskSummary))?></em><?php endif; ?></td>
-            <td><div class="result-row-actions"><a href="?tab=student360&class=<?=e($classId)?>&student=<?=e((string)$row['key'])?>">360°</a><a href="?tab=skills&class=<?=e($classId)?>&student=<?=e(skill_student_key_for_label($classId,(string)$row['label']))?>">Skills</a><a href="?tab=grade&class=<?=e($classId)?>">Hodnotit</a></div></td>
+            <td class="result-check-col" data-label="Vybrat"><input type="checkbox" name="student_keys[]" value="<?=e((string)$row['key'])?>" data-row-select aria-label="Vybrat <?=e((string)$row['label'])?>"></td>
+            <td class="result-student" data-label="Student"><div class="result-student-cell"><span class="teacher-avatar"><?=e(strtoupper(u_substr((string)$row['label'],0,1)))?></span><div><strong><?=e((string)$row['label'])?></strong><small><?=e((string)($row['seat_label']?:$row['email']?:'bez doplňujících údajů'))?></small><?php if($marker!=='none'): ?><em class="result-marker marker-<?=e($marker)?>"><?=e(teacher_student_marker_label($marker))?></em><?php endif; ?></div></div></td>
+            <td data-label="Projekty"><strong><?= (int)$row['published'] ?></strong><small><?= (int)$row['drafts'] ?> koncept · <?= (int)$row['returned'] ?> vráceno</small></td>
+            <td data-label="Průměr"><b><?=teacher_class_pct($row['avg_project_pct'],0)?></b></td>
+            <td data-label="Známka"><?php if($row['avg_grade']===null): ?>—<?php else: ?><span class="grade-pill grade-<?=max(1,min(5,(int)round((float)$row['avg_grade'])))?>"><?=teacher_class_grade($row['avg_grade'])?></span><?php endif; ?></td>
+            <td data-label="Testy"><strong><?= (int)($activity['tests']??0) ?>×</strong><small>best <?=teacher_class_pct(isset($activity['best_test'])&&$activity['best_test']!==null?(float)$activity['best_test']:null,0)?></small></td>
+            <td data-label="Laboratoře"><strong><?= (int)($activity['labs']??0) ?>×</strong><small>dokončeno</small></td>
+            <td data-label="Prestige"><strong><?= (int)($activity['prestige_passed']??0) ?> / <?= (int)($activity['prestige_attempts']??0) ?></strong><small>úspěšně / pokusy</small></td>
+            <td data-label="Mastery"><b><?=teacher_class_pct($row['mastery'],0)?></b></td>
+            <td data-label="Priorita"><span class="result-priority priority-<?=e($priority)?>"><i></i><?=e(teacher_student_priority_label($priority))?></span></td>
+            <td data-label="Stav"><span class="result-status <?=e($status==='ok'?'ok':($status==='no_result'?'neutral':'attention'))?>"><?=e(teacher_student_status_label($status))?></span><?php if($last>0): ?><small><?=e(date('d.m.Y',$last))?></small><?php endif; ?></td>
+            <td data-label="Úkoly"><strong><?= (int)($row['active_tasks']??0) ?></strong><small>aktivní · <?= (int)($row['done_tasks']??0) ?> hotovo</small><?php if((int)($row['active_tasks']??0)>0): ?><em class="task-deadline <?=((int)($taskSummary['overdue']??0)>0?'overdue':((int)($taskSummary['due_3']??0)>0?'soon':''))?>"><?=e(teacher_task_deadline_label($taskSummary))?></em><?php endif; ?></td>
+            <td data-label="Odkazy"><div class="result-row-actions"><a href="?tab=student360&class=<?=e($classId)?>&student=<?=e((string)$row['key'])?>">360°</a><a href="?tab=skills&class=<?=e($classId)?>&student=<?=e(skill_student_key_for_label($classId,(string)$row['label']))?>">Skills</a><a href="?tab=grade&class=<?=e($classId)?>">Hodnotit</a></div></td>
           </tr>
         <?php endforeach; ?>
         </tbody></table><div class="teacher-empty class-results-no-match" data-class-results-empty hidden>Žádný student neodpovídá aktivním filtrům.</div></div>
+        <?php if($dtState!==null && $dtRes['pages']>1): ?><div class="ds78 dt791 dt791-pager-only"><?=dt791_pager_html($dtBase,$dtState,$dtRes,'class-results-table')?></div><?php endif; ?>
       </form>
     </section>
     <?php

@@ -40,20 +40,40 @@ function ov61_render_kpis(array $data): void
     echo '</ul>';
 }
 
-function ov61_render_lagging(array $data): void
+function ov61_render_lagging(array $data, string $classId = ''): void
 {
     echo '<section class="teacher-panel ov61-panel" aria-labelledby="ov61-lag-h"><div class="teacher-panel-head"><div><span>Zaostávání</span><h2 id="ov61-lag-h">Kdo potřebuje pomoc</h2></div>'
         . '<small>Žádná aktivita ' . OV61_INACTIVE_DAYS . ' dní a víc, nebo mastery pod ' . (int)OV61_LOW_MASTERY . ' % u žáka, který už začal.</small></div>';
-    if ($data['lagging'] === []) {
-        echo '<p class="teacher-empty">Nikdo ze třídy podle těchto pravidel nezaostává.</p></section>';
+    if ($data['students'] === []) {
+        echo function_exists('ux791_empty_html')
+            ? ux791_empty_html('Třída zatím nemá žáky', 'Žáci se do seznamu dostanou přes seznamovací dotazník nebo účty v záložce Přístupy.', ov61_empty_actions($classId, [['pristupy', 'Otevřít Přístupy'], ['intake', 'Otevřít Dotazník']]), 'h3')
+            : '<p class="teacher-empty">Třída zatím nemá žáky.</p>';
+        echo '</section>';
         return;
     }
-    echo '<div class="ov61-table-wrap"><table class="ov61-table"><caption class="ov61-sr">Žáci, kteří zaostávají</caption><thead><tr><th scope="col">Žák</th><th scope="col">Poslední aktivita</th><th scope="col">Mastery</th><th scope="col">Důvod</th></tr></thead><tbody>';
-    foreach ($data['lagging'] as $s) {
-        echo '<tr><th scope="row">' . e($s['label']) . '</th><td>' . e(ov61_date((int)$s['last'])) . '</td><td>'
-            . ($s['mastery'] === null ? '—' : e(number_format((float)$s['mastery'], 0, ',', ' ')) . ' %') . '</td><td>' . e(implode('; ', $s['reasons'])) . '</td></tr>';
+    if ($data['lagging'] === []) echo '<p class="teacher-empty" role="status">Nikdo ze třídy podle těchto pravidel nezaostává. Níže je celá třída.</p>';
+    if (!function_exists('dt791_table_html')) { echo '</section>'; return; }
+    // v79.1: celá třída v tabulce (zaostávající nahoře – stejné pořadí jako dřív), řazení, filtr a stránkování po 50 na serveru (GET, jen čtení).
+    $cols = [['key' => 'zak', 'label' => 'Žák', 'sort' => true], ['key' => 'stav', 'label' => 'Stav', 'sort' => true], ['key' => 'aktivita', 'label' => 'Poslední aktivita', 'sort' => true],
+        ['key' => 'mastery', 'label' => 'Mastery', 'sort' => true], ['key' => 'duvod', 'label' => 'Důvod']];
+    $rows = [];
+    foreach (array_values($data['students']) as $i => $s) {
+        $mastery = $s['mastery'] === null ? '—' : number_format((float)$s['mastery'], 0, ',', ' ') . ' %';
+        $state = $s['lagging'] ? 'Potřebuje pomoc' : 'V pořádku';
+        $rows[] = ['sort' => ['poradi' => $i, 'zak' => (string)$s['label'], 'stav' => $s['lagging'] ? 0 : 1, 'aktivita' => (int)$s['last'] > 0 ? (int)$s['last'] : null, 'mastery' => $s['mastery'] === null ? null : (float)$s['mastery']],
+            'text' => implode(' ', [$s['label'], $state, ov61_date((int)$s['last']), $mastery, implode(' ', $s['reasons'])]), 'class' => $s['lagging'] ? 'is-warn' : '',
+            'cells' => [e($s['label']), '<span class="ds-badge ' . ($s['lagging'] ? 'is-warn' : 'is-ok') . '">' . e($state) . '</span>', e(ov61_date((int)$s['last'])), e($mastery), e($s['reasons'] === [] ? '—' : implode('; ', $s['reasons']))]];
     }
-    echo '</tbody></table></div></section>';
+    $state = dt791_state(['poradi', 'zak', 'stav', 'aktivita', 'mastery'], 'poradi');
+    echo dt791_table_html('ov61-zaci', 'Žáci třídy (zaostávající nahoře)', $cols, $rows, ['tab' => 'prehled', 'class' => $classId], $state, 'Jméno nebo důvod') . '</section>';
+}
+
+/** v79.1: akce prázdného stavu jen do záložek, které učitel vidí. @param list<array{0:string,1:string}> $tabs */
+function ov61_empty_actions(string $classId, array $tabs): array
+{
+    $out = [];
+    foreach ($tabs as [$tab, $label]) if (!function_exists('c70_tab_visible') || c70_tab_visible($tab)) $out[] = ['?' . http_build_query(['tab' => $tab, 'class' => $classId]), $label];
+    return $out;
 }
 
 function ov61_render_reports(array $data, string $classId, string $csrf, bool $canManage, array $labels): void
@@ -61,7 +81,7 @@ function ov61_render_reports(array $data, string $classId, string $csrf, bool $c
     echo '<section class="teacher-panel ov61-panel" aria-labelledby="ov61-rep-h"><div class="teacher-panel-head"><div><span>Hlášení žáků</span><h2 id="ov61-rep-h">Čeká na potvrzení</h2></div>'
         . '<small>Potvrzení odměňuje výchozími body a XP podle typu, každé hlášení jen jednou.</small></div>';
     if ($data['reports'] === []) {
-        echo '<p class="teacher-empty">Žádné nové hlášení.</p></section>';
+        echo function_exists('ux791_empty_html') ? ux791_empty_html('Žádné nové hlášení', 'Žáci zatím nenahlásili chybu ani návrh. Nová hlášení se objeví tady i v záložce Hlášení.', ov61_empty_actions($classId, [['hlaseni', 'Otevřít Hlášení']]), 'h3') . '</section>' : '<p class="teacher-empty">Žádné nové hlášení.</p></section>';
         return;
     }
     // Formulář (CSRF + akce) jen pro toho, kdo smí rozhodovat; asistent dostane čistě čtecí seznam.
@@ -88,7 +108,7 @@ function ov61_render_applications_and_purchases(array $data, string $classId, ar
 {
     echo '<section class="teacher-panel ov61-panel" aria-labelledby="ov61-app-h"><div class="teacher-panel-head"><div><span>Projekty a obchod</span><h2 id="ov61-app-h">Další čeká na rozhodnutí</h2></div></div><div class="ov61-two">';
     echo '<div><h3>Přihlášky na projekty</h3>';
-    if ($data['applications'] === []) echo '<p class="teacher-empty">Žádná přihláška nečeká.</p>';
+    if ($data['applications'] === []) echo function_exists('ux791_empty_html') ? ux791_empty_html('Žádná přihláška nečeká', 'Žáci se zatím nepřihlásili na nabídku projektu. Nabídky projektů spravujete v záložce Nabídky projektů.', ov61_empty_actions($classId, [['projekty', 'Otevřít Nabídky projektů']]), 'p') : '<p class="teacher-empty">Žádná přihláška nečeká.</p>';
     else {
         echo '<ul class="ov61-list">';
         foreach (array_slice($data['applications'], 0, OV61_LIST_MAX) as $app) {
@@ -99,7 +119,7 @@ function ov61_render_applications_and_purchases(array $data, string $classId, ar
     }
     echo '<a class="btn secondary" href="?tab=projekty&amp;class=' . e(rawurlencode($classId)) . '">Rozhodnout v záložce Projekty</a></div>';
     echo '<div><h3>Nákupy k případnému vrácení</h3>';
-    if ($data['purchases'] === []) echo '<p class="teacher-empty">Za ' . OV61_PURCHASE_DAYS . ' dní žádný nevrácený nákup.</p>';
+    if ($data['purchases'] === []) echo function_exists('ux791_empty_html') ? ux791_empty_html('Žádný nákup k vrácení', 'Za ' . OV61_PURCHASE_DAYS . ' dní žáci v obchodě nic nekoupili, nebo je vše vrácené.', ov61_empty_actions($classId, [['obchod', 'Otevřít Obchod']]), 'p') : '<p class="teacher-empty">Za ' . OV61_PURCHASE_DAYS . ' dní žádný nevrácený nákup.</p>';
     else {
         echo '<ul class="ov61-list">';
         foreach (array_slice($data['purchases'], 0, OV61_LIST_MAX) as $buy) {
@@ -135,7 +155,7 @@ function ov61_render_teacher_tab(string $requestedClass, string $csrf): void
     if ($classId !== '') echo '<a class="btn secondary" href="?tab=prehled&amp;export=1&amp;class=' . e(rawurlencode($classId)) . '" download>Exportovat do CSV</a>';
     echo '</section>';
     if ($classId === '') {
-        echo '<p class="teacher-empty">Nemáte přiřazenou žádnou třídu. Požádejte administrátora o přidělení.</p>';
+        echo function_exists('ux791_empty_html') ? ux791_empty_html('Nemáte přiřazenou žádnou třídu', 'Přehled třídy se ukáže, jakmile vám administrátor přidělí třídu (Správa → Učitelé).', [['?tab=attention', 'Otevřít Co řešit dnes']]) : '<p class="teacher-empty">Nemáte přiřazenou žádnou třídu. Požádejte administrátora o přidělení.</p>';
         return;
     }
     ov61_render_class_nav($classId);
@@ -144,7 +164,7 @@ function ov61_render_teacher_tab(string $requestedClass, string $csrf): void
     $labels = ov61_labels(project_students_for_class($classId));
     $canManage = !function_exists('teacher_permission') || teacher_permission('content.manage');
     ov61_render_kpis($data);
-    ov61_render_lagging($data);
+    ov61_render_lagging($data, $classId);
     ov61_render_reports($data, $classId, $csrf, $canManage, $labels);
     ov61_render_applications_and_purchases($data, $classId, $labels);
 }

@@ -759,3 +759,13 @@ Podrobnosti: `CHANGELOG_V79.md`, `BUILD_MANIFEST_V79.md` (soubory, změny limit�
 - **Žák:** Úlohy (`?view=ulohy&uloha=…`) a připnutí práce v Portfoliu po krocích; stránky načítají `assets/components-v78.css` a `assets/stepper-v79.css` (v těle stránky jako ostatní CSS v75).
 - **Rollback vydání:** nasadit v78.1 (`19a2a3d`). Rozpracované koncepty v relaci tím jen zaniknou, data se nemění.
 - **Kontrola po nasazení:** `php tools/v79_stepper_audit.php` → `V79_STEPPER_AUDIT_OK` (prohlížečová část jen s Chrome + `playwright-core` v `NODE_PATH`, jinak SKIP; vynutit `EDUCANET_STEPPER_BROWSER=require`); celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v79.1 · přehlednost obsahu: Dnešní hodina, tabulky, formuláře, prázdné stavy
+
+Podrobnosti: `CHANGELOG_V79_1.md`, `BUILD_MANIFEST_V79_1.md` (soubory, změny limitů auditů, výkon), návod `docs/NAVOD_V79_1.md`. Nové PHP rozšíření ani migraci nevyžaduje, úložiště beze změny, žádná nová POST akce.
+
+- **Nové soubory:** `ux_v79_1.php` (prázdný stav s akcí, tabulka s řazením/filtrem/stránkováním na serveru, ukazatel s tabulkou pro čtečky), `lesson_today_v79_1_views.php` (hero karta a pořadí sekcí Dnešní hodiny; `lt71_render_tab` sem deleguje), `assets/content-v79-1.css` (načítá se na každé záložce cockpitu přes `nav781_css_html`), `assets/today-v79-1.js` (sbalitelné sekce na mobilu), `assets/dark/student-dark-ulohy-v69.css` a `student-dark-portfolio-v69.css` (generované `php tools/v69_dark_overlay.php`).
+- **Nové GET parametry (jen zobrazení):** `?razeni`, `?smer`, `?filtr`, `?strana` na záložkách `prehled`, `schvalovani`, `class_results` – zapsané v `teacher59_get_policies()` jako informativní, hodnoty přes whitelist.
+- **Žák:** `UI67_DARK_VIEWS` + `ulohy`, `portfolio` (tmavý režim podle zařízení i na Úlohách a Portfoliu). Nové msgid prázdných stavů v `lang/<en|uk>/ui/v75.php` a `projects_v65.php`.
+- **Rollback vydání:** nasadit v79 (`9c927d6`). Data se nemění; v prohlížečích zůstane jen nepoužívaný klíč `edu.lt791.closed` v `localStorage`.
+- **Kontrola po nasazení:** `php tools/v79_1_content_audit.php` → `V79_1_CONTENT_AUDIT_OK` (prohlížečová část jen s Chrome + `playwright-core` v `NODE_PATH`, jinak SKIP; vynutit `EDUCANET_V791_BROWSER=require`, snímky `EDUCANET_V791_SHOTS=<adresář>`); celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.

@@ -6,7 +6,7 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 /**
  * EDUCANET v69 · tools/v69_dark_overlay.php – tmavá vrstva žáka rozdělená podle pohledu.
  *
- *   php tools/v69_dark_overlay.php            vygeneruje assets/dark/student-dark-<pohled>-v69.css (home, dashboard, profile)
+ *   php tools/v69_dark_overlay.php            vygeneruje assets/dark/student-dark-<pohled>-v69.css (home, dashboard, profile; v79.1 + ulohy, portfolio)
  *   php tools/v69_dark_overlay.php --check    ověří, že soubory odpovídají zdrojům (V69_OVERLAY_CURRENT / V69_OVERLAY_STALE, exit 1)
  *   php tools/v69_dark_overlay.php --stats    velikost a gzip každého souboru
  *
@@ -44,6 +44,20 @@ const DO69_VIEWS = [
         'js' => ['student-ui-v50-7-7.js', 'ui-v51.js', 'student-v55.js', 'learning-v56.js', 
             'nav-v61.js', 'i18n-v58.js'],
         'out' => 'assets/dark/student-dark-profile-v69.css',
+    ],
+    // v79.1: Úlohy (krokový postup v79) a Portfolio – tmavý režim podle zařízení jako Domů / Přehled / Profil. Styly = rámec stránky žáka + vrstva pohledu;
+    // tokenové vrstvy v78/v79 (tokens-v78, components-v78, stepper-v79, nav-student-v78-1) mají tmavý režim samy, proto tu nejsou.
+    'ulohy' => [
+        'css' => ['app.css', 'mastery.css', 'cognitive-v43.css', 'learning-studio-v44.css', 'visual-simulation-v45.css', 'student-ui-v50-7-7.css', 'ui-v51.css', 'tutorial-v52.css',
+            'session-v53.css', 'brand-v54.css', 'student-v55.css', 'learning-v56.css', 'components-v61.css', 'nav-v61.css', 'i18n-v59.css', 'learn-v75.css'],
+        'js' => ['student-ui-v50-7-7.js', 'ui-v51.js', 'student-v55.js', 'learning-v56.js', 'nav-v61.js', 'i18n-v58.js', 'stepper-v79.js'],
+        'out' => 'assets/dark/student-dark-ulohy-v69.css',
+    ],
+    'portfolio' => [
+        'css' => ['app.css', 'mastery.css', 'cognitive-v43.css', 'learning-studio-v44.css', 'visual-simulation-v45.css', 'student-ui-v50-7-7.css', 'ui-v51.css', 'tutorial-v52.css',
+            'session-v53.css', 'brand-v54.css', 'student-v55.css', 'learning-v56.css', 'components-v61.css', 'nav-v61.css', 'i18n-v59.css', 'projects-v65.css', 'learn-v75.css'],
+        'js' => ['student-ui-v50-7-7.js', 'ui-v51.js', 'student-v55.js', 'learning-v56.js', 'nav-v61.js', 'i18n-v58.js', 'projects-v65.js', 'stepper-v79.js'],
+        'out' => 'assets/dark/student-dark-portfolio-v69.css',
     ],
 ];
 

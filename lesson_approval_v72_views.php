@@ -72,21 +72,33 @@ function lc72_status_chip(array $status): string
 
 function lc72_table_html(string $class, array $rows, int $selected): string
 {
-    if ($rows === []) return '<section class="c70-empty" role="status"><h2>Třída zatím nemá žádný návrh obsahu.</h2><p>Lekce používají původní obsah.</p></section>';
-    $html = '<section class="c70-card c70-wide" aria-labelledby="lc72-list"><h2 id="lc72-list">Lekce s návrhem obsahu</h2>'
-        . '<table class="c70-table"><caption class="c70-sr">Lekce, jejich stav a datum výuky</caption><thead><tr><th scope="col">Lekce</th><th scope="col">Výuka</th>'
-        . '<th scope="col">Stav</th><th scope="col">Úplnost</th></tr></thead><tbody>';
-    foreach ($rows as $r) {
+    if ($rows === []) {
+        return function_exists('ux791_empty_html')
+            ? ux791_empty_html('Třída zatím nemá žádný návrh obsahu.', 'Lekce používají původní obsah. Návrh obsahu přibude s obsahovou stopou; do té doby není co schvalovat.',
+                array_values(array_filter([c70_tab_visible('curriculum') ? ['?' . http_build_query(['tab' => 'curriculum', 'class' => $class]), 'Otevřít Plán a kurikulum'] : null,
+                    c70_tab_visible('hodina') ? ['?' . http_build_query(['tab' => 'hodina', 'class' => $class]), 'Otevřít Dnešní hodinu'] : null])))
+            : '<section class="c70-empty" role="status"><h2>Třída zatím nemá žádný návrh obsahu.</h2><p>Lekce používají původní obsah.</p></section>';
+    }
+    $html = '<section class="c70-card c70-wide" aria-labelledby="lc72-list"><h2 id="lc72-list">Lekce s návrhem obsahu</h2>';
+    $statusOrder = ['vraceno' => 0, 'zmeneno' => 1, 'navrh' => 2, 'schvaleno' => 3];
+    $table = [];
+    foreach (array_values($rows) as $i => $r) {
         $n = (int)$r['number'];
         $url = '?tab=schvalovani&class=' . rawurlencode($class) . '&lesson=' . $n . '#lc72-preview';
         $when = $r['date'] === '' ? '—' : date('j. n. Y', (int)strtotime($r['date']));
         if ($r['days'] !== null && $r['days'] >= 0) $when .= ' (za ' . (int)$r['days'] . ' d)';
-        $html .= '<tr' . ($r['t14'] ? ' class="is-behind"' : '') . '><th scope="row"><a href="' . e($url) . '"' . ($n === $selected ? ' aria-current="true"' : '') . '>' . e((string)$r['title']) . '</a></th>'
-            . '<td data-label="Výuka">' . e($when) . ($r['t14'] ? ' <span class="c70-chip c70-chip-warn">schvalte do výuky</span>' : '') . '</td>'
-            . '<td data-label="Stav">' . lc72_status_chip($r['status']) . '</td>'
-            . '<td data-label="Úplnost">' . (int)$r['completeness']['score'] . '/' . (int)$r['completeness']['total'] . '</td></tr>';
+        $table[] = ['sort' => ['lekce' => $n, 'vyuka' => $r['date'] === '' ? null : (string)$r['date'], 'stav' => $statusOrder[$r['status']['status']] ?? 9, 'uplnost' => (int)$r['completeness']['score'], 'poradi' => $i],
+            'text' => implode(' ', ['L' . $n, (string)$r['title'], $when, (string)$r['status']['label'], $r['t14'] ? 'schvalte do výuky T-14' : '']), 'class' => $r['t14'] ? 'is-warn' : '',
+            'cells' => ['<a href="' . e($url) . '"' . ($n === $selected ? ' aria-current="true"' : '') . '>' . e((string)$r['title']) . '</a>',
+                e($when) . ($r['t14'] ? ' <span class="c70-chip c70-chip-warn">schvalte do výuky</span>' : ''), lc72_status_chip($r['status']),
+                (int)$r['completeness']['score'] . '/' . (int)$r['completeness']['total']]];
     }
-    return $html . '</tbody></table></section>';
+    if (!function_exists('dt791_table_html')) return $html . '</section>';
+    // v79.1: řazení, filtr a stránkování po 50 na serveru (GET ?razeni/?smer/?filtr/?strana, jen čtení); výchozí pořadí podle čísla lekce.
+    $cols = [['key' => 'lekce', 'label' => 'Lekce', 'sort' => true], ['key' => 'vyuka', 'label' => 'Výuka', 'sort' => true], ['key' => 'stav', 'label' => 'Stav', 'sort' => true], ['key' => 'uplnost', 'label' => 'Úplnost', 'sort' => true]];
+    $state = dt791_state(['lekce', 'vyuka', 'stav', 'uplnost', 'poradi'], 'lekce');
+    $base = ['tab' => 'schvalovani', 'class' => $class] + ($selected > 0 ? ['lesson' => (string)$selected] : []);
+    return $html . dt791_table_html('lc72-tab', 'Lekce, jejich stav a datum výuky', $cols, $table, $base, $state, 'Číslo, název nebo stav lekce') . '</section>';
 }
 
 /** Náhled celého návrhu lekce + formuláře rozhodnutí. */

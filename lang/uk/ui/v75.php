@@ -99,4 +99,6 @@ return [
     'Procvič si' => 'Потренуйся',
     'K těmto lekcím teď nejsou úlohy s variantami.' => 'Для цих уроків зараз немає завдань із варіантами.',
     'Úroveň si vybereš v den, kdy lekci budete mít.' => 'Рівень обереш у день, коли у вас буде урок.',
+    'Zpět na přehled' => 'Назад до огляду',   // v79.1
+    'Připnout první práci' => 'Закріпити першу роботу',   // v79.1
 ];

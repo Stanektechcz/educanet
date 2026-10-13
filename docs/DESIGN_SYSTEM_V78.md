@@ -126,3 +126,34 @@ s `!important`. Mimo `.ds78` se nic nemění.
 - `php tools/v78_design_tokens_audit.php` – 35 kontrol (tokeny, kontrast, barvy mimo tokeny, písmo, 44 px, breakpointy, rozpočty, registrace, HTTP).
 - Prohlížeč (Chrome, Playwright): ukázka na 11 šířkách 320–1920 (+ 1366 × 600) ve světlém i tmavém režimu – bez vodorovného posunu,
   všechny cíle ≥ 44 px, žádné písmo pod 14 px, barvy komponent = tokeny (starší vrstvy je nepřebíjejí). Snímky `docs/screens-v78/`.
+
+## 8. Obsahové vzory (v79.1, fáze D)
+| Vzor | Značky / funkce | Pravidla |
+|---|---|---|
+| Hero karta hodiny | `section.ds78.lt791-hero` (`lesson_today_v79_1_views.php`) | třída a předmět v `h1`, lekce, `dl.lt791-facts` (Čas, Cíl, Stav jako odznak s textem), jedna primární akce + max. 2 sekundární |
+| Pořadí obsahu hodiny | `.lt791-flow > .lt791-sec[data-lt791-sec]` | Plán po minutách → Materiály → Komu pomoct → Exit ticket → Poznámky, pak ostatní; na xl (≥ 1366 px) kontextový panel `.lt791-ctx` (`role=complementary`) vpravo přes CSS grid, bez duplicity v HTML |
+| Sbalitelné sekce | `assets/today-v79-1.js` | jen pod 768 px, tlačítko v nadpisu s `aria-expanded`/`aria-controls`, stav v `localStorage` jen v `try/catch`; bez JS nebo úložiště je vše rozbalené |
+| Tabulka s řazením | `dt791_table_html()` (`ux_v79_1.php`) | řazení, filtr a stránkování po 50 **na serveru** přes GET `?razeni`, `?smer`, `?filtr`, `?strana` (whitelist, neplatné hodnoty = výchozí); `caption`, `th scope`, `aria-sort`, `td[data-label]`; < 768 px (a v kontejneru < 480 px) karty, od 768 px lepicí hlavička a první sloupec |
+| Prázdný stav | `ux791_empty_html($title, $why, $actions)` | nadpis = co tu bude, odstavec = proč je prázdno, tlačítko = co udělat (`role=status`); nebezpečné URL se vynechají |
+| Ukazatel s pruhy | `ind791_bars_html()` | pruh jen dekorace (`aria-hidden`), hodnota vždy textem, tabulka pro čtečky se stejnými čísly; KPI dlaždice mají tón i textem („Pozor“, „V pořádku“) |
+| Formulář | `fieldset` + `legend`, `.ds-help` pod polem s `aria-describedby` | na mobilu 1 sloupec; čísla `inputmode="numeric"`, e-mail `type=email autocomplete=email`, jméno učitele `autocomplete=username`, adresy `type=url` |
+
+## 9. Mikrotexty a glosář (v79.1)
+**Pravidla:** tlačítko začíná slovesem v infinitivu a říká výsledek (*Otevřít Přístupy*, ne *Přístupy →*); max. 3 slova; stejná akce má všude
+stejný název; nadpis prázdného stavu říká, co tu chybí, druhá věta proč a co se stane; stav vždy textem, barva jen doplňuje. Bez vykřičníků a zdrobnělin.
+
+| Akce / pojem | Používáme | Nepoužíváme |
+|---|---|---|
+| přejít na jinou záložku | **Otevřít …** (Otevřít Přehled třídy, Otevřít Přístupy, Otevřít Hlášení) | Přejít na…, Jít do…, šipka bez slovesa |
+| projektor | **Spustit projektor** | Projektor, Promítat |
+| tisk | **Vytisknout hodinu** / Tisk (plán + pracovní list) v odkazech | Tisknout, Print |
+| příprava | **Otevřít přípravu hodiny** | Příprava → |
+| filtr tabulky | **Filtrovat**, **Použít**, **Zrušit filtr** | Hledat (u tabulek), Reset |
+| řazení | **Řadit podle**, **Směr** (Vzestupně / Sestupně) | Sort, Seřadit dle |
+| počet řádků | **Zobrazeno 1–50 z 101** | Výsledky 1-50/101 |
+| stránkování | **Strana 2 z 3** | Page, Další stránka » |
+| schválení | **Schválit**, **Vrátit k úpravě**; stav *Návrh čeká na schválení* / *Schváleno* | OK, Potvrdit (u obsahu) |
+| T-14 | **T-14: schválit do výuky** (lekce, které se učí do 14 dní) | dva týdny dopředu |
+| Komu pomoct | **Komu dnes pomoct** (výběr podle signálů) | Problémoví žáci, Slabí žáci |
+| exit ticket | **Exit ticket** (krátké ověření na konci hodiny) | Výstupní lístek, Kvízek |
+| prázdno | *Třída zatím nemá žáky* · *Žádné nové hlášení* · *Filtru nic neodpovídá* | Nic tu není, Žádná data |

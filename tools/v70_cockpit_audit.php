@@ -79,6 +79,7 @@ unset($get['tyden74|paleta']);   // v74: JSON žáků pro rychlé hledání (mod
 unset($get['portfolia75|tisk'], $get['opakovani75|tisk']);   // v75: stránky k tisku (moduly portfolia75 / opakovani75) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V75.md)
 unset($get['plan76|tisk'], $get['svp76|tisk'], $get['svp76|csv']);   // v76: tisk Plánu vs. skutečnosti a tisk/CSV Plnění ŠVP (moduly plan76 / svp76) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V76.md)
 unset($get['priprava79|krok'], $get['reflexe73|krok'], $get['hromadne74|krok'], $get['opakovani75|krok'], $get['identita|krok']);   // v79: číslo kroku stepperu (jen přepíná zobrazení) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V79.md)
+foreach (['prehled', 'schvalovani', 'class_results'] as $t791) foreach (['razeni', 'smer', 'filtr', 'strana'] as $p791) unset($get[$t791 . '|' . $p791]);   // v79.1: řazení, filtr a stránkování tabulek (jen zobrazení) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V79_1.md)
 ksort($get);
 $check('politiky teacher59: POST i GET tabulka beze změny proti v69 (v70 nepřidává akci ani GET parametr registru)',
     hash('sha256', (string)json_encode($post)) === V70C_POST_POLICY_SHA && hash('sha256', (string)json_encode($get)) === V70C_GET_POLICY_SHA);

@@ -25,7 +25,8 @@ function pf75_render_student_section(string $classId, string $studentKey): void
         . '<div class="p65"><section class="p65-card" aria-labelledby="pf75-h"><h2 id="pf75-h">' . e(tr('Připnuté práce')) . '</h2>'
         . '<p class="p65-noprint">' . e(tr('Připni odkaz na svou grafiku nebo web, vyřešenou úlohu nebo projekt a napiš, co ses naučil/a. Vidíš to jen ty a tvoji učitelé, kteří ti můžou napsat komentář.')) . '</p>';
     if ($pins === []) {
-        echo '<p class="l75-empty" role="status">' . e(tr('Zatím tu nic není. Začni třeba odkazem na práci, na kterou jsi hrdý/á.')) . '</p>';
+        echo '<div class="l75-empty" role="status"><p>' . e(tr('Zatím tu nic není. Začni třeba odkazem na práci, na kterou jsi hrdý/á.')) . '</p>'
+            . '<p><a class="btn primary" href="#sp79-top">' . e(tr('Připnout první práci')) . '</a></p></div>';   // v79.1: prázdný stav s akcí (krokový formulář níže)
     } else {
         echo '<ol class="pf75-list">';
         foreach ($pins as $id => $p) echo pf75_pin_html((string)$id, $p, $csrf);

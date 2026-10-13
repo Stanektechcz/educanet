@@ -27,7 +27,8 @@ function port65v_render_page(string $classId, string $studentKey, string $flash)
     echo '</section>';
     $model = port65_view_model($classId, $studentKey);
     echo '<section class="p65-card" aria-labelledby="p65-prev"><h2 id="p65-prev">' . e(tr('Náhled portfolia')) . '</h2>';
-    if ($model === []) echo '<p>' . e(tr('Zatím nemáš nic vybráno.')) . '</p>';
+    if ($model === []) echo '<div class="l75-empty" role="status"><p>' . e(tr('Zatím nemáš nic vybráno.')) . ' ' . e(tr('Vyber ohodnocený projekt výše, nebo připni odkaz na svou práci níže.')) . '</p>'
+        . '<p><a class="btn secondary" href="#sp79-top">' . e(tr('Připnout práci')) . '</a></p></div>';   // v79.1: vysvětlení + akce
     foreach ($model as $item) echo port65v_item_html($item, true);
     echo '</section></div>';
 }

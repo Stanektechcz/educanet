@@ -29,6 +29,7 @@ function lt71_model(array $modules, string $requestedClass, int $lessonParam, ?i
 /** Záložka „Dnešní hodina“. $now jen pro audit (pevné datum); v provozu aktuální čas. */
 function lt71_render_tab(array $modules, string $classId, ?int $now = null): void
 {
+    if (function_exists('lt791_render_tab')) { lt791_render_tab($modules, $classId, $now); return; }   // v79.1: hero karta, pořadí sekcí, kontextový panel (lesson_today_v79_1_views.php)
     $requested = is_string($_GET['class'] ?? null) ? (string)$_GET['class'] : '';
     $lesson = is_string($_GET['lesson'] ?? null) && preg_match('/^\d{1,2}$/', (string)$_GET['lesson']) === 1 ? (int)$_GET['lesson'] : 0;
     try {

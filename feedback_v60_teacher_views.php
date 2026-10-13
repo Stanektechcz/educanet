@@ -69,7 +69,11 @@ function fb60_render_teacher_tab(string $classId, string $csrf): void
         . '<p class="teacher-note">Potvrzením hlášení žák získá body a XP – za jedno hlášení jen jednou, i kdyby ses k potvrzení vrátil/a. Zamítnout už odměněné hlášení nejde.</p>';
     fb60_render_filters($filters, $allowed, $isAdmin);
     if ($rows === []) {
-        echo '<p class="teacher-empty">Žádná hlášení neodpovídají filtru.</p></section>';
+        // v79.1: vysvětlený prázdný stav s akcí
+        $anyFilter = $filters['status'] !== '' || $filters['type'] !== '' || $filters['class'] !== '';
+        echo '<div class="c70-empty" role="status"><h3>' . ($anyFilter ? 'Žádná hlášení neodpovídají filtru.' : 'Zatím žádné hlášení') . '</h3><p>'
+            . ($anyFilter ? 'Zkuste jiný stav, typ nebo třídu – nebo filtr zrušte.' : 'Žáci zatím nenahlásili chybu ani návrh. Hlášení posílají z aplikace tlačítkem Nahlásit.') . '</p>'
+            . '<p class="c70-actions"><a class="btn secondary" href="?tab=' . ($anyFilter ? 'hlaseni' : 'attention') . '">' . ($anyFilter ? 'Zrušit filtr' : 'Otevřít Co řešit dnes') . '</a></p></div></section>';
         return;
     }
     $canManage = fb60_teacher_can_manage();
@@ -119,9 +123,9 @@ function fb60_render_decision_form(array $row, string $csrf, bool $isAdmin): voi
     $xp = (int)($row['reward_points'] ?? 0) > 0 ? (int)$row['reward_xp'] : (int)$defaults['xp'];
     $locked = (int)($row['reward_points'] ?? 0) > 0;
     echo '<form method="post" class="fb60-t-form"><input type="hidden" name="csrf" value="' . e($csrf) . '"><input type="hidden" name="action" value="fb60_decide"><input type="hidden" name="id" value="' . e($id) . '">'
-        . '<label>Body (1–10)<input type="number" name="points" min="1" max="' . FB60_MAX_POINTS . '" value="' . $points . '"' . ($locked ? ' readonly' : '') . '></label>';
+        . '<label>Body (1–10)<input type="number" inputmode="numeric" name="points" min="1" max="' . FB60_MAX_POINTS . '" value="' . $points . '"' . ($locked ? ' readonly' : '') . '></label>';
     if ($isAdmin) {
-        echo '<label>XP (0–' . FB60_MAX_XP . ')<input type="number" name="xp" min="0" max="' . FB60_MAX_XP . '" value="' . $xp . '"' . ($locked ? ' readonly' : '') . '></label>';
+        echo '<label>XP (0–' . FB60_MAX_XP . ')<input type="number" inputmode="numeric" name="xp" min="0" max="' . FB60_MAX_XP . '" value="' . $xp . '"' . ($locked ? ' readonly' : '') . '></label>';
     } else {
         echo '<label>XP<select name="xp"' . ($locked ? ' disabled' : '') . '>';
         foreach (FB60_XP_PRESETS as $preset) echo '<option value="' . $preset . '"' . ($preset === $xp ? ' selected' : '') . '>' . $preset . '</option>';

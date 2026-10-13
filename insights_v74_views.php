@@ -34,7 +34,8 @@ function in74_card_html(array $m, ?int $now = null): string
         $why = $c['students'] === 0 ? 'Třída zatím nemá žáky v seznamu.'
             : ($c['idle'] === $c['students'] ? 'Žáci zatím nemají v aplikaci žádná data (' . $c['idle'] . ' bez aktivity) – signály se objeví po první práci v lekci.'
                 : 'Žádný žák teď nemá výrazný signál.' . ($c['idle'] > 0 ? ' ' . $c['idle'] . ' žáků je zatím bez aktivity (bez dat se nehodnotí).' : ''));
-        return $html . '<p class="in74-empty" role="status"><strong>Dnes nikoho nevybíráme.</strong> ' . e($why) . '</p></section>';
+        $next = function_exists('lt70_tab_link') ? lt70_tab_link($c['students'] === 0 ? 'pristupy' : 'prehled', (string)($m['class'] ?? ''), $c['students'] === 0 ? 'Otevřít Přístupy' : 'Otevřít Přehled třídy', [], 'btn secondary') : '';   // v79.1: akce prázdného stavu
+        return $html . '<p class="in74-empty" role="status"><strong>Dnes nikoho nevybíráme.</strong> ' . e($why) . '</p>' . ($next !== '' ? '<p class="c70-actions">' . $next . '</p>' : '') . '</section>';
     }
     $html .= '<p class="c70-muted">' . e('Vybráno ' . count($c['rows']) . ' z ' . $c['with_reasons'] . ' žáků se signálem' . ($c['idle'] > 0 ? ' · ' . $c['idle'] . ' bez aktivity se nehodnotí' : '') . '.') . '</p><ol class="in74-list">';
     foreach ($c['rows'] as $r) {

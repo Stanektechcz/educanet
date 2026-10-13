@@ -259,7 +259,7 @@ function intake_v51_render_teacher_tab(array $modules): void
         </div>
         <?php endif; ?>
         <section class="u51-box">
-          <div class="u51-t-head"><div><h2>Žáci</h2><p><?= count($responses) ?> odpovědí · profil otevřete tlačítkem</p></div><input class="u51-search u51-noprint" type="search" placeholder="Hledat jméno, místo, cíl…" data-u51-search></div>
+          <div class="u51-t-head"><div><h2>Žáci</h2><p><?= count($responses) ?> odpovědí · profil otevřete tlačítkem</p></div><input class="u51-search u51-noprint" type="search" aria-label="Hledat v odpovědích žáků" autocomplete="off" placeholder="Hledat jméno, místo, cíl…" data-u51-search></div>
           <div class="u51-table-wrap"><table class="u51-table">
             <thead><tr><th>Žák</th><th>Místo</th><th>Jistota</th><th>Ověření</th><th>Cíl na rok</th><th>Účet</th><th></th></tr></thead>
             <tbody>
@@ -354,8 +354,8 @@ function intake_v51_render_teacher_tab(array $modules): void
           <h2>Úvod a učebna</h2><p>Kliknutím na lavici ji zapnete nebo vypnete. Každá lavice má vždy dvě místa.</p>
           <label class="u51-field"><span>Úvodní text pro žáky</span><textarea name="intro" rows="2"><?= e($class['intro']) ?></textarea></label>
           <div class="u51-grid-2">
-            <label class="u51-field"><span>Počet řad</span><input type="number" name="rows" min="1" max="12" value="<?= (int)$class['rows'] ?>" data-u51-rows></label>
-            <label class="u51-field"><span>Lavic v řadě</span><input type="number" name="cols" min="1" max="10" value="<?= (int)$class['cols'] ?>" data-u51-cols></label>
+            <label class="u51-field"><span>Počet řad</span><input type="number" inputmode="numeric" name="rows" min="1" max="12" value="<?= (int)$class['rows'] ?>" data-u51-rows></label>
+            <label class="u51-field"><span>Lavic v řadě</span><input type="number" inputmode="numeric" name="cols" min="1" max="10" value="<?= (int)$class['cols'] ?>" data-u51-cols></label>
           </div>
           <div class="u51-editor-tools"><button type="button" class="btn secondary" data-u51-seat-all>Všechny lavice</button><button type="button" class="btn secondary" data-u51-seat-aisle>Ulička uprostřed</button></div>
           <div class="u51-room"><div class="u51-board">Tabule</div><div class="u51-desks" data-u51-seat-editor></div></div>

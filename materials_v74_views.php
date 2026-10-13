@@ -95,7 +95,7 @@ function mat74_list_html(string $class, array $items, int $lesson, string $state
     uasort($rows, static fn(array $a, array $b): int => strnatcasecmp((string)$a['title'], (string)$b['title']));
     $html = '<section class="c70-card c70-wide" aria-labelledby="mat74-list"><h2 id="mat74-list">Materiály třídy</h2>' . mat74_filter_html($class, $lesson, $state, $q);
     if ($items === []) {
-        return $html . '<div class="c70-empty" role="status"><h3>Knihovna třídy je zatím prázdná.</h3><p>Přidejte první materiál formulářem níže. Správce může jednorázově převzít videa učitelů a doporučené zdroje lekcí migrací '
+        return $html . '<div class="c70-empty" role="status"><h3>Knihovna třídy je zatím prázdná.</h3><p class="c70-actions"><a class="btn primary" href="#mat74-pridat">Přidat první materiál</a></p><p>Přidejte první materiál formulářem níže. Správce může jednorázově převzít videa učitelů a doporučené zdroje lekcí migrací '
             . '<code>php tools/migrate.php --apply --only=0004_materials_v74</code> (náhled bez změn: <code>--dry-run</code>). Do té doby Dnešní hodina ukazuje doporučené zdroje jako dosud.</p></div></section>';
     }
     if ($rows === []) return $html . '<p class="c70-muted" role="status">Filtru neodpovídá žádný materiál. <a class="c70-link" href="' . e(mat74_url($class)) . '">Zrušit filtr</a></p></section>';
@@ -157,7 +157,7 @@ function mat74_fields_html(array $f, string $prefix): string
 function mat74_add_html(string $class, string $csrf, bool $open): string
 {
     if (!mat74_can_manage()) return '<p class="c70-note" role="status">Máte jen čtení – materiály přidává a upravuje učitel třídy nebo administrátor.</p>';
-    return '<details class="c70-card c70-wide mat74-add"' . ($open ? ' open' : '') . '><summary><strong>Přidat materiál</strong> <span class="c70-muted">(vznikne verze 1)</span></summary>'
+    return '<details id="mat74-pridat" class="c70-card c70-wide mat74-add"' . ($open ? ' open' : '') . '><summary><strong>Přidat materiál</strong> <span class="c70-muted">(vznikne verze 1)</span></summary>'
         . mat74_form_open($class, 'mat74_add', $csrf) . mat74_fields_html(mat74_blank(), 'mat74-add-') . '<button class="btn primary" type="submit">Přidat do knihovny</button></form></details>';
 }
 

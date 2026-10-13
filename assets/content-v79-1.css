@@ -1,0 +1,158 @@
+/* EDUCANET v79.1 · přehlednost obsahu cockpitu: Dnešní hodina (hero, pořadí sekcí, kontextový panel xl, sbalitelné sekce na mobilu),
+   tabulky (xs/sm karty, md+ lepicí hlavička a první sloupec, řazení, filtr, stránkování), ukazatele, formuláře (1 sloupec na mobilu),
+   prázdné stavy a oprava .btn.small (9,6 px). Barvy jen tokeny: uvnitř .ds78 tokeny v78, ve starších kartách tokeny --ui-* (světlý i tmavý režim).
+   Media dotazy jen pro rozvržení stránky (breakpointy v78: 768 / 1024 / 1366), tabulky přes @container. Písmo ≥ 14 px, cíle ≥ 44 px. */
+
+/* ---------- oprava starší vrstvy: .btn.small měl 0,6rem (9,6 px) a výšku 36 px ---------- */
+.teacher-app .btn.small, .t68 .btn.small { font-size: .875rem; min-height: 44px; padding: 6px 14px; }
+
+/* ---------- Dnešní hodina ---------- */
+.lt791 { display: grid; gap: var(--ui-space-4, 16px); min-width: 0; }
+.lt791 > * { margin-top: 0; margin-bottom: 0; min-width: 0; }
+.ds78.lt791-hero { display: grid; gap: var(--space-4); padding: var(--space-4); background: var(--surface); color: var(--text); border: var(--border-width) solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-1); }
+.ds78.lt791-hero h1 { margin: 0 0 var(--space-2); font-size: var(--fs-2xl); }
+.ds78 .lt791-hero__what { margin: 0 0 var(--space-3); font-size: var(--fs-lg); font-weight: var(--fw-medium); }
+.ds78 .lt791-facts { display: grid; gap: var(--space-2); margin: 0; }
+.ds78 .lt791-facts > div { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); gap: var(--space-3); align-items: baseline; }
+.ds78 .lt791-facts dt { color: var(--muted); font-weight: var(--fw-bold); font-size: var(--fs-sm); }
+.ds78 .lt791-facts dd { margin: 0; }
+.ds78 .lt791-hero__actions { display: grid; gap: var(--space-3); align-content: start; }
+.ds78 .lt791-more { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; }
+.ds78 .lt791-fs { border: 0; padding: 0; margin: 0; min-width: 0; }
+.ds78 .lt791-fs legend { padding: 0; margin: 0 0 var(--space-2); font-weight: var(--fw-bold); }
+.ds78 .lt791-open .ds-field { margin-bottom: var(--space-3); }
+.ds78 .lt791-code { margin: 0; font-size: var(--fs-lg); }
+.ds78 .lt791-code strong { font-family: var(--font-mono); font-size: var(--fs-xl); letter-spacing: .08em; }
+.lt791 .lt791-eyebrow { margin: 0 0 4px; color: var(--ui-muted); font-size: .875rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.lt791-flow { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: var(--ui-space-4, 16px); align-items: start; }
+.lt791-ctx { display: grid; gap: var(--ui-space-4, 16px); min-width: 0; }
+.lt791-sec { min-width: 0; }
+.lt791-sec > .c70-card, .lt791-sec > section { margin: 0; }
+.lt791 .lt791-t14-list { display: grid; gap: 8px; margin: 0 0 12px; padding-left: 1.2em; }
+.lt791 .c70-card, .lt791 .c70-card p, .lt791 .c70-card li, .lt791 .c70-muted, .lt791 .c70-chip, .lt791 .c71-time { font-size: max(.875rem, 1em); }
+@media (min-width: 1024px) {
+  .ds78.lt791-hero { grid-template-columns: minmax(0, 1fr) minmax(260px, 340px); align-items: start; padding: var(--space-5); }
+}
+/* xl (PC): kontextový panel vpravo – Komu pomoct a T-14 přes celou výšku hlavního sloupce (grid, bez duplicity v HTML) */
+@media (min-width: 1366px) {
+  .lt791-flow { grid-template-columns: minmax(0, 1fr) minmax(320px, 400px); column-gap: var(--ui-space-4, 16px); row-gap: 0; }
+  .lt791-flow > * { grid-column: 1; margin-bottom: var(--ui-space-4, 16px); }
+  .lt791-flow > .lt791-ctx { grid-column: 2; grid-row: 1 / span 12; position: sticky; top: 88px; max-height: calc(100vh - 104px); overflow: auto; align-self: start; }
+  .lt791-ctx .in74-card { grid-column: auto; }
+}
+/* mobil: sbalitelné sekce (tlačítko v nadpisu přidá assets/today-v79-1.js; bez JS je vše rozbalené) */
+.lt791 .lt791-tg { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 44px; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.lt791 .lt791-tg::after { content: ""; flex: none; width: .55em; height: .55em; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); }
+.lt791 .lt791-tg[aria-expanded="true"]::after { transform: rotate(-135deg); }
+.lt791 .lt791-tg:focus-visible { outline: 3px solid var(--ui-accent, currentColor); outline-offset: 2px; }
+.lt791 .lt791-body[hidden] { display: none; }
+
+/* ---------- tabulky: Dnešní hodina (žáci) a Výsledky třídy – md+ lepicí hlavička a první sloupec ---------- */
+@media (min-width: 768px) {
+  .lt791-sec[data-lt791-sec="zaci"] > .c70-card { max-height: 80vh; overflow: auto; }
+  .lt791 .c70-table thead th { position: sticky; top: 0; z-index: 2; background: var(--ui-surface); }
+  .lt791 .c70-table tbody th[scope="row"], .lt791 .c70-table thead th:first-child { position: sticky; left: 0; z-index: 1; background: var(--ui-surface); }
+  .lt791 .c70-table thead th:first-child { z-index: 3; }
+  .class-results-table-wrap { max-height: 75vh; }
+  .class-results-table .result-check-col { position: sticky; left: 0; z-index: 1; background: var(--ui-surface); }
+  .class-results-table td.result-student { position: sticky; left: 44px; z-index: 1; background: var(--ui-surface); }
+  .class-results-table thead th.result-check-col, .class-results-table thead th.result-student { z-index: 3; }
+  .class-results-table thead th.result-student { position: sticky; left: 44px; }
+}
+.class-results-table th, .class-results-table td, .class-results-table td > small, .class-results-table td > strong, .class-results-table td > b,
+.result-student-cell strong, .result-student-cell small, .result-status, .result-priority, .result-row-actions a, .result-marker, .task-deadline { font-size: .875rem; }
+.result-row-actions a { display: inline-flex; align-items: center; min-height: 44px; }
+.class-results-table th a.dt791-sort { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; color: inherit; }
+.lt791 small, .lt791 .c70-picker a small, .lt791 .c70-table th, .lt791 .c70-table td, .dt791 .c70-chip, .class-results-table .teacher-avatar { font-size: .875rem; }
+.result-check-col input { width: 24px; height: 24px; }
+@media (max-width: 767px) {
+  .class-results-table-wrap { margin: 0; overflow: visible; }
+  .class-results-table, .class-results-table-v45-4 { min-width: 0; }
+  .class-results-table thead { display: none; }
+  .class-results-table, .class-results-table tbody, .class-results-table tr, .class-results-table td { display: block; width: 100%; }
+  .class-results-table tr { margin: 0 0 12px; padding: 8px 12px; border: 1px solid var(--ui-line); border-radius: 12px; background: var(--ui-surface); }
+  .class-results-table td { display: grid; grid-template-columns: minmax(6rem, 38%) minmax(0, 1fr); gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--ui-line); }
+  .class-results-table td:last-child { border-bottom: 0; }
+  .class-results-table td[data-label]::before { content: attr(data-label); color: var(--ui-muted); font-weight: 700; }
+  .class-results-table td > * { grid-column: 2; }
+  .class-results-table td > small { white-space: normal; }
+  .result-student-cell { min-width: 0; }
+  .lt791 .c70-table td::before { content: attr(data-label) ": "; }
+}
+
+/* ---------- tabulka dt791 (řazení, filtr, stránkování na serveru): xs/sm (< 768 px) karty, md+ tabulka s lepicí hlavičkou a prvním sloupcem;
+   v úzkém kontejneru (< 480 px, např. boční panel) také karty ---------- */
+.ds78.dt791 { background: transparent; margin: 0 0 var(--space-4); }
+.ds78 .dt791-filter { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-2) var(--space-3); margin: 0 0 var(--space-3); }
+.ds78 .dt791-field { margin: 0; flex: 1 1 16rem; max-width: 28rem; }
+.ds78 .dt791-count { flex-basis: 100%; margin: 0; }
+.ds78 .dt791-wrap { overflow: auto; }
+.ds78 .dt791-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--surface); color: var(--text); font-size: var(--fs-sm); }
+.ds78 .dt791-table caption { text-align: left; font-size: var(--fs-base); font-weight: var(--fw-bold); padding: 0 0 var(--space-2); }
+.ds78 .dt791-table th, .ds78 .dt791-table td { padding: var(--space-3); text-align: left; vertical-align: top; border-bottom: var(--border-width) solid var(--line); }
+.ds78 .dt791-table thead th { position: sticky; top: 0; z-index: 2; background: var(--surface-2); color: var(--text); font-weight: var(--fw-bold); }
+.ds78 .dt791-table tbody tr:hover > * { background: var(--surface-2); }
+.ds78 .dt791-sort { display: inline-flex; align-items: center; gap: var(--space-1); min-height: var(--target-min); min-width: var(--target-min); color: var(--text); text-decoration: none; }
+.ds78 .dt791-sortf { margin: 0; flex: 0 1 12rem; }
+.ds78 .dt791-sort:hover { color: var(--accent); text-decoration: underline; }
+.ds78 .dt791-table th[aria-sort] .dt791-sort { color: var(--accent); }
+.ds78 .dt791-table tbody th a, .ds78 .dt791-table td a { display: inline-flex; align-items: center; min-height: var(--target-min); }
+.ds78 .dt791-table tr.is-warn > th:first-child { box-shadow: inset 4px 0 0 var(--warn); }
+@media (min-width: 768px) {
+  .ds78 .dt791-wrap { max-height: 75vh; border: var(--border-width) solid var(--line); border-radius: var(--radius); }
+  .ds78 .dt791-table tbody th[scope="row"], .ds78 .dt791-table thead th:first-child { position: sticky; left: 0; z-index: 1; background: var(--surface); }
+  .ds78 .dt791-table thead th:first-child { z-index: 3; background: var(--surface-2); }
+}
+@media (max-width: 767px) {
+  .ds78 .dt791-table thead { display: none; }
+  .ds78 .dt791-table, .ds78 .dt791-table tbody, .ds78 .dt791-table tr, .ds78 .dt791-table td, .ds78 .dt791-table tbody th { display: block; width: 100%; }
+  .ds78 .dt791-table { background: transparent; }
+  .ds78 .dt791-table caption { display: block; }
+  .ds78 .dt791-table tr { background: var(--surface); border: var(--border-width) solid var(--line); border-radius: var(--radius); padding: var(--space-2) var(--space-3); margin-bottom: var(--space-3); }
+  .ds78 .dt791-table td { display: grid; grid-template-columns: minmax(6rem, 40%) minmax(0, 1fr); gap: var(--space-3); padding: var(--space-2) 0; }
+  .ds78 .dt791-table td > * { grid-column: 2; justify-self: start; }
+  .ds78 .dt791-table td::before { content: attr(data-label); color: var(--muted); font-weight: var(--fw-medium); }
+  .ds78 .dt791-table tr > :last-child { border-bottom: 0; }
+  .ds78 .dt791-table tbody th[scope="row"] { padding: var(--space-2) 0; font-size: var(--fs-base); font-weight: var(--fw-bold); }
+}
+@container (width < 480px) {
+  .ds78 .dt791-table thead { display: none; }
+  .ds78 .dt791-table, .ds78 .dt791-table tbody, .ds78 .dt791-table tr, .ds78 .dt791-table td, .ds78 .dt791-table tbody th { display: block; width: 100%; }
+  .ds78 .dt791-table td { display: grid; grid-template-columns: minmax(6rem, 40%) minmax(0, 1fr); gap: var(--space-3); }
+  .ds78 .dt791-table td > * { grid-column: 2; justify-self: start; }
+  .ds78 .dt791-table td::before { content: attr(data-label); color: var(--muted); }
+}
+.ds78 .dt791-pager { margin: var(--space-3) 0 0; }
+.ds78 .dt791-pager ul { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.ds78 .dt791-page { min-width: var(--target-min); }
+.ds78 .dt791-page.is-current { display: inline-grid; place-items: center; min-height: var(--target-min); padding: 0 var(--space-3); border-radius: var(--radius); background: var(--accent); color: var(--on-accent); font-weight: var(--fw-bold); }
+
+/* ---------- prázdný stav s akcí ---------- */
+.ds78.ux791-empty { background: transparent; margin: var(--space-2) 0; }
+.ds78 .ux791-empty__title { margin: 0; font-size: var(--fs-lg); font-weight: var(--fw-bold); color: var(--text); }
+.ds78 .ux791-empty__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); margin: var(--space-2) 0 0; }
+
+/* ---------- ukazatele: KPI dlaždice (jednotný styl, tón i textem) a pruhy s tabulkovou alternativou ---------- */
+.c70-kpi span, .c70-kpi small { font-size: .875rem; }
+.c70-kpi .c791-tone { font-style: normal; font-weight: 700; font-size: .875rem; }
+.c70-kpi.is-warn .c791-tone { color: var(--ui-warn-ink); }
+.c70-kpi.is-ok .c791-tone { color: var(--ui-ok-ink); }
+.ds78.ind791 { background: transparent; }
+.ds78 .ind791-bars { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.ds78 .ind791-bars li { display: grid; grid-template-columns: minmax(4rem, 30%) minmax(0, 1fr) auto; gap: var(--space-3); align-items: center; font-size: var(--fs-sm); }
+.ds78 .ind791-track { height: .6rem; border-radius: var(--radius-pill); background: var(--surface-2); overflow: hidden; border: var(--border-width) solid var(--line); }
+.ds78 .ind791-track i { display: block; height: 100%; background: var(--accent); }
+.ds78 .ind791-value { font-weight: var(--fw-bold); font-variant-numeric: tabular-nums; }
+
+/* ---------- formuláře: na mobilu jeden sloupec, nápověda pod polem ---------- */
+@media (max-width: 767px) {
+  .teacher-two-col, .teacher-feedback-grid, .teacher-grade-layout, .teacher-member-adjust > article, .teacher-rubric article, .teacher-student-checks,
+  .teacher-login-card, .class-results-filterbar, .bulk-action-popover.task-popover, .ov61-two, .teacher-target-grid { grid-template-columns: minmax(0, 1fr); }
+  .teacher-filter-row { flex-direction: column; }
+  .teacher-filter-row label { min-width: 0; }
+}
+.teacher-login-card form label, .class-results-filterbar label > span, .bulk-action-popover label, .teacher-panel-head > div > span { font-size: .875rem; }
+.teacher-login-card form input { min-height: 44px; }
+
+/* text jen pro čtečky i mimo .ds78 (řazení ve starší tabulce Výsledků) */
+.class-results-table .ds-sr, .dt791-pager-only .ds-sr { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }

@@ -162,6 +162,7 @@ function nav781_css_html(string $tab): string
 {
     $out = '';
     $files = $tab === 'design78' ? ['assets/nav-v78-1.css'] : ['assets/tokens-v78.css', 'assets/components-v78.css', 'assets/nav-v78-1.css'];
+    $files[] = 'assets/content-v79-1.css';   // v79.1: přehlednost obsahu (Dnešní hodina, tabulky, ukazatele, formuláře, prázdné stavy) – na každé záložce, po komponentách v78
     foreach ($files as $f) {
         $path = __DIR__ . '/' . $f;
         $out .= '<link rel="stylesheet" href="' . e($f . '?v=' . (is_file($path) ? (string)filemtime($path) : NAV781_ASSET_VERSION)) . '">';

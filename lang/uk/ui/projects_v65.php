@@ -127,4 +127,6 @@ return [
     'Průběh projektů' => 'Перебіг проєктів',
     'Zatím nemáš žádný projekt' => 'У тебе ще немає проєкту',
     'Vyber si z nabídky níže a napiš krátký návrh.' => 'Обери з переліку нижче й напиши короткий задум.',
+    'Vyber ohodnocený projekt výše, nebo připni odkaz na svou práci níže.' => 'Обери оцінений проєкт вище або закріпи посилання на свою роботу нижче.',   // v79.1
+    'Připnout práci' => 'Закріпити роботу',   // v79.1
 ];

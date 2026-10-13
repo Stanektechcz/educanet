@@ -31,7 +31,7 @@ const V69D_GZIP_BUDGET = 15360;
 $state = audit_counter();
 $check = audit_checker($state);
 $read = static fn(string $rel): string => (string)@file_get_contents($ROOT . '/' . $rel);
-$views = ['home', 'dashboard', 'profile'];
+$views = ['home', 'dashboard', 'profile', 'ulohy', 'portfolio'];   // v79.1: + Úlohy a Portfolio (změna limitu auditu, BUILD_MANIFEST_V79_1.md)
 
 // 1) aktuálnost a pokrytí
 $cmd = escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($ROOT . '/tools/v69_dark_overlay.php') . ' --check 2>&1';
@@ -68,6 +68,9 @@ try {
     $pages['home'] = (string)$h->request('GET', '/?view=home')['body'];
     audit_login_student($h, 'class_3a', 'Audit Žák');
     $pages['dashboard'] = (string)$h->request('GET', '/?view=dashboard')['body'];
+    // v79.1: Úlohy (seznam + úloha s krokem 1 a 2) a Portfolio vykreslené pro čerstvého žáka
+    $pages['ulohy'] = (string)$h->request('GET', '/?view=ulohy')['body'] . (string)$h->request('GET', '/?view=ulohy&uloha=net_ports')['body'] . (string)$h->request('GET', '/?view=ulohy&uloha=lnx_chmod&krok=2')['body'];
+    $pages['portfolio'] = (string)$h->request('GET', '/?view=portfolio')['body'];
     // profil je pro čerstvého žáka přesměrovaný na přehled → třídy se berou ze šablon profilu (literály class="…" v profile_v60*.php)
     foreach (['profile_v60.php', 'profile_v60_views.php', 'growth_v67_views.php'] as $tpl) if (preg_match_all('~class="([^"<>?]*)"~', (string)file_get_contents($ROOT . '/' . $tpl), $pm) > 0) $pages['profile'] = ($pages['profile'] ?? '') . implode(' ', array_map(static fn(string $c): string => 'class="' . $c . '"', $pm[1]));
 } finally {

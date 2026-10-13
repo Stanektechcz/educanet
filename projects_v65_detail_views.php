@@ -125,7 +125,7 @@ function p65v_render_split(array $record, string $classId, string $studentKey, a
     $inner = p65v_hidden($record);
     foreach ($members as $m) {
         if ($m === $studentKey) continue;
-        $inner .= '<label>' . e(adaptive_student_label($classId, $m)) . '<input type="number" name="points[' . e($m) . ']" min="0" max="100" step="1" value="' . (int)($mine[$m] ?? 0) . '" required></label>';
+        $inner .= '<label>' . e(adaptive_student_label($classId, $m)) . '<input type="number" inputmode="numeric" name="points[' . e($m) . ']" min="0" max="100" step="1" value="' . (int)($mine[$m] ?? 0) . '" required></label>';
     }
     $inner .= '<p aria-live="polite">' . e(tr('Součet')) . ': <strong data-p65-sum>0 / 100</strong></p><button class="btn primary" type="submit">' . e(tr('Uložit rozdělení')) . '</button>';
     echo '<section class="p65-card"><h2>' . e(tr('Rozdělení 100 bodů')) . '</h2><p class="p65-hint">' . e(tr('Rozděl 100 bodů mezi ostatní členy podle jejich přínosu. Výsledek je jen návrh, potvrzuje ho učitel.')) . '</p>'

@@ -41,7 +41,8 @@ function tb75_render_page(string $classId, string $studentKey, string $task): vo
     $tasks = tb75_tasks_for_class($classId);
     if ($tasks === []) {
         echo '<h1>' . e(tr('Úlohy s variantami')) . '</h1><div class="l75-empty" role="status"><strong>' . e(tr('Pro tvou třídu zatím úlohy s variantami nejsou.')) . '</strong> '
-            . e(tr('Začínáme sítěmi a Linuxem (3.A a 4.A). Až učitel přidá sadu i pro tvůj předmět, objeví se tady.')) . '</div></div>';
+            . e(tr('Začínáme sítěmi a Linuxem (3.A a 4.A). Až učitel přidá sadu i pro tvůj předmět, objeví se tady.'))
+            . '<p><a class="btn primary" href="?view=dashboard">' . e(tr('Zpět na přehled')) . '</a></p></div></div>';   // v79.1: prázdný stav s akcí
         return;
     }
     if ($task !== '' && in_array($task, $tasks, true)) {

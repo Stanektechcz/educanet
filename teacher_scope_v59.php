@@ -599,6 +599,10 @@ function teacher59_get_policies(): array
         'plan76|tisk' => ['class' => 'required'], 'svp76|tisk' => ['class' => 'required'], 'svp76|csv' => ['class' => 'required'],
         // v79: číslo kroku stepperu (1–9, jen přepíná zobrazený krok; není v registru `get` modulů, ?class= hlídá obecná kontrola rozsahu níže).
         'priprava79|krok' => [], 'reflexe73|krok' => [], 'hromadne74|krok' => [], 'opakovani75|krok' => [], 'identita|krok' => [],
+        // v79.1: tabulky s řazením, filtrem a stránkováním na serveru (ux_v79_1.php: ?razeni, ?smer, ?filtr, ?strana – whitelist hodnot, jen čtení, ?class= hlídá obecná kontrola níže).
+        'prehled|razeni' => [], 'prehled|smer' => [], 'prehled|filtr' => [], 'prehled|strana' => [],
+        'schvalovani|razeni' => [], 'schvalovani|smer' => [], 'schvalovani|filtr' => [], 'schvalovani|strana' => [],
+        'class_results|razeni' => [], 'class_results|smer' => [], 'class_results|filtr' => [], 'class_results|strana' => [],
     ];
 }
 

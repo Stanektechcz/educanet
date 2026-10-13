@@ -315,7 +315,7 @@ function teacher_render_demo_accounts(array $modules): void
           <input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="action" value="teacher_demo_account_create"><input type="hidden" name="return_tab" value="demo_accounts">
           <label>Třída<select name="class_id" required><?php foreach($modules as $cid=>$module): if(!is_array($module))continue; ?><option value="<?=e((string)$cid)?>"><?=e(teacher_class_label((string)$cid))?> · <?=e((string)($module['subject']??''))?></option><?php endforeach; ?></select></label>
           <label>Jméno <small>volitelné</small><input name="demo_name" maxlength="100" placeholder="Automaticky: Demo student 1.A"></label>
-          <label>E-mail <small>volitelné</small><input type="email" name="demo_email" maxlength="190" placeholder="Automaticky vygenerujeme @<?=e(google_workspace_domain())?>"></label>
+          <label>E-mail <small>volitelné</small><input type="email" name="demo_email" maxlength="190" inputmode="email" autocomplete="off" placeholder="Automaticky vygenerujeme @<?=e(google_workspace_domain())?>"></label>
           <label>Heslo <small>volitelné</small><input type="text" name="demo_password" minlength="10" maxlength="200" placeholder="Bezpečné heslo vygenerujeme automaticky" autocomplete="new-password"></label>
           <div class="demo-account-info"><b>Co se stane?</b><span>Účet bude ihned ověřený, automaticky propojený s vybranou třídou a označený jako demo. Nelze jím přepsat existující skutečný účet.</span></div>
           <button class="btn primary" type="submit">＋ Vytvořit demo účet</button>

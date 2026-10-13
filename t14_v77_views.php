@@ -82,7 +82,8 @@ function t1477_class_html(array $modules, array $cp, string $today): string
     }
     $html .= '</div>';
     if ($cp['rows'] === []) {
-        $html .= '<p class="c70-muted" role="status">V příštích 4 týdnech se v této třídě neučí žádná lekce s návrhem obsahu.</p>';
+        $html .= '<div class="c70-empty" role="status"><h3>Nic ke schválení</h3><p>V příštích 4 týdnech se v této třídě neučí žádná lekce s návrhem obsahu.</p>'   // v79.1: s akcí
+            . (function_exists('lt70_tab_link') ? '<p class="c70-actions">' . lt70_tab_link('schvalovani', (string)$cp['class'], 'Otevřít Schvalování lekcí', [], 'btn secondary') . '</p>' : '') . '</div>';
     } else {
         $html .= '<div class="c72-scroll"><table class="c70-table t1477-table"><caption class="c70-sr">Lekce ' . e($name) . ' s výukou do 4 týdnů a termínem schválení</caption><thead><tr>'
             . '<th scope="col">Lekce</th><th scope="col">Výuka</th><th scope="col">Schválit do</th><th scope="col">Obsah lekce</th><th scope="col">Vazba na ŠVP</th><th scope="col">Příprava</th></tr></thead><tbody>';

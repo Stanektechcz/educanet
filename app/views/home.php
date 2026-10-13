@@ -59,13 +59,13 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
               <p><?= tr_html('Školní účet má tvar {domain}. Jednorázové heslo ti dá učitel na kartičce. Po přihlášení si nastavíš vlastní.', ['domain' => '<strong>jmeno.prijmeni@' . e(google_workspace_domain()) . '</strong>']) ?></p>
               <form method="post" class="auth54-inline-form">
                 <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="local_forgot_password">
-                <label class="auth54-field"><span><?= e(tr('Zapomenuté heslo – pošleme odkaz')) ?></span><input type="email" name="email" placeholder="jmeno.prijmeni@<?= e(google_workspace_domain()) ?>" required></label>
+                <label class="auth54-field"><span><?= e(tr('Zapomenuté heslo – pošleme odkaz')) ?></span><input type="email" name="email" inputmode="email" autocomplete="email" placeholder="jmeno.prijmeni@<?= e(google_workspace_domain()) ?>" required></label>
                 <button class="btn secondary" type="submit"><?= e(tr('Poslat odkaz')) ?></button>
               </form>
               <?php if (local_auth_require_email_verification()): ?>
               <form method="post" class="auth54-inline-form">
                 <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="local_resend_verification">
-                <label class="auth54-field"><span><?= e(tr('Nepřišel ověřovací e-mail?')) ?></span><input type="email" name="email" placeholder="jmeno.prijmeni@<?= e(google_workspace_domain()) ?>" required></label>
+                <label class="auth54-field"><span><?= e(tr('Nepřišel ověřovací e-mail?')) ?></span><input type="email" name="email" inputmode="email" autocomplete="email" placeholder="jmeno.prijmeni@<?= e(google_workspace_domain()) ?>" required></label>
                 <button class="btn secondary" type="submit"><?= e(tr('Poslat znovu')) ?></button>
               </form>
               <?php endif; ?>

@@ -33,9 +33,9 @@ function teacher58_modules(): array
                 'paths_v63.php', 'paths_v63_class.php', 'cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'calendar_days_v71.php',
                 'lesson_today_v70.php', 'lesson_today_v70_views.php', 'lesson_today_v71_views.php',
                 'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'lesson_exit_v72_views.php', 'lesson_reflect_v73.php', 'lesson_reflect_v73_views.php',
-                'materials_v74.php', 'materials_v74_views.php', 'insights_v74.php', 'insights_v74_views.php'],   // v74: knihovna materiálů a „Komu dnes pomoct“ (jen čtení); v73: karta „Minule“ z reflexe (jen čtení); v72: stav schválení a souhrn exit ticketu (jen čtení); v72.1: jména a režim exit ticketu
+                'materials_v74.php', 'materials_v74_views.php', 'insights_v74.php', 'insights_v74_views.php', 'ux_v79_1.php', 'lesson_today_v79_1_views.php'],   // v74: knihovna materiálů a „Komu dnes pomoct“ (jen čtení); v73: karta „Minule“ z reflexe (jen čtení); v72: stav schválení a souhrn exit ticketu (jen čtení); v72.1: jména a režim exit ticketu
             // v71: model lekce lm71 (plán po minutách, poznámky, pracovní list, úplnost) a karty dnů bez lekce; stále jen čtení.
-            'css' => ['assets/cockpit-v71.css'],
+            'css' => ['assets/cockpit-v71.css'], 'js' => ['assets/today-v79-1.js'],   // v79.1: rozvržení (lesson_today_v79_1_views.php, CSS assets/content-v79-1.css v rámci cockpitu), sbalitelné sekce na mobilu
             'render' => static function (array $m, string $c): void { lt71_render_tab($m, $c); },
         ],
         // v72 · Schvalování lekcí: návrh obsahu vlny 1 (L5–L16) – stav, náhled, schválení a vrácení. POST lc72_approve / lc72_return mají exact
@@ -43,7 +43,7 @@ function teacher58_modules(): array
         'schvalovani' => [
             'label' => 'Schvalování lekcí', 'hint' => 'Návrhy obsahu lekcí: náhled, schválení a vrácení', 'group' => 'podpora',
             'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php',
-                'svp_v72.php', 'svp_v72_map.php', 'svp_v72_views.php', 'ai_prompts_v72_1.php', 'ai_prompts_v76.php', 'ai_prompts_v77.php', 'lesson_approval_v72_views.php', 'bulk_approval_v74.php', 'bulk_approval_v74_views.php'],   // v72.1: vazba na ŠVP + náhled AI promptů; v74: karta „Hromadné schválení“ (jen čtení)
+                'svp_v72.php', 'svp_v72_map.php', 'svp_v72_views.php', 'ai_prompts_v72_1.php', 'ai_prompts_v76.php', 'ai_prompts_v77.php', 'lesson_approval_v72_views.php', 'bulk_approval_v74.php', 'bulk_approval_v74_views.php', 'ux_v79_1.php'],   // v79.1: tabulka lekcí (řazení, filtr, stránkování)   // v72.1: vazba na ŠVP + náhled AI promptů; v74: karta „Hromadné schválení“ (jen čtení)
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v72.css'],
             'post' => ['lc72_' => 'lc72_teacher_handle_post'],   // v72.1: lc72_svp_approve / lc72_svp_return předává handler do svp72_teacher_handle_post
             'render' => static function (array $m, string $c) use ($csrf): void { lc72_render_tab($m, $c, $csrf()); },
@@ -329,7 +329,7 @@ function teacher58_modules(): array
         // oprávnění ov61_ = content.manage (asistent jen čte).
         'prehled' => [
             'label' => 'Přehled třídy', 'hint' => 'Kdo zaostává a co čeká na schválení', 'group' => 'podpora',
-            'files' => ['points_v53.php', 'points_v60.php', 'feedback_v60.php', 'projects_v60.php', 'marketplace_v60.php', 'teacher_class_dashboard.php', 'teacher_overview_v61.php', 'teacher_overview_v61_views.php'],
+            'files' => ['points_v53.php', 'points_v60.php', 'feedback_v60.php', 'projects_v60.php', 'marketplace_v60.php', 'teacher_class_dashboard.php', 'teacher_overview_v61.php', 'teacher_overview_v61_views.php', 'ux_v79_1.php'],   // v79.1: tabulka žáků (řazení, filtr, stránkování), prázdné stavy
             'css' => ['assets/teacher-overview-v61.css'], 'js' => ['assets/teacher-overview-v61.js'],
             'post' => ['ov61_' => 'ov61_teacher_handle_post'],
             'get' => [
