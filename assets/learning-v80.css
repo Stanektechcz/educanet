@@ -1,0 +1,98 @@
+/* EDUCANET v80 · podpora učení žáka: Můj pokrok, nápovědy, opakování chyb, interaktivní cvičení, cíle a odznaky.
+   Jen tokeny v78 (světlý i tmavý režim podle zařízení), mobil první (1 sloupec), od 768 px dva sloupce. Cíle ≥ 44 px, písmo ≥ --fs-sm (14 px). */
+.ds78.lr80-page { max-width: 64rem; margin: 0 auto; padding: 0 0 var(--space-6); background: transparent; color: var(--text); font-size: var(--fs-base); line-height: var(--lh); }
+.ds78.lr80-page h1 { margin: var(--space-2) 0 var(--space-2); font-size: var(--fs-2xl); line-height: var(--lh-tight); color: var(--text); }
+.ds78 .lr80-sec h2, .ds78 .lr80-card h2 { margin: 0 0 var(--space-3); font-size: var(--fs-xl); line-height: var(--lh-tight); color: var(--text); }
+.ds78 .lr80-sec h3, .ds78.lr80-hints h3, .ds78.lr80-why h3 { margin: 0 0 var(--space-2); font-size: var(--fs-lg); color: var(--text); }
+.ds78 .lr80-lead { margin: 0 0 var(--space-4); color: var(--muted); max-width: 46rem; }
+.ds78 .lr80-muted, .ds78.lr80-hints .lr80-muted { color: var(--muted); }
+.ds78 .lr80-note, .ds78.lr80-hints .lr80-note { margin: var(--space-3) 0 0; color: var(--muted); font-size: var(--fs-sm); }
+.ds78 .lr80-sec, .ds78 .lr80-next { margin: 0 0 var(--space-4); }
+.ds78 .lr80-next { border: 2px solid var(--accent); background: var(--accent-soft); }
+.ds78 .lr80-next p { margin: 0 0 var(--space-3); }
+.ds78 .lr80-next__what { font-size: var(--fs-lg); font-weight: var(--fw-bold); color: var(--text); }
+.ds78 .lr80-next__btn { font-size: var(--fs-lg); }
+
+/* ukazatele: popisek + hodnota textem, pruh jen dekorace */
+.ds78 .lr80-bars { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+.ds78 .lr80-bar { display: grid; grid-template-columns: 1fr auto; gap: var(--space-1) var(--space-3); align-items: baseline; }
+.ds78 .lr80-bar__label { font-weight: var(--fw-medium); }
+.ds78 .lr80-bar__value { color: var(--muted); font-size: var(--fs-sm); text-align: right; }
+.ds78 .lr80-bar__track { grid-column: 1 / -1; display: block; height: .75rem; border-radius: var(--radius-pill); background: var(--surface-2); border: 1px solid var(--line); overflow: hidden; }
+.ds78 .lr80-bar__fill { display: block; height: 100%; background: var(--accent); border-radius: var(--radius-pill); }
+.ds78 .lr80-goal-rm { margin-top: calc(-1 * var(--space-2)); }
+.ds78 .lr80-goal-rm form { margin: 0; }
+.ds78 .lr80-table { margin-top: var(--space-4); }
+.ds78 .lr80-table summary { min-height: var(--target-min); display: flex; align-items: center; cursor: pointer; color: var(--accent); font-weight: var(--fw-medium); }
+.ds78 .lr80-tbl { width: 100%; border-collapse: collapse; margin-top: var(--space-2); font-size: var(--fs-sm); }
+.ds78 .lr80-tbl caption { text-align: left; color: var(--muted); padding-bottom: var(--space-1); }
+.ds78 .lr80-tbl th, .ds78 .lr80-tbl td { padding: var(--space-2); border-bottom: 1px solid var(--line); text-align: left; color: var(--text); }
+.ds78 .lr80-tbl thead th { background: var(--surface-2); }
+
+/* seznamy Co umím / Co procvičit / opakování */
+.ds78 .lr80-cols { display: grid; gap: 0; }
+.ds78 .lr80-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.ds78 .lr80-list li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); min-height: var(--target-min); padding: var(--space-1) 0; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+.ds78 .lr80-list li:last-child { border-bottom: 0; }
+.ds78 .lr80-list a:not(.ds-btn) { display: inline-flex; align-items: center; min-height: var(--target-min); color: var(--accent); font-weight: var(--fw-medium); }
+.ds78 .lr80-list__title { flex: 1 1 12rem; font-weight: var(--fw-medium); }
+.ds78 .lr80-cards { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
+.ds78 .lr80-card p { margin: 0 0 var(--space-3); }
+
+/* cíle a odznaky */
+.ds78 .lr80-goal-form { display: grid; gap: var(--space-2); margin-top: var(--space-4); }
+.ds78 .lr80-badges { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); }
+.ds78 .lr80-badge { display: grid; gap: var(--space-1); justify-items: start; padding: var(--space-3); border: var(--border-width) dashed var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.ds78 .lr80-badge.is-earned { border: 2px solid var(--ok); background: var(--ok-soft); }
+.ds78 .lr80-badge__icon { font-size: var(--fs-xl); line-height: 1; color: var(--muted); }
+.ds78 .lr80-badge.is-earned .lr80-badge__icon { color: var(--ok); }
+.ds78 .lr80-badge__name { font-weight: var(--fw-bold); }
+.ds78 .lr80-badge__how { color: var(--muted); font-size: var(--fs-sm); }
+
+/* nápovědy, vysvětlení chyb, upoutávky */
+.ds78.lr80-hints, .ds78.lr80-why, .ds78.lr80-due, .ds78.lr80-links { margin: var(--space-4) 0; color: var(--text); font-size: var(--fs-base); }
+.ds78.lr80-hints { padding: var(--space-4); border: var(--border-width) solid var(--line); border-left: 4px solid var(--info); border-radius: var(--radius); background: var(--info-soft); }
+.ds78 .lr80-hint-list { margin: 0 0 var(--space-3); padding-left: var(--space-5); display: grid; gap: var(--space-2); }
+.ds78 .lr80-hint-form { margin: 0; }
+.ds78.lr80-why, .ds78 .lr80-why-list { padding: var(--space-3) var(--space-4); border-left: 4px solid var(--warn); border-radius: var(--radius); background: var(--warn-soft); }
+.ds78.lr80-why ul, .ds78 .lr80-why-list { margin: 0; padding-left: var(--space-5); display: grid; gap: var(--space-2); }
+.ds78.lr80-due { display: grid; gap: var(--space-2); padding: var(--space-4); border: 2px solid var(--accent); border-radius: var(--radius-lg); background: var(--accent-soft); }
+.ds78.lr80-due p { margin: 0; }
+.ds78.lr80-links { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.ds78 .lr80-result { margin: 0 0 var(--space-4); padding: var(--space-3) var(--space-4); border-radius: var(--radius); border: var(--border-width) solid var(--line); background: var(--surface); color: var(--text); }
+.ds78 .lr80-result.is-ok { border-left: 4px solid var(--ok); background: var(--ok-soft); }
+.ds78 .lr80-result.is-miss { border-left: 4px solid var(--warn); background: var(--warn-soft); }
+.ds78 .lr80-result p { margin: 0 0 var(--space-2); }
+.ds78 .lr80-live:empty { display: none; }
+.ds78 .lr80-key { display: grid; gap: var(--space-1) var(--space-3); margin: var(--space-2) 0; }
+.ds78 .lr80-key dd { margin: 0 0 var(--space-2); }
+.ds78 .lr80-data, .ds78 .lr80-code { margin: 0 0 var(--space-3); padding: var(--space-3); border-radius: var(--radius); background: var(--surface-2); color: var(--text); font-family: var(--font-mono); font-size: var(--fs-sm); white-space: pre-wrap; overflow-wrap: anywhere; }
+.ds78 .lr80-form { display: grid; gap: 0; }
+.ds78 .lr80-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-2); }
+
+/* interaktivní cvičení */
+.ds78 .lr80-tool, .ds78 .lr80-perm { margin: 0 0 var(--space-4); padding: var(--space-3); border: var(--border-width) solid var(--line); border-radius: var(--radius); min-width: 0; }
+.ds78 .lr80-tool legend, .ds78 .lr80-perm legend { padding: 0 var(--space-1); font-weight: var(--fw-bold); color: var(--text); }
+.ds78 .lr80-out { display: block; margin: 0 0 var(--space-4); padding: var(--space-3); min-height: var(--target-min); border-radius: var(--radius); background: var(--surface-2); color: var(--text); font-family: var(--font-mono); font-size: var(--fs-sm); overflow-wrap: anywhere; }
+.ds78 .lr80-num { max-width: 9rem; }
+.ds78 .lr80-chmod { display: grid; gap: 0; }
+.ds78 .lr80-check { padding: 0 var(--space-2); border-radius: var(--radius); }
+.ds78 .lr80-check:hover { background: var(--surface-2); }
+.ds78 .lr80-swatches { display: grid; grid-template-columns: auto 1fr; gap: var(--space-2) var(--space-3); align-items: center; margin-bottom: var(--space-4); }
+.ds78 .lr80-swatch { width: 3rem; height: 3rem; border-radius: var(--radius); border: 2px solid var(--border); background: var(--surface-2); }
+.ds78 .lr80-chan { grid-template-columns: 1fr; }
+.ds78 .lr80-range { width: 100%; min-height: var(--target-min); accent-color: var(--accent); margin: 0; }
+.ds78 .lr80-duel { display: grid; gap: var(--space-3); margin-bottom: var(--space-4); }
+.ds78 .lr80-duel__side { padding: var(--space-3); border: var(--border-width) solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.ds78 .lr80-duel__name { margin: 0 0 var(--space-2); font-weight: var(--fw-bold); }
+
+@media (min-width: 768px) {
+  .ds78 .lr80-cols { grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+  .ds78 .lr80-cards { grid-template-columns: 1fr 1fr; }
+  .ds78 .lr80-chmod { grid-template-columns: repeat(3, 1fr); gap: var(--space-3); }
+  .ds78 .lr80-duel { grid-template-columns: 1fr 1fr; }
+  .ds78 .lr80-goal-form { grid-template-columns: 1fr auto; align-items: end; }
+  .ds78 .lr80-goal-form .ds-field { margin-bottom: 0; }
+  .ds78 .lr80-key { grid-template-columns: minmax(10rem, 1fr) 2fr; }
+}
+.ds78.lr80-page .ui-link { display: inline-flex; align-items: center; min-height: var(--target-min); color: var(--accent); font-weight: var(--fw-medium); }

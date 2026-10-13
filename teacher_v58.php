@@ -145,6 +145,13 @@ function teacher58_modules(): array
             'post' => ['kp75_' => 'comp75_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { comp75_render_tab($m, $c, $csrf()); },
         ],
+        // v80 · Pokrok a podpora žáků: cíle na týden, odznaky za zlepšení, opakování chyb, počty nápověd a cvičení (jen čtení, bez POST; GET jen ?class=).
+        'pokrok80' => [
+            'label' => 'Pokrok a podpora žáků', 'hint' => 'Cíle, odznaky, opakování chyb a nápovědy', 'group' => 'podpora',
+            'files' => ['cockpit_v70.php', 'teacher_prefs_v72_1.php', 'taskbank_v75_gen.php', 'taskbank_v75.php', 'hints_v80_gfx.php', 'hints_v80.php', 'learning_v80.php', 'widgets_v80.php', 'progress_v80.php', 'learning_v80_teacher_views.php'],
+            'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v75.css'],
+            'render' => static function (array $m, string $c): void { lr80_render_teacher_tab($m, $c); },
+        ],
         // v75 · Úlohy s variantami: úspěšnost po úlohách, přehled žáků a klíč k variantě žáka (jen čtení; ?zak= je pořadí v tabulce, ?kolo= číslo kola).
         'ulohy75' => [
             'label' => 'Úlohy s variantami', 'hint' => 'Úspěšnost třídy a klíč k variantě každého žáka', 'group' => 'podpora',

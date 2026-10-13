@@ -20,6 +20,7 @@ const TB75_CLASS_SETS = ['class_3a' => ['net_subnet', 'net_mask', 'net_ports', '
     'class_1a' => ['gfx_color', 'web_units', 'css_spec', 'img_dpi'], 'class_2a' => ['gfx_color', 'web_units', 'css_spec', 'img_dpi']];   // v76: grafika a web
 const TB75_TRIES = 3;
 const TB75_LOG_MAX = 20;
+const TB75_ANSWER_MAX = 120;   // v80: nejdelší odpověď (cesta lnx_path má až 95 znaků; dřív 80 = některé varianty nešly vyřešit)
 const TB75_ACTIONS = ['tb75_answer', 'tb75_next'];
 
 function tb75_path(): string
@@ -90,7 +91,7 @@ function tb75_submit(string $classId, string $studentKey, string $task, array $a
 {
     if (!in_array($task, tb75_tasks_for_class($classId), true)) return ['ok' => false, 'error' => 'unknown_task'];
     if (array_filter($answers, static fn($v): bool => is_string($v) && trim($v) !== '') === []) return ['ok' => false, 'error' => 'empty'];
-    $answers = array_map(static fn($v): string => is_string($v) ? mb_substr($v, 0, 80) : '', $answers);
+    $answers = array_map(static fn($v): string => is_string($v) ? mb_substr($v, 0, TB75_ANSWER_MAX) : '', $answers);
     $ref = tb75_student_ref($classId, $studentKey);
     $now ??= time();
     $out = ['ok' => false, 'error' => null, 'result' => null];

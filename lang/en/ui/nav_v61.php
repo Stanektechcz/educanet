@@ -52,4 +52,6 @@ return [
     'Opakování před písemkou' => 'Review before the test',
     // v78.1 · spodní lišta žáka: Domů · Dnes · Úlohy · Profil
     'Úlohy' => 'Tasks',
+    // v80 · podpora učení: Můj pokrok (Dnes); cvičení a opakování chyb jsou v rozcestníku na Úlohách a v Mém pokroku (rozpočet HTML stránek v61)
+    'Můj pokrok' => 'My progress',
 ];

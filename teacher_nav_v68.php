@@ -19,7 +19,7 @@ require_once __DIR__ . '/ui_v67.php';
 /** Záložky cockpitu s tmavým režimem (po převodu CSS na tokeny a kontrole kontrastu; ostatní zůstanou světlé). */
 const UI68_TEACHER_DARK_TABS = [
     'attention', 'hodina', 'priprava79', 'hodina_projektor', 'hodina_tisk', 'hodina_zastup', 'reflexe73', 'tyden74', 'streda77', 'prehled', 'hlaseni', 'student360', 'class_results', 'analytics', 'interventions', 'communications', 'intake', 'pristupy', 'groups',
-    'cesty', 'schvalovani', 'hromadne74', 'materialy74', 'urovne75', 'ulohy75', 'opakovani75', 'kompetence75', 'portfolia75', 'plan76', 'svp76', 'nastaveni_vyuky', 'curriculum', 'teach', 'session', 'calendar', 'authoring', 'editor', 'labdata',
+    'cesty', 'schvalovani', 'hromadne74', 'materialy74', 'urovne75', 'ulohy75', 'opakovani75', 'kompetence75', 'portfolia75', 'pokrok80', 'plan76', 'svp76', 'nastaveni_vyuky', 'curriculum', 'teach', 'session', 'calendar', 'authoring', 'editor', 'labdata',
     'hodnoceni66', 'kompetence', 'projekty65', 'grade', 'projekty', 'workspace', 'history',
     'arena', 'roboti', 'hry', 'ctf', 'incidenty', 'souboje', 'ekonomika', 'obchod',
     'sprava_prehled', 'design78', 'ucitele', 'identita', 'provoz', 'quality', 'ops_audit', 'team_admin', 'demo_accounts', 'overview', 'reports', 'ucet', 'sekce',
@@ -92,6 +92,7 @@ function teacher68_tab_map(): array
         'pristupy' => $t('trida', 'Přístupy', 'Jednorázová hesla a kartičky žáků', true, 'students.manage'),
         'groups' => $t('trida', 'Týmy', 'Členství, lobby a role v týmech'),
         'portfolia75' => $t('trida', 'Portfolia žáků', 'Připnuté práce, reflexe a komentáře'),   // v75
+        'pokrok80' => $t('trida', 'Pokrok a podpora žáků', 'Cíle, odznaky, opakování chyb a nápovědy'),   // v80
         'arena' => $t('hry', 'Aréna', 'Závody třídy, týdenní hádanka a záznam', false),
         'roboti' => $t('hry', 'Robotí liga', 'Zápasy programovatelných robotů'),
         'hry' => $t('hry', 'Týmové hry', 'Štafeta, bingo, Riskuj! a další'),

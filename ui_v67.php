@@ -21,7 +21,7 @@ const UI67_THEMES = ['system', 'light', 'dark'];
 const UI67_THEME_COOKIE = 'edu_theme';
 const UI67_THEME_COOKIE_TTL = 31536000;
 const UI67_DARK_CSS = 'assets/tokens-dark-v67.css';
-/** v69: generovaná tmavá vrstva starších CSS rozdělená podle pohledu (tools/v69_dark_overlay.php); %s = home | dashboard | profile | ulohy | portfolio (v79.1). Jen při tmavém motivu. */
+/** v69: generovaná tmavá vrstva starších CSS rozdělená podle pohledu (tools/v69_dark_overlay.php); %s = home | dashboard | profile | ulohy | portfolio (v79.1) | pokrok | cviceni | opakovat (v80). Jen při tmavém motivu. */
 const UI69_STUDENT_DARK_CSS = 'assets/dark/student-dark-%s-v69.css';
 
 /**
@@ -29,7 +29,7 @@ const UI69_STUDENT_DARK_CSS = 'assets/dark/student-dark-%s-v69.css';
  * přehled i profil mají ve starších vrstvách pevné světlé barvy (karta přihlášení, pozadí, štítky navigace) a tokeny samy nestačí.
  * Pohled sem přidej až po převodu jeho CSS na tokeny v61 a po kontrole v prohlížeči.
  */
-const UI67_DARK_VIEWS = ['home', 'dashboard', 'profile', 'ulohy', 'portfolio'];   // v79.1: + Úlohy a Portfolio (krokové postupy v79, tmavá vrstva v69 po pohledu, ověřeno v prohlížeči)
+const UI67_DARK_VIEWS = ['home', 'dashboard', 'profile', 'ulohy', 'portfolio', 'pokrok', 'cviceni', 'opakovat'];   // v79.1: + Úlohy a Portfolio; v80: + Můj pokrok, Interaktivní cvičení, Opakování chyb (tokeny v78, tmavá vrstva v69 po pohledu)
 
 /** @return list<string> */
 function ui67_dark_views(): array

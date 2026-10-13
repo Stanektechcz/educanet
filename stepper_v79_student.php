@@ -58,7 +58,8 @@ function tb79_render_task(string $classId, string $studentKey, string $task): vo
     if ($closed) {
         echo '<p class="l75-muted" role="status">' . e(tr('Tahle varianta je uzavřená – vezmi si další.')) . '</p>' . sp79_nav_links_html(tb79_url($task, 4), $labels[3], tb79_url($task, 3), $w) . '</section>';
     } else {
-        echo tb79_form_html($task, $v, $last, max(0, TB75_TRIES - $e['tries']), $w, $labels) . '</section>';
+        $hints = function_exists('lr80_hints_html') ? lr80_hints_html($classId, $studentKey, 'task', $task, $e['round'], $v) : '';   // v80: odstupňované nápovědy (jen počet)
+        echo tb79_form_html($task, $v, $last, max(0, TB75_TRIES - $e['tries']), $w, $labels) . $hints . '</section>';
     }
     echo sp79_panel_open(3, $step, $labels[2]) . tb79_check_html($task, $v, $last, $solved, $closed, max(0, TB75_TRIES - $e['tries']), $w, $labels) . '</section>';
     echo sp79_panel_open(4, $step, $labels[3]);
@@ -90,7 +91,7 @@ function tb79_form_html(string $task, array $v, ?array $last, int $left, array $
             foreach ((array)$f['options'] as $o) $html .= '<option value="' . e((string)$o) . '"' . ($keep !== '' && (string)$o === $keep ? ' selected' : '') . '>' . e((string)$o) . '</option>';
             $html .= '</select>';
         } else {
-            $html .= '<input id="' . e($id) . '" name="a[' . e((string)$f['id']) . ']" type="text" inputmode="' . ($f['kind'] === 'number' ? 'numeric' : 'text') . '" autocomplete="off" spellcheck="false" maxlength="80" required' . $msg
+            $html .= '<input id="' . e($id) . '" name="a[' . e((string)$f['id']) . ']" type="text" inputmode="' . ($f['kind'] === 'number' ? 'numeric' : 'text') . '" autocomplete="off" spellcheck="false" maxlength="120" required' . $msg
                 . ($keep !== '' ? ' value="' . e($keep) . '" readonly' : '') . ($describedBy !== '' ? ' aria-describedby="' . e($describedBy) . '"' : '') . '>';
             if ((string)$f['hint'] !== '') $html .= '<small id="' . e($id) . '-h" class="l75-muted"' . edu_content_lang_attr() . '>' . e((string)$f['hint']) . '</small>';
         }
@@ -108,14 +109,20 @@ function tb79_check_html(string $task, array $v, ?array $last, bool $solved, boo
     if ($closed) {
         $html = '<div class="l75-result ' . ($solved ? 'is-ok' : 'is-miss') . '" role="status"><strong>' . e($solved ? tr('Správně, všechna pole sedí.') : tr('Tentokrát to nevyšlo – tady je řešení.')) . '</strong></div><dl class="l75-key">';
         foreach ($v['fields'] as $f) $html .= '<dt' . edu_content_lang_attr() . '>' . e((string)$f['label']) . '</dt><dd><code>' . e((string)$f['answer']) . '</code></dd>';
-        return $html . '</dl><p class="l75-muted"' . edu_content_lang_attr() . '>' . e((string)$v['explain']) . '</p>' . sp79_nav_links_html(tb79_url($task, 4), $labels[3], '', $w);
+        return $html . '</dl><p class="l75-muted"' . edu_content_lang_attr() . '>' . e((string)$v['explain']) . '</p>' . tb79_why_html($v, $last) . sp79_nav_links_html(tb79_url($task, 4), $labels[3], '', $w);
     }
     if ($last === null) return '<p class="l75-muted" role="status">' . e(tr('Zatím nevyšlo. Zbývá pokusů: {n}.', ['n' => $left])) . '</p>' . tb79_fix_link($task);
     $good = (int)($last['correct'] ?? 0);
     $html = '<div class="l75-result is-miss" role="status"><strong>' . e(tr('Správně {good} z {all} polí.', ['good' => $good, 'all' => count($v['fields'])])) . '</strong> '
         . e(tr('Oprav pole označená „zkus znovu“. Zbývá pokusů: {n}.', ['n' => $left])) . '</div><ul class="sp79-list">';
     foreach ($v['fields'] as $f) $html .= '<li><span' . edu_content_lang_attr() . '>' . e((string)$f['label']) . '</span>: ' . e(!empty($last['fields'][$f['id']]) ? tr('správně') : tr('zkus znovu')) . '</li>';
-    return $html . '</ul>' . tb79_fix_link($task);
+    return $html . '</ul>' . tb79_why_html($v, $last) . tb79_fix_link($task);
+}
+
+/** v80: vysvětlení konkrétních chyb poslední kontroly (spočítané při odevzdání, drží se jen v relaci). */
+function tb79_why_html(array $v, ?array $last): string
+{
+    return $last !== null && function_exists('lr80_why_html') ? lr80_why_html($v, (array)($last['why'] ?? [])) : '';
 }
 
 /** Odkaz zpět na řešení (oprava chybných polí). */

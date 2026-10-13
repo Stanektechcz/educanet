@@ -31,7 +31,7 @@ const V69D_GZIP_BUDGET = 15360;
 $state = audit_counter();
 $check = audit_checker($state);
 $read = static fn(string $rel): string => (string)@file_get_contents($ROOT . '/' . $rel);
-$views = ['home', 'dashboard', 'profile', 'ulohy', 'portfolio'];   // v79.1: + Úlohy a Portfolio (změna limitu auditu, BUILD_MANIFEST_V79_1.md)
+$views = ['home', 'dashboard', 'profile', 'ulohy', 'portfolio', 'pokrok', 'cviceni', 'opakovat'];   // v79.1: + Úlohy a Portfolio; v80: + Můj pokrok, cvičení, opakování (změny limitu auditu, BUILD_MANIFEST_V79_1.md, BUILD_MANIFEST_V80.md)
 
 // 1) aktuálnost a pokrytí
 $cmd = escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($ROOT . '/tools/v69_dark_overlay.php') . ' --check 2>&1';
@@ -71,6 +71,10 @@ try {
     // v79.1: Úlohy (seznam + úloha s krokem 1 a 2) a Portfolio vykreslené pro čerstvého žáka
     $pages['ulohy'] = (string)$h->request('GET', '/?view=ulohy')['body'] . (string)$h->request('GET', '/?view=ulohy&uloha=net_ports')['body'] . (string)$h->request('GET', '/?view=ulohy&uloha=lnx_chmod&krok=2')['body'];
     $pages['portfolio'] = (string)$h->request('GET', '/?view=portfolio')['body'];
+    // v80: Můj pokrok, cvičení (seznam + 4 cvičení) a opakování chyb pro čerstvého žáka
+    $pages['pokrok'] = (string)$h->request('GET', '/?view=pokrok')['body'];
+    $pages['cviceni'] = implode('', array_map(static fn(string $q): string => (string)$h->request('GET', '/?view=cviceni' . $q)['body'], ['', '&w=subnet', '&w=chmod', '&w=color', '&w=spec']));
+    $pages['opakovat'] = (string)$h->request('GET', '/?view=opakovat')['body'];
     // profil je pro čerstvého žáka přesměrovaný na přehled → třídy se berou ze šablon profilu (literály class="…" v profile_v60*.php)
     foreach (['profile_v60.php', 'profile_v60_views.php', 'growth_v67_views.php'] as $tpl) if (preg_match_all('~class="([^"<>?]*)"~', (string)file_get_contents($ROOT . '/' . $tpl), $pm) > 0) $pages['profile'] = ($pages['profile'] ?? '') . implode(' ', array_map(static fn(string $c): string => 'class="' . $c . '"', $pm[1]));
 } finally {

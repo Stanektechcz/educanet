@@ -157,3 +157,13 @@ stejný název; nadpis prázdného stavu říká, co tu chybí, druhá věta pro
 | Komu pomoct | **Komu dnes pomoct** (výběr podle signálů) | Problémoví žáci, Slabí žáci |
 | exit ticket | **Exit ticket** (krátké ověření na konci hodiny) | Výstupní lístek, Kvízek |
 | prázdno | *Třída zatím nemá žáky* · *Žádné nové hlášení* · *Filtru nic neodpovídá* | Nic tu není, Žádná data |
+
+## 10. Vzory podpory učení (v80)
+| Vzor | Značky / funkce | Pravidla |
+|---|---|---|
+| Jeden další krok | `section.ds-card.lr80-next` (`pg80_next_html`) | na stránce právě jedno primární tlačítko (`ds-btn--primary ds-btn--block`) s důvodem v jedné větě; starší patičkové „Pokračovat“ se na stránce nevykresluje |
+| Pruh s hodnotou | `ul.lr80-bars > li.lr80-bar` (`pg80_bar_html`) | popisek + hodnota textem („3 z 7 …“), pruh `aria-hidden`; vedle `details.lr80-table` se stejnými čísly v tabulce (caption, `th scope`) |
+| Odstupňovaná nápověda | `section.ds78.lr80-hints` (`lr80_hints_html`) | 1 postrčení → 2 postup řešení → 3 vyřešený krok; vždy tlačítko „Ukázat nápovědu N ze 3“ (POST), ukládá se jen počet; nápověda nesnižuje body |
+| Vysvětlení chyby | `div.ds78.lr80-why[role=status]` | u každého chybného pole jedna věta o konkrétní chybě (ne „špatně“), bez opakování odpovědi žáka |
+| Živá pomůcka | `output.lr80-out[aria-live=polite][data-t]` | text šablony z HTML (`tr()`), JS jen dosazuje čísla (`textContent`, zpoždění 120 ms); odpověď vždy kontroluje server |
+| Odznak za zlepšení | `ul.lr80-badges > li.lr80-badge(.is-earned)` | ikona jen dekorace, stav textem („získáno“ / „zatím ne“) + jak ho získat; žádné pořadí ani srovnání |

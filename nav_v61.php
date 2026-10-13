@@ -51,7 +51,7 @@ function nav61_bottom_items(?string $classId, string $view): array
     return [
         ['href' => '?view=dashboard', 'label' => trm('Domů'), 'mark' => '⌂', 'active' => $view === 'dashboard', 'class' => ''],
         ['href' => $lessonOpen ? '?view=hodina' : '?view=calendar', 'label' => trm('Dnes'), 'mark' => '●', 'active' => $todayActive, 'class' => $lessonOpen && !$todayActive ? 'is-today' : ''],
-        ['href' => '?view=ulohy', 'label' => trm('Úlohy'), 'mark' => '✓', 'active' => in_array($view, ['ulohy', 'opakovani'], true), 'class' => ''],
+        ['href' => '?view=ulohy', 'label' => trm('Úlohy'), 'mark' => '✓', 'active' => in_array($view, ['ulohy', 'opakovani', 'opakovat', 'cviceni'], true), 'class' => ''],
         ['href' => '?view=profile', 'label' => trm('Profil'), 'mark' => '◆', 'active' => in_array($view, ['profile', 'community'], true), 'class' => ''],
     ];
 }
@@ -131,6 +131,7 @@ function nav61_group_today(?array $lesson, string $view, ?string $classId = null
     if ($lesson !== null) $items[] = nav61_entry('?view=hodina', trm('Dnešní hodina'), ['hodina', 'intake'], $view, (string)$lesson['class']);
     // v63: výukové cesty jen třídám, které je mají (3.A, 1.A).
     if ($classId !== null && function_exists('p63_enabled_for_class') && p63_enabled_for_class($classId)) $items[] = nav61_entry('?view=cesty', trm('Moje cesty'), ['cesty', 'cesta'], $view);
+    if ($classId !== null) $items[] = nav61_entry('?view=pokrok', trm('Můj pokrok'), ['pokrok'], $view);   // v80: přehled pokroku a jeden další krok
     $items[] = nav61_entry('?view=calendar', trm('Kalendář'), ['calendar'], $view);
     return ['key' => 'today', 'label' => trm('Dnes'), 'icon' => 'today', 'flag' => (string)($lesson['class'] ?? '') === 'is-today' ? 'today' : '', 'items' => $items];
 }

@@ -274,7 +274,7 @@ function v55_footer_cta(): void
 {
     if (($GLOBALS['module'] ?? null) === null) return;
     $view = (string)($GLOBALS['view'] ?? '');
-    if (in_array($view, ['test', 'kb_quiz', 'hodina', 'intake', 'change_password', 'join', 'activate'], true)) return;
+    if (in_array($view, ['test', 'kb_quiz', 'hodina', 'intake', 'change_password', 'join', 'activate', 'pokrok'], true)) return;   // v80: Můj pokrok má vlastní jediný Další krok
     $classId = current_class_id($GLOBALS['modules'] ?? []);
     if (is_string($classId) && $classId !== '' && function_exists('v56_next_step')) {
         $step = v56_next_step($classId, (array)$GLOBALS['modules'][$classId], (array)($GLOBALS['nextLessons'] ?? []), (array)($GLOBALS['extendedLessons'] ?? []), (array)($GLOBALS['schoolYear'] ?? []));

@@ -99,6 +99,11 @@ return [
         'review75' => ['lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'taskbank_v75_views.php', 'review_v75.php', 'review_v75_views.php'],
         // v75 · POST žáka: úlohy, úroveň aktivity (doporučení čte exit tickety) a portfolio (kandidáti projektů v65).
         'v75_actions' => ['taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'taskbank_v75_views.php', 'levels_v75.php', 'levels_v75_views.php', 'portfolio_v75.php', 'portfolio_v75_views.php'],
+        // v80 · podpora učení: nápovědy a vysvětlení chyb (hints_v80*), opakování chyb, cvičení, cíle (?view=cviceni, ?view=opakovat; háček v tb75_handle_post).
+        'learning80' => ['taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'taskbank_v75_views.php', 'hints_v80_gfx.php', 'hints_v80.php', 'learning_v80.php', 'widgets_v80.php', 'progress_v80.php', 'learning_v80_views.php', 'widgets_v80_views.php'],
+        // v80 · Můj pokrok (?view=pokrok): kompetence v62 a cesty v63 jen ke čtení + doporučení dalšího kroku.
+        'progress80' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'paths_v63_flow.php', 'progress_v80_views.php'],
+        'learning80_post' => ['learning_v80_post.php'],
         'diagrams' => ['app/views/_diagrams.php'],
         // POST
         'lesson_path' => ['tutorial_v52.php', 'session_v53.php', 'learning_v56.php', 'question_meta_v66.php', 'assessment_v66.php'],
@@ -149,8 +154,11 @@ return [
         ['match' => ['projekt65'], 'file' => 'views/projects_v65.php', 'libs' => ['layout', 'projects65']],
         ['match' => ['portfolio', 'portfolio_export'], 'file' => 'views/portfolio.php', 'libs' => ['layout', 'projects65']],
         // v75: úlohy s variantami a opakování před písemkou.
-        ['match' => ['ulohy'], 'file' => 'views/ulohy_v75.php', 'libs' => ['layout', 'taskbank75', 'stepper79']],
-        ['match' => ['opakovani'], 'file' => 'views/opakovani_v75.php', 'libs' => ['layout', 'review75', 'stepper79']],
+        ['match' => ['ulohy'], 'file' => 'views/ulohy_v75.php', 'libs' => ['layout', 'taskbank75', 'stepper79', 'learning80']],   // v80: nápovědy, vysvětlení chyb, upoutávka opakování
+        // v80: Můj pokrok, interaktivní cvičení a opakování chyb.
+        ['match' => ['pokrok'], 'file' => 'views/pokrok_v80.php', 'libs' => ['layout', 'learning80', 'progress80']],
+        ['match' => ['cviceni', 'opakovat'], 'file' => 'views/learning_v80.php', 'libs' => ['layout', 'learning80']],
+        ['match' => ['opakovani'], 'file' => 'views/opakovani_v75.php', 'libs' => ['layout', 'review75', 'stepper79', 'learning80']],
         // v63: výukové cesty žáka (seznam a krok; třída bez cest dostane 404).
         ['match' => ['cesty', 'cesta'], 'file' => 'views/paths.php', 'libs' => ['layout', 'paths']],
         // v66: Moje hodnocení (návrh hodnocení se zobrazí jen ve třídách, kde ho zapnul administrátor).
@@ -213,9 +221,11 @@ return [
         // v72 · exit ticket schválené lekce (formativní; identita ze session, varianta určená serverem).
         ['match' => ['lx72_answer'], 'file' => 'actions/lesson_exit_v72.php', 'libs' => ['lesson_exit']],
         // v75 · úlohy s variantami, úroveň aktivity v lekci a portfolio (identita ze session, lekce ověřená kalendářem).
-        ['match' => ['tb75_answer', 'tb75_next', 'dif75_pick', 'pf75_s_pin', 'pf75_s_reflect', 'pf75_s_unpin'], 'file' => 'actions/v75.php', 'libs' => ['lesson_exit', 'projects65', 'v75_actions']],
+        ['match' => ['tb75_answer', 'tb75_next', 'dif75_pick', 'pf75_s_pin', 'pf75_s_reflect', 'pf75_s_unpin'], 'file' => 'actions/v75.php', 'libs' => ['lesson_exit', 'projects65', 'v75_actions', 'learning80']],   // v80: háček opakování + vysvětlení chyb
         // v79 · krokové postupy žáka: Zpět / Další / Zahodit ukládají jen koncept do relace (identita ze session); uložení = původní akce (pf75_s_pin).
         ['match' => ['sp79_s_next', 'sp79_s_back', 'sp79_s_reset'], 'file' => 'actions/stepper_v79.php', 'libs' => ['projects65', 'v75_actions']],
+        // v80 · podpora učení: nápověda (jen počet), odpověď na opakování, kontrola cvičení na serveru, osobní cíl na týden (identita ze session).
+        ['match' => ['lr80_hint', 'lr80_rep_answer', 'lr80_w_check', 'lr80_goal_add', 'lr80_goal_remove'], 'file' => 'actions/learning_v80.php', 'libs' => ['learning80', 'learning80_post']],
         // v67 · profil: cíle žáka (přidat, týdenní kontrola, odebrat) a sdílení se spolužáky (identita ze session).
         ['match' => ['grow67_*'], 'file' => 'actions/growth_v67.php', 'libs' => ['growth']],
         // v64 · retrospektiva týmové hry (tři otázky po dohrané hře; identita ze session).

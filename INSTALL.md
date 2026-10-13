@@ -769,3 +769,17 @@ Podrobnosti: `CHANGELOG_V79_1.md`, `BUILD_MANIFEST_V79_1.md` (soubory, změny li
 - **Žák:** `UI67_DARK_VIEWS` + `ulohy`, `portfolio` (tmavý režim podle zařízení i na Úlohách a Portfoliu). Nové msgid prázdných stavů v `lang/<en|uk>/ui/v75.php` a `projects_v65.php`.
 - **Rollback vydání:** nasadit v79 (`9c927d6`). Data se nemění; v prohlížečích zůstane jen nepoužívaný klíč `edu.lt791.closed` v `localStorage`.
 - **Kontrola po nasazení:** `php tools/v79_1_content_audit.php` → `V79_1_CONTENT_AUDIT_OK` (prohlížečová část jen s Chrome + `playwright-core` v `NODE_PATH`, jinak SKIP; vynutit `EDUCANET_V791_BROWSER=require`, snímky `EDUCANET_V791_SHOTS=<adresář>`); celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v80 · podpora učení: Můj pokrok, nápovědy, opakování chyb, interaktivní cvičení, cíle
+
+Podrobnosti: `CHANGELOG_V80.md`, `BUILD_MANIFEST_V80.md` (soubory, změny limitů auditů, výkon), návod `docs/NAVOD_V80.md`. Nové PHP rozšíření ani migraci nevyžaduje.
+
+- **Nové stránky žáka:** `?view=pokrok` (Můj pokrok), `?view=cviceni` (interaktivní cvičení, `&w=subnet|chmod|color|spec`), `?view=opakovat` (opakování chyb, `&uloha=`). Nové POST akce žáka (router `app/routes.php`, `actions_class`, CSRF): `lr80_hint`, `lr80_rep_answer`, `lr80_w_check`, `lr80_goal_add`, `lr80_goal_remove`.
+- **Nové úložiště:** `storage/learning_v80_<třída>.json.php` (vzniká samo při první akci; ochranný první řádek, zápis jen `storage_update`). Obsah: plán opakování, počty nápověd, stav cvičení, cíle – bez jmen a bez odpovědí. Zálohuje se se `storage/`.
+- **Retence:** `php tools/v58_retention.php` (náhled) / `--apply` maže i data v80 odešlých žáků (řádek výstupu `v80_data_purged=`); žák bez aktivity přes 365 dní se maže při zápisu třídy.
+- **Učitel:** záložka `pokrok80` (Třída a žáci › Pokrok a podpora žáků) – jen čtení, bez POST a bez GET registru (`?class=` hlídá obecná kontrola rozsahu).
+- **Žák:** `UI67_DARK_VIEWS` + `pokrok`, `cviceni`, `opakovat` (tmavý režim podle zařízení); vrstvy `assets/dark/student-dark-{pokrok,cviceni,opakovat}-v69.css` generuje `php tools/v69_dark_overlay.php`. Nová doména překladu `learning_v80` (`lang/<en|uk>/ui/learning_v80.php`).
+- **Oprava:** odpověď úlohy smí mít až 120 znaků (`TB75_ANSWER_MAX`; dřív 80 – některé varianty „Cesty v Linuxu“ nešly vyřešit).
+- **Testovací infrastruktura:** `tools/lib/http_harness.php` – časový limit požadavku 30 s (`EDUCANET_HARNESS_TIMEOUT`), POST se po vypršení času neopakuje; `tools/run_audits.php` vypíše řádky FAIL neúspěšných auditů.
+- **Rollback vydání:** nasadit v79.1 (`afe9c00`). Soubory `storage/learning_v80_*.json.php` lze ponechat (starší verze je nečte) nebo smazat.
+- **Kontrola po nasazení:** `php tools/v80_learning_audit.php` → `V80_LEARNING_AUDIT_OK` (prohlížečová část jen s Chrome + `playwright-core` v `NODE_PATH`, jinak SKIP; vynutit `EDUCANET_V80_BROWSER=require`, snímky `EDUCANET_V80_SHOTS=<adresář>`); celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.

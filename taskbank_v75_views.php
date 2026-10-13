@@ -54,6 +54,7 @@ function tb75_render_page(string $classId, string $studentKey, string $task): vo
     $state = tb75_student_state($classId, $ref);
     echo '<h1>' . e(tr('Úlohy s variantami')) . '</h1>'
         . '<p class="l75-lead">' . e(tr('Každý dostane stejný typ úlohy, ale s jinými čísly – opsat výsledek od souseda nejde. Odpověď se zkontroluje hned. Úlohy se nepočítají do známky ani bodů, slouží k procvičení.')) . '</p>'
+        . (function_exists('lr80_due_banner_html') ? lr80_due_banner_html($classId, $studentKey) . lr80_links_html() : '')   // v80: Na dnes k opakování, Můj pokrok, cvičení
         . '<ul class="l75-cards">';
     foreach ($tasks as $t) {
         $e = tb75_entry($state, $t);
@@ -108,7 +109,7 @@ function tb75_render_task(string $classId, string $studentKey, string $task, str
             foreach ((array)$f['options'] as $o) echo '<option value="' . e((string)$o) . '"' . ($keep !== '' && (string)$o === $keep ? ' selected' : '') . '>' . e((string)$o) . '</option>';
             echo '</select>';
         } else {
-            echo '<input id="' . e($id) . '" name="a[' . e((string)$f['id']) . ']" type="text" inputmode="' . ($f['kind'] === 'number' ? 'numeric' : 'text') . '" autocomplete="off" spellcheck="false" maxlength="80" required'
+            echo '<input id="' . e($id) . '" name="a[' . e((string)$f['id']) . ']" type="text" inputmode="' . ($f['kind'] === 'number' ? 'numeric' : 'text') . '" autocomplete="off" spellcheck="false" maxlength="120" required'
                 . ($keep !== '' ? ' value="' . e($keep) . '" readonly' : '') . ($describedBy !== '' ? ' aria-describedby="' . e($describedBy) . '"' : '') . '>';
             if ((string)$f['hint'] !== '') echo '<small id="' . e($id) . '-h" class="l75-muted"' . edu_content_lang_attr() . '>' . e((string)$f['hint']) . '</small>';
         }
@@ -142,6 +143,9 @@ function tb75_handle_post(string $action, string $classId): void
         $_SESSION['flash'] = match ((string)$res['error']) { 'empty' => tr('Vyplň aspoň jedno pole.'), 'solved', 'shown' => tr('Tahle varianta je uzavřená – vezmi si další.'), default => tr('Úlohu se nepodařilo najít.') };
         redirect_to($back);
     }
-    $_SESSION['tb75_last'] = ['task' => $task, 'round' => (int)$res['entry']['round'], 'fields' => $res['result']['fields'], 'correct' => $res['result']['correct']];
+    require_once __DIR__ . '/learning_v80.php';   // v80: chybná pole → opakování za 1/3/7 dní; vysvětlení konkrétní chyby (jen v relaci, odpověď se neukládá)
+    lr80_on_task_result($classId, $studentKey, $task, (array)$res['result']);
+    $why = $res['result']['ok'] ? [] : hn80_diagnose(tb75_variant($task, tb75_student_ref($classId, $studentKey), (int)$res['entry']['round']), $answers);
+    $_SESSION['tb75_last'] = ['task' => $task, 'round' => (int)$res['entry']['round'], 'fields' => $res['result']['fields'], 'correct' => $res['result']['correct'], 'why' => $why];
     redirect_to($back . '#tb75-h-' . $task);
 }

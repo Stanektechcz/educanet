@@ -317,6 +317,15 @@ return [
             'portfolio_v79.php',
             'app/actions/stepper_v79.php',
         ],
+        // v80 · podpora učení žáka: Můj pokrok, nápovědy a vysvětlení chyb, opakování chyb, interaktivní cvičení, cíle a odznaky (nápovědy a zadání zůstávají česky).
+        'learning_v80' => [
+            'learning_v80_views.php',
+            'progress_v80_views.php',
+            'widgets_v80_views.php',
+            'learning_v80_post.php',
+            'app/views/learning_v80.php',
+            'app/views/pokrok_v80.php',
+        ],
         // Integrátor – sdílené soubory, dokončí se až po B1–B6 (F2).
         'shared' => [
             'bootstrap.php',

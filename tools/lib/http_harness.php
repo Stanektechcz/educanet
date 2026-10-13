@@ -66,6 +66,24 @@ final class Harness
         $this->pid = is_array($status) ? (int)($status['pid'] ?? 0) : null;
     }
 
+    /** v80: časový limit požadavku (s); výchozí 30 (dřív 10 – pod zátěží celé sady auditů nestačil), EDUCANET_HARNESS_TIMEOUT přepíše. */
+    public static function requestTimeout(): float
+    {
+        $env = getenv('EDUCANET_HARNESS_TIMEOUT');
+        return is_string($env) && is_numeric($env) && (float)$env >= 1 ? (float)$env : 30.0;
+    }
+
+    /**
+     * v80: opakovat smí jen GET/HEAD, nebo požadavek, který server vůbec nepřijal: odmítnuté spojení nebo vyčerpané lokální porty
+     * (Windows: „Only one usage of each socket address“ – v plné sadě auditů zůstávají tisíce spojení v TIME_WAIT po prohlížečových auditech).
+     * Nikdy POST po vypršení času (mohl se už provést).
+     */
+    public static function safeToRetry(string $method, string $error): bool
+    {
+        if (in_array(strtoupper($method), ['GET', 'HEAD'], true)) return true;
+        return preg_match('~refused|could not be made|only one usage of each socket address|address already in use|10048|10055~i', $error) === 1 && stripos($error, 'timed out') === false;
+    }
+
     public static function findFreePort(int $from = 8150, int $to = 8199): int
     {
         // Náhodný start v rozsahu: opakované běhy (a jiní souběžní agenti) nechávají
@@ -118,7 +136,7 @@ final class Harness
         $harness = new self($port, $process, $pipes, $logFile);
         register_shutdown_function([$harness, 'stop']);
 
-        $deadline = microtime(true) + 15.0;
+        $deadline = microtime(true) + 30.0;   // v80: 15 → 30 s (start pod zátěží plné sady)
         $up = false;
         while (microtime(true) < $deadline) {
             $status = proc_get_status($process);
@@ -249,16 +267,18 @@ final class Harness
                     'header' => implode("\r\n", $reqHeaders),
                     'content' => $body,
                     'ignore_errors' => true,
-                    'timeout' => 10,
+                    'timeout' => self::requestTimeout(),
                     'follow_location' => 0,
                     'protocol_version' => 1.1,
                 ],
             ]);
 
             $respBody = @file_get_contents($url, false, $context);
-            if ($respBody === false) {
-                // Ojedinělé selhání spojení (server právě dobíhá start) – jedno opakování stačí.
-                usleep(150000);
+            // Selhání spojení (server dobíhá start, vyčerpané lokální porty) – až 4 opakování s rostoucí pauzou. v80: POST se po vypršení času NEopakuje
+            // (pomalý požadavek pod zátěží by se jinak provedl dvakrát – dvojitý krok stepperu, dvojitý pokus úlohy); jen nepřijaté spojení.
+            foreach ([150000, 500000, 1000000, 2000000] as $pause) {
+                if ($respBody !== false || !self::safeToRetry($method, (string)(error_get_last()['message'] ?? ''))) break;
+                usleep($pause);
                 $respBody = @file_get_contents($url, false, $context);
             }
             $responseHeaders = $http_response_header ?? [];

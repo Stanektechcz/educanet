@@ -181,9 +181,9 @@ $check('cockpitová CSS po převodu nenarostla o víc než 10 % (var(--kN) je de
 
 // ---------------------------------------------------------------- 5) pohledy a render
 $map = teacher68_tab_map();
-// v79.1: + Úlohy a Portfolio (tmavý režim krokových postupů podle zařízení; změna limitu auditu, BUILD_MANIFEST_V79_1.md)
-$check('žák: UI67_DARK_VIEWS = přihlášení, přehled, profil, úlohy, portfolio; přepínač vzhledu se vykresluje (CSRF, 3 tlačítka, aria-pressed)',
-    ui67_dark_views() === ['home', 'dashboard', 'profile', 'ulohy', 'portfolio'] && preg_match('~name="csrf".*aria-pressed="(true|false)".*aria-pressed.*aria-pressed~s', ui67_theme_switch_html('tok', '?view=dashboard', 'dashboard')) === 1);
+// v79.1: + Úlohy a Portfolio (tmavý režim krokových postupů podle zařízení; změna limitu auditu, BUILD_MANIFEST_V79_1.md); v80: + Můj pokrok, cvičení, opakování (BUILD_MANIFEST_V80.md)
+$check('žák: UI67_DARK_VIEWS = přihlášení, přehled, profil, úlohy, portfolio, můj pokrok, cvičení, opakování; přepínač vzhledu se vykresluje (CSRF, 3 tlačítka, aria-pressed)',
+    ui67_dark_views() === ['home', 'dashboard', 'profile', 'ulohy', 'portfolio', 'pokrok', 'cviceni', 'opakovat'] && preg_match('~name="csrf".*aria-pressed="(true|false)".*aria-pressed.*aria-pressed~s', ui67_theme_switch_html('tok', '?view=dashboard', 'dashboard')) === 1);
 $sys = ui67_dark_link_html('profile', 'system');
 $check('žák: efektivní motiv jen pro ověřené pohledy (home/dashboard/profile), ostatní světlé; tmavé CSS: „tmavý“ napevno, „podle systému“ skriptem při tmavém systému (bez <link>, bez „<“ ve skriptu), „světlý“ nic',
     ui67_effective_theme('dashboard', 'dark') === 'dark' && ui67_effective_theme('materialy', 'dark') === 'light' && ui67_dark_link_html('dashboard', 'light') === ''

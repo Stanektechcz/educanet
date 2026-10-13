@@ -226,7 +226,12 @@ function ra_run_one(string $file, string $phpBinary, int $timeoutSeconds, string
         if ($lastLine === '') {
             $lastLine = $timedOut ? 'Vypršel časový limit.' : ('exit=' . $exitCode);
         }
-        return ['name' => $name, 'status' => $status, 'last_line' => $lastLine, 'seconds' => $seconds, 'exit_code' => $exitCode];
+        // v80: u neúspěšného auditu i jeho řádky FAIL (max. 8) – nestabilní selhání v plné sadě jde pak dohledat bez opakování.
+        $fails = $status === 'PASS' ? [] : array_slice(array_values(preg_grep('/^(FAIL|TIMEOUT)\b/', preg_split('/
+||
+/', $out . "
+" . $err) ?: []) ?: []), 0, 8);
+        return ['name' => $name, 'status' => $status, 'last_line' => $lastLine, 'seconds' => $seconds, 'exit_code' => $exitCode, 'fails' => $fails];
     } finally {
         // Vždy uklidit dočasnou kopii citlivé storage – i při timeoutu/výjimce výše.
         ra_rrmdir($tmpStorage);
@@ -276,6 +281,9 @@ if (basename((string)($argv[0] ?? '')) === basename(__FILE__)) {
         printf("%-45s %-8s %6s  %s\n", 'audit', 'stav', 'cas(s)', 'posledni radek');
         foreach ($results as $r) {
             printf("%-45s %-8s %6.2f  %s\n", $r['name'], $r['status'], $r['seconds'], $r['last_line']);
+        }
+        foreach ($results as $r) {
+            foreach ((array)($r['fails'] ?? []) as $line) echo '  ' . $r['name'] . ': ' . mb_substr(trim((string)$line), 0, 300) . "\n";
         }
     }
 
