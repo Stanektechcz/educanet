@@ -125,6 +125,8 @@ function teacher_action_permission_prefixes(): array
         'kp75_'=>'content.manage','lv75_'=>'content.manage','op75_'=>'content.manage','pf75_'=>'projects.manage',
         // v76 · ruční pozorování kompetence (ob76_add) = důkaz k hodnocení (asistent jen čte).
         'ob76_'=>'grading.manage',
+        // v80.1 · Mapa třídy: zpětná vazba žákům, přidělení procvičování, výběr žáků a vlastní fráze = práce se žáky třídy (asistent jen čte).
+        'ts801_'=>'students.manage',
     ];
 }
 function teacher_action_permission(string $action): ?string

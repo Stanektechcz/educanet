@@ -328,6 +328,10 @@ function teacher59_action_policies(): array
     // v79 · krokové postupy: Zpět / Další / Zahodit ukládají jen koncept do relace (žádný zápis do úložiště). Třída formuláře (class_id, class_ids[]),
     // je-li v požadavku, musí být v rozsahu; handler sp79_teacher_handle_post ověří oprávnění toku (content.manage, admin u Identity).
     foreach (['sp79_next', 'sp79_back', 'sp79_reset'] as $action) $table[$action] = $none;
+    // v80.1 · Mapa třídy (modul `mapa801`): zpětná vazba, přidělení procvičování a výběr žáků – třída povinná a v rozsahu (handler ji i žáky ověří znovu,
+    // žáci jen ze seznamu třídy); vlastní fráze učitele bez třídy (jen vlastní záznam). Jiné ts801_* akce zůstávají zakázané.
+    foreach (['ts801_feedback_send', 'ts801_feedback_withdraw', 'ts801_assign', 'ts801_assign_cancel', 'ts801_select'] as $action) $table[$action] = $req;
+    foreach (['ts801_phrase_add', 'ts801_phrase_delete'] as $action) $table[$action] = $none;
     $table['ob76_add'] = $req;   // v76 · ruční pozorování kompetence (modul kompetence): třída povinná a v rozsahu, žák jen ze seznamu třídy; jiné ob76_* zakázané
     return $table;
 }
@@ -603,6 +607,8 @@ function teacher59_get_policies(): array
         'prehled|razeni' => [], 'prehled|smer' => [], 'prehled|filtr' => [], 'prehled|strana' => [],
         'schvalovani|razeni' => [], 'schvalovani|smer' => [], 'schvalovani|filtr' => [], 'schvalovani|strana' => [],
         'class_results|razeni' => [], 'class_results|smer' => [], 'class_results|filtr' => [], 'class_results|strana' => [],
+        // v80.1: filtry Mapy třídy (classmap_v80_1.php: whitelist hodnot, jen zobrazení; ?class= hlídá obecná kontrola níže, výběr žáků jde POSTem).
+        'mapa801|zdroj' => [], 'mapa801|oblast' => [], 'mapa801|od' => [], 'mapa801|do' => [], 'mapa801|razeni' => [], 'mapa801|smer' => [], 'mapa801|zobrazeni' => [],
     ];
 }
 

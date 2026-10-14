@@ -152,6 +152,18 @@ function teacher58_modules(): array
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v75.css'],
             'render' => static function (array $m, string $c): void { lr80_render_teacher_tab($m, $c); },
         ],
+        // v80.1 · Mapa třídy: žáci × kompetence / úlohy (hodnota textem, filtry a řazení přes GET whitelist), rychlá zpětná vazba a přidělení procvičování.
+        // POST ts801_* mají exact politiky v teacher_scope_v59.php (třída povinná a v rozsahu; fráze jen vlastní záznam), oprávnění ts801_ = students.manage
+        // (asistent jen čte). GET jen ?class= a filtry mapy (zdroj, oblast, od, do, razeni, smer, zobrazeni – informativní politiky, jen zobrazení).
+        'mapa801' => [
+            'label' => 'Mapa třídy', 'hint' => 'Kdo co umí, zpětná vazba a procvičování jedním klikem', 'group' => 'podpora',
+            'files' => ['cockpit_v70.php', 'teacher_prefs_v72_1.php', 'competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'competencies_v75_views.php',
+                'taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'hints_v80_gfx.php', 'hints_v80.php', 'learning_v80.php', 'widgets_v80.php', 'progress_v80.php', 'ux_v79_1.php',
+                'classmap_v80_1.php', 'support_v80_1.php', 'support_v80_1_teacher.php', 'classmap_v80_1_views.php'],
+            'css' => ['assets/cockpit-v71.css', 'assets/classmap-v80-1.css'], 'js' => ['assets/classmap-v80-1.js'],
+            'post' => ['ts801_' => 'ts801_teacher_handle_post'],
+            'render' => static function (array $m, string $c) use ($csrf): void { cm801_render_tab($m, $c, $csrf()); },
+        ],
         // v75 · Úlohy s variantami: úspěšnost po úlohách, přehled žáků a klíč k variantě žáka (jen čtení; ?zak= je pořadí v tabulce, ?kolo= číslo kola).
         'ulohy75' => [
             'label' => 'Úlohy s variantami', 'hint' => 'Úspěšnost třídy a klíč k variantě každého žáka', 'group' => 'podpora',

@@ -1,5 +1,26 @@
 /* EDUCANET v61 · podmenu horní navigace. Tlačítko přepíná aria-expanded, Esc zavře a vrátí fokus, šipky procházejí položky.
    Bez tohoto skriptu funguje podmenu přes :hover / :focus-within (viz nav-v61.css). Skript jen přepíná třídy a atributy, žádné vkládání HTML. */
+/* v80.1: sdílené značky menu účtu – drawer (mobil) a přepínač jazyka se klonují z horní lišty a patičky (cloneNode, žádné HTML z řetězců). */
+(function () {
+  'use strict';
+  var drawer = document.querySelector('.nav61-drawer[data-nav61-skip]');
+  if (drawer && !drawer.firstChild) {
+    var skip = (drawer.getAttribute('data-nav61-skip') || '').split(' ');
+    [].slice.call(document.querySelectorAll('.nav61-main li.nav61-group')).forEach(function (group) {
+      var label = group.querySelector('.nav61-label');
+      var links = [].slice.call(group.querySelectorAll('.nav61-panel a')).filter(function (a) { return skip.indexOf(a.getAttribute('href')) === -1; });
+      if (!links.length) return;
+      var head = document.createElement('span');
+      head.className = drawer.getAttribute('data-nav61-head') || 'v56-menu-label';
+      head.textContent = label ? label.textContent : '';
+      drawer.appendChild(head);
+      links.forEach(function (a) { drawer.appendChild(a.cloneNode(true)); });
+    });
+  }
+  var langSlot = document.querySelector('[data-nav61-lang]');
+  var langForm = document.querySelector('footer .edu-lang-switcher');
+  if (langSlot && langForm && !langSlot.firstChild) langSlot.appendChild(langForm.cloneNode(true));
+})();
 (function () {
   'use strict';
   var groups = [].slice.call(document.querySelectorAll('li.nav61-group'));

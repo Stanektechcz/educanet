@@ -167,3 +167,12 @@ stejný název; nadpis prázdného stavu říká, co tu chybí, druhá věta pro
 | Vysvětlení chyby | `div.ds78.lr80-why[role=status]` | u každého chybného pole jedna věta o konkrétní chybě (ne „špatně“), bez opakování odpovědi žáka |
 | Živá pomůcka | `output.lr80-out[aria-live=polite][data-t]` | text šablony z HTML (`tr()`), JS jen dosazuje čísla (`textContent`, zpoždění 120 ms); odpověď vždy kontroluje server |
 | Odznak za zlepšení | `ul.lr80-badges > li.lr80-badge(.is-earned)` | ikona jen dekorace, stav textem („získáno“ / „zatím ne“) + jak ho získat; žádné pořadí ani srovnání |
+
+## 11. Vzory podpory učitele (v80.1)
+| Vzor | Značky / funkce | Pravidla |
+|---|---|---|
+| Mapa (heatmapa) | `.ds78.cm801 > .cm801-wrap[role=region][tabindex=0] > table.cm801-table` (`cm801_table_html`) | buňka `td.cm801-c.is-{strong,ok,mid,low,none}` = ikona (`aria-hidden`) + hodnota textem + skrytý popis úrovně; barva jen doplněk (`--ok-soft`, `--warn-soft`, `--danger-soft`); legenda nad tabulkou; `caption`, `th scope`, `aria-sort`, souhrn v `tfoot` |
+| Lepicí sloupce | `thead th` sticky nahoře, výběr (`.cm801-sel`, 3rem) + jméno (`th[scope=row]`, left 3rem) sticky vlevo | obal má `position: relative` (skryté texty `.c70-sr` uvnitř nesmí roztáhnout stránku); bez výběru třída `no-pick` posune jméno na left 0 |
+| Tabulková alternativa | GET `zobrazeni=tabulka` → `table.cm801-table.is-plain` | stejná data celými slovy bez barev |
+| Výběr + akce | jeden `form.cm801-form` kolem mapy, akce tlačítky `name="action" value="…"` | zaškrtávátka v `label.cm801-check` (≥ 44 px), počet vybraných `[data-cm801-count]` s `aria-live`; JS jen pomáhá (vybrat vše, fráze do textu) |
+| Sdílené značky menu | `<div class="nav61-drawer" data-nav61-skip data-nav61-head>` a `<div data-nav61-lang>` | obsah klonuje `assets/nav-v61.js` (`cloneNode`) z horní lišty a patičky; použít jen tam, kde kontejner bez JS stejně není dostupný |

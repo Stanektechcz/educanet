@@ -315,6 +315,7 @@ html:not([data-theme="light"]) .v44-gps-track .done i{background:color-mix(in sr
 html:not([data-theme="light"]) .v44-gps-track .current{color:inherit}
 html:not([data-theme="light"]) .v44-gps-track .current i{background:var(--accent,#a5a6ff);border-color:var(--accent,#a5a6ff);color:#171717;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent,#a5a6ff) 10%,transparent)}
 html:not([data-theme="light"]) .v44-inline-feedback.ok{background:color-mix(in srgb,#107736 9%,transparent)}
+html:not([data-theme="light"]) .v44-inline-feedback.mid{background:color-mix(in srgb,#895603 9%,transparent)}
 html:not([data-theme="light"]) .v44-inline-feedback.bad{background:color-mix(in srgb,#ff6969 8%,transparent)}
 html:not([data-theme="light"]) .v44-dashboard-track span{border-radius:999px;background:color-mix(in srgb,currentColor 3%,transparent);color:var(--muted,#a0b8db)}
 html:not([data-theme="light"]) .v44-dashboard-track .done{color:#2bd86c;background:color-mix(in srgb,#107736 8%,transparent)}

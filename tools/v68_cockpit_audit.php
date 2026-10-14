@@ -103,6 +103,7 @@ unset($post['mat74_add'], $post['mat74_update'], $post['mat74_verify'], $post['m
 unset($post['kp75_approve'], $post['kp75_return'], $post['lv75_approve'], $post['lv75_return'], $post['pf75_comment'], $post['op75_publish'], $post['op75_close']);   // v75: kompetence 2.A/4.A, úrovně, portfolia a opakování (nové moduly kompetence75 / urovne75 / portfolia75 / opakovani75) – vyjmuté ze snímku stejně jako v74 (změna limitu auditu, BUILD_MANIFEST_V75.md)
 unset($post['ob76_add']);   // v76: ruční pozorování kompetence (modul kompetence, prefix ob76_) – vyjmuto ze snímku stejně jako v75 (změna limitu auditu, BUILD_MANIFEST_V76.md)
 unset($post['sp79_next'], $post['sp79_back'], $post['sp79_reset']);   // v79: koncepty krokových postupů (jen relace, prefix sp79_ v novém modulu priprava79) – vyjmuto ze snímku stejně jako v76 (změna limitu auditu, BUILD_MANIFEST_V79.md)
+foreach (['ts801_feedback_send', 'ts801_feedback_withdraw', 'ts801_assign', 'ts801_assign_cancel', 'ts801_select', 'ts801_phrase_add', 'ts801_phrase_delete'] as $a801) unset($post[$a801]);   // v80.1: Mapa třídy – zpětná vazba, přidělení procvičování, výběr žáků a vlastní fráze (nový modul mapa801, prefix ts801_) – vyjmuto ze snímku stejně jako v79 (změna limitu auditu, BUILD_MANIFEST_V80_1.md)
 ksort($post);
 $get = teacher59_get_policies();
 foreach (['kompetence', 'cesty', 'projekty65', 'hodnoceni66', 'labdata'] as $t) unset($get[$t . '|student']);
@@ -111,6 +112,7 @@ unset($get['portfolia75|tisk'], $get['opakovani75|tisk']);   // v75: stránky k 
 unset($get['plan76|tisk'], $get['svp76|tisk'], $get['svp76|csv']);   // v76: tisk Plánu vs. skutečnosti a tisk/CSV Plnění ŠVP (moduly plan76 / svp76) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V76.md)
 unset($get['priprava79|krok'], $get['reflexe73|krok'], $get['hromadne74|krok'], $get['opakovani75|krok'], $get['identita|krok']);   // v79: číslo kroku stepperu (jen přepíná zobrazení) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V79.md)
 foreach (['prehled', 'schvalovani', 'class_results'] as $t791) foreach (['razeni', 'smer', 'filtr', 'strana'] as $p791) unset($get[$t791 . '|' . $p791]);   // v79.1: řazení, filtr a stránkování tabulek (jen zobrazení) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V79_1.md)
+foreach (['zdroj', 'oblast', 'od', 'do', 'razeni', 'smer', 'zobrazeni'] as $p801) unset($get['mapa801|' . $p801]);   // v80.1: filtry Mapy třídy (jen zobrazení) – vyjmuto ze snímku GET (změna limitu auditu, BUILD_MANIFEST_V80_1.md)
 ksort($get);
 $postSha = hash('sha256', json_encode($post));
 $check('politiky teacher59: POST tabulka = snímek v69 (bez vyřazených akcí; kromě teacher68_theme_set) sha=' . $postSha, $postSha === V68C_POST_POLICY_SHA);

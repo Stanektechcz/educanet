@@ -98,8 +98,9 @@ $check('i18n: doména learning_v80 (5 souborů UI + pohledy) v manifestu, katalo
     && array_keys($en) === array_keys($uk) && count($en) >= 150 && isset((require $ROOT . '/lang/en/ui/nav_v61.php')['Můj pokrok'], (require $ROOT . '/lang/uk/ui/nav_v61.php')['Můj pokrok']));
 $GLOBALS['ui61_primary_nav'] = null;
 $hrefs = array_merge(...array_map(static fn(array $g): array => array_column($g['items'], 'href'), nav61_groups('class_3a', 'pokrok')));
-$check('navigace žáka: Můj pokrok (Dnes); cvičení a opakování v rozcestníku Úloh a Mého pokroku (rozpočet HTML stránek v61 – menu se nezvětšuje víc); spodní lišta dál 4 položky, „Úlohy“ aktivní i na cvičení a opakování',
-    in_array('?view=pokrok', $hrefs, true) && !in_array('?view=cviceni', $hrefs, true) && str_contains(lr80_links_html(), '?view=cviceni') && str_contains(lr80_links_html(), '?view=opakovat') && count(nav61_bottom_items('class_3a', 'cviceni')) === 4
+// v80.1 (změna limitu auditu, BUILD_MANIFEST_V80_1.md): po zmenšení HTML hlavičky (sdílený drawer) jsou cvičení a opakování chyb i v menu Učení.
+$check('navigace žáka: Můj pokrok (Dnes); cvičení a opakování v rozcestníku Úloh a Mého pokroku a od v80.1 i v menu Učení; spodní lišta dál 4 položky, „Úlohy“ aktivní i na cvičení a opakování',
+    in_array('?view=pokrok', $hrefs, true) && in_array('?view=cviceni', $hrefs, true) && in_array('?view=opakovat', $hrefs, true) && str_contains(lr80_links_html(), '?view=cviceni') && str_contains(lr80_links_html(), '?view=opakovat') && count(nav61_bottom_items('class_3a', 'cviceni')) === 4
     && nav61_bottom_items('class_3a', 'opakovat')[2]['active'] && nav61_bottom_items('class_3a', 'cviceni')[2]['active']);
 
 require __DIR__ . '/lib/v80_learning_part2.php';

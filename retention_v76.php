@@ -11,6 +11,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  *   - výsledky úloh s variantami: záznam žáka v storage/taskbank_v75.json.php (classes[třída][ref]),
  *   - volby úrovní v hodině: záznam žáka v storage/levels_v75_picks.json.php (classes[třída][lekce][hash žáka]),
  *   - v80: podpora učení (opakování chyb, počty nápověd, cvičení, cíle): záznam žáka v storage/learning_v80_<třída>.json.php (klíč = stejné ref jako úlohy).
+ *   - v80.1: zpětná vazba a přidělení procvičování od učitele: záznamy žáka v storage/support_v80_1_<třída>.json.php (stejné ref).
  * Kandidáti = stejné pravidlo jako v65 (proj65_retention_candidates: stav, datum archivace, aliasy třída:student:hash).
  * Soubor se maže pod výlučným zámkem (ev62_delete_locked), sdílené soubory přes storage_update. Vrací jen počty – žádná jména.
  */
@@ -33,13 +34,13 @@ function r76_level_hashes(array $aliases): array
 }
 
 /**
- * Pročistí data v75 odešlých žáků. Dry-run jen spočítá.
- * @return array{students:int,portfolio:int,tasks:int,levels:int,learning:int,dry_run:bool}
+ * Pročistí data v75 odešlých žáků. Dry-run jen spočítá. v80.1: i zpětná vazba a přidělení procvičování od učitele (support).
+ * @return array{students:int,portfolio:int,tasks:int,levels:int,learning:int,support:int,dry_run:bool}
  */
 function r76_retention_purge(bool $dryRun, ?int $now = null): array
 {
     $cand = function_exists('proj65_retention_candidates') ? proj65_retention_candidates($now) : [];
-    $res = ['students' => count($cand), 'portfolio' => 0, 'tasks' => 0, 'levels' => 0, 'learning' => 0, 'dry_run' => $dryRun];
+    $res = ['students' => count($cand), 'portfolio' => 0, 'tasks' => 0, 'levels' => 0, 'learning' => 0, 'support' => 0, 'dry_run' => $dryRun];
     if ($cand === []) return $res;
     $refs = [];
     $hashes = [];
@@ -83,5 +84,7 @@ function r76_retention_purge(bool $dryRun, ?int $now = null): array
     if (is_file($levelPath)) { if ($dryRun) $scrubLevels(storage_read($levelPath, false)); else storage_update($levelPath, $scrubLevels); }
     require_once __DIR__ . '/learning_v80.php';   // v80: podpora učení (stejné ref jako úlohy v75)
     $res['learning'] = lr80_retention_purge(array_values(array_unique($refs)), $dryRun);
+    require_once __DIR__ . '/support_v80_1.php';   // v80.1: zpětná vazba a přidělení od učitele (stejné ref jako úlohy v75)
+    $res['support'] = ts801_retention_purge(array_values(array_unique($refs)), $dryRun);
     return $res;
 }

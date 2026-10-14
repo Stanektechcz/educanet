@@ -161,7 +161,12 @@ function nav61_v75_items(string $view, ?string $classId): array
 {
     if ($classId === null) return [];
     $items = [];
-    if (in_array($classId, ['class_1a', 'class_2a', 'class_3a', 'class_4a'], true)) $items[] = nav61_entry('?view=ulohy', trm('Úlohy s variantami'), ['ulohy'], $view);   // v76: i grafika a web (1.A, 2.A)
+    if (in_array($classId, ['class_1a', 'class_2a', 'class_3a', 'class_4a'], true)) {
+        $items[] = nav61_entry('?view=ulohy', trm('Úlohy s variantami'), ['ulohy'], $view);   // v76: i grafika a web (1.A, 2.A)
+        // v80.1: cvičení a opakování chyb v menu (místo se uvolnilo sdíleným drawerem a menším HTML hlavičky – rozpočet v61 62 kB)
+        $items[] = nav61_entry('?view=cviceni', trm('Interaktivní cvičení'), ['cviceni'], $view);
+        $items[] = nav61_entry('?view=opakovat', trm('Opakování chyb'), ['opakovat'], $view);
+    }
     $packs = defined('STORAGE_DIR') && function_exists('storage_read_request') && is_file(STORAGE_DIR . '/review_v75.json.php') ? (storage_read_request(STORAGE_DIR . '/review_v75.json.php', false)['packs'] ?? []) : [];
     if ((string)($packs[$classId]['status'] ?? '') === 'published') $items[] = nav61_entry('?view=opakovani', trm('Opakování před písemkou'), ['opakovani'], $view);
     return $items;
@@ -249,17 +254,24 @@ function nav61_main_html(?string $classId, string $view): string
 function nav61_drawer_html(?string $classId, string $view): string
 {
     if (nav61_bottom_hidden($view)) return '';
+    // v80.1: sdílené značky – odkazy se neopakují v HTML; assets/nav-v61.js je naklonuje z horní lišty (nav61-main) bez cílů spodní lišty
+    // (data-nav61-skip). Menu účtu se bez JS stejně neotevře, takže bez JS se nic neztrácí. Úspora ≈ 1,3 kB na každé stránce žáka.
     $inBar = array_column(nav61_bottom_items($classId, $view), 'href');
-    $html = '';
+    return '<div class="nav61-drawer" data-nav61-skip="' . e(implode(' ', $inBar)) . '" data-nav61-head="v56-menu-label"></div>';
+}
+
+/** v80.1: obsah draweru jako dřív na serveru (jen pro audit shody s klonem v JS). @return list<array{label:string,hrefs:list<string>}> */
+function nav61_drawer_groups(?string $classId, string $view): array
+{
+    if (nav61_bottom_hidden($view)) return [];
+    $inBar = array_column(nav61_bottom_items($classId, $view), 'href');
+    $out = [];
     foreach (nav61_groups($classId, $view) as $group) {
+        $hrefs = array_values(array_filter(array_column($group['items'], 'href'), static fn(string $h): bool => !in_array($h, $inBar, true)));
         $groupLabel = (string)$group['label'];
-        $links = '';
-        foreach ($group['items'] as $item) {
-            if (!in_array($item['href'], $inBar, true)) $links .= nav61_link_html($item);
-        }
-        if ($links !== '') $html .= '<span class="v56-menu-label">' . e(tr($groupLabel)) . '</span>' . $links;
+        if ($hrefs !== []) $out[] = ['label' => tr($groupLabel), 'hrefs' => $hrefs];
     }
-    return '<div class="nav61-drawer">' . $html . '</div>';
+    return $out;
 }
 
 /** Odkaz „Přeskočit na obsah“ (první zaměřitelný prvek stránky; cílem je <main id="main-content">). */

@@ -50,5 +50,20 @@ function in74_card_html(array $m, ?int $now = null): string
         foreach ($r['reasons'] as $reason) $html .= '<li><strong>' . e($reason['text']) . '</strong> – ' . e($reason['source']) . ' <em>' . e($reason['action']) . '</em></li>';
         $html .= '</ul></details></li>';
     }
-    return $html . '</ol></section>';
+    return $html . '</ol>' . in74_support_form_html((string)($m['class'] ?? ''), $c['rows']) . '</section>';
+}
+
+/**
+ * v80.1: jedním klikem převzít vybrané žáky do Mapy třídy (POST ts801_select – klíče žáků jen v těle formuláře, nikdy v URL; výběr se drží v relaci).
+ * Jen když učitel smí posílat zpětnou vazbu (students.manage) a záložku Mapa třídy vidí.
+ */
+function in74_support_form_html(string $classId, array $rows): string
+{
+    if ($rows === [] || !function_exists('csrf_token') || (function_exists('teacher_permission') && !teacher_permission('students.manage'))
+        || (function_exists('c70_tab_visible') && !c70_tab_visible('mapa801'))) return '';
+    $keys = '';
+    foreach ($rows as $r) $keys .= '<input type="hidden" name="students[]" value="' . e((string)$r['key']) . '">';
+    return '<form method="post" action="teacher.php" class="in74-support"><input type="hidden" name="csrf" value="' . e(csrf_token()) . '"><input type="hidden" name="action" value="ts801_select">'
+        . '<input type="hidden" name="return_tab" value="hodina"><input type="hidden" name="class_id" value="' . e($classId) . '">' . $keys
+        . '<button type="submit" class="btn secondary">Poslat zpětnou vazbu nebo procvičování</button> <span class="c70-muted">Vybrané žáky (' . count($rows) . ') otevře v Mapě třídy, kde zvolíte frázi nebo úlohu.</span></form>';
 }

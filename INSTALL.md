@@ -783,3 +783,18 @@ Podrobnosti: `CHANGELOG_V80.md`, `BUILD_MANIFEST_V80.md` (soubory, změny limit�
 - **Testovací infrastruktura:** `tools/lib/http_harness.php` – časový limit požadavku 30 s (`EDUCANET_HARNESS_TIMEOUT`), POST se po vypršení času neopakuje; `tools/run_audits.php` vypíše řádky FAIL neúspěšných auditů.
 - **Rollback vydání:** nasadit v79.1 (`afe9c00`). Soubory `storage/learning_v80_*.json.php` lze ponechat (starší verze je nečte) nebo smazat.
 - **Kontrola po nasazení:** `php tools/v80_learning_audit.php` → `V80_LEARNING_AUDIT_OK` (prohlížečová část jen s Chrome + `playwright-core` v `NODE_PATH`, jinak SKIP; vynutit `EDUCANET_V80_BROWSER=require`, snímky `EDUCANET_V80_SHOTS=<adresář>`); celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v80.1 · podpora učitele: Mapa třídy, rychlá zpětná vazba, přidělení procvičování
+
+Podrobnosti: `CHANGELOG_V80_1.md`, `BUILD_MANIFEST_V80_1.md` (soubory, změny limitů auditů, výkon), návod `docs/NAVOD_V80_1.md`. Nové PHP rozšíření ani migraci nevyžaduje.
+
+- **Učitel:** záložka `mapa801` (Třída a žáci › Mapa třídy). Nové POST akce (CSRF, politiky teacher59, oprávnění `ts801_` = `students.manage`): `ts801_feedback_send`, `ts801_feedback_withdraw`,
+  `ts801_assign`, `ts801_assign_cancel`, `ts801_select` (třída povinná a v rozsahu), `ts801_phrase_add`, `ts801_phrase_delete` (jen vlastní záznam). GET filtry `zdroj, oblast, od, do, razeni, smer, zobrazeni` (whitelist).
+- **Nové úložiště:** `storage/support_v80_1_<třída>.json.php` (zprávy a přidělení: ref žáka, druh, text učitele, čas, hash učitele) a `storage/support_v80_1_phrases.json.php` (vlastní fráze);
+  vznikají samy při první akci, ochranný první řádek, zápis jen `storage_update`. Zálohují se se `storage/`. „Opakování chyb“ zapisuje i do `storage/learning_v80_<třída>.json.php` (v80).
+- **Retence:** záznamy starší než 180 dní se mažou při zápisu třídy; `php tools/v58_retention.php` (náhled) / `--apply` maže i data v80.1 odešlých žáků (řádek `v80_1_data_purged=`).
+- **Žák:** Můj pokrok – Další krok „Od učitele“ a sekce Od učitele (doména překladu `support_v80_1`, `lang/<en|uk>/ui/support_v80_1.php`); menu Učení + Interaktivní cvičení a Opakování chyb.
+- **Menší HTML stránek žáka:** drawer a jazyk v menu účtu klonuje `assets/nav-v61.js` (cache prohlížeče: soubor má novou verzi přes `asset_url`); Linux příkazy 58,1 kB (limit v61 62 kB).
+- **Rollback vydání:** nasadit v80 (`459b310`). Soubory `storage/support_v80_1_*.json.php` lze ponechat (v80 je nečte) nebo smazat; zařazené položky opakování v `learning_v80_*` zůstávají platné.
+- **Kontrola po nasazení:** `php tools/v80_1_teacher_audit.php` → `V80_1_TEACHER_AUDIT_OK` (prohlížečová část jen s Chrome + `playwright-core` v `NODE_PATH`, jinak SKIP; vynutit `EDUCANET_V801_BROWSER=require`,
+  snímky `EDUCANET_V801_SHOTS=<adresář>`); celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.

@@ -102,7 +102,7 @@ return [
         // v80 · podpora učení: nápovědy a vysvětlení chyb (hints_v80*), opakování chyb, cvičení, cíle (?view=cviceni, ?view=opakovat; háček v tb75_handle_post).
         'learning80' => ['taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'taskbank_v75_views.php', 'hints_v80_gfx.php', 'hints_v80.php', 'learning_v80.php', 'widgets_v80.php', 'progress_v80.php', 'learning_v80_views.php', 'widgets_v80_views.php'],
         // v80 · Můj pokrok (?view=pokrok): kompetence v62 a cesty v63 jen ke čtení + doporučení dalšího kroku.
-        'progress80' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'paths_v63_flow.php', 'progress_v80_views.php'],
+        'progress80' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'paths_v63_flow.php', 'support_v80_1.php', 'support_v80_1_views.php', 'progress_v80_views.php'],   // v80.1: Od učitele
         'learning80_post' => ['learning_v80_post.php'],
         'diagrams' => ['app/views/_diagrams.php'],
         // POST

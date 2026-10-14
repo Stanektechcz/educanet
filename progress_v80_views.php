@@ -71,6 +71,8 @@ function pg80_overview(string $classId, string $studentKey, ?int $now = null): a
     $o = ['ref' => $ref, 'state' => $state, 'tasks' => pg80_task_rows($classId, $tb, $state), 'competencies' => pg80_competencies($classId, $studentKey, $now),
         'paths' => pg80_paths($classId, $studentKey), 'exits' => pg80_exit_rows($classId, $studentKey), 'due' => lr80_rep_due($state, $now), 'planned' => lr80_rep_planned($state, $now),
         'widgets' => $widgets, 'goals' => pg80_goals_week($state, $now), 'badges' => pg80_badges($state, $tb, $now), 'tb' => $tb];
+    // v80.1: přidělení a zpětná vazba od učitele (support_v80_1_views.php); nesplněné přidělení má v Dalším kroku přednost
+    $o['teacher'] = function_exists('ts801_student_view') ? ts801_student_view($classId, $studentKey, $now) : ['feedback' => [], 'open' => [], 'done' => []];
     $o['next'] = pg80_next_step($classId, $studentKey, $o, $now);
     return $o;
 }
@@ -78,6 +80,8 @@ function pg80_overview(string $classId, string $studentKey, ?int $now = null): a
 /** JEDEN další krok: opakování → cesta (v63) → úloha k procvičení → nové cvičení → úlohy. @return array{href:string,kind:string,arg:string} */
 function pg80_next_step(string $classId, string $studentKey, array $o, int $now): array
 {
+    $teacherNext = function_exists('ts801_next_step') ? ts801_next_step((array)($o['teacher'] ?? [])) : null;   // v80.1: „Od učitele“ jako první
+    if ($teacherNext !== null) return $teacherNext;
     if ($o['due'] !== []) return ['href' => '?view=opakovat', 'kind' => 'review', 'arg' => (string)count($o['due'])];
     if (function_exists('p63_next')) {
         $rec = p63_next($classId, $studentKey, $now);
@@ -160,10 +164,12 @@ function pg80_next_html(array $next): string
         'task' => [tr('Tahle úloha ti zatím jde nejméně, nebo jsi ji ještě nezkusil(a).'), tr('Procvičit úlohu')],
         'widget' => [tr('Zkus interaktivní cvičení – výsledek uvidíš hned.'), tr('Otevřít cvičení')],
         'tasks' => [tr('Všechno je splněno. Vezmi si další variantu úlohy.'), tr('Otevřít úlohy')],
+        'teacher' => [tr('Tohle ti přidělil učitel. Až to vyřešíš, splní se to samo.'), (string)($next['button'] ?? tr('Začít'))],   // v80.1
         default => [tr('Zkus interaktivní cvičení.'), tr('Otevřít cvičení')],
     };
-    $what = match ($next['kind']) { 'path' => (string)$next['arg'], 'task' => tb75_t_title((string)$next['arg']), 'widget' => wg80_title((string)$next['arg']), default => '' };
-    return '<section class="ds-card lr80-next" aria-labelledby="lr80-next-h"><p class="ds-eyebrow lr80-eyebrow" id="lr80-next-h">' . e(tr('Další krok')) . '</p>'
+    $what = match ($next['kind']) { 'path', 'teacher' => (string)$next['arg'], 'task' => tb75_t_title((string)$next['arg']), 'widget' => wg80_title((string)$next['arg']), default => '' };
+    $eyebrow = $next['kind'] === 'teacher' ? tr('Další krok') . ' · ' . tr('Od učitele') : tr('Další krok');
+    return '<section class="ds-card lr80-next" aria-labelledby="lr80-next-h"><p class="ds-eyebrow lr80-eyebrow" id="lr80-next-h">' . e($eyebrow) . '</p>'
         . ($what !== '' ? '<p class="lr80-next__what"' . edu_content_lang_attr() . '>' . e($what) . '</p>' : '') . '<p>' . e($why) . '</p>'
         . '<a class="ds-btn ds-btn--primary ds-btn--block lr80-next__btn" href="' . e($next['href']) . '">' . e($label) . '</a></section>';
 }
@@ -244,7 +250,7 @@ function pg80_render_page(string $classId, string $studentKey, ?int $now = null)
     $rows = pg80_summary_rows($o);
     echo lr80_assets_html() . '<div class="ds78 lr80-page lr80-progress"><h1>' . e(tr('Můj pokrok')) . '</h1>'
         . '<p class="lr80-lead">' . e(tr('Všechno na jednom místě: co už umíš, co procvičit a jeden další krok. Vidíš to jen ty a tví učitelé.')) . '</p>'
-        . pg80_next_html($o['next']) . lr80_links_html();
+        . pg80_next_html($o['next']) . (function_exists('ts801_section_html') ? ts801_section_html($o['teacher']) : '') . lr80_links_html();
     echo '<section class="ds-card lr80-sec" aria-labelledby="lr80-sum-h"><h2 id="lr80-sum-h">' . e(tr('Přehled')) . '</h2><ul class="lr80-bars">';
     foreach ($rows as [$label, $have, $total, $text]) echo pg80_bar_html($label, $have, $total, $text);
     echo '</ul><details class="lr80-table"><summary>' . e(tr('Zobrazit jako tabulku')) . '</summary><table class="lr80-tbl"><caption>' . e(tr('Přehled pokroku')) . '</caption><thead><tr><th scope="col">'

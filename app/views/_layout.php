@@ -74,22 +74,18 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
             <div class="topbar-right topbar-lang-only"><?= edu_lang_switcher_html(csrf_token(), '?view=' . (string)$view) ?></div>
         <?php endif; ?>
         <?php if ($module): ?>
-            <?php if (!$compactAssessment): ?>
-                <?php /* v61 (nav): pět míst (Dnes, Učení, Hry a aréna, Projekty, Profil) s podmenu; vykresluje nav_v61.php. */ ?>
-                <?= nav61_main_html($ui61Cid, (string)$view) ?>
-                <div class="topbar-right v55-right">
-                    <?php if (is_string($cid) && $cid !== ''): v55_render_level_chip($cid); endif; ?>
-                    <div class="v56-menu" data-v56-menu>
-                        <button class="v56-menu-button" type="button" data-v56-menu-button aria-label="<?= e(tr('Menu účtu')) ?>" aria-expanded="false" aria-controls="v56-account-menu"><?= nav61_icon('menu') ?><span><?= e(tr('Menu')) ?></span><i aria-hidden="true">⌄</i></button>
-                        <div class="v56-menu-panel" id="v56-account-menu" data-v56-menu-panel>
-                            <?= nav61_drawer_html($ui61Cid, (string)$view) /* v61: skupiny odkazů jen na úzkém displeji; na širším je nahrazuje horní lišta */ ?>
-                            <div class="v56-menu-lang"><?= edu_lang_switcher_html(csrf_token(), '?view=' . (string)$view) ?></div>
-                            <div class="v56-menu-lang"><?= ui67_theme_switch_html(csrf_token(), '?view=' . (string)$view, (string)$view) ?></div>
-                            <form method="post"><input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="logout_class"><button type="submit"><?= e(tr('Odhlásit se')) ?></button></form>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
+            <?php if (!$compactAssessment):
+                /* v61 (nav): pět míst (Dnes, Učení, Hry a aréna, Projekty, Profil) s podmenu; vykresluje nav_v61.php.
+                   v80.1: hlavička bez odsazení (menší HTML každé stránky); drawer a jazyk v menu účtu klonuje assets/nav-v61.js z horní lišty
+                   a patičky (sdílené značky) – menu účtu se bez JS neotevře, takže bez JS se nic neztrácí. */
+                echo nav61_main_html($ui61Cid, (string)$view), '<div class="topbar-right v55-right">';
+                if (is_string($cid) && $cid !== '') v55_render_level_chip($cid);
+                echo '<div class="v56-menu" data-v56-menu><button class="v56-menu-button" type="button" data-v56-menu-button aria-label="', e(tr('Menu účtu')), '" aria-expanded="false" aria-controls="v56-account-menu">',
+                    nav61_icon('menu'), '<span>', e(tr('Menu')), '</span><i aria-hidden="true">⌄</i></button><div class="v56-menu-panel" id="v56-account-menu" data-v56-menu-panel>',
+                    nav61_drawer_html($ui61Cid, (string)$view), '<div class="v56-menu-lang" data-nav61-lang></div>',
+                    '<div class="v56-menu-lang">', ui67_theme_switch_html(csrf_token(), '?view=' . (string)$view, (string)$view), '</div>',
+                    '<form method="post"><input type="hidden" name="csrf" value="', e(csrf_token()), '"><input type="hidden" name="action" value="logout_class"><button type="submit">', e(tr('Odhlásit se')), '</button></form></div></div></div>';
+            endif; ?>
             <?php if ($compactAssessment): ?>
             <div class="topbar-right"><div class="assessment-mode-label"><span><?= e(tr('Soustředění')) ?></span><strong><?= e($view === 'test' ? tr('Startovní test') : tr('Knowledge check')) ?></strong></div><span class="v55-lock-flag"><?= e(tr('Zamčeno do odevzdání')) ?></span></div>
             <?php endif; ?>

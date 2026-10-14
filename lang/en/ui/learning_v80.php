@@ -171,4 +171,8 @@ return [
     'Zopakovat {n} položek z opakování' => ['one' => 'Review {n} item', 'other' => 'Review {n} items'],
     'Vyřešit {n} interaktivních cvičení' => ['one' => 'Solve {n} interactive exercise', 'other' => 'Solve {n} interactive exercises'],
     'Vyřešit {n} úloh bez nápovědy' => ['one' => 'Solve {n} task without a hint', 'other' => 'Solve {n} tasks without a hint'],
+    // v80.1 · Další krok „Od učitele“ (přidělené procvičování)
+    'Tohle ti přidělil učitel. Až to vyřešíš, splní se to samo.' => 'Your teacher assigned this to you. It is marked as done as soon as you solve it.',
+    'Začít' => 'Start',
+    'Od učitele' => 'From your teacher',
 ];

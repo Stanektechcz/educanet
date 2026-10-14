@@ -1,0 +1,74 @@
+/* EDUCANET v80.1 · Mapa třídy (záložka mapa801). Jen tokeny v78 uvnitř .ds78, písmo jen --fs-*, cíle --target-min,
+   @media jen 768 px (breakpoint md). Úroveň buňky = ikona + hodnota textem; barva pozadí je jen doplněk. */
+.ds78.cm801 { background: transparent; color: var(--text); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); margin: 0 0 var(--space-5); min-width: 0; max-width: 100%; }
+.ds78.cm801 > *, .ds78 .cm801-form { min-width: 0; max-width: 100%; }
+.ds78 .cm801-filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-2) var(--space-3); margin: 0; }
+.ds78 .cm801-filters .ds-field { margin: 0; flex: 1 1 11rem; max-width: 20rem; }
+.ds78 .cm801-range { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); border: 0; padding: 0; margin: 0; flex: 1 1 14rem; }
+.ds78 .cm801-range legend { padding: 0; margin-bottom: var(--space-1); }
+.ds78 .cm801-range .ds-input { width: 5.5rem; }
+.ds78 .cm801-range .ds-help { flex-basis: 100%; margin: 0; }
+.ds78 .cm801-filter-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.ds78 .cm801-legend { display: flex; flex-wrap: wrap; gap: var(--space-2); list-style: none; margin: 0; padding: 0; font-size: var(--fs-sm); }
+.ds78 .cm801-legend li { padding: var(--space-1) var(--space-3); border-radius: var(--radius-pill); border: var(--border-width) solid var(--line); }
+.ds78 .cm801-wrap { position: relative; overflow: auto; max-height: 75vh; border: var(--border-width) solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.ds78 .cm801-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: var(--fs-sm); color: var(--text); background: var(--surface); }
+.ds78 .cm801-table caption { text-align: left; font-size: var(--fs-base); font-weight: var(--fw-bold); padding: var(--space-3); }
+.ds78 .cm801-table th, .ds78 .cm801-table td { padding: var(--space-1) var(--space-2); text-align: left; vertical-align: middle; border-bottom: var(--border-width) solid var(--line); border-right: var(--border-width) solid var(--line); }
+.ds78 .cm801-table thead th { position: sticky; top: 0; z-index: 2; background: var(--surface-2); vertical-align: bottom; min-width: 7.5rem; max-width: 11rem; font-weight: var(--fw-bold); hyphens: auto; overflow-wrap: break-word; }
+.ds78 .cm801-table thead th small { display: block; color: var(--muted); font-weight: var(--fw-medium); font-size: var(--fs-sm); }
+.ds78 .cm801-sort { display: inline-block; min-height: var(--target-min); min-width: var(--target-min); padding: var(--space-1) 0; color: var(--text); text-decoration: none; }
+.ds78 .cm801-sort:hover { color: var(--accent); text-decoration: underline; }
+.ds78 .cm801-table th[aria-sort] .cm801-sort { color: var(--accent); }
+.ds78 .cm801-table .cm801-sel { position: sticky; left: 0; z-index: 1; width: 3rem; min-width: 3rem; background: var(--surface); padding: 0; }
+.ds78 .cm801-table tbody th[scope="row"], .ds78 .cm801-table tfoot th[scope="row"] { position: sticky; left: 3rem; z-index: 1; background: var(--surface); min-width: 10rem; font-weight: var(--fw-bold); }
+.ds78 .cm801-table thead th:nth-child(1), .ds78 .cm801-table thead th:nth-child(2) { position: sticky; z-index: 3; background: var(--surface-2); }
+.ds78 .cm801-table thead th:nth-child(1) { left: 0; min-width: 3rem; }
+.ds78 .cm801-table thead th:nth-child(2) { left: 3rem; min-width: 10rem; }
+.ds78 .cm801-table.no-pick thead th:nth-child(1), .ds78 .cm801-table.no-pick tbody th[scope="row"], .ds78 .cm801-table.no-pick tfoot th[scope="row"] { left: 0; }
+.ds78 .cm801-table.no-pick thead th:nth-child(2) { left: auto; min-width: 7.5rem; z-index: 2; }
+.ds78 .cm801-check { display: flex; align-items: center; justify-content: center; min-width: var(--target-min); min-height: var(--target-min); cursor: pointer; }
+.ds78 .cm801-check input { width: 1.25rem; height: 1.25rem; accent-color: var(--accent); }
+.ds78 .cm801-table tbody th a, .ds78 .cm801-c a { display: flex; align-items: center; gap: var(--space-1); min-height: var(--target-min); color: inherit; text-decoration: none; white-space: nowrap; }
+.ds78 .cm801-table tbody th a { color: var(--accent); text-decoration: underline; white-space: normal; }
+.ds78 .cm801-c a:hover { text-decoration: underline; }
+.ds78 .cm801-c.is-strong { background: var(--ok-soft); font-weight: var(--fw-bold); }
+.ds78 .cm801-c.is-ok { background: var(--ok-soft); }
+.ds78 .cm801-c.is-mid { background: var(--warn-soft); }
+.ds78 .cm801-c.is-low { background: var(--danger-soft); font-weight: var(--fw-bold); }
+.ds78 .cm801-c.is-none { color: var(--muted); }
+.ds78 .is-plain .cm801-c { background: transparent; font-weight: var(--fw-normal); color: var(--text); }
+.ds78 .cm801-table tbody tr:hover > th, .ds78 .cm801-table tbody tr:hover > .cm801-sel, .ds78 .cm801-table tbody tr:hover > .cm801-avg { background: var(--surface-2); }
+.ds78 .cm801-table tfoot th, .ds78 .cm801-table tfoot td { background: var(--surface-2); color: var(--text); }
+.ds78 .cm801-sum { min-width: 7.5rem; white-space: normal; }
+.ds78 .cm801-avg { white-space: nowrap; font-weight: var(--fw-medium); }
+.ds78 .cm801-actions { display: grid; gap: var(--space-3); margin-top: var(--space-3); }
+.ds78 .cm801-count { margin: 0; font-weight: var(--fw-bold); }
+.ds78 .cm801-pickall { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; }
+.ds78 .cm801-pickall[hidden] { display: none; }
+.ds78 .cm801-box { display: grid; gap: var(--space-3); margin: 0; padding: var(--space-4); border: var(--border-width) solid var(--line); border-radius: var(--radius-lg); background: var(--surface); }
+.ds78 .cm801-box legend { font-size: var(--fs-lg); font-weight: var(--fw-bold); padding: 0 var(--space-2); }
+.ds78 .cm801-box .ds-field { margin: 0; max-width: 40rem; }
+.ds78 .cm801-box > .ds-btn { justify-self: start; }
+.ds78 .cm801-phr { display: grid; gap: var(--space-1); }
+.ds78 .cm801-phr__h { margin: 0; font-weight: var(--fw-bold); }
+.ds78 .cm801-radio { display: flex; align-items: center; gap: var(--space-2); min-height: var(--target-min); padding: 0 var(--space-2); border-radius: var(--radius); cursor: pointer; }
+.ds78 .cm801-radio:hover { background: var(--surface-2); }
+.ds78 .cm801-radio input { width: 1.25rem; height: 1.25rem; flex: none; accent-color: var(--accent); }
+.ds78 .cm801-radio small, .ds78 .cm801-list small { color: var(--muted); font-size: var(--fs-sm); }
+.ds78 textarea.ds-input { min-height: 6rem; resize: vertical; }
+.ds78 .cm801-own, .ds78 .cm801-sent { padding: var(--space-4); border: var(--border-width) solid var(--line); border-radius: var(--radius-lg); background: var(--surface); }
+.ds78 .cm801-own summary { min-height: var(--target-min); display: flex; align-items: center; font-weight: var(--fw-bold); cursor: pointer; }
+.ds78 .cm801-addphr { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-2) var(--space-3); }
+.ds78 .cm801-addphr .ds-field { margin: 0; flex: 1 1 14rem; }
+.ds78 .cm801-sent h2 { font-size: var(--fs-lg); margin: 0 0 var(--space-3); }
+.ds78 .cm801-sent h3 { font-size: var(--fs-base); margin: 0 0 var(--space-2); }
+.ds78 .cm801-sent-cols { display: grid; gap: var(--space-4); }
+.ds78 .cm801-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.ds78 .cm801-list li { padding: var(--space-2) 0; border-bottom: var(--border-width) solid var(--line); overflow-wrap: anywhere; }
+.ds78 .cm801-inline { display: inline; margin: 0 0 0 var(--space-2); }
+@media (min-width: 768px) {
+  .ds78 .cm801-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .ds78 .cm801-count, .ds78 .cm801-pickall { grid-column: 1 / -1; }
+  .ds78 .cm801-sent-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

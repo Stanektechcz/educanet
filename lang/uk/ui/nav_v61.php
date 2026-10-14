@@ -54,4 +54,7 @@ return [
     'Úlohy' => 'Завдання',
     // v80 · podpora učení: Můj pokrok (Dnes); cvičení a opakování chyb jsou v rozcestníku na Úlohách a v Mém pokroku (rozpočet HTML stránek v61)
     'Můj pokrok' => 'Мій прогрес',
+    // v80.1 · Učení: interaktivní cvičení a opakování chyb (znovu v menu po zmenšení HTML hlavičky)
+    'Interaktivní cvičení' => 'Інтерактивні вправи',
+    'Opakování chyb' => 'Повторення помилок',
 ];

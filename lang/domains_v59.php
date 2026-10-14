@@ -326,6 +326,10 @@ return [
             'app/views/learning_v80.php',
             'app/views/pokrok_v80.php',
         ],
+        // v80.1 · Od učitele na stránce Můj pokrok: přidělené procvičování a zpětná vazba učitele (text zprávy se nepřekládá).
+        'support_v80_1' => [
+            'support_v80_1_views.php',
+        ],
         // Integrátor – sdílené soubory, dokončí se až po B1–B6 (F2).
         'shared' => [
             'bootstrap.php',
