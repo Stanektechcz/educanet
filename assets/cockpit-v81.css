@@ -1,0 +1,125 @@
+/* EDUCANET v81 · cockpit učitele – modernější vzhled (načítá se poslední, po rámci v68, v78.1 a opravách v80.2).
+   Co řešit dnes (mřížka priorit, třídy „V pořádku“, panely), Dnešní hodina (hero, ukazatele, výběr třídy), jednotné hlavičky starších záložek,
+   prázdné stavy s ikonou, hustota tabulek (Komfortní / Kompaktní), skeleton palety ⌘K. Uvnitř .ds78 tokeny v78, ve starších vrstvách
+   tokeny v61 (--ui-*), které mají vlastní tmavý režim. Žádné nové barvy; @media jen s breakpointy v78; laděno pro PC (lg/xl). */
+
+/* (přesunuto z ui-v81.css – jen cockpit; rozpočet CSS stránek žáka) */
+/* ---------- stavy: prázdný / úspěch / chyba / informace ---------- */
+.v81-state.ds78 { display: flex; gap: var(--space-4); align-items: flex-start; margin: 0 0 var(--space-4); padding: var(--space-5); border: var(--border-width) dashed var(--line); border-radius: var(--radius-xl); background: var(--surface); color: var(--text); }
+.v81-state .v81-state__icon { display: grid; place-items: center; width: 44px; height: 44px; flex: none; border-radius: var(--radius-pill); background: var(--surface-2); color: var(--muted); font-size: 1.15rem; }
+.v81-state .v81-state__title { margin: 0 0 var(--space-1); font-size: var(--fs-lg); font-weight: var(--fw-bold); line-height: var(--lh-tight); }
+.v81-state p { margin: 0; color: var(--muted); }
+.v81-state.is-ok { border-style: solid; border-color: var(--ok); background: var(--ok-soft); }
+.v81-state.is-ok .v81-state__icon { background: var(--surface); color: var(--ok); }
+.v81-state.is-error { border-style: solid; border-color: var(--danger); background: var(--danger-soft); }
+.v81-state.is-error .v81-state__icon { background: var(--surface); color: var(--danger); }
+.v81-state.is-info { border-style: solid; border-color: var(--info); background: var(--info-soft); }
+.v81-state.is-info .v81-state__icon { background: var(--surface); color: var(--info); }
+.v81-state.is-ok p, .v81-state.is-error p, .v81-state.is-info p { color: var(--text); }
+.v81-state .v81-state__actions { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); margin-top: var(--space-2); }
+.ds78 .v81-state__link { display: inline-flex; align-items: center; gap: var(--space-1); min-height: var(--target-min); color: var(--accent); font-weight: var(--fw-bold); }
+
+/* ---------- přepínač hustoty (Komfortní / Kompaktní) ---------- */
+.v81-density.ds78 { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin: 0 0 var(--space-4); padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3); border: var(--border-width) solid var(--line); border-radius: var(--radius-pill); background: var(--surface); color: var(--muted); font-size: var(--fs-sm); }
+.v81-density[hidden] { display: none; }
+.v81-density .v81-density__label { font-weight: var(--fw-bold); }
+.ds78 .v81-density__btn { min-height: var(--target-min); padding: 0 var(--space-4); border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--text); font: inherit; font-weight: var(--fw-medium); cursor: pointer; transition: background-color var(--v81-dur) var(--v81-ease), color var(--v81-dur) var(--v81-ease); }
+.ds78 .v81-density__btn:hover { background: var(--surface-2); }
+.ds78 .v81-density__btn[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+
+/* ---------- stavové štítky (vždy text + ikona, barva jen doplňuje) ---------- */
+.ds78 .v81-chip { display: inline-flex; align-items: center; gap: var(--space-1); padding: 2px var(--space-3); border-radius: var(--radius-pill); background: var(--surface-2); color: var(--text); font-size: var(--fs-sm); font-weight: var(--fw-bold); line-height: 1.6; white-space: nowrap; }
+.ds78 .v81-chip.is-ok { background: var(--ok-soft); color: var(--ok); }
+.ds78 .v81-chip.is-warn { background: var(--warn-soft); color: var(--warn); }
+.ds78 .v81-chip.is-danger { background: var(--danger-soft); color: var(--danger); }
+.ds78 .v81-chip.is-info { background: var(--info-soft); color: var(--info); }
+
+/* ---------- jednotná hlavička starších záložek (nadpis, účel, akce) ---------- */
+#t68-main .teacher-page-head { gap: var(--ui-space-4) var(--ui-space-5); align-items: flex-end; }
+#t68-main .teacher-page-head h1 { font-weight: 800; letter-spacing: -.02em; line-height: 1.12; }
+#t68-main .teacher-page-head .eyebrow { color: var(--ui-accent-ink); letter-spacing: .06em; }
+#t68-main .teacher-page-head p { max-width: 70ch; color: var(--ui-muted); }
+#t68-main .v81-head { margin-top: var(--space-2); }
+
+/* ---------- Co řešit dnes: mřížka priorit (pořadí = naléhavost) ---------- */
+.v81-prio.ds78 { margin: 0 0 var(--space-5); background: transparent; }
+.v81-prio .v81-prio__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.5rem), 1fr)); gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+.v81-prio .v81-prio__item { display: flex; min-width: 0; }
+.ds78 .v81-prio__card { position: relative; display: grid; grid-template-columns: auto 1fr; grid-template-areas: "icon label" "n n" "hint hint" "chip chip"; gap: var(--space-1) var(--space-2); align-content: start;
+  width: 100%; padding: var(--space-4) var(--space-4) var(--space-4) calc(var(--space-4) + 4px); border: var(--border-width) solid var(--line); border-radius: var(--radius-xl); background: var(--surface); color: var(--text);
+  text-decoration: none; box-shadow: var(--v81-shadow); overflow: hidden; }
+.ds78 .v81-prio__card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--line); }
+.v81-prio .is-danger .v81-prio__card::before { background: var(--danger); }
+.v81-prio .is-warn .v81-prio__card::before { background: var(--warn); }
+.v81-prio .is-info .v81-prio__card::before { background: var(--info); }
+.v81-prio .is-ok .v81-prio__card::before { background: var(--ok); }
+.ds78 a.v81-prio__card:hover { border-color: var(--accent); color: var(--text); }
+.v81-prio .v81-prio__icon { grid-area: icon; display: grid; place-items: center; width: 32px; height: 32px; border-radius: var(--radius); background: var(--surface-2); color: var(--muted); }
+.v81-prio .is-danger .v81-prio__icon { background: var(--danger-soft); color: var(--danger); }
+.v81-prio .is-warn .v81-prio__icon { background: var(--warn-soft); color: var(--warn); }
+.v81-prio .is-info .v81-prio__icon { background: var(--info-soft); color: var(--info); }
+.v81-prio .v81-prio__label { grid-area: label; align-self: center; font-weight: var(--fw-bold); }
+.v81-prio .v81-prio__n { grid-area: n; margin-top: var(--space-2); font-size: var(--fs-2xl); font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.v81-prio .is-danger .v81-prio__n { color: var(--danger); }
+.v81-prio .is-warn .v81-prio__n { color: var(--warn); }
+.v81-prio .v81-prio__hint { grid-area: hint; color: var(--muted); font-size: var(--fs-sm); }
+.v81-prio .v81-chip { grid-area: chip; justify-self: start; margin-top: var(--space-2); }
+.v81-prio .is-ok:not([data-v81-prio="resolved_recent"]) .v81-prio__n { color: var(--muted); }
+
+/* třídy bez signálů – jeden řádek */
+.v81-calm.ds78 { margin: 0 0 var(--space-5); padding: var(--space-4) var(--space-5); border: var(--border-width) solid var(--line); border-radius: var(--radius-xl); background: var(--surface); box-shadow: var(--v81-shadow); }
+.v81-calm .v81-calm__title { display: flex; align-items: center; gap: var(--space-2); margin: 0 0 var(--space-3); font-size: var(--fs-lg); }
+.v81-calm .v81-calm__title svg { color: var(--ok); }
+.v81-calm ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: var(--space-2) var(--space-3); margin: 0; padding: 0; list-style: none; }
+.v81-calm li { display: grid; gap: 2px; padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg); background: var(--surface-2); }
+.v81-calm li span { color: var(--muted); font-size: var(--fs-sm); }
+.ds78 .v81-calm li a { display: inline-flex; align-items: center; min-height: var(--target-min); font-weight: var(--fw-bold); }
+
+/* panely Co řešit dnes – měkčí karty */
+#t68-main :is(.ops-attention-class, .ops-health-panel, .ops-plus-grid > .teacher-panel, .ops-undo-panel) { border-radius: 16px; box-shadow: var(--ui-shadow-1); }
+#t68-main .ops-health-grid > article { border-radius: 14px; }
+#t68-main .ops-plus-grid .v81-state { margin: 0; }
+
+/* prázdný stav starších záložek (c70_empty_html) s ikonou */
+#t68-main .c70-empty { position: relative; padding-left: calc(var(--ui-space-5) + 52px); border-radius: 16px; }
+#t68-main .c70-empty > .v81-state__icon { position: absolute; left: var(--ui-space-5); top: var(--ui-space-5); display: grid; place-items: center; width: 40px; height: 40px; border-radius: 999px; background: var(--ui-surface-2); color: var(--ui-muted); }
+
+/* ---------- Dnešní hodina ---------- */
+#t68-main .lt791-hero.ds78 { position: relative; border-radius: var(--radius-xl); box-shadow: var(--v81-shadow); overflow: hidden; }
+#t68-main .lt791-hero.ds78::before { content: ""; position: absolute; inset: 0 0 auto; height: 5px; background: linear-gradient(90deg, var(--accent), var(--accent) 60%, var(--highlight)); }
+#t68-main .lt791-hero.ds78 h1 { letter-spacing: -.02em; font-weight: 800; }
+#t68-main .lt791-hero .lt791-fs { border-radius: var(--radius-lg); }
+#t68-main .c70-kpis { gap: var(--ui-space-3); }
+#t68-main .c70-kpi { position: relative; border-radius: 14px; box-shadow: var(--ui-shadow-1); transition: transform 180ms ease, box-shadow 180ms ease; }
+#t68-main .c70-kpi:hover { transform: translateY(-1px); box-shadow: var(--ui-shadow-2); }
+#t68-main .c70-kpi strong { font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+#t68-main .c70-kpi.is-warn { box-shadow: inset 4px 0 0 var(--ui-warn-ink), var(--ui-shadow-1); }
+#t68-main .c70-kpi.is-ok { box-shadow: inset 4px 0 0 var(--ui-ok-ink), var(--ui-shadow-1); }
+#t68-main .c70-kpi .c791-tone { display: inline-flex; align-items: center; margin-top: 4px; padding: 0 10px; border-radius: 999px; font-style: normal; font-weight: 700; }
+#t68-main .c70-kpi.is-warn .c791-tone { background: var(--ui-warn-soft); color: var(--ui-warn-ink); }
+#t68-main .c70-kpi.is-ok .c791-tone { background: var(--ui-surface-2); color: var(--ui-ok-ink); }
+#t68-main .c70-classes a { border-radius: 14px; transition: border-color 180ms ease, background-color 180ms ease; }
+#t68-main .c70-card, #t68-main .lt791-ctx { border-radius: 16px; }
+
+/* ---------- hustota tabulek ---------- */
+#t68-main .v81-density { margin-top: var(--space-2); }
+:root[data-v81-density="compact"] #t68-main table :is(td, th) { padding-top: 3px !important; padding-bottom: 3px !important; line-height: 1.25 !important; }
+:root[data-v81-density="compact"] #t68-main table td :is(small, p) { margin: 0; }
+
+/* ---------- paleta ⌘K: skeleton místo prázdného seznamu během načítání ---------- */
+.v81-skel { display: grid; gap: 10px; padding: 12px 16px; }
+.v81-skel span { display: block; height: 14px; border-radius: 6px; background: linear-gradient(90deg, var(--ui-surface-2) 25%, var(--ui-line) 50%, var(--ui-surface-2) 75%); background-size: 200% 100%; animation: v81-shimmer 1.4s linear infinite; }
+.v81-skel span:nth-child(2) { width: 70%; }
+.v81-skel span:nth-child(3) { width: 50%; }
+@keyframes v81-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+@media (min-width: 1366px) {
+  .v81-prio .v81-prio__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #t68-main .c70-kpi, #t68-main .c70-kpi:hover, #t68-main .c70-classes a { transition: none; transform: none; }
+  .v81-skel span { animation: none; }
+}
+@media print { .v81-density { display: none !important; } #t68-main .lt791-hero.ds78::before { display: none; } #t68-main .c70-kpi { box-shadow: none; } }
+/* malé panely Co řešit dnes vykreslit vždy (content-visibility: auto ze starší vrstvy je při tisku a celostránkovém snímku nechávalo prázdné) */
+#t68-main .ops-plus-grid > .teacher-panel { content-visibility: visible; contain-intrinsic-size: none; contain: paint; }

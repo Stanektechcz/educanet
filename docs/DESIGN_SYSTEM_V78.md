@@ -1,4 +1,4 @@
-# Design systém EDUCANET v78 (fáze A–F, dokončeno ve v80.2)
+# Design systém EDUCANET v78 (fáze A–F, dokončeno ve v80.2; vizuální jazyk v81 v §13)
 
 Jedna knihovna tokenů a komponent pro postupné sjednocení vzhledu cockpitu učitele i žákovské části.
 Živá ukázka: **`teacher.php?tab=design78`** (Správa › Design systém, jen administrátor, fiktivní data, nic neukládá).
@@ -201,3 +201,24 @@ stejný název; nadpis prázdného stavu říká, co tu chybí, druhá věta pro
 | Doplňkový text ≥ 4,5 : 1 | `--u-faint: #5f6b7a` (`ui-v51.css`) | tmavé vrstvy v69 a kopie cockpitu se přegenerují nástroji |
 | Opravy cílů, kontrastu a fokusu starších tříd | `assets/a11y-v80-2.css` (poslední styl hlavičky žáka), `assets/a11y-cockpit-v80-2.css` (poslední styl rámce cockpitu, jen `#t68-main`) | jen existující proměnné (`--u-*`, `--ui-*`, `--edu-*`), žádné nové barvy |
 | Tabulka vždy v rámečku s posunem | `.ds-table-wrap`, `.c72-scroll`, `.cm801-wrap` | stránka nikdy nepřeteče do strany (audit 11 šířek) |
+
+## 13. Vizuální jazyk v81 (modernější, přehlednější, intuitivnější)
+Nad tokeny v78, žádné nové barvy. Soubory: `ui_v81.php`, `assets/icons-v81.svg`, `assets/ui-v81.css` (sdílené), `assets/home-v81.css` (Domů žáka),
+`assets/cockpit-v81.css` (cockpit), `assets/ui-v81.js`. Audit `tools/v81_visual_audit.php`.
+
+| Prvek | Značky / funkce | Pravidla |
+|---|---|---|
+| Ikona | `i81('nazev')` → `svg.i81[aria-hidden][focusable=false] > use[href=assets/icons-v81.svg?v=…#i-nazev]` | jeden sprite, 24 × 24, tah `currentColor`; vždy vedle textu (nikdy jediný nosič informace); nový symbol = záznam v `UI81_ICONS` + `<symbol id="i-…">` |
+| Hlavička stránky | `v81_head_html($title, $lead, $actions, $eyebrow, $icon)` → `header.v81-head.ds78` | `h1` + **jedna věta o účelu** (`.v81-head__lead`) + **nejvýš jedna primární akce** (další jako sekundární, max. 3); starší záložky: `.teacher-page-head` + třída `v81-legacy-head` |
+| Stav | `v81_state_html('empty'|'ok'|'error'|'info', $title, $text, $actions)` | ikona + nadpis + proč + co dál; chyba `role=alert`, ostatní `role=status` |
+| Nápověda při první návštěvě | `v81_hint_html($id, 'Jak to funguje', [2–4 body])` → `aside.v81-hint[hidden][data-v81-hint]` | až za `h1`; bez JS skrytá; JS ukáže, dokud ji uživatel nezavře (`localStorage` `v81-hint-<id>` = 1, `try/catch`); po zavření fokus do obsahu |
+| Toast po POST | hláška s `data-v81-toast="ok|info|error"` (cockpit `teacher-flash`, žák `.notice`) | s JS oznámení v `.v81-toasts[role=status][aria-live=polite]`, 6 s, pauza při najetí/fokusu; bez JS zůstává hláška v textu; **chyba zůstává v textu i s JS** |
+| Hustota tabulek | `v81_density_html()` + `v81_density_head_js()` (jen `UI81_DENSITY_TABS`) | skupina „Komfortní / Kompaktní“ s `aria-pressed`; `html[data-v81-density=compact]` zmenší jen svislé odsazení buněk (písmo ≥ 14 px zůstává) |
+| Stavový štítek | `span.v81-chip.is-ok|is-warn|is-danger|is-info` | text + ikona, barva jen doplněk |
+| Karta priority | `ol.v81-prio__list > li.v81-prio__item.is-…` | pořadí = naléhavost (Řešit hned → Pozor → Sledovat → V pořádku); nulové karty na konec |
+| Pohyb | `.v81-lift` (zvednutí 2 px), `--v81-dur` 180 ms, `--v81-ease` | při `prefers-reduced-motion: reduce` 0 ms a bez transformací |
+| Tvar a stín | `--radius-xl` 16 px, `--v81-shadow`, `--v81-shadow-hover` (tmavý režim vlastní hodnoty) | karty 16 px, tlačítka 12 px, štítky pilulka |
+
+**Dělej / nedělej (v81):** na stránce **jedno** plné primární tlačítko (Domů: jen v kartě Dnes; karty Co dál / Výzva mají obrys) · ikonu vždy s textem ·
+nová stránka žáka s v81 = přidat pohled do `UI81_STUDENT_VIEWS` a ověřit rozpočet `tools/v61_design_audit.php` (nezvyšovat – udělat místo) ·
+**nedělej** série/„streaky“ na Domů, nápovědu viditelnou bez JS (nešla by zavřít), přechody delší než 200 ms, `localStorage` mimo `try/catch`.

@@ -156,7 +156,8 @@ function ch64_weekly_view(string $classId, string $sid, string $week, array $ent
 }
 
 /** Karta výzvy týdne na přehledu (bez nového CSS – třídy karty „Co dál“). Jen čtení + jednorázové zafixování týdne. */
-function ch64_render_card(string $classId, string $studentKey): void
+/** v81: $streak = false skryje řádek „Série týdnů“ (domovská stránka žáka bez sérií). */
+function ch64_render_card(string $classId, string $studentKey, bool $streak = true): void
 {
     $c = ch64_weekly_for($classId, $studentKey);
     if ($c === null) return;
@@ -164,7 +165,7 @@ function ch64_render_card(string $classId, string $studentKey): void
     echo '<section class="p63-card ui-card" aria-labelledby="ch64-title"><p class="ui-eyebrow">' . e(tr('Výzva týdne')) . '</p>'
         . '<h2 id="ch64-title">' . e(ch64_label((string)$c['competency'], (string)$c['label'])) . '</h2>'
         . '<p class="p63-reason">' . e($c['done'] ? tr('Splněno: v téhle kompetenci jsi tento týden prokázal/a, co umíš.') : tr('Vyzkoušej to v Labu nebo v týmové hře. Odměnou je jistota, že to umíš – žádné body.')) . '</p>'
-        . '<p class="p63-meta">' . e(tr('Série týdnů: {n}', ['n' => (int)$c['streak']])) . ' · ' . e(tr('Prázdniny sérii nepřeruší.')) . '</p>'
+        . ($streak ? '<p class="p63-meta">' . e(tr('Série týdnů: {n}', ['n' => (int)$c['streak']])) . ' · ' . e(tr('Prázdniny sérii nepřeruší.')) . '</p>' : '')
         . '<p><a class="ui-btn ui-btn--primary p63-go" href="' . e((string)$c['href_game']) . '">' . e(tr('Do hry')) . '</a> '
         . '<a class="ui-link p63-all" href="' . e((string)$c['href_path']) . '">' . e(tr('Cesta k téhle kompetenci')) . '</a></p></section>';
 }

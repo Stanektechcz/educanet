@@ -44,9 +44,9 @@ function mot61_streak_html(array $o): string
 
 /**
  * Karta „Dnešní cíle“ (≤ 3 denní + 2 týdenní cíle, série, strop XP). $class = další CSS třída karty.
- * Odměna se připíše při zobrazení (líně); nepřihlášený žák cíle vidí, ale XP nezískává.
+ * Odměna se připíše při zobrazení (líně); nepřihlášený žák cíle vidí, ale XP nezískává. v81: $streak = false skryje sérii (domovská stránka bez sérií).
  */
-function mot61_render_goals_card(string $classId, string $class = ''): void
+function mot61_render_goals_card(string $classId, string $class = '', bool $streak = true): void
 {
     $o = mot61_overview_for_session($classId, time());
     if ($o === null) return;
@@ -54,7 +54,7 @@ function mot61_render_goals_card(string $classId, string $class = ''): void
     echo '<section class="mot61-card ui-card' . ($class !== '' ? ' ' . e($class) : '') . '" aria-labelledby="mot61-title"><header class="ui-card-head"><div><p class="ui-eyebrow">' . e(tr('Cíle')) . '</p>'
         . '<h2 id="mot61-title">' . e(tr('Dnešní cíle')) . '</h2></div></header>';
     if ($o['granted'] > 0) echo '<p class="ui-flash" role="status">' . e(tr('Za splněné cíle přibylo {n} XP.', ['n' => (int)$o['granted']])) . '</p>';
-    echo mot61_streak_html($o) . mot61_goal_list(tr('Dnes'), $o['goals']['day']) . mot61_goal_list(tr('Tento týden'), $o['goals']['week']);
+    echo ($streak ? mot61_streak_html($o) : '') . mot61_goal_list(tr('Dnes'), $o['goals']['day']) . mot61_goal_list(tr('Tento týden'), $o['goals']['week']);
     echo '<p class="mot61-foot">' . e(tr('XP za cíle: dnes {d} z {dc}, tento týden {w} z {wc}. Cíle neovlivní známky ani žebříček.', ['d' => (int)$o['xp_today'], 'dc' => MOT61_DAILY_XP_CAP, 'w' => (int)$o['xp_week'], 'wc' => MOT61_WEEKLY_XP_CAP])) . '</p>';
     if (!auth_is_signed_in()) echo '<p class="mot61-foot">' . e(tr('XP za cíle se připisuje po přihlášení účtem.')) . '</p>';
     echo '</section>';

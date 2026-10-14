@@ -816,3 +816,17 @@ Podrobnosti: `CHANGELOG_V80_2.md`, `BUILD_MANIFEST_V80_2.md` (soubory, změny li
   `tools/lib/v61_perf_baseline.php` platí jen pro vývojový počítač, na serveru se porovnání se základnou přeskočí (absolutní limity platí).
 - **Ruční kontrola:** `docs/MANUAL_CHECKLIST_V80.md` (klávesnice, NVDA, skutečný telefon a tablet).
 - **Rollback vydání:** nasadit v80.1 (`4c6e903`) včetně `assets/cx-projects-v65.css` (z git historie); data se neměnila.
+
+## v81 · modernější vzhled: Domů, cockpit, ikony, nápovědy
+
+Podrobnosti: `CHANGELOG_V81.md`, `BUILD_MANIFEST_V81.md` (soubory, změny limitů auditů, výkon), návod `docs/NAVOD_V81.md`.
+Žádná změna dat ani úložiště; nové PHP rozšíření ani migraci nevyžaduje.
+
+- **Nové soubory:** `ui_v81.php` (ikony, hlavička, stavy, nápověda, hustota), `assets/icons-v81.svg` (sprite ikon – server musí `.svg` posílat jako
+  `image/svg+xml`, Apache i nginx to dělají ve výchozím nastavení), `assets/ui-v81.css`, `assets/ui-v81.js`, `assets/home-v81.css` (jen Domů),
+  `assets/cockpit-v81.css` (jen cockpit). Odkazy mají verzi podle času změny souboru – po nasazení není potřeba mazat cache.
+- **Chování v prohlížeči:** nápověda „Jak to funguje“ a hustota tabulek se pamatují v `localStorage` (jen „zavřeno“ / „kompaktní“, žádná osobní data);
+  při zakázaném úložišti se nápověda ukáže znovu a tabulky zůstanou komfortní. Bez JS: hlášky zůstávají v textu, nápověda ani přepínač se neukážou.
+- **Audit:** `php tools/v81_visual_audit.php` → `V81_VISUAL_AUDIT_OK` (prohlížečová část jen s Chrome + `playwright-core` v `NODE_PATH`, jinak SKIP;
+  vynutit `EDUCANET_V81_BROWSER=require`, snímky `EDUCANET_V81_SHOTS=<adresář>`).
+- **Rollback vydání:** nasadit v80.2 (`6e2626f`); nové soubory v81 mohou na serveru zůstat (nic je nenačte).

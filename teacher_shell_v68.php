@@ -11,6 +11,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 
 require_once __DIR__ . '/teacher_nav_v68.php';
 require_once __DIR__ . '/nav_v78_1_views.php';   // v78.1: navigace 4 sekce, drawer, spodní lišta, drobečky se Zpět
+require_once __DIR__ . '/ui_v81.php';   // v81: ikony, hlavička, stavy, nápověda, toasty, hustota tabulek
 
 const TEACHER68_ASSET_VERSION = '68.0';
 
@@ -79,7 +80,8 @@ function teacher68_shell_css_html(string $tab): string
 {
     return teacher68_link_html('assets/teacher-shell-v68.css') . teacher68_link_html('assets/teacher-contrast-v69.css') . teacher68_link_html('assets/cockpit-v70.css') . teacher68_dark_html($tab)   // v69: kontrast malých popisků (AA)
         . nav781_css_html($tab)   // v78.1: tokeny a komponenty v78 + navigace (4 sekce, drawer, spodní lišta)
-        . teacher68_link_html('assets/a11y-cockpit-v80-2.css');   // v80.2: cíle 44 px, kontrast a fokus starších vrstev (audit tools/v80_2_a11y_audit.php)
+        . teacher68_link_html('assets/a11y-cockpit-v80-2.css')   // v80.2: cíle 44 px, kontrast a fokus starších vrstev (audit tools/v80_2_a11y_audit.php)
+        . v81_cockpit_assets_html() . (in_array($tab, UI81_DENSITY_TABS, true) ? v81_density_head_js() : '');   // v81: modernější vzhled cockpitu (poslední), hustota tabulek bez probliknutí
 }
 
 /** Tři tlačítka vzhledu (POST s CSRF, funguje bez JS, aria-pressed = aktuální volba). */

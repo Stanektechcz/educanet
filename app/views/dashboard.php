@@ -205,28 +205,49 @@ if ($view === 'dashboard') {
 
     render_header(tr('Přehled'), $module);
     ?>
-    <?php if ($flash !== ''): ?><div class="notice"><?= e($flash) ?></div><?php endif; ?>
+    <?php if ($flash !== ''): ?><div class="notice" data-v81-toast="info" data-v81-close="<?= e(tr('Zavřít oznámení')) ?>"><?= e($flash) ?></div><?php endif; ?>
+    <?php /* v81: domovská stránka – pozdrav (hlavička v81), „Dnes“ (jeden krok, jedno primární tlačítko) s kruhem pokroku, rychlé dlaždice, pak Co dál, výzva a cíle bez sérií */
+      $h81Pct = max(0, min(100, (int)$dashOverallPercent)); ?>
     <section class="student-cockpit student-cockpit-v502">
-      <div class="student-cockpit-main">
-        <div class="student-welcome-row v5075-welcome">
-          <div class="student-welcome-copy">
-            <span<?= edu_content_lang_attr() ?>><?=e((string)$module['subject'])?></span>
+      <div class="student-cockpit-main ds78 h81">
+        <header class="v81-head h81-greet">
+          <div class="v81-head__text">
+            <p class="v81-head__eyebrow"><?= i81('home') ?><span<?= edu_content_lang_attr() ?>><?=e((string)$module['subject'])?></span></p>
             <h1><?= e(tr('Ahoj, {name}.', ['name' => explode(' ',trim($studentName))[0] ?: tr('studente')])) ?></h1>
+            <p class="v81-head__lead"><?= e(tr('Tady začínáš: jeden krok na dnešek, tvůj pokrok a rychlé odkazy.')) ?></p>
           </div>
-        </div>
+        </header>
+        <?= v81_hint_html('domu', tr('Jak to funguje'), [tr('Karta Dnes ukazuje jeden nejdůležitější krok – stačí kliknout na tlačítko.'), tr('Kruh ukazuje, kolik kurzu máš hotovo. Podrobnosti najdeš v Můj pokrok.'), tr('Dlaždice vedou rovnou na úlohy, cvičení, opakování a portfolio.')], tr('Rozumím, skrýt nápovědu'), tr('Nápověda')) ?>
 
-        <article class="student-do-now-card v5075-do-now">
-          <div class="student-do-now-copy"><div class="eyebrow"><?= e(tr('Teď')) ?></div><h2><?= e((string)$dashNextAction['title']) ?></h2><p><?= e((string)$dashNextAction['text']) ?></p></div>
-          <div class="student-do-now-action">
-          <?php if($dashNextAction['kind']==='test'): ?><form method="post"><input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="start_test"><button class="btn primary student-primary-cta" type="submit"><?= e((string)$dashNextAction['label']) ?></button></form><?php else: ?><a class="btn primary student-primary-cta" href="<?= e((string)$dashNextAction['href']) ?>"><?= e((string)$dashNextAction['label']) ?></a><?php endif; ?>
+        <article class="student-do-now-card v5075-do-now h81-hero" aria-labelledby="h81-today">
+          <div class="student-do-now-copy h81-hero__copy"><p class="h81-hero__eyebrow"><?= i81('sun') ?><span><?= e(tr('Dnes')) ?></span></p><h2 id="h81-today"><?= e((string)$dashNextAction['title']) ?></h2><p><?= e((string)$dashNextAction['text']) ?></p>
+          <div class="student-do-now-action h81-hero__action">
+          <?php if($dashNextAction['kind']==='test'): ?><form method="post"><input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="start_test"><button class="btn primary student-primary-cta" type="submit"><span><?= e((string)$dashNextAction['label']) ?></span><?= i81('arrow') ?></button></form><?php else: ?><a class="btn primary student-primary-cta" href="<?= e((string)$dashNextAction['href']) ?>"><span><?= e((string)$dashNextAction['label']) ?></span><?= i81('arrow') ?></a><?php endif; ?>
+          </div></div>
+          <div class="h81-progress">
+            <div class="h81-ring" style="--p:<?= $h81Pct ?>"><svg viewBox="0 0 120 120" aria-hidden="true" focusable="false"><circle class="h81-ring__track" cx="60" cy="60" r="52"/><circle class="h81-ring__fill" cx="60" cy="60" r="52" pathLength="100" stroke-dasharray="<?= $h81Pct ?> 100"/></svg><p class="h81-ring__value"><strong><?= $h81Pct ?> %</strong><span><?= e(tr('kurzu hotovo')) ?></span></p></div>
+            <ul class="h81-stats">
+              <li><?= i81('book') ?><span><?= e(tr('Lekce: {n} z {m}', ['n' => $dashLessonsDone, 'm' => $dashLessonsTotal])) ?></span></li>
+              <li><?= i81('target') ?><span><?= e(tr('Témata: {n} z {m}', ['n' => $dashKbDone, 'm' => $dashKbTotal])) ?></span></li>
+            </ul>
+            <a class="h81-more" href="?view=pokrok"><?= i81('chart') ?><span><?= e(tr('Otevřít Můj pokrok')) ?></span></a>
           </div>
         </article>
 
+        <nav class="h81-tiles" aria-label="<?= e(tr('Rychlý přístup')) ?>"><ul>
+          <li><a class="h81-tile v81-lift" href="?view=ulohy"><span class="h81-tile__icon"><?= i81('tasks') ?></span><strong><?= e(tr('Úlohy')) ?></strong><span><?= e(tr('Úlohy s variantami a nápovědou')) ?></span></a></li>
+          <li><a class="h81-tile v81-lift" href="?view=cviceni"><span class="h81-tile__icon"><?= i81('target') ?></span><strong><?= e(tr('Cvičení')) ?></strong><span><?= e(tr('Krátká interaktivní cvičení')) ?></span></a></li>
+          <li><a class="h81-tile v81-lift" href="?view=opakovat"><span class="h81-tile__icon"><?= i81('review') ?></span><strong><?= e(tr('Opakování')) ?></strong><span><?= e(tr('Zopakuj si, co ti nešlo')) ?></span></a></li>
+          <li><a class="h81-tile v81-lift" href="?view=portfolio"><span class="h81-tile__icon"><?= i81('folder') ?></span><strong><?= e(tr('Portfolio')) ?></strong><span><?= e(tr('Tvoje nejlepší práce')) ?></span></a></li>
+        </ul></nav>
+
+        <div class="h81-pair">
         <?php if (function_exists('p63_render_next_card')) p63_render_next_card((string)$classId, (string)$adaptiveStudentKey); // v63 (rozhodnutí školy Q6): karta Co dál přímo POD kartou Teď, jen čtení ?>
 
-        <?php if (function_exists('ch64_render_card')) ch64_render_card((string)$classId, (string)$adaptiveStudentKey); // v64: výzva týdne navázaná na Co dál (třídy karty Co dál, bez nového CSS) ?>
+        <?php if (function_exists('ch64_render_card')) ch64_render_card((string)$classId, (string)$adaptiveStudentKey, false); // v64: výzva týdne navázaná na Co dál (třídy karty Co dál, bez nového CSS); v81: bez řádku sérií ?>
+        </div>
 
-        <?php if (function_exists('mot61_render_goals_card')) mot61_render_goals_card((string)$classId); // v61: dnešní cíle ?>
+        <?php if (function_exists('mot61_render_goals_card')) mot61_render_goals_card((string)$classId, 'h81-goals', false); // v61: dnešní cíle; v81: bez sérií (motivace bez „streaků“) ?>
 
         <div class="v506-dashboard-quiet-links v5075-dashboard-detail-link">
           <a href="?view=dashboard&details=1"><?= e(tr('Zobrazit můj progres')) ?></a>
@@ -391,8 +412,7 @@ if ($view === 'dashboard') {
     </section>
 
     <form class="inline-form dashboard-logout" method="post"><input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="logout_class"><span><?= tr_html('Přihlášen/a jako {name}', ['name' => '<strong>' . e($studentName) . '</strong>']) ?></span><button class="link-button" type="submit"><?= e(tr('Odhlásit')) ?></button></form>
-    <script>(()=>{const b=document.querySelector('[data-focus-mode-toggle]');if(!b)return;const key='educanetFocusMode';const T_OVERVIEW=<?= json_encode(tr('Zobrazit celý přehled')) ?>;const T_FOCUS=<?= json_encode(tr('Soustředěný režim')) ?>;const apply=on=>{document.body.classList.toggle('student-focus-mode',on);b.setAttribute('aria-pressed',on?'true':'false');b.textContent=on?T_OVERVIEW:T_FOCUS};const saved=localStorage.getItem(key);apply(saved===null?true:saved==='1');b.addEventListener('click',()=>{const on=!document.body.classList.contains('student-focus-mode');localStorage.setItem(key,on?'1':'0');apply(on)})})();</script>
-    <?php
+    <?php /* v81: vyřazen mrtvý skript „Soustředěný režim“ (přepínač [data-focus-mode-toggle] se na přehledu od v50.7 nevykresluje) */
     render_footer();
     exit;
 }

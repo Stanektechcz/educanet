@@ -268,6 +268,7 @@ function teacher68_handle_post(string $action): void
     $theme = is_string($_POST['theme'] ?? null) ? (string)$_POST['theme'] : '';
     if (!ui67_theme_set($theme)) throw new RuntimeException('Neplatná volba vzhledu.');
     $return = teacher68_return_url(is_string($_POST['return'] ?? null) ? (string)$_POST['return'] : '');
+    if (function_exists('teacher_flash')) teacher_flash('Vzhled je uložený: ' . (['system' => 'podle systému', 'light' => 'světlý', 'dark' => 'tmavý'][$theme] ?? $theme) . '.');   // v81: potvrzení (toast)
     header('Location: ' . $return, true, 303);
     exit;
 }

@@ -10,6 +10,7 @@ declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 require_once dirname(__DIR__, 2) . '/nav_v61.php';   // v61: drobečky a spodní lišta
 require_once dirname(__DIR__, 2) . '/ui_v67.php';    // v67: vzhled (data-theme) a prázdné stavy
+require_once dirname(__DIR__, 2) . '/ui_v81.php';    // v81: ikony, hlavička, nápověda, toasty (jen prezentace)
 
 function render_header(string $title, ?array $module = null, bool $titleIsContent = false): void
 {
@@ -37,7 +38,7 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="theme-color" content="#f6f7f9">
     <link rel="stylesheet" href="<?= e(asset_url('assets/app.css?v=46')) ?>"><link rel="stylesheet" href="<?= e(asset_url('assets/mastery.css?v=46')) ?>"><link rel="stylesheet" href="<?= e(asset_url('assets/cognitive-v43.css?v=46')) ?>"><link rel="stylesheet" href="<?= e(asset_url('assets/learning-studio-v44.css?v=46')) ?>"><link rel="stylesheet" href="<?= e(asset_url('assets/visual-simulation-v45.css?v=46')) ?>">
-    <?php if(in_array((string)$view,['dashboard','study','mistakes','study_loop'],true)): ?><link rel="stylesheet" href="<?= e(asset_url('assets/student-coach-v47.css?v=47.2')) ?>"><?php endif; ?>
+    <?php if(in_array((string)$view,['study','mistakes','study_loop'],true)||((string)$view==='dashboard'&&(string)($_GET['details']??'')==='1')): /* v81: kouč v47 jen na podrobném progresu (?details=1), ne na běžném přehledu */ ?><link rel="stylesheet" href="<?= e(asset_url('assets/student-coach-v47.css?v=47.2')) ?>"><?php endif; ?>
     <?php if((string)$view==='visual_lab'): ?><link rel="stylesheet" href="<?= e(asset_url('assets/visual-practical-v48.css?v=48')) ?>"><link rel="stylesheet" href="<?= e(asset_url('assets/visual-labs-3a-v48-1.css?v=48.1')) ?>"><?php endif; ?>
     <?php if(in_array((string)$view,['hands_on','growth','growth_path','skill_passport','peer_lab'],true)): ?><link rel="stylesheet" href="<?= e(asset_url('assets/hands-on-v50.css?v=50')) ?>"><?php endif; ?>
     <?php if($module !== null): ?><link rel="stylesheet" href="<?= e(asset_url('assets/student-ui-v50-7-7.css?v=51.0')) ?>"><?php endif; ?>
@@ -59,6 +60,7 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
     <link rel="stylesheet" href="<?= e(asset_url('assets/i18n-v59.css?v=59.0')) ?>">
     <?php if (!empty($GLOBALS['login63'])): ?><link rel="stylesheet" href="<?= e(asset_url('assets/login-v63.css?v=63.0')) ?>"><?php endif; ?>
     <link rel="stylesheet" href="<?= e(asset_url('assets/a11y-v80-2.css?v=80.2')) ?>"><?php /* v80.2: cíle 44 px, kontrast a fokus starších vrstev – poslední styl hlavičky */ ?>
+    <?php if ($module !== null && in_array((string)$view, UI81_STUDENT_VIEWS, true)) echo v81_assets_html((string)$view === 'dashboard'); /* v81: modernější vzhled (Domů, Můj pokrok) – po opravách v80.2 */ ?>
     <script src="<?= e(asset_url('assets/i18n-v58.js?v=58.0')) ?>" defer></script>
     <?= edu_tr_json_js() ?>
 </head>
@@ -122,7 +124,7 @@ function render_footer(): void
 <script src="<?= e(asset_url('assets/learning-v56.js?v=56.1')) ?>" defer></script>
 <?php if (in_array((string)($GLOBALS['view'] ?? ''), ['lab', 'prikazy'], true)): ?><script src="<?= e(asset_url('assets/linux-v57.js?v=59.1')) ?>" defer></script><script src="<?= e(asset_url('assets/arena-v57.js?v=57.0')) ?>" defer></script><?php endif; ?>
 <?php if(($GLOBALS['module']??null)!==null && (string)($GLOBALS['view']??'')==='goal_nav'): ?><script src="<?= e(asset_url('assets/goal-navigator-v50-4.js?v=50.4')) ?>"></script><?php endif; ?>
-<?php if(in_array((string)($GLOBALS['view']??''),['dashboard','study','mistakes','study_loop'],true)): ?><script src="<?= e(asset_url('assets/student-coach-v47.js?v=47.2')) ?>"></script><?php endif; ?>
+<?php if(in_array((string)($GLOBALS['view']??''),['study','mistakes','study_loop'],true)||((string)($GLOBALS['view']??'')==='dashboard'&&(string)($_GET['details']??'')==='1')): ?><script src="<?= e(asset_url('assets/student-coach-v47.js?v=47.2')) ?>"></script><?php endif; ?>
 <?php if((string)($GLOBALS['view']??'')==='visual_lab'): ?><script src="<?= e(asset_url('assets/visual-practical-v48.js?v=48')) ?>"></script><script src="<?= e(asset_url('assets/visual-labs-3a-v48-1.js?v=48.1')) ?>"></script><?php endif; ?>
 <?php if(in_array((string)($GLOBALS['view']??''),['hands_on','growth','growth_path','skill_passport','peer_lab'],true)): ?><script src="<?= e(asset_url('assets/hands-on-v50.js?v=50')) ?>"></script><?php endif; ?>
 <script src="<?= e(asset_url('assets/cognitive-v43.js?v=46')) ?>"></script><script src="<?= e(asset_url('assets/learning-studio-v44.js?v=46')) ?>"></script><script src="<?= e(asset_url('assets/visual-simulation-v45.js?v=46')) ?>"></script>

@@ -19,7 +19,9 @@ foreach([
     'main-menu-more'=>'progressive navigation',
 ] as $needle=>$label){ if(!str_contains($index,$needle) && !str_contains($css,$needle))$errors[]="$label missing"; }
 if(str_contains($index,'<?php render_kb_concept_loop('))$errors[]='generic concept-loop is still rendered inside KB visual step';
-if(!str_contains($index,"apply(saved===null?true:saved==='1')"))$errors[]='focus mode is not default-on for first visit';
+// v81 (změna očekávání, BUILD_MANIFEST_V81.md): skript „Soustředěný režim“ byl mrtvý (přepínač [data-focus-mode-toggle] se od v50.7 nevykresluje) a v81 ho vyřadila;
+// přehled je soustředěný trvale (jediný krok v kartě Dnes, podrobnosti až na ?details=1).
+if(!str_contains($index,"apply(saved===null?true:saved==='1')")&&!str_contains($index,'v81: vyřazen mrtvý skript „Soustředěný režim“'))$errors[]='focus mode is not default-on for first visit';
 if(!str_contains($js,'data-lesson-story-demo'))$errors[]='lesson story JS missing';
 if(!str_contains($css,'.lesson-story-demo'))$errors[]='lesson story CSS missing';
 

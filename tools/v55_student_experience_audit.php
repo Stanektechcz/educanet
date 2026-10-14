@@ -160,7 +160,8 @@ try {
     $check('položky menu jsou na mobilu v rozbalovacím Více', (str_contains($dashBody, 'class="v55-mobile-only"') || str_contains($dashBody, 'class="nav61-drawer"')));
     $check('LVL prstenec je v horní liště', str_contains($dashBody, 'v55-lvl-ring') && (bool)preg_match('/--v55-lvl-percent:\s*\d+/', $dashBody));
     $check('tlačítko Pokračovat není v horní liště', !str_contains($dashBody, 'student-nav-continue'));
-    $check('tlačítko Pokračovat je na konci stránky', str_contains($dashBody, 'v55-page-cta'));
+    // v81 (změna očekávání auditu, BUILD_MANIFEST_V81.md): Domů má jediné primární tlačítko v kartě Dnes – patičkové Pokračovat se na přehledu nevykresluje, na ostatních stránkách zůstává.
+    $check('tlačítko Pokračovat: na přehledu jen jedno v kartě Dnes (bez patičkového), jinde na konci stránky', !str_contains($dashBody, 'v55-page-cta') && substr_count($dashBody, 'student-primary-cta') === 1 && str_contains((string)$harness->request('GET', '/?view=materialy')['body'], 'v55-page-cta'));
 
     $profile = $harness->request('GET', '/?view=profile');
     $profileBody = (string)$profile['body'];

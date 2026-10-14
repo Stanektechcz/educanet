@@ -4,6 +4,32 @@ Všechna data na snímcích jsou **fiktivní** (`student_directory.php`, dočasn
 (Chrome přes playwright-core), každý ≤ 150 kB (JPEG). Sadu v80.2 obnoví `EDUCANET_V802_SHOTS=docs/screens-v78 php tools/v80_2_a11y_audit.php`.
 Starší sady zůstávají jako záznam stavu dané vrstvy.
 
+
+
+## v81 · modernější vzhled – před / po (36)
+Domů žáka, Co řešit dnes a Dnešní hodina; 375 / 1280 / 1920 px, světlý i tmavý režim zařízení. `v81-before-*` = v80.2 (`6e2626f`, stejná fiktivní data), `v81-after-*` = v81. Obnoví `EDUCANET_V81_SHOTS=docs/screens-v78 php tools/v81_visual_audit.php` (po).
+
+| Stránka | Šířka | Režim | Před | Po |
+|---|---:|---|---|---|
+| Žák – Domů | 375 | světlý | [v81-before-s-domu-375-light.jpg](v81-before-s-domu-375-light.jpg) (59 kB) | [v81-after-s-domu-375-light.jpg](v81-after-s-domu-375-light.jpg) (89 kB) |
+| Žák – Domů | 375 | tmavý | [v81-before-s-domu-375-dark.jpg](v81-before-s-domu-375-dark.jpg) (59 kB) | [v81-after-s-domu-375-dark.jpg](v81-after-s-domu-375-dark.jpg) (86 kB) |
+| Žák – Domů | 1280 | světlý | [v81-before-s-domu-1280-light.jpg](v81-before-s-domu-1280-light.jpg) (85 kB) | [v81-after-s-domu-1280-light.jpg](v81-after-s-domu-1280-light.jpg) (116 kB) |
+| Žák – Domů | 1280 | tmavý | [v81-before-s-domu-1280-dark.jpg](v81-before-s-domu-1280-dark.jpg) (87 kB) | [v81-after-s-domu-1280-dark.jpg](v81-after-s-domu-1280-dark.jpg) (113 kB) |
+| Žák – Domů | 1920 | světlý | [v81-before-s-domu-1920-light.jpg](v81-before-s-domu-1920-light.jpg) (93 kB) | [v81-after-s-domu-1920-light.jpg](v81-after-s-domu-1920-light.jpg) (132 kB) |
+| Žák – Domů | 1920 | tmavý | [v81-before-s-domu-1920-dark.jpg](v81-before-s-domu-1920-dark.jpg) (94 kB) | [v81-after-s-domu-1920-dark.jpg](v81-after-s-domu-1920-dark.jpg) (128 kB) |
+| Co řešit dnes | 375 | světlý | [v81-before-t-dnes-375-light.jpg](v81-before-t-dnes-375-light.jpg) (86 kB) | [v81-after-t-dnes-375-light.jpg](v81-after-t-dnes-375-light.jpg) (103 kB) |
+| Co řešit dnes | 375 | tmavý | [v81-before-t-dnes-375-dark.jpg](v81-before-t-dnes-375-dark.jpg) (87 kB) | [v81-after-t-dnes-375-dark.jpg](v81-after-t-dnes-375-dark.jpg) (101 kB) |
+| Co řešit dnes | 1280 | světlý | [v81-before-t-dnes-1280-light.jpg](v81-before-t-dnes-1280-light.jpg) (139 kB) | [v81-after-t-dnes-1280-light.jpg](v81-after-t-dnes-1280-light.jpg) (148 kB) |
+| Co řešit dnes | 1280 | tmavý | [v81-before-t-dnes-1280-dark.jpg](v81-before-t-dnes-1280-dark.jpg) (141 kB) | [v81-after-t-dnes-1280-dark.jpg](v81-after-t-dnes-1280-dark.jpg) (146 kB) |
+| Co řešit dnes | 1920 | světlý | [v81-before-t-dnes-1920-light.jpg](v81-before-t-dnes-1920-light.jpg) (148 kB) | [v81-after-t-dnes-1920-light.jpg](v81-after-t-dnes-1920-light.jpg) (133 kB) |
+| Co řešit dnes | 1920 | tmavý | [v81-before-t-dnes-1920-dark.jpg](v81-before-t-dnes-1920-dark.jpg) (136 kB) | [v81-after-t-dnes-1920-dark.jpg](v81-after-t-dnes-1920-dark.jpg) (148 kB) |
+| Dnešní hodina | 375 | světlý | [v81-before-t-hodina-375-light.jpg](v81-before-t-hodina-375-light.jpg) (35 kB) | [v81-after-t-hodina-375-light.jpg](v81-after-t-hodina-375-light.jpg) (35 kB) |
+| Dnešní hodina | 375 | tmavý | [v81-before-t-hodina-375-dark.jpg](v81-before-t-hodina-375-dark.jpg) (34 kB) | [v81-after-t-hodina-375-dark.jpg](v81-after-t-hodina-375-dark.jpg) (34 kB) |
+| Dnešní hodina | 1280 | světlý | [v81-before-t-hodina-1280-light.jpg](v81-before-t-hodina-1280-light.jpg) (85 kB) | [v81-after-t-hodina-1280-light.jpg](v81-after-t-hodina-1280-light.jpg) (86 kB) |
+| Dnešní hodina | 1280 | tmavý | [v81-before-t-hodina-1280-dark.jpg](v81-before-t-hodina-1280-dark.jpg) (83 kB) | [v81-after-t-hodina-1280-dark.jpg](v81-after-t-hodina-1280-dark.jpg) (83 kB) |
+| Dnešní hodina | 1920 | světlý | [v81-before-t-hodina-1920-light.jpg](v81-before-t-hodina-1920-light.jpg) (123 kB) | [v81-after-t-hodina-1920-light.jpg](v81-after-t-hodina-1920-light.jpg) (120 kB) |
+| Dnešní hodina | 1920 | tmavý | [v81-before-t-hodina-1920-dark.jpg](v81-before-t-hodina-1920-dark.jpg) (121 kB) | [v81-after-t-hodina-1920-dark.jpg](v81-after-t-hodina-1920-dark.jpg) (117 kB) |
+
 ## v80.2 · reprezentativní sada (aktuální vzhled) (40)
 Hlavní stránky po ověření přístupnosti v80.2 – šířky 375 / 768 / 1280 / 1920 px, světlý i tmavý režim zařízení. Učitel: Dnešní hodina, Středa T-14, Hromadné schválení (cockpit je laděný pro PC, tmavý jen u záložek s tmavým režimem); žák: Domů a Úloha s variantou.
 

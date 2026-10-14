@@ -342,7 +342,6 @@ html:not([data-theme="light"]) .corrective-transfer-result.needs-work{background
 /* student-ui-v50-7-7.css (sha256 2a8d5d9efaf1) */
 html:not([data-theme="light"]) body:not(.assessment-mode){--student-shadow:0 14px 34px rgba(0,0,0,0.088)}
 html:not([data-theme="light"]) body:not(.view-dashboard):not(.assessment-mode) .panel{box-shadow:0 10px 28px rgba(0,0,0,0.056)}
-html:not([data-theme="light"]) .student-welcome-copy span{color:var(--muted)}
 html:not([data-theme="light"]) .student-do-now-card{border-radius:26px;border:1px solid color-mix(in srgb,var(--accent) 26%,var(--line));background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 9%,var(--surface)),var(--surface) 58%);box-shadow:0 20px 52px color-mix(in srgb,var(--accent) 10%,transparent)}
 html:not([data-theme="light"]) .student-primary-cta{border-radius:16px}
 html:not([data-theme="light"]) .student-do-now-action small{color:var(--muted)}
@@ -393,7 +392,6 @@ html:not([data-theme="light"]) body:not(.assessment-mode) .panel, html:not([data
 html:not([data-theme="light"]) :where(body:not(.assessment-mode)) .btn{border-radius:10px;box-shadow:none}
 html:not([data-theme="light"]) body:not(.assessment-mode) .btn.secondary{background:#171717!important;border-color:var(--edu-line)!important}
 html:not([data-theme="light"]) :where(body:not(.assessment-mode)) :is(input,textarea,select){border-radius:var(--ui-radius-sm,9px);border-color:var(--ui-field-border,var(--edu-line));box-shadow:none}
-html:not([data-theme="light"]) .view-dashboard .student-welcome-copy>span{color:var(--edu-muted)!important}
 html:not([data-theme="light"]) .view-dashboard .student-do-now-card{border-radius:16px!important;background:#171717!important}
 html:not([data-theme="light"]) .view-dashboard .student-do-now-copy p{color:var(--edu-muted)!important}
 html:not([data-theme="light"]) .view-dashboard .student-do-now-action small{color:var(--edu-muted)!important}

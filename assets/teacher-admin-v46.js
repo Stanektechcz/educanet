@@ -98,13 +98,14 @@
     const paint=()=>items().forEach((i,x)=>i.classList.toggle('active',x===active));
     const filter=()=>{const q=norm(input.value).replace(/\s+/g,' ');all().forEach(i=>i.hidden=!!q&&!norm(i.dataset.search).includes(q));active=0;paint();};
     const load=()=>{const src=backdrop.dataset.paletteSrc;if(loaded||!src)return;loaded=true;say('Načítám…');
-      fetch(src,{credentials:'same-origin',headers:{'Accept':'application/json'}}).then(r=>r.ok?r.json():Promise.reject(r.status)).then(data=>{
+      /* v81: skeleton místo prázdného seznamu, dokud nepřijdou data */ const sk=document.createElement('div');sk.className='v81-skel';sk.setAttribute('aria-hidden','true');for(let i=0;i<3;i++)sk.append(document.createElement('span'));results.setAttribute('aria-busy','true');results.prepend(sk);const done=()=>{sk.remove();results.removeAttribute('aria-busy');};
+      fetch(src,{credentials:'same-origin',headers:{'Accept':'application/json'}}).then(r=>r.ok?r.json():Promise.reject(r.status)).then(data=>{done();
         if(!data||!data.ok)throw new Error('data');
         const add=it=>{const a=document.createElement('a');a.href=String(it.url||'');a.setAttribute('data-command-item','');a.dataset.search=norm(it.search||it.label);
           const s=document.createElement('strong');s.textContent=String(it.label||'');const m=document.createElement('small');m.textContent=String(it.hint||'');a.append(s,m);results.appendChild(a);};
         (data.pages||[]).forEach(add);(data.items||[]).forEach(add);
         say(data.names_hidden?'Jména žáků jsou skrytá (Nastavení výuky) – hledají se jen stránky a třídy.':((data.items||[]).length?'':'Ve vašich třídách zatím nejsou žáci.'));filter();
-      }).catch(()=>{loaded=false;say('Hledání se nepodařilo načíst. Zkuste paletu zavřít a otevřít znovu.');});};
+      }).catch(()=>{done();loaded=false;say('Hledání se nepodařilo načíst. Zkuste paletu zavřít a otevřít znovu.');});};
     const open=()=>{backdrop.hidden=false;active=0;input.value='';all().forEach(i=>i.hidden=false);paint();load();setTimeout(()=>input.focus(),0);};
     const close=()=>{backdrop.hidden=true;};
     document.querySelectorAll('[data-command-open]').forEach(b=>b.addEventListener('click',open));document.querySelectorAll('[data-command-close]').forEach(b=>b.addEventListener('click',close));

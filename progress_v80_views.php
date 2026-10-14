@@ -250,6 +250,7 @@ function pg80_render_page(string $classId, string $studentKey, ?int $now = null)
     $rows = pg80_summary_rows($o);
     echo lr80_assets_html() . '<div class="ds78 lr80-page lr80-progress"><h1>' . e(tr('Můj pokrok')) . '</h1>'
         . '<p class="lr80-lead">' . e(tr('Všechno na jednom místě: co už umíš, co procvičit a jeden další krok. Vidíš to jen ty a tví učitelé.')) . '</p>'
+        . (function_exists('v81_hint_html') ? v81_hint_html('pokrok', tr('Jak to funguje'), [tr('Nahoře je jeden další krok – začni jím.'), tr('Přehled ukazuje, kolik máš hotovo v každé oblasti.'), tr('Co procvičit se doplňuje samo podle tvých chyb.')], tr('Rozumím, skrýt nápovědu'), tr('Nápověda')) : '')   // v81: nápověda při první návštěvě
         . pg80_next_html($o['next']) . (function_exists('ts801_section_html') ? ts801_section_html($o['teacher']) : '') . lr80_links_html();
     echo '<section class="ds-card lr80-sec" aria-labelledby="lr80-sum-h"><h2 id="lr80-sum-h">' . e(tr('Přehled')) . '</h2><ul class="lr80-bars">';
     foreach ($rows as [$label, $have, $total, $text]) echo pg80_bar_html($label, $have, $total, $text);

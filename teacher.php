@@ -509,7 +509,7 @@ if(in_array($tab,['grade','groups','workspace'],true)){
 <main class="teacher-shell t68-main" id="t68-main" tabindex="-1">
 <?=teacher68_breadcrumb_html($tab,$classId,$t68Section)?>
 <?=teacher68_class_bar_html($tab,$classId,$catalog,$t68Visible)?>
-<?php if($flash): ?><div class="teacher-flash <?=e((string)$flash['type'])?>"><?=e((string)$flash['message'])?></div><?php endif; ?>
+<?php if($flash): /* v81: s JS i jako toast (chyba zůstává i v textu) */ ?><div class="teacher-flash <?=e((string)$flash['type'])?>" role="status" data-v81-toast="<?=((string)$flash['type'])==='error'?'error':'ok'?>"><?=e((string)$flash['message'])?></div><?php endif; ?>
 <?php ops61_render_health_banner(); ?>
 
 <?php if($tab==='sekce'): ?>

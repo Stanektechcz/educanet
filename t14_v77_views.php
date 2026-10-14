@@ -40,9 +40,11 @@ function t1477_render_tab(array $modules, string $classId): void
     $all = t1477_classes();
     $reqClass = is_string($_GET['class'] ?? null) ? (string)$_GET['class'] : '';
     $pick = in_array($reqClass, $all, true) ? [$reqClass] : $all;
-    echo '<section class="teacher-page-head c70-head"><div><div class="eyebrow">Dnes · plán schvalování</div><h1>Středa: co schválit do 14 dní</h1>'
+    echo '<section class="teacher-page-head c70-head v81-legacy-head"><div><div class="eyebrow">Dnes · plán schvalování</div><h1>Středa: co schválit do 14 dní</h1>'
         . '<p>Pravidlo T-14: obsah lekce má být schválený nejpozději 14 dní před výukou. Tady vidíte lekce, které se učí v příštích 4 týdnech, '
-        . 'jejich termín schválení a stav. Žáci do schválení vidí původní lekci. Každou středu stačí projít tuto stránku a kliknout na „Schválit hromadně“.</p></div></section>';
+        . 'jejich termín schválení a stav. Žáci do schválení vidí původní lekci. Každou středu stačí projít tuto stránku a kliknout na „Schválit hromadně“.</p></div>'
+        . ((function_exists('c70_tab_visible') && c70_tab_visible('hromadne74')) ? '<div class="teacher-hero-actions"><a class="btn primary" href="?tab=hromadne74">Otevřít Hromadné schválení</a></div>' : '') . '</section>'   // v81: jedna primární akce v hlavičce
+        . (function_exists('v81_density_html') ? v81_density_html() : '');   // v81: Komfortní / Kompaktní
     if ($all === []) {
         echo function_exists('c70_empty_html') ? c70_empty_html('Nemáte přiřazenou žádnou třídu.', 'Přehled T-14 se ukáže, jakmile vám administrátor přidělí třídu.', []) : '';
         return;

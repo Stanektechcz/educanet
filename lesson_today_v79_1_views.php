@@ -36,6 +36,7 @@ function lt791_render_tab(array $modules, string $classId, ?int $now = null): vo
     $sec = static fn(string $key, string $html): string => $html === '' ? '' : '<div class="lt791-sec" data-lt791-sec="' . e($key) . '">' . $html . '</div>';
     echo '<div class="lt791" data-lt791>';
     echo lt791_hero_html($m, $modules);
+    if (function_exists('v81_hint_html')) echo v81_hint_html('hodina', 'Jak to funguje', ['Nahoře je třída, lekce a jedna hlavní akce – otevřít hodinu a vygenerovat kód.', 'Karty s čísly ukazují stav třídy; „Pozor“ znamená, že je co řešit.', 'Níže je plán po minutách, materiály a komu dnes pomoct.']);   // v81: nápověda při první návštěvě
     if (function_exists('lr73_today_note_html')) echo lr73_today_note_html($m);   // v73: „Minule“ + Projektor / Tisk / Zástup / Reflexe
     if (is_array($m['day'])) echo lt71_day_html($m);
     echo lt70_picker_html($m, $modules) . lt71_kpis_html($m);

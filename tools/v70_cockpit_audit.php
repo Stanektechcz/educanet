@@ -193,7 +193,7 @@ try {
     $check('HTTP: rozcestník Dnes má souhrn dnešní výuky všech tříd, Správa souhrn KPI a karty zůstaly', str_contains($hubDnes, 'Dnešní výuka') && substr_count($hubDnes, '?tab=hodina&amp;class=') >= 4
         && str_contains($hubDnes, 't68-cards') && str_contains($hubSprava, 'Souhrn správy') && str_contains($hubSprava, 't68-cards'));
     $att = (string)$h->request('GET', '/teacher.php', ['tab' => 'attention'])['body'];
-    $check('HTTP: „Co řešit dnes“ už neodkazuje na vyřazenou Automatizaci, ale na Dnešní hodinu', !str_contains($att, 'tab=automations') && str_contains($att, '>Dnešní hodina</a>'));
+    $check('HTTP: „Co řešit dnes“ už neodkazuje na vyřazenou Automatizaci, ale na Dnešní hodinu', !str_contains($att, 'tab=automations') && (str_contains($att, '>Dnešní hodina</a>') || str_contains($att, '>Otevřít Dnešní hodinu</span></a>')));   // v81 (změna očekávání, BUILD_MANIFEST_V81.md): primární akce hlavičky „Otevřít Dnešní hodinu“ s ikonou
     $teach = (string)$h->request('GET', '/teacher.php', ['tab' => 'teach', 'class' => 'class_3a'])['body'];
     $cal = v56_current_lesson_number('class_3a', $year);
     $check('HTTP: Režim hodiny bez ?lesson= otevře lekci podle kalendáře (' . $cal . '), ne vždy lekci 1', str_contains($teach, 'Lekce ' . str_pad((string)$cal, 2, '0', STR_PAD_LEFT)));

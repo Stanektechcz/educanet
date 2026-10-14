@@ -175,4 +175,11 @@ return [
     'Tohle ti přidělil učitel. Až to vyřešíš, splní se to samo.' => 'Це тобі призначив учитель. Щойно розв’яжеш, позначиться як виконане.',
     'Začít' => 'Почати',
     'Od učitele' => 'Від учителя',
+    // v81: domovská stránka a nápovědy
+    'Jak to funguje' => 'Як це працює',
+    'Nahoře je jeden další krok – začni jím.' => 'Угорі є один наступний крок – почни з нього.',
+    'Přehled ukazuje, kolik máš hotovo v každé oblasti.' => 'Огляд показує, скільки ти виконав(-ла) в кожній галузі.',
+    'Co procvičit se doplňuje samo podle tvých chyb.' => 'Що потренувати – доповнюється само за твоїми помилками.',
+    'Rozumím, skrýt nápovědu' => 'Зрозуміло, сховати підказку',
+    'Zavřít oznámení' => 'Закрити сповіщення',
 ];

@@ -1,0 +1,90 @@
+/* EDUCANET v81 · domovská stránka žáka (?view=dashboard) nad tokeny v78: pozdrav, „Dnes“ (jeden krok + kruh pokroku), dlaždice
+   Úlohy · Cvičení · Opakování · Portfolio, karty Co dál / Výzva týdne / Dnešní cíle. Jen tokeny (světlý i tmavý režim podle zařízení),
+   @media jen s breakpointy v78. Specifičnost .student-cockpit .h81 … přebije starší vrstvy (student-ui-v50-7-7, app.css). */
+
+.student-cockpit .h81.ds78 { --u-text: var(--text); --u-surface: var(--surface); --u-accent: var(--accent); --u-faint: var(--muted);
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5); max-width: 72rem; margin-inline: auto; background: transparent; color: var(--text); font-family: var(--font-sans); }
+.student-cockpit .h81 .h81-greet { margin: 0; }
+.student-cockpit .h81 :is(h1, h2) { color: var(--text); }
+
+/* karta Dnes */
+.student-cockpit .h81 .h81-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5); align-items: center; margin: 0; padding: var(--space-6) var(--space-5) var(--space-5);
+  overflow: hidden; border: var(--border-width) solid var(--line); border-radius: var(--radius-xl); background: var(--surface); box-shadow: var(--v81-shadow); }
+.student-cockpit .h81 .h81-hero::before { content: ""; position: absolute; inset: 0 0 auto; height: 6px; background: linear-gradient(90deg, var(--accent), var(--accent) 55%, var(--highlight)); }
+.student-cockpit .h81 .h81-hero__eyebrow { display: inline-flex; align-items: center; gap: var(--space-2); margin: 0 0 var(--space-3); padding: var(--space-1) var(--space-3); border-radius: var(--radius-pill);
+  background: var(--accent-soft); color: var(--text) !important; font-size: var(--fs-sm) !important; font-weight: var(--fw-bold); letter-spacing: .04em; text-transform: uppercase; opacity: 1; }
+.student-cockpit .h81 .h81-hero__eyebrow svg { color: var(--accent); }
+.student-cockpit .h81 .h81-hero h2 { margin: 0 0 var(--space-2); font-size: var(--fs-2xl); font-weight: 800; line-height: 1.15; letter-spacing: -.015em; }
+/* starší vrstvy mají u karty Teď !important (session-v53: levý pruh 4 px; student-ui: menší a průhledný odstavec) – přebíjí se jen tady */
+.student-cockpit .h81 .h81-hero.student-do-now-card { border-left: var(--border-width) solid var(--line) !important; background: var(--surface) !important; }
+.student-cockpit .h81 .h81-hero__copy > p:not(.h81-hero__eyebrow) { margin: 0; max-width: 60ch !important; color: var(--muted) !important; font-size: var(--fs-base) !important; line-height: var(--lh) !important; opacity: 1; }
+.student-cockpit .h81 .h81-hero__action { display: flex; margin-top: var(--space-5); }
+.student-cockpit .h81 .h81-hero__action form { margin: 0; }
+.student-cockpit .h81 .student-primary-cta { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 52px; padding: 0 var(--space-5); border: 0; border-radius: var(--radius-lg);
+  background: var(--accent); color: var(--on-accent); font-size: var(--fs-base); font-weight: var(--fw-bold); text-decoration: none; box-shadow: var(--shadow-1); cursor: pointer;
+  transition: background-color var(--v81-dur) var(--v81-ease), transform var(--v81-dur) var(--v81-ease), box-shadow var(--v81-dur) var(--v81-ease); }
+.student-cockpit .h81 .student-primary-cta:hover { background: var(--accent-hover); color: var(--on-accent); transform: translateY(-1px); box-shadow: var(--v81-shadow-hover); }
+.student-cockpit .h81 .student-primary-cta:active { transform: translateY(0) scale(.98); }
+.student-cockpit .h81 .student-primary-cta svg { transition: transform var(--v81-dur) var(--v81-ease); }
+.student-cockpit .h81 .student-primary-cta:hover svg { transform: translateX(3px); }
+
+/* kruh pokroku (hodnota vždy textem, kruh jen dekorace) */
+.student-cockpit .h81 .h81-progress { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-2) var(--space-4); align-items: center; padding: var(--space-4); border-radius: var(--radius-lg); background: var(--surface-2); }
+.student-cockpit .h81 .h81-ring { position: relative; grid-row: span 2; width: 7.5rem; height: 7.5rem; }
+.student-cockpit .h81 .h81-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.student-cockpit .h81 .h81-ring circle { fill: none; stroke-width: 12; }
+.student-cockpit .h81 .h81-ring__track { stroke: var(--surface); }
+.student-cockpit .h81 .h81-ring__fill { stroke: var(--accent); stroke-linecap: round; }
+.student-cockpit .h81 .h81-ring__value { position: absolute; inset: 0; display: grid; place-content: center; margin: 0; text-align: center; line-height: 1.15; }
+.student-cockpit .h81 .h81-ring__value strong { font-size: var(--fs-xl); font-weight: 800; }
+.student-cockpit .h81 .h81-ring__value span { max-width: 5.5rem; color: var(--muted); font-size: var(--fs-sm); }
+.student-cockpit .h81 .h81-stats { display: grid; gap: var(--space-1); margin: 0; padding: 0; list-style: none; font-size: var(--fs-sm); font-weight: var(--fw-medium); }
+.student-cockpit .h81 .h81-stats li { display: flex; align-items: center; gap: var(--space-2); }
+.student-cockpit .h81 .h81-stats svg { color: var(--accent); }
+.student-cockpit .h81 .h81-more { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--target-min); color: var(--accent); font-size: var(--fs-sm); font-weight: var(--fw-bold); text-decoration: none; }
+.student-cockpit .h81 .h81-more:hover span { text-decoration: underline; text-underline-offset: .2em; }
+
+/* dlaždice rychlého přístupu */
+.student-cockpit .h81 .h81-tiles ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+.student-cockpit .h81 .h81-tile { display: grid; gap: var(--space-1); align-content: start; height: 100%; min-height: 7.5rem; padding: var(--space-4); border: var(--border-width) solid var(--line); border-radius: var(--radius-xl);
+  background: var(--surface); color: var(--text); text-decoration: none; box-shadow: var(--shadow-1); }
+.student-cockpit .h81 .h81-tile:hover { border-color: var(--accent); color: var(--text); box-shadow: var(--v81-shadow-hover); }
+.student-cockpit .h81 .h81-tile__icon { display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: var(--space-2); border-radius: var(--radius-lg); background: var(--accent-soft); color: var(--accent); font-size: 1.2rem; }
+.student-cockpit .h81 .h81-tile strong { font-size: var(--fs-lg); line-height: var(--lh-tight); }
+.student-cockpit .h81 .h81-tile span:last-child { color: var(--muted); font-size: var(--fs-sm); line-height: 1.4; }
+
+/* karty Co dál, Výzva týdne, Dnešní cíle – jednotný vzhled, primární tlačítko zůstává jen v kartě Dnes */
+.student-cockpit .h81 .h81-pair { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
+.student-cockpit .h81 :is(.p63-card, .h81-goals) { margin: 0; padding: var(--space-5); border: var(--border-width) solid var(--line); border-radius: var(--radius-xl); background: var(--surface); color: var(--text); box-shadow: var(--v81-shadow); }
+.student-cockpit .h81 :is(.p63-card, .h81-goals) .ui-eyebrow { margin: 0 0 var(--space-2); color: var(--accent); font-size: var(--fs-sm); font-weight: var(--fw-bold); letter-spacing: .06em; text-transform: uppercase; }
+.student-cockpit .h81 .p63-card h2 { margin: 0 0 var(--space-2); font-size: var(--fs-lg); }
+.student-cockpit .h81 .p63-reason { color: var(--text); }
+.student-cockpit .h81 .p63-meta { color: var(--muted); }
+.student-cockpit .h81 .p63-go { min-height: var(--target-min); padding: 0 var(--space-4); border: 2px solid var(--accent); border-radius: var(--radius-lg); background: transparent; color: var(--accent); font-weight: var(--fw-bold); text-decoration: none;
+  transition: background-color var(--v81-dur) var(--v81-ease); }
+.student-cockpit .h81 .p63-go:hover { background: var(--accent-soft); color: var(--text); }
+.student-cockpit .h81 .p63-all { color: var(--accent); }
+.student-cockpit .h81 .h81-goals h2 { margin: 0; font-size: var(--fs-lg); }
+.student-cockpit .h81 .h81-goals .mot61-sub { margin: var(--space-4) 0 var(--space-2); color: var(--muted); font-size: var(--fs-sm); letter-spacing: .06em; text-transform: uppercase; }
+.student-cockpit .h81 .h81-goals .ui-meter-bar { display: block; height: 8px; border-radius: var(--radius-pill); background: var(--surface-2); overflow: hidden; }
+.student-cockpit .h81 .h81-goals .ui-meter-bar i { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
+.student-cockpit .h81 .h81-goals .mot61-goal.is-done .ui-meter-bar i { background: var(--ok); }
+.student-cockpit .h81 .h81-goals .mot61-foot { color: var(--muted); font-size: var(--fs-sm); }
+
+/* tichý odkaz na podrobný progres a lišta „k řešení“ */
+.student-cockpit .h81 .v5075-dashboard-detail-link { margin: 0; text-align: center; }
+.student-cockpit .h81 .v5075-dashboard-detail-link { justify-content: center; }
+.student-cockpit .h81 .v5075-dashboard-detail-link a { padding: 0 var(--space-4); border-radius: var(--radius-pill); color: var(--accent); font-size: var(--fs-sm); font-weight: var(--fw-bold); text-decoration: underline; text-underline-offset: .2em; }
+
+@media (min-width: 768px) {
+  .student-cockpit .h81 .h81-hero { grid-template-columns: minmax(0, 1fr) minmax(16rem, 20rem); padding: var(--space-6); }
+  .student-cockpit .h81 .h81-progress { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
+  .student-cockpit .h81 .h81-ring { grid-row: auto; width: 8.5rem; height: 8.5rem; }
+}
+@media (min-width: 1024px) {
+  .student-cockpit .h81 .h81-tiles ul { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .student-cockpit .h81 .h81-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .student-cockpit .h81 .student-primary-cta, .student-cockpit .h81 .student-primary-cta svg, .student-cockpit .h81 .p63-go { transition: none; transform: none; }
+}

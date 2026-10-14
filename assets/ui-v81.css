@@ -1,0 +1,51 @@
+/* EDUCANET v81 · modernější vzhled – sdílená vrstva (žák i cockpit) nad tokeny v78 (assets/tokens-v78.css).
+   Ikony (sprite assets/icons-v81.svg), hlavička stránky, nápověda při první návštěvě, toasty a mikrointerakce (150–200 ms, vypnuté při prefers-reduced-motion). Jen tokeny, žádné nové barvy.
+   @media jen s breakpointy v78 (480/768/1024/1366/1920). Prvky mají vlastní .ds78 (tokeny platí uvnitř .ds78). */
+
+.ds78 { --radius-xl: 16px; --v81-dur: 180ms; --v81-ease: cubic-bezier(.2, .8, .2, 1); --v81-shadow: 0 1px 2px rgba(12, 17, 63, .06), 0 6px 18px rgba(12, 17, 63, .07); --v81-shadow-hover: 0 2px 4px rgba(12, 17, 63, .08), 0 12px 28px rgba(12, 17, 63, .12); }
+:root[data-theme="dark"] .ds78 { --v81-shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 22px rgba(0, 0, 0, .35); --v81-shadow-hover: 0 2px 4px rgba(0, 0, 0, .45), 0 14px 32px rgba(0, 0, 0, .45); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ds78 { --v81-shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 22px rgba(0, 0, 0, .35); --v81-shadow-hover: 0 2px 4px rgba(0, 0, 0, .45), 0 14px 32px rgba(0, 0, 0, .45); } }
+
+/* ---------- ikony ---------- */
+svg.i81 { width: 1.25em; height: 1.25em; flex: none; vertical-align: -.22em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- hlavička stránky: nadpis, jedna věta o účelu, primární akce ---------- */
+.v81-head.ds78 { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-4) var(--space-5); margin: 0 0 var(--space-5); padding: 0; background: transparent; }
+.v81-head .v81-head__text { flex: 1 1 26rem; min-width: 0; }
+.v81-head .v81-head__eyebrow { display: inline-flex; align-items: center; gap: var(--space-2); margin: 0 0 var(--space-2); color: var(--accent); font-size: var(--fs-sm); font-weight: var(--fw-bold); letter-spacing: .06em; text-transform: uppercase; }
+.v81-head h1 { margin: 0; color: var(--text); font-size: var(--fs-2xl); font-weight: 800; line-height: 1.12; letter-spacing: -.02em; }
+.v81-head .v81-head__lead { margin: var(--space-2) 0 0; max-width: 62ch; color: var(--muted); font-size: var(--fs-base); line-height: var(--lh); }
+.v81-head .v81-head__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.ds78 .v81-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: var(--target-min); text-decoration: none; }
+
+/* ---------- nápověda při první návštěvě ---------- */
+.v81-hint.ds78 { position: relative; display: flex; gap: var(--space-4); align-items: flex-start; margin: 0 0 var(--space-5); padding: var(--space-4) var(--space-7) var(--space-4) var(--space-5); border: var(--border-width) solid var(--accent); border-radius: var(--radius-xl); background: var(--accent-soft); color: var(--text); box-shadow: var(--v81-shadow); animation: v81-in var(--v81-dur) var(--v81-ease); }
+.v81-hint[hidden] { display: none; }
+.v81-hint .v81-hint__icon { display: grid; place-items: center; width: 40px; height: 40px; flex: none; border-radius: var(--radius-pill); background: var(--surface); color: var(--accent); font-size: 1.15rem; }
+.v81-hint .v81-hint__title { margin: 0 0 var(--space-2); font-size: var(--fs-lg); font-weight: var(--fw-bold); }
+.v81-hint ol { margin: 0; padding-left: 1.25rem; display: grid; gap: var(--space-1); }
+.v81-hint li { max-width: 70ch; }
+.ds78 .v81-hint__close { position: absolute; top: var(--space-2); right: var(--space-2); display: grid; place-items: center; width: var(--target-min); height: var(--target-min); border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--text); cursor: pointer; transition: background-color var(--v81-dur) var(--v81-ease); }
+.ds78 .v81-hint__close:hover { background: var(--surface); }
+
+/* ---------- toasty po odeslání formuláře (bez JS zůstává hláška v textu stránky) ---------- */
+.v81-toasted { display: none !important; }
+.v81-toasts.ds78 { position: fixed; z-index: 60; inset-inline: var(--space-4); bottom: calc(var(--bottomnav-h) + var(--space-4)); display: grid; gap: var(--space-2); justify-items: end; padding: 0; background: transparent; pointer-events: none; }
+.v81-toasts .v81-toast { pointer-events: auto; display: flex; align-items: center; gap: var(--space-3); max-width: min(30rem, 100%); padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4); border-radius: var(--radius-lg); background: var(--brand); color: var(--on-brand); box-shadow: var(--shadow-2); font-weight: var(--fw-medium); animation: v81-in var(--v81-dur) var(--v81-ease); }
+.v81-toasts .v81-toast.is-error { background: var(--danger); color: var(--on-danger); }
+.v81-toasts .v81-toast__close { display: grid; place-items: center; width: var(--target-min); height: var(--target-min); flex: none; border: 0; border-radius: var(--radius-pill); background: transparent; color: inherit; cursor: pointer; }
+.v81-toasts .v81-toast__close:hover { outline: 2px solid currentColor; outline-offset: -6px; }
+.v81-toasts .v81-toast__close:focus-visible { outline: var(--focus-width) solid currentColor !important; outline-offset: -4px !important; }
+
+/* ---------- mikrointerakce ---------- */
+.ds78 .v81-lift { transition: transform var(--v81-dur) var(--v81-ease), box-shadow var(--v81-dur) var(--v81-ease), border-color var(--v81-dur) var(--v81-ease); }
+.ds78 .v81-lift:hover { transform: translateY(-2px); box-shadow: var(--v81-shadow-hover); }
+.ds78 .v81-lift:active { transform: translateY(0) scale(.99); }
+@keyframes v81-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (min-width: 768px) { .v81-toasts.ds78 { bottom: var(--space-5); inset-inline: auto var(--space-5); } }
+@media (prefers-reduced-motion: reduce) {
+  .ds78 { --v81-dur: 0ms; }
+  .ds78 .v81-lift, .ds78 .v81-lift:hover, .ds78 .v81-lift:active, .v81-hint.ds78, .v81-toasts .v81-toast { transform: none; transition: none; animation: none; }
+}
+@media print { .v81-hint, .v81-toasts { display: none !important; } }
+.v81-sr { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }

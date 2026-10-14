@@ -175,4 +175,11 @@ return [
     'Tohle ti přidělil učitel. Až to vyřešíš, splní se to samo.' => 'Your teacher assigned this to you. It is marked as done as soon as you solve it.',
     'Začít' => 'Start',
     'Od učitele' => 'From your teacher',
+    // v81: domovská stránka a nápovědy
+    'Jak to funguje' => 'How it works',
+    'Nahoře je jeden další krok – začni jím.' => 'At the top is one next step – start with it.',
+    'Přehled ukazuje, kolik máš hotovo v každé oblasti.' => 'The overview shows how much you have done in each area.',
+    'Co procvičit se doplňuje samo podle tvých chyb.' => 'What to practise fills in automatically from your mistakes.',
+    'Rozumím, skrýt nápovědu' => 'Got it, hide the tips',
+    'Zavřít oznámení' => 'Close notification',
 ];

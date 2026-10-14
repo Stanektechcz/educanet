@@ -13,15 +13,57 @@ function teacher_ops_student_url(string $classId,string $studentKey): string { r
 function teacher_render_attention_center(?string $classId=null): void
 {
     $classId=$classId!==null&&isset(project_catalog()[$classId])&&(!function_exists('teacher59_can_class')||teacher59_can_class($classId))?$classId:null;$center=teacher_ops_attention_center($classId);
+    /* v70: vyřazená Automatizace → Dnešní hodina; Výsledky jen pro třídu v rozsahu učitele */ $opsResultsClass=$classId??(function_exists('c70_classes')?(c70_classes()[0]??''):'class_2a');
+    $hodinaUrl='?tab=hodina'.($classId!==null?'&class='.rawurlencode($classId):'');
+    $resultsUrl=$opsResultsClass!==''?'?tab=class_results&class='.rawurlencode($opsResultsClass):'';
+    // v81: hlavička (nadpis, účel, jedna primární akce), nápověda při první návštěvě a mřížka priorit seřazená podle naléhavosti
+    echo v81_head_html('Co mám dnes řešit?', 'Priority na dnešek: nejdřív kritické signály a termíny, pak to, co čeká na vás. Nic se nehodnotí automaticky.',
+        array_values(array_filter([[$hodinaUrl, 'Otevřít Dnešní hodinu', 'primary', 'sun'], $resultsUrl !== '' ? [$resultsUrl, 'Otevřít Výsledky', 'secondary', 'chart'] : null])), 'Dnes · ' . date('j. n. Y'), 'sun', 'ds', 'ops-page-head');
+    echo v81_hint_html('dnes', 'Jak to funguje', ['Karty nahoře jsou seřazené podle naléhavosti – červená „Řešit hned“ je první.', 'Třídy bez signálů jsou sbalené do jednoho řádku „V pořádku“.', 'Kliknutím na kartu otevřete Výsledky s připraveným filtrem.']);
+    echo teacher81_priority_grid_html($center, $opsResultsClass);
+    $calm=[];
+    foreach($center['classes'] as $cid=>$data):
+        $critical=array_slice((array)$data['critical'],0,6);
+        if(!(array)$data['critical']&&!(array)$data['deadlines']){ $calm[]=(string)$cid; continue; }   // v81: třída bez signálů = jeden řádek „V pořádku“
     ?>
-    <section class="teacher-page-head ops-page-head"><div><div class="eyebrow">Teacher Operations · Dnes</div><h1>Co mám dnes řešit?</h1><p>Prioritizovaný přehled termínů, propadů, vrácených prací a čekajících kroků. Žádné automatické známkování ani skryté zásahy.</p></div><div class="ops-head-actions"><?php /* v70: vyřazená Automatizace → Dnešní hodina; Výsledky jen pro třídu v rozsahu učitele */ $opsResultsClass=$classId??(function_exists('c70_classes')?(c70_classes()[0]??''):'class_2a'); ?><a class="btn secondary" href="?tab=hodina<?=$classId!==null?'&amp;class='.e($classId):''?>">Dnešní hodina</a><?php if($opsResultsClass!==''): ?><a class="btn primary" href="?tab=class_results&amp;class=<?=e($opsResultsClass)?>">Výsledky →</a><?php endif; ?></div></section>
-    <section class="ops-kpis"><article class="critical"><span>Kritické</span><strong><?=$center['critical']?></strong><small>kombinace více signálů</small></article><article><span>Termíny</span><strong><?=$center['deadlines']?></strong><small>po termínu / do 3 dnů</small></article><article><span>Propady</span><strong><?=$center['drops']?></strong><small>pokles ≥ 15 p. b.</small></article><article><span>Čeká na mě</span><strong><?=$center['waiting_teacher']?></strong><small>koncepty a kontrola</small></article><article><span>Čeká na studenty</span><strong><?=$center['waiting_student']?></strong><small>úkoly / dopracování</small></article><article class="resolved"><span>Vyřešeno 7 dní</span><strong><?=$center['resolved_recent']?></strong><small>nedávno uzavřené</small></article></section>
-    <?php foreach($center['classes'] as $cid=>$data): $critical=array_slice((array)$data['critical'],0,6); ?>
     <section class="teacher-panel ops-attention-class"><div class="teacher-panel-head"><div><span><?=e(teacher_class_label((string)$cid))?></span><h2><?=count((array)$data['critical'])?> kritických · <?=count((array)$data['deadlines'])?> termínových signálů</h2></div><div class="ops-panel-actions"><a href="?tab=class_results&class=<?=e((string)$cid)?>&task_due=overdue">Po termínu</a><a href="?tab=class_results&class=<?=e((string)$cid)?>&priority=high">Vysoká priorita</a><a href="?tab=analytics&class=<?=e((string)$cid)?>">Analytika</a></div></div>
       <?php if(!$critical): ?><div class="teacher-empty">Žádný student nemá kombinaci kritických signálů.</div><?php else: ?><div class="ops-attention-list"><?php foreach($critical as $row): ?><article><a class="ops-student-main" href="<?=e(teacher_ops_student_url((string)$cid,(string)$row['key']))?>"><span class="teacher-avatar"><?=e(strtoupper(u_substr((string)$row['label'],0,1)))?></span><div><strong><?=e((string)$row['label'])?></strong><small><?php foreach(array_slice((array)$row['signals'],0,3) as $signal): ?><em><?=e((string)$signal['label'])?></em><?php endforeach; ?></small></div></a><div class="ops-attention-score"><b><?= (int)$row['attention_score'] ?></b><span>priorita</span></div><a class="btn secondary small" href="?tab=class_results&class=<?=e((string)$cid)?>&q=<?=urlencode((string)$row['label'])?>">Vybrat</a></article><?php endforeach; ?></div><?php endif; ?>
       <footer class="ops-attention-footer"><a href="?tab=class_results&class=<?=e((string)$cid)?>&status=returned">Vrácené práce · <?=count(array_filter((array)$data['students'],static fn($r)=>(int)($r['returned']??0)>0))?></a><a href="?tab=class_results&class=<?=e((string)$cid)?>&task_due=next3">Do 3 dnů · <?=count((array)$data['deadlines'])?></a><span>Čeká na mě · <?=count((array)$data['waiting_teacher'])?></span><span>Čeká na studenty · <?=count((array)$data['waiting_student'])?></span></footer>
     </section><?php endforeach; ?>
+    <?php if($calm): ?><section class="v81-calm ds78" aria-labelledby="v81-calm-h"><h2 id="v81-calm-h" class="v81-calm__title"><?=i81('ok')?><span>V pořádku – bez kritických a termínových signálů</span></h2><ul><?php foreach($calm as $cid): $d=(array)$center['classes'][$cid]; ?><li><strong><?=e(teacher_class_label($cid))?></strong><span>Čeká na mě <?=count((array)($d['waiting_teacher']??[]))?> · na žáky <?=count((array)($d['waiting_student']??[]))?></span><a href="?tab=class_results&amp;class=<?=e($cid)?>">Otevřít Výsledky</a></li><?php endforeach; ?></ul></section><?php endif; ?>
     <?php
+}
+
+/** v81: mřížka priorit „Co řešit dnes“ – karty se stavem (text + ikona), seřazené podle naléhavosti; nulové karty na konec. */
+function teacher81_priority_grid_html(array $center, string $resultsClass): string
+{
+    $r = static fn(string $q): string => $resultsClass !== '' ? '?tab=class_results&class=' . rawurlencode($resultsClass) . $q : '';
+    $items = [
+        ['critical', 'Kritické signály', 'více signálů u jednoho žáka', $r('&priority=high'), 'danger', 'warn'],
+        ['deadlines', 'Termíny', 'po termínu nebo do 3 dnů', $r('&task_due=next3'), 'warn', 'clock'],
+        ['waiting_teacher', 'Čeká na mě', 'koncepty a kontrola', $r('&status=attention'), 'warn', 'inbox'],
+        ['drops', 'Propady', 'pokles o 15 a více p. b.', $resultsClass !== '' ? '?tab=analytics&class=' . rawurlencode($resultsClass) : '', 'warn', 'chart'],
+        ['waiting_student', 'Čeká na žáky', 'úkoly a dopracování', $r('&status=returned'), 'info', 'users'],
+        ['resolved_recent', 'Vyřešeno za 7 dní', 'nedávno uzavřené', '', 'ok', 'ok'],
+    ];
+    $rank = ['danger' => 0, 'warn' => 1, 'info' => 2, 'ok' => 3];
+    $cards = [];
+    foreach ($items as $i => [$key, $label, $hint, $url, $tone, $icon]) {
+        $n = (int)($center[$key] ?? 0);
+        $state = $key === 'resolved_recent' ? 'ok' : ($n > 0 ? $tone : 'ok');
+        $chip = $key === 'resolved_recent' ? 'Hotovo' : ($n === 0 ? 'V pořádku' : ['danger' => 'Řešit hned', 'warn' => 'Pozor', 'info' => 'Sledovat'][$tone]);
+        $order = $key === 'resolved_recent' ? 9 : ($n > 0 ? $rank[$tone] : 5);
+        $cards[] = [$order, $i, $key, $label, $hint, $url, $state, $chip, $icon, $n];
+    }
+    usort($cards, static fn(array $a, array $b): int => [$a[0], $a[1]] <=> [$b[0], $b[1]]);
+    $html = '<section class="v81-prio ds78" aria-labelledby="v81-prio-h"><h2 id="v81-prio-h" class="v81-sr">Priority dne</h2><ol class="v81-prio__list">';
+    foreach ($cards as [, , $key, $label, $hint, $url, $state, $chip, $icon, $n]) {
+        $chipIcon = ['danger' => 'warn', 'warn' => 'warn', 'info' => 'info', 'ok' => 'ok'][$state];
+        $inner = '<span class="v81-prio__icon">' . i81($icon) . '</span><span class="v81-prio__label">' . e($label) . '</span><strong class="v81-prio__n">' . $n . '</strong>'
+            . '<span class="v81-prio__hint">' . e($hint) . '</span><span class="v81-chip is-' . e($state) . '">' . i81($chipIcon) . e($chip) . '</span>';
+        $html .= '<li class="v81-prio__item is-' . e($state) . '" data-v81-prio="' . e($key) . '">' . ($url !== '' && $n > 0 ? '<a class="v81-prio__card v81-lift" href="' . e($url) . '">' . $inner . '</a>' : '<div class="v81-prio__card">' . $inner . '</div>') . '</li>';
+    }
+    return $html . '</ol></section>';
 }
 
 function teacher_render_student360(string $classId,string $studentKey): void
