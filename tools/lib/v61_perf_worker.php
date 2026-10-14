@@ -15,6 +15,8 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  * Zápisy do úložiště řídí EDUCANET_STORAGE_READONLY (zde nenastavujeme; nastavuje volající).
  */
 
+require_once __DIR__ . '/v61_perf_calibration.php';
+
 final class V61PerfSession implements SessionHandlerInterface
 {
     public function __construct(private string $payload) {}
@@ -27,10 +29,16 @@ final class V61PerfSession implements SessionHandlerInterface
 }
 
 $spec = json_decode((string)(getenv('V61_PERF_SPEC') ?: ($argv[1] ?? '')), true);
-if (!is_array($spec) || !in_array($spec['kind'] ?? '', ['student', 'teacher', 'readonly_probe'], true)) { fwrite(STDERR, "bad spec\n"); exit(2); }
+if (!is_array($spec) || !in_array($spec['kind'] ?? '', ['student', 'teacher', 'readonly_probe', 'reference'], true)) { fwrite(STDERR, "bad spec\n"); exit(2); }
 $root = str_replace(chr(92), '/', dirname(__DIR__, 2));
 if (is_string($spec['storage'] ?? null) && $spec['storage'] !== '') { putenv('EDUCANET_STORAGE_DIR=' . $spec['storage']); $_ENV['EDUCANET_STORAGE_DIR'] = $spec['storage']; }
 chdir($root);
+if ($spec['kind'] === 'reference') {
+    // v80.2: samostatná referenční stránka (pevné knihovny + data + HTML, tools/lib/v61_perf_calibration.php) – stejný druh procesu jako měřená stránka
+    $refMs = v61_ref_measure(is_string($spec['ref_dir'] ?? null) ? $spec['ref_dir'] : null);
+    echo "\nV61PERF " . json_encode(['ms' => round($refMs, 3), 'ref_ms' => round($refMs, 3), 'bytes' => 0, 'calls' => 0, 'disk' => 0, 'unique' => 0, 'files' => count(get_included_files()), 'max_same' => 0, 'status' => 200, 'location' => '', 'error' => false]) . "\n";
+    exit(0);
+}
 if ($spec['kind'] === 'readonly_probe') {
     // Samotest režimu jen pro čtení: nad DOČASNÝM úložištěm zkusí zápis a ohlásí, jestli soubor vznikl (ostrá data se nikdy nepoužijí).
     $_SERVER['SCRIPT_FILENAME'] = $root . '/index.php';
@@ -64,11 +72,20 @@ $t0 = hrtime(true);
 // v76: samotest auditu (umělé zpomalení 1–1000 ms v měřené části) – dokazuje, že stabilizované měření skutečnou regresi stále zachytí.
 $selftestDelay = (int)($spec['selftest_delay_ms'] ?? 0);
 if ($selftestDelay > 0 && $selftestDelay <= 1000) usleep($selftestDelay * 1000);
+// v80.2: umělé zpomalení jako práce CPU v ms referenčního stroje (na vytíženém stroji se zpomalí stejně jako skutečný kód)
+$selftestWork = (float)($spec['selftest_work_ms'] ?? 0);
+if ($selftestWork > 0 && $selftestWork <= 1000) v61_ref_work(v61_ref_units_for_ms($selftestWork));
 ob_start();
 register_shutdown_function(static function () use ($t0, $spec): void {
     $html = (string)ob_get_clean();
     if (is_string($spec['dump'] ?? null) && $spec['dump'] !== '') file_put_contents($spec['dump'], $html); // ladění: uložení vykresleného HTML
+    // v80.2: samotest regrese – práce CPU navíc, dokud stránka netrvá o selftest_regress_pct % déle (týž proces, týž okamžik)
+    $regress = (float)($spec['selftest_regress_pct'] ?? 0);
+    if ($regress > 0 && $regress <= 200) { $until = $t0 + (int)((hrtime(true) - $t0) * (1 + $regress / 100)); while (hrtime(true) < $until) v61_ref_work(1); }
     $ms = (hrtime(true) - $t0) / 1e6;
+    // v80.2: kalibrace – pevná referenční zátěž hned po stránce ve stejném procesu (jak rychlý je stroj právě teď)
+    $filesIncluded = count(get_included_files());
+    $refMs = v61_ref_measure(is_string($spec['ref_dir'] ?? null) ? $spec['ref_dir'] : null);
     $stats = $GLOBALS['educanet_storage_stats'] ?? ['calls' => 0, 'disk' => 0, 'by' => []];
     $by = (array)($stats['by'] ?? []);
     $location = '';
@@ -77,11 +94,12 @@ register_shutdown_function(static function () use ($t0, $spec): void {
     $fatal = is_array($err) && in_array($err['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true);
     echo "\nV61PERF " . json_encode([
         'ms' => round($ms, 2),
+        'ref_ms' => round($refMs, 3),
         'bytes' => strlen($html),
         'calls' => (int)($stats['calls'] ?? 0),
         'disk' => (int)($stats['disk'] ?? 0),
         'unique' => count($by),
-        'files' => count(get_included_files()),
+        'files' => $filesIncluded,
         'max_same' => $by === [] ? 0 : max($by),
         'top' => (static function (array $b): array { arsort($b); return array_slice($b, 0, 4, true); })($by),
         'status' => (int)(http_response_code() ?: 200),

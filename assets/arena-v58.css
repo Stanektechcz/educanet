@@ -5,7 +5,7 @@
 .arena58w-boards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
 .arena58w-board table caption { text-align: left; }
 .arena58w-solution td { padding-top: 0; border-bottom: 1px dashed var(--a57-line); }
-.arena58w-solution code { font-size: .82rem; background: var(--a57-soft); padding: 2px 6px; border-radius: 6px; overflow-wrap: anywhere; display: inline-block; }
+.arena58w-solution code { font-size: .875rem; background: var(--a57-soft); padding: 2px 6px; border-radius: 6px; overflow-wrap: anywhere; display: inline-block; }
 .arena58w-me p { margin: 4px 0; }
 .arena58w-history table { font-size: .9rem; }
 .arena58w-modenav { margin-top: -6px; }

@@ -8,6 +8,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Rozpočty z plánu v61: žákovská stránka ≤ 60 ms serveru a ≤ 60 KB HTML, učitelská záložka ≤ 150 ms.
  */
 
+require_once __DIR__ . '/v61_perf_calibration.php';
+
 const V61_BUDGET_STUDENT_MS = 60.0;
 /** 60 KB + 2 KB pro navigaci se skupinami a podmenu (nav_v61.php; nejtěžší stránka prikazy měřila 58,8 -> 61,3 KB). */
 const V61_BUDGET_STUDENT_KB = 62.0;
@@ -114,7 +116,12 @@ function v61_perf_run(array $spec, array $env = []): ?array
     return is_array($row) ? $row : null;
 }
 
-/** Medián z $runs běhů; vrací metriky mediánu (ms, bytes, calls…) a příznak chyby/přesměrování z posledního běhu. */
+/**
+ * Medián z $runs běhů; vrací metriky mediánu (ms, bytes, calls…) a příznak chyby/přesměrování z posledního běhu.
+ * v80.2: navíc kalibrace stroje – 'ref_ms' (medián referenční zátěže změřené v týchž procesech hned po stránce),
+ * 'ratio' (medián ms stránky / medián ref_ms), 'slowness' (zpomalení stroje, ≥ 1, viz v61_slowness()), 'slow_ok'
+ * (stroj není přetížený nad V61_SLOWNESS_MAX) a 'norm_ms' = ms / slowness (≈ čas na nevytíženém referenčním stroji).
+ */
 function v61_perf_measure(array $spec, int $runs = 5, array $env = []): ?array
 {
     $rows = [];
@@ -125,10 +132,26 @@ function v61_perf_measure(array $spec, int $runs = 5, array $env = []): ?array
         if ($r === null) return null;
         $rows[] = $r;
     }
+    return v61_perf_summary($rows) + ['rows' => $rows];
+}
+
+/** Souhrn řádků měřicích procesů (medián, kalibrace). @param list<array<string,mixed>> $rows */
+function v61_perf_summary(array $rows): array
+{
     $last = $rows[count($rows) - 1];
+    $ms = v61_median(array_column($rows, 'ms'));
+    $refs = array_map('floatval', array_column($rows, 'ref_ms'));
+    $ref = v61_median($refs);
+    $slow = v61_slowness($refs);
     return [
-        'ms' => round(v61_median(array_column($rows, 'ms')), 1),
+        'ms' => round($ms, 1),
         'ms_min' => round(min(array_column($rows, 'ms')), 1),
+        'ref_ms' => round($ref, 1),
+        'ratio' => $ref > 0 ? round($ms / $ref, 3) : 0.0,
+        'slowness' => $slow['factor'],
+        'slowness_raw' => $slow['raw'],
+        'slow_ok' => $slow['ok'],
+        'norm_ms' => round($ms / $slow['factor'], 1),
         'bytes' => (int)$last['bytes'],
         'calls' => (int)$last['calls'],
         'disk' => (int)$last['disk'],
@@ -146,19 +169,65 @@ function v61_perf_measure(array $spec, int $runs = 5, array $env = []): ?array
 const V61_REMEASURE_ROUNDS = 2;
 
 /**
- * v76 · stabilní měření: medián z $runs běhů (po 2 zahřívacích); když přesáhne $limitMs, měření se celé zopakuje nejvýš
- * V61_REMEASURE_ROUNDS× a platí nejnižší medián z kol. Skutečná regrese (stránka je pomalá pokaždé) zůstane nad limitem ve všech
+ * v76 · stabilní měření: medián z $runs běhů (po 2 zahřívacích); když nesplní limit, měření se celé zopakuje nejvýš
+ * V61_REMEASURE_ROUNDS× a platí nejlepší kolo. Skutečná regrese (stránka je pomalá pokaždé) zůstane nad limitem ve všech
  * kolech, přechodný šum (jiný proces na stroji) ne. Vrací metriky jako v61_perf_measure() + 'rounds' (počet kol).
+ * v80.2: $limit je buď limit normalizovaného času v ms (porovnává se 'norm_ms', ne surové 'ms'), nebo funkce
+ * fn(array $m): bool (např. limit + porovnání se základnou přes 'ratio_all' = poměr ze všech dosavadních kol); nejlepší kolo = nejnižší 'norm_ms'.
  */
-function v61_perf_measure_stable(array $spec, int $runs, array $env, float $limitMs): ?array
+function v61_perf_measure_stable(array $spec, int $runs, array $env, float|Closure $limit): ?array
 {
+    $ok = $limit instanceof Closure ? $limit : static fn(array $m): bool => $m['slow_ok'] && $m['norm_ms'] <= $limit;
     $best = null;
+    $all = [];
     for ($round = 1; $round <= 1 + V61_REMEASURE_ROUNDS; $round++) {
         $m = v61_perf_measure($spec, $runs, $env);
         if ($m === null) return null;
-        if ($best === null || $m['ms'] < $best['ms']) $best = $m;
+        // v80.2: poměr pro porovnání se základnou se počítá ze VŠECH dosavadních běhů (opakované kolo zpřesní odhad, nevybírá šťastné kolo)
+        $all = array_merge($all, (array)$m['rows']);
+        $pool = v61_perf_summary($all);
+        $m['ratio_all'] = $pool['ratio'];
+        $passed = $ok($m);
+        if ($best === null || ($passed && !$best['passed']) || ($passed === $best['passed'] && $m['norm_ms'] < $best['norm_ms'])) $best = $m + ['passed' => $passed];
+        $best['ratio_all'] = $pool['ratio'];
+        $best['runs_all'] = count($all);
+        $best['passed'] = $ok($best);
         $best['rounds'] = $round;
-        if ($best['ms'] <= $limitMs) break;
+        if ($best['passed']) break;
     }
+    unset($best['rows']);
     return $best;
+}
+
+/**
+ * v80.2 · střídané měření dvou variant téže stránky (A, B, A, B …) – obě varianty zažijí stejnou zátěž stroje, takže poměr
+ * jejich časů je spolehlivý i na vytíženém stroji (samotest: B = A s umělou regresí). Vrací surové řádky obou variant
+ * ['a' => list, 'b' => list] (souhrn přes v61_perf_pair_ratios(), i za víc kol dohromady) nebo null.
+ *
+ * @return array{a:list<array<string,mixed>>,b:list<array<string,mixed>>}|null
+ */
+function v61_perf_measure_paired(array $specA, array $specB, int $runs, array $env = []): ?array
+{
+    v61_perf_run($specA, $env);
+    v61_perf_run($specB, $env);
+    $a = $b = [];
+    for ($i = 0; $i < $runs; $i++) {
+        $ra = v61_perf_run($specA, $env);
+        $rb = $ra === null ? null : v61_perf_run($specB, $env);
+        if ($ra === null || $rb === null) return null;
+        $a[] = $ra;
+        $b[] = $rb;
+    }
+    return ['a' => $a, 'b' => $b];
+}
+
+/**
+ * Poměry obou variant ze střídaného měření: ms / medián reference OBOU variant dohromady (zažily stejnou zátěž, takže
+ * poměr B/A závisí jen na stránce, ne na šumu reference). @return array{a:float,b:float}
+ */
+function v61_perf_pair_ratios(array $rowsA, array $rowsB): array
+{
+    $ref = v61_median(array_map('floatval', array_merge(array_column($rowsA, 'ref_ms'), array_column($rowsB, 'ref_ms'))));
+    if ($ref <= 0 || $rowsA === [] || $rowsB === []) return ['a' => 0.0, 'b' => 0.0];
+    return ['a' => round(v61_median(array_column($rowsA, 'ms')) / $ref, 3), 'b' => round(v61_median(array_column($rowsB, 'ms')) / $ref, 3)];
 }

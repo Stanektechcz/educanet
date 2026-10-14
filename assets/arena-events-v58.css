@@ -3,7 +3,7 @@
 .arn58e { display: flex; flex-direction: column; gap: 1rem; color: inherit; }
 .arn58e a { color: inherit; }
 .arn58e .arn58e-muted { color: var(--t52-muted, #5f6b7a); }
-.arn58e .small { font-size: 0.85em; }
+.arn58e .small { font-size: max(.875rem, 0.85em); }
 
 /* v58 A11Y-A1: --card-bg/--card-border nikdy nebyly nikde definované (tmavé pozadí + tmavý text
    ambientu tohoto světlého rozhraní ~1:1). Karty používají stejné světlé tokeny jako sourozenecký
@@ -31,7 +31,7 @@
 
 /* Odpočet – nikdy jen barvou; text „Zbývá“ + číslice + jednotka jsou vždy vypsané. */
 .arn58e-clock { display: flex; flex-direction: column; align-items: center; min-width: 5.5rem; }
-.arn58e-clock-label { font-size: 0.75rem; color: var(--t52-muted, #5f6b7a); text-transform: uppercase; letter-spacing: 0.04em; }
+.arn58e-clock-label { font-size: .875rem; color: var(--t52-muted, #5f6b7a); text-transform: uppercase; letter-spacing: 0.04em; }
 .arn58e-clock-value { font-size: 1.35rem; font-variant-numeric: tabular-nums; font-weight: 700; }
 .arn58e-clock.is-low .arn58e-clock-value { color: var(--u-bad, #b42318); }
 .arn58e-clock.is-low::before { content: '⏰ '; }
@@ -59,7 +59,7 @@
 .arn58e-board li.is-empty { color: var(--t52-muted, #5f6b7a); font-style: italic; }
 .arn58e-board li span { margin-left: auto; }
 
-.arn58e-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.15rem 0.55rem; border-radius: 999px; font-size: 0.78rem; border: 1px solid currentColor; }
+.arn58e-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.15rem 0.55rem; border-radius: 999px; font-size: .875rem; border: 1px solid currentColor; }
 .arn58e-badge.is-draft::before { content: '⏳ '; }
 .arn58e-badge.is-live::before { content: '● '; }
 .arn58e-badge.is-finished::before { content: '⏹ '; }
@@ -75,7 +75,7 @@
 .arn58e-form { display: flex; flex-direction: column; gap: 0.7rem; max-width: 46rem; }
 .arn58e-form textarea { width: 100%; min-height: 3.4rem; font: inherit; }
 .arn58e-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 0.6rem; }
-.arn58e-fields label, .arn58e-form > label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.85rem; }
+.arn58e-fields label, .arn58e-form > label { display: flex; flex-direction: column; gap: 0.25rem; font-size: .875rem; }
 .arn58e-check { display: flex; align-items: center; gap: 0.4rem; min-height: 44px; }
 .arn58e-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 .arn58e-actions form { display: inline-flex; }

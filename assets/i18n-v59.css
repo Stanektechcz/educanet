@@ -19,7 +19,7 @@
 }
 
 .edu-lang-label {
-  font-size: 0.72rem;
+  font-size: .875rem;
   font-weight: 700;
   color: var(--muted, #65717e);
   white-space: nowrap;
@@ -38,7 +38,7 @@
   background: var(--surface-2, #eef2f5);
   color: var(--text, #111827);
   font: inherit;
-  font-size: 0.78rem;
+  font-size: .875rem;
 }
 
 .edu-lang-switcher__apply {
@@ -50,7 +50,7 @@
   background: var(--accent, #2459ff);
   color: #fff;
   font: inherit;
-  font-size: 0.75rem;
+  font-size: .875rem;
   font-weight: 700;
   cursor: pointer;
 }
@@ -74,7 +74,7 @@
   background: var(--surface-2, #eef2f5);
   /* v59 · A11Y-06: #65717e na #eef2f5 mělo ~4.42:1 – #4d5762 dává >=4.5:1. */
   color: #4d5762;
-  font-size: 0.72rem;
+  font-size: .875rem;
   line-height: 1.4;
 }
 

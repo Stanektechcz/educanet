@@ -6,8 +6,8 @@
 body:not(.assessment-mode) .proj60-card p{color:var(--ui-muted,#374151);margin:0;}
 body:not(.assessment-mode) .proj60-client,.proj60-client{color:var(--ui-muted,#4b5563);font-style:italic;}
 .proj60-skills{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px;}
-.proj60-skills li{padding:3px 12px;border-radius:var(--ui-radius-pill,999px);background:var(--ui-accent-soft,#e2f6f8);color:var(--ui-accent-ink,#05616c);font-size:.85rem;font-weight:600;}
-.proj60-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:.85rem;}
+.proj60-skills li{padding:3px 12px;border-radius:var(--ui-radius-pill,999px);background:var(--ui-accent-soft,#e2f6f8);color:var(--ui-accent-ink,#05616c);font-size:.875rem;font-weight:600;}
+.proj60-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:.875rem;}
 .proj60-meta span{padding:4px 8px;border-radius:8px;background:var(--ui-surface-2,#eef2f5);color:var(--ui-ink,#111827);}
 .proj60-meta .proj60-level-ok{background:#e6f6ef;}
 .proj60-meta .proj60-consent{background:#fff3d6;}

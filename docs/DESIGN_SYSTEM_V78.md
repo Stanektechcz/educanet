@@ -1,4 +1,4 @@
-# Design systém EDUCANET v78 (počáteční verze, fáze A)
+# Design systém EDUCANET v78 (fáze A–F, dokončeno ve v80.2)
 
 Jedna knihovna tokenů a komponent pro postupné sjednocení vzhledu cockpitu učitele i žákovské části.
 Živá ukázka: **`teacher.php?tab=design78`** (Správa › Design systém, jen administrátor, fiktivní data, nic neukládá).
@@ -109,23 +109,40 @@ Všechny třídy fungují uvnitř `.ds78`. Selektory mají tvar `.ds78 .ds-…` 
 | Lepicí akční lišta | `.ds-actionbar[role=region][aria-label]` (+ `__info`) | drží se dole v rámci své sekce |
 | Rozvržení | `.ds-layout > .ds-layout__nav / __main / __aside`, `.ds-container`, `.ds-stack`, `.ds-cluster`, `.ds-grid` | |
 
-## 5. Dělej / nedělej
-- **Dělej:** barvy jen `var(--token)`; nová barva = nový sémantický token v `tokens-v78.css` + dvojice v `design_v78.php` + audit.
-- **Dělej:** stav vždy textem (a ikonou), barva je jen doplněk; ikonová tlačítka s `aria-label`; `type="button"` u tlačítek mimo formulář.
-- **Dělej:** písmo přes `--fs-*`; interaktivní prvek min. `var(--target-min)`; nové breakpointy jen z tabulky výše.
-- **Nedělej:** pevné hex/rgb v komponentách, `innerHTML` s daty, hover jako jediný nosič informace, písmo pod 14 px,
-  vlastní `@media` šířky, webfonty a CDN.
+## 5. Dělej / nedělej (s příklady)
+| Dělej | Nedělej |
+|---|---|
+| Barvy jen přes tokeny: `.ds78 .x { color: var(--muted); background: var(--surface-2); }` | Pevné barvy v komponentě: `color: #697381;` (kontrast i tmavý režim se rozbijí) |
+| Nová barva = nový sémantický token v `tokens-v78.css` (světlý + obě tmavé sady) + dvojice v `design_v78.php` + `php tools/v78_design_tokens_audit.php` | Lokální odstín „jen pro tuhle kartu“ |
+| Stav textem a ikonou: `<span class="ds-badge is-warn">Čeká na schválení</span>` | Stav jen barvou (zelená / červená tečka bez textu) |
+| Ikonové tlačítko s názvem: `<button class="ds-btn ds-btn--icon" type="button" aria-label="Zavřít">×</button>` | Ikona bez `aria-label`, `type` chybí u tlačítka mimo formulář |
+| Písmo `font-size: var(--fs-sm)` (≥ 14 px); u starší vrstvy `max(.875rem, …)` | `font-size: .72rem`, `<small>` jako jediný nosič informace, text < 14 px |
+| Cíl dotyku `min-height: var(--target-min)` (44 px), u odkazu v kartě `display: inline-flex; align-items: center` | Odkaz 20 px vysoký mimo běžný text, zaškrtávátko 16 px bez popisku |
+| Široká tabulka v rámečku `.ds-table-wrap` / `overflow-x: auto` (posouvá se rámeček) | Tabulka s `white-space: nowrap`, která posune celou stránku |
+| `@media` jen se šířkami z tabulky breakpointů (320/480/768/1024/1366/1920), karty a tabulky přes `@container` | Vlastní breakpoint `@media (max-width: 640px)` v nových souborech |
+| Fokus: nechat `:focus-visible` z tokenů (`--focus`, 3 px) | `outline: none` bez náhrady, hover jako jediný nosič informace |
+| Text pro čtečky `.ds-sr`, nadpis stránky `h1` (může být vizuálně skrytý) | Stránka bez `h1`, přeskočená úroveň `h2 → h4` |
+| Data jen přes `textContent` / `cloneNode` v JS | `innerHTML` s daty, webfonty, CDN, analytika |
 - **Nedělej:** třídu `.teacher-page-head` uvnitř `.ds78` (starší vrstva nastavuje odstavci 12 px) – použij `header` + `.ds-eyebrow`.
+- **Starší vrstva převedená na v78** (vzor `learn-v75.css`, `projects-v65.css` ve v80.2): kořenový prvek dostane třídu `ds78`
+  (`<div class="l75-wrap ds78">`), selektory `.ds78 .l75-…` (specifičnost přebije `.ds78 p`, `.ds78 a`), `background: transparent` na kořeni,
+  soubor se vyřadí ze zdrojů tmavé vrstvy v69 (`DO69_VIEWS`) a z odvozených kopií cockpitu (`TK68_DERIVED`), v cockpitu se k záložce přidá `tokens-v78.css`.
 
-## 6. Most ke starším vrstvám (dočasný, vyřadit ve fázi F)
+## 6. Most ke starším vrstvám (zůstává i po v80.2)
 `ui-v51.css` nastavuje polím a fokusu barvy s `!important` přes `--u-*`. Uvnitř `.ds78` jsou proto tyto proměnné přesměrované na tokeny
-(`--u-text`, `--u-surface`, `--u-accent`, `--u-faint`) a fokus má `:root .ds78 :is(a, button, input, …):focus-visible`
-s `!important`. Mimo `.ds78` se nic nemění.
+(`--u-text`, `--u-surface`, `--u-accent`, `--u-faint`) a fokus má `:root .ds78 :is(a, button, input, …):focus-visible` s `!important`. Mimo `.ds78` se nic nemění.
+**Proč nebyl ve fázi F vyřazen (v80.2):** `ui-v51.css` je dál načtený na **každé** stránce žáka (`app/views/_layout.php`) a v cockpitu jako
+`cx-ui-v51.css`. Bez mostu by uvnitř `.ds78` vyhrálo `!important` z ui-v51: primární tlačítka modrá místo akcentu, fokus 2 px tyrkysový
+`#007a87` místo `--focus` 3 px (ve tmavém režimu pod 3 : 1 na tmavém pozadí) a pole by nebrala tmavé tokeny v cockpitu. Most se vyřadí spolu
+s ui-v51 (návrh sloučení č. 4 v `docs/CSS_INVENTORY_V78.md` – přepis pohledů žáka na v78 po jednom pohledu).
 
-## 7. Ověření (v78)
-- `php tools/v78_design_tokens_audit.php` – 35 kontrol (tokeny, kontrast, barvy mimo tokeny, písmo, 44 px, breakpointy, rozpočty, registrace, HTTP).
-- Prohlížeč (Chrome, Playwright): ukázka na 11 šířkách 320–1920 (+ 1366 × 600) ve světlém i tmavém režimu – bez vodorovného posunu,
-  všechny cíle ≥ 44 px, žádné písmo pod 14 px, barvy komponent = tokeny (starší vrstvy je nepřebíjejí). Snímky `docs/screens-v78/`.
+## 7. Ověření
+- `php tools/v78_design_tokens_audit.php` – tokeny, kontrast dvojic tokenů, barvy mimo tokeny, písmo, 44 px, breakpointy, rozpočty, registrace, HTTP.
+- **`php tools/v80_2_a11y_audit.php` (v80.2)** – jednotný audit hlavních stránek učitele i žáka: 11 šířek × světlý/tmavý (posun, 44 px, 14 px,
+  kontrast vykresleného textu, `lang`, nadpisy, landmarky, tabindex, tmavý režim), reflow 200 % a 400 %, pořadí a viditelnost fokusu (Tab).
+  Schválené výjimky jen ve `v802_exceptions()` (`tools/lib/v80_2_a11y_pages.php`) s důvodem v manifestu – ve v80.2 žádné.
+- `php tools/v80_2_font_floor.php --check` – žádná deklarace písma pod 14 px ve starších vrstvách (mimo tisk, SVG a generované soubory).
+- Ruční kontrola: `docs/MANUAL_CHECKLIST_V80.md` (klávesnice, NVDA, skutečný telefon a tablet). Snímky: `docs/screens-v78/INDEX.md`.
 
 ## 8. Obsahové vzory (v79.1, fáze D)
 | Vzor | Značky / funkce | Pravidla |
@@ -176,3 +193,11 @@ stejný název; nadpis prázdného stavu říká, co tu chybí, druhá věta pro
 | Tabulková alternativa | GET `zobrazeni=tabulka` → `table.cm801-table.is-plain` | stejná data celými slovy bez barev |
 | Výběr + akce | jeden `form.cm801-form` kolem mapy, akce tlačítky `name="action" value="…"` | zaškrtávátka v `label.cm801-check` (≥ 44 px), počet vybraných `[data-cm801-count]` s `aria-live`; JS jen pomáhá (vybrat vše, fráze do textu) |
 | Sdílené značky menu | `<div class="nav61-drawer" data-nav61-skip data-nav61-head>` a `<div data-nav61-lang>` | obsah klonuje `assets/nav-v61.js` (`cloneNode`) z horní lišty a patičky; použít jen tam, kde kontejner bez JS stejně není dostupný |
+
+## 12. Starší vrstvy a přístupnost (v80.2)
+| Pravidlo | Kde | Poznámka |
+|---|---|---|
+| Písmo ≥ 14 px i ve starších vrstvách | `tools/v80_2_font_floor.php` (`font-size: max(.875rem, V)`), `assets/lab-floor-v80-2.css` (zamčené soubory labu), `--ui-text-xs: .875rem`, `small` v `app.css` | po úpravě CSS spustit `--check`; tisk (`@media print`) a SVG beze změny |
+| Doplňkový text ≥ 4,5 : 1 | `--u-faint: #5f6b7a` (`ui-v51.css`) | tmavé vrstvy v69 a kopie cockpitu se přegenerují nástroji |
+| Opravy cílů, kontrastu a fokusu starších tříd | `assets/a11y-v80-2.css` (poslední styl hlavičky žáka), `assets/a11y-cockpit-v80-2.css` (poslední styl rámce cockpitu, jen `#t68-main`) | jen existující proměnné (`--u-*`, `--ui-*`, `--edu-*`), žádné nové barvy |
+| Tabulka vždy v rámečku s posunem | `.ds-table-wrap`, `.c72-scroll`, `.cm801-wrap` | stránka nikdy nepřeteče do strany (audit 11 šířek) |

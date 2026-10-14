@@ -45,7 +45,7 @@
 .lab58e-item-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
 .lab58e-badge {
-  display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px; font-size: .8rem; font-weight: 600;
+  display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px; font-size: .875rem; font-weight: 600;
   background: var(--e58-soft); color: var(--e58-muted); width: fit-content;
 }
 .lab58e-badge.published { background: var(--e58-ok-soft); color: var(--e58-ok); }
@@ -70,7 +70,7 @@
 .lab58e-check-row { grid-template-columns: minmax(160px, 1fr) 1fr 1fr; }
 @media (max-width: 640px) { .lab58e-file-row, .lab58e-gen-row, .lab58e-check-row { grid-template-columns: 1fr; } }
 
-.lab58e-hint { color: var(--e58-muted); font-size: .85rem; margin: 6px 0 0; }
+.lab58e-hint { color: var(--e58-muted); font-size: .875rem; margin: 6px 0 0; }
 .lab58e-form-actions { margin-top: 14px; }
 
 .lab58e-check-panel { margin-top: 18px; padding-top: 18px; border-top: 1px dashed var(--e58-line); }

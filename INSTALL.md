@@ -798,3 +798,21 @@ Podrobnosti: `CHANGELOG_V80_1.md`, `BUILD_MANIFEST_V80_1.md` (soubory, změny li
 - **Rollback vydání:** nasadit v80 (`459b310`). Soubory `storage/support_v80_1_*.json.php` lze ponechat (v80 je nečte) nebo smazat; zařazené položky opakování v `learning_v80_*` zůstávají platné.
 - **Kontrola po nasazení:** `php tools/v80_1_teacher_audit.php` → `V80_1_TEACHER_AUDIT_OK` (prohlížečová část jen s Chrome + `playwright-core` v `NODE_PATH`, jinak SKIP; vynutit `EDUCANET_V801_BROWSER=require`,
   snímky `EDUCANET_V801_SHOTS=<adresář>`); celá sada `php tools/run_audits.php --since=all --with-smoke --with-router`.
+
+## v80.2 · ověření přístupnosti, úklid CSS, stabilní měření výkonu
+
+Podrobnosti: `CHANGELOG_V80_2.md`, `BUILD_MANIFEST_V80_2.md` (soubory, změny limitů auditů, SHA vyřazených souborů, výkon), návod `docs/NAVOD_V80_2.md`.
+Žádná změna chování, dat ani úložiště; nové PHP rozšíření ani migraci nevyžaduje.
+
+- **Nové assety:** `assets/a11y-v80-2.css` (poslední styl hlavičky žáka), `assets/a11y-cockpit-v80-2.css` (poslední styl rámce cockpitu), `assets/lab-floor-v80-2.css` (Linux Lab a příkazy, generuje
+  `tools/v80_2_font_floor.php`). Service worker přednačítá i nové vrstvy (`?view=precache`); název cache zůstává, změněné CSS mají novou verzi URL (`asset_url`).
+- **Upravené styly:** písmo ≥ 14 px ve starších vrstvách (`tools/v80_2_font_floor.php`), `--u-faint` a `--ui-text-xs`, `learn-v75.css` a `projects-v65.css`
+  na tokenech v78; odvozené kopie `assets/cx-*.css` a tmavé vrstvy `assets/dark/*`, `cockpit-dark-v68.css` přegenerované.
+- **Vyřazený soubor:** `assets/cx-projects-v65.css` – při ruční aktualizaci (rsync bez `--delete`) ho na serveru smažte, jinak ho cockpit dál načte
+  místo převedeného originálu (`teacher68_css_href` dává přednost kopii `cx-`).
+- **Audity:** `php tools/v80_2_a11y_audit.php` → `V80_2_A11Y_AUDIT_OK` (prohlížečová část jen s Chrome + `playwright-core` v `NODE_PATH`, jinak SKIP;
+  vynutit `EDUCANET_V802_BROWSER=require`, snímky `EDUCANET_V802_SHOTS=<adresář>`); `php tools/v80_2_font_floor.php --check`.
+  Audit výkonu `tools/v61_perf_audit.php` měří kalibrovaně (referenční stránka v každém měřicím procesu); základna poměrů
+  `tools/lib/v61_perf_baseline.php` platí jen pro vývojový počítač, na serveru se porovnání se základnou přeskočí (absolutní limity platí).
+- **Ruční kontrola:** `docs/MANUAL_CHECKLIST_V80.md` (klávesnice, NVDA, skutečný telefon a tablet).
+- **Rollback vydání:** nasadit v80.1 (`4c6e903`) včetně `assets/cx-projects-v65.css` (z git historie); data se neměnila.

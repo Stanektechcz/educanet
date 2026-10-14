@@ -25,7 +25,7 @@ function p65t_label(string $classId, array $record): string
 
 function proj65_render_teacher_tab(string $classId, string $csrf): void
 {
-    echo '<section class="teacher-panel p65"><h2>Projekty: cyklus, rubriky a peer review</h2>'
+    echo '<section class="teacher-panel p65 ds78"><h2>Projekty: cyklus, rubriky a peer review</h2>'
         . '<p class="teacher-note">Rubrika jen navrhuje známku, rozhoduješ ty. Peer review nikdy neovlivní skóre, známku ani důkaz kompetence. Recenzenta vidíš jen ty, autor ne.</p>';
     if (project_catalog()[$classId] ?? null) {
         p65t_render_settings($classId, $csrf);

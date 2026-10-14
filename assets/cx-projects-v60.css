@@ -1,4 +1,4 @@
-/* GENEROVÁNO tools/v68_tokenize_css.php --derive ze souboru assets/projects-v60.css (sha256 48a01488f395a251) – ručně neupravovat. */
+/* GENEROVÁNO tools/v68_tokenize_css.php --derive ze souboru assets/projects-v60.css (sha256 0b8e2a759d46be72) – ručně neupravovat. */
 /* v60 · Projekty podle levelu (žák). Světlé plochy a explicitní barvy textu (viz marketplace-v60.css:
    globální h1–h4/p ze student-ui-v50-7-7.css by na tmavém pozadí nebyly čitelné). Bez CDN; prefers-reduced-motion. */
 .proj60-hero{padding:20px;border-radius:var(--ui-radius,16px);background:var(--ui-surface,var(--k3));border:1px solid var(--ui-line,var(--k828));margin-bottom:16px;min-width:0;overflow-wrap:anywhere;}
@@ -7,8 +7,8 @@
 body:not(.assessment-mode) .proj60-card p{color:var(--ui-muted,var(--k58));margin:0;}
 body:not(.assessment-mode) .proj60-client,.proj60-client{color:var(--ui-muted,var(--k829));font-style:italic;}
 .proj60-skills{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px;}
-.proj60-skills li{padding:3px 12px;border-radius:var(--ui-radius-pill,999px);background:var(--ui-accent-soft,var(--k168));color:var(--ui-accent-ink,var(--k706));font-size:.85rem;font-weight:600;}
-.proj60-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:.85rem;}
+.proj60-skills li{padding:3px 12px;border-radius:var(--ui-radius-pill,999px);background:var(--ui-accent-soft,var(--k168));color:var(--ui-accent-ink,var(--k706));font-size:.875rem;font-weight:600;}
+.proj60-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:.875rem;}
 .proj60-meta span{padding:4px 8px;border-radius:8px;background:var(--ui-surface-2,var(--k41));color:var(--ui-ink,var(--k4));}
 .proj60-meta .proj60-level-ok{background:var(--k203);}
 .proj60-meta .proj60-consent{background:var(--k832);}

@@ -1,4 +1,4 @@
-/* GENEROVÁNO tools/v68_tokenize_css.php --derive ze souboru assets/session-v53.css (sha256 f1f7b4ed2ab8fc8a) – ručně neupravovat. */
+/* GENEROVÁNO tools/v68_tokenize_css.php --derive ze souboru assets/session-v53.css (sha256 c3efce0904e0625a) – ručně neupravovat. */
 /* EDUCANET v53 · hodina s kódem + barevnější a přehlednější vrstva */
 :root {
   --s53-1: var(--k658);   /* modrá · postup a akce */
@@ -20,20 +20,20 @@
 .s53-head h1 { margin: 4px 0 6px; font-size: clamp(1.4rem, 3vw, 2rem); }
 .s53-head p { margin: 0; color: var(--u-muted, var(--k165)); max-width: 640px; }
 .s53-badges { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.s53-points { display: inline-flex; align-items: baseline; gap: 5px; padding: 8px 14px; border-radius: 999px; background: var(--k3); border: 1px solid var(--s53-4); color: var(--k696); font-size: .82rem; font-weight: 650; }
+.s53-points { display: inline-flex; align-items: baseline; gap: 5px; padding: 8px 14px; border-radius: 999px; background: var(--k3); border: 1px solid var(--s53-4); color: var(--k696); font-size: .875rem; font-weight: 650; }
 .s53-points b { font-size: 1.1rem; }
 .s53-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 12px; }
 .s53-instructions { border-left: 4px solid var(--s53-4); background: var(--s53-tint-4); }
 .s53-instructions p { margin: 6px 0 0; }
 .s53-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: s53; }
 .s53-steps li { counter-increment: s53; display: grid; gap: 4px; padding: 12px 14px 12px 48px; position: relative; border-radius: 12px; background: var(--u-soft, var(--k655)); }
-.s53-steps li::before { content: counter(s53); position: absolute; left: 12px; top: 12px; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--s53-1); color: var(--k3); font-size: .8rem; font-weight: 750; }
-.s53-steps span { color: var(--u-muted, var(--k165)); font-size: .86rem; }
+.s53-steps li::before { content: counter(s53); position: absolute; left: 12px; top: 12px; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--s53-1); color: var(--k3); font-size: .875rem; font-weight: 750; }
+.s53-steps span { color: var(--u-muted, var(--k165)); font-size: .875rem; }
 .s53-steps .btn { justify-self: start; margin-top: 4px; }
 .s53-work .t52-checklist label { align-items: flex-start; }
 .s53-work .t52-checklist span { display: grid; gap: 2px; }
-.s53-work .t52-checklist small { color: var(--u-muted, var(--k165)); font-size: .8rem; }
-.s53-work .t52-checklist em { margin-left: auto; font-style: normal; font-size: .72rem; color: var(--u-faint, var(--k657)); white-space: nowrap; }
+.s53-work .t52-checklist small { color: var(--u-muted, var(--k165)); font-size: .875rem; }
+.s53-work .t52-checklist em { margin-left: auto; font-style: normal; font-size: .875rem; color: var(--u-faint, var(--k657)); white-space: nowrap; }
 .s53-feedback { margin-top: 12px; padding: 12px 14px; border-radius: 12px; background: var(--s53-tint-5); border-left: 4px solid var(--s53-5); }
 .s53-feedback p { margin: 6px 0 0; }
 
@@ -57,14 +57,14 @@
 
 /* Nápovědy za body v tutoriálu */
 .t52-hints { display: grid; gap: 8px; padding: 12px 14px; border-radius: 12px; background: var(--s53-tint-4); border: 1px solid var(--k697); }
-.t52-hints-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: .82rem; font-weight: 650; color: var(--k696); }
+.t52-hints-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: .875rem; font-weight: 650; color: var(--k696); }
 .t52-hint-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
-.t52-hint-buttons button { border: 1px solid var(--k698); background: var(--k3); color: var(--k696); border-radius: 999px; padding: 7px 12px; font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer; }
+.t52-hint-buttons button { border: 1px solid var(--k698); background: var(--k3); color: var(--k696); border-radius: 999px; padding: 7px 12px; font: inherit; font-size: .875rem; font-weight: 600; cursor: pointer; }
 .t52-hint-buttons button:hover:not(:disabled) { border-color: var(--s53-4); }
 .t52-hint-buttons button:disabled { opacity: .55; cursor: not-allowed; }
 .t52-hint-out { display: grid; gap: 6px; }
 .t52-hint-out p { margin: 0; padding: 8px 10px; border-radius: 10px; background: var(--k3); font-size: .88rem; }
-.t52-hint-out p b { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--k696); }
+.t52-hint-out p b { display: block; font-size: .875rem; text-transform: uppercase; letter-spacing: .06em; color: var(--k696); }
 
 /* Barevnější, přehlednější vrstva pro studenta */
 body.accent-graphics { --u-accent: var(--k688); --u-accent-soft: var(--k692); --t52-accent: var(--k688); --t52-accent-soft: var(--k692); }
@@ -86,11 +86,11 @@ body.accent-advanced { --u-accent: var(--k689); --u-accent-soft: var(--k693); --
 }
 
 /* v56 · fáze žáka v učitelském přehledu */
-.s53-phase-detail { display: block; margin-top: 4px; font-size: .72rem; color: var(--k657); white-space: nowrap; }
+.s53-phase-detail { display: block; margin-top: 4px; font-size: .875rem; color: var(--k657); white-space: nowrap; }
 
 /* v56 · co dnes projdou žáci (režim hodiny) */
 .v56-teach-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
 .v56-teach-grid article { display: flex; gap: 11px; padding: 13px 15px; border-radius: 13px; border: 1px solid var(--k161); background: var(--k3); }
-.v56-teach-grid b { flex: 0 0 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: var(--k164); color: var(--k3); font-size: .8rem; }
+.v56-teach-grid b { flex: 0 0 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: var(--k164); color: var(--k3); font-size: .875rem; }
 .v56-teach-grid strong { display: block; font-size: .92rem; }
-.v56-teach-grid small { display: block; margin-top: 3px; font-size: .78rem; color: var(--k165); line-height: 1.45; }
+.v56-teach-grid small { display: block; margin-top: 3px; font-size: .875rem; color: var(--k165); line-height: 1.45; }

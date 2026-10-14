@@ -15,7 +15,7 @@ function port65v_render_page(string $classId, string $studentKey, string $flash)
     p65v_assets();
     $candidates = port65_candidates($classId, $studentKey);
     $sel = port65_selection(port65_student_id($classId, $studentKey), $candidates);
-    echo '<div class="p65"><section class="p65-card p65-noprint"><div class="eyebrow">' . e(tr('Portfolio')) . '</div><h1>' . e(tr('Moje portfolio')) . '</h1>'
+    echo '<div class="p65 ds78"><section class="p65-card p65-noprint"><div class="eyebrow">' . e(tr('Portfolio')) . '</div><h1>' . e(tr('Moje portfolio')) . '</h1>'
         . '<p>' . e(tr('Vyber práce, ke kterým jsi hrdý/á, a ke každé napiš krátkou reflexi. Portfolio je jen tvoje a nesdílí se odkazem.')) . '</p>'
         . '<p class="p65-inline"><a class="btn secondary" href="?view=projekt65">' . e(tr('Moje projekty')) . '</a>'
         . '<a class="btn primary" href="?view=portfolio_export">' . e(tr('Stáhnout jako HTML')) . '</a>'

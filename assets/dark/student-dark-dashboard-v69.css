@@ -1,5 +1,5 @@
 /* EDUCANET v69 · tmavá vrstva pohledu „dashboard“ – GENEROVÁNO tools/v69_dark_overlay.php ze souborů assets/*.css, ručně neupravovat. Načítá se jen při tmavém motivu. */
-/* app.css (sha256 9a16b9b98494) */
+/* app.css (sha256 556486e78601) */
 html:not([data-theme="light"]){--bg:#212122;--surface:#171717;--surface-2:#252626;--text:#ffffff;--muted:#abbed3;--line:#353738;--accent:#bac1ff;--accent-soft:#28292d;--ok:#20dc9a;--ok-soft:#222624;--bad:#ffc7c7;--bad-soft:#262323;--shadow:0 18px 50px rgba(0,0,0,0.128)}
 html:not([data-theme="light"]) body{background:var(--bg);color:var(--text)}
 html:not([data-theme="light"]) body.accent-graphics{--accent:#d3c7ff;--accent-soft:#2b292d}
@@ -283,7 +283,7 @@ html:not([data-theme="light"]) .teacher-task-card p{color:#a4b8c9}
 html:not([data-theme="light"]) .teacher-task-meta span{border-radius:7px;background:#252626;color:#9fb0c0}
 html:not([data-theme="light"]) .teacher-task-resource{border-radius:9px;background:#212222}
 html:not([data-theme="light"]) .teacher-intervention-panel{border:1px solid #323436}
-/* mastery.css (sha256 27355d611cef) */
+/* mastery.css (sha256 faaee26a03d0) */
 html:not([data-theme="light"]) .ml-card{background:color-mix(in srgb,var(--surface,#171717) 96%,transparent);border:1px solid color-mix(in srgb,currentColor 10%,transparent);border-radius:22px;box-shadow:0 14px 34px rgba(0,0,0,0.08)}
 html:not([data-theme="light"]) .ml-chip{border-radius:999px;background:color-mix(in srgb,currentColor 7%,transparent)}
 html:not([data-theme="light"]) .ml-chip.ok{background:rgba(22,161,73,0.1);color:#2bd86c}
@@ -307,10 +307,10 @@ html:not([data-theme="light"]) .ml-custom-grid article{border:1px solid color-mi
 }html:not([data-theme="light"]) .ml-custom-grid article{border:1px solid rgba(0,0,0,0.144);border-radius:14px;background:rgba(23,23,23,0.55)}
 html:not([data-theme="light"]) .ml-custom-grid article small{color:#a0b8db}
 html:not([data-theme="light"]) .ml-card :focus-visible{outline:3px solid color-mix(in srgb,#b1beff 56%,transparent);outline-offset:2px}
-/* cognitive-v43.css (sha256 700653a37225) */
+/* cognitive-v43.css (sha256 45afe0539a9f) */
 html:not([data-theme="light"]) .cv43-feedback.ok{background:color-mix(in srgb,#107736 10%,transparent)}
 html:not([data-theme="light"]) .cv43-feedback.bad{background:color-mix(in srgb,#ff6969 9%,transparent)}
-/* learning-studio-v44.css (sha256 1d60ad992b97) */
+/* learning-studio-v44.css (sha256 6e3215cbfe14) */
 html:not([data-theme="light"]) .v44-gps-track .done i{background:color-mix(in srgb,#107736 14%,var(--panel,#171717));border-color:color-mix(in srgb,#107736 45%,transparent);color:#2bd86c}
 html:not([data-theme="light"]) .v44-gps-track .current{color:inherit}
 html:not([data-theme="light"]) .v44-gps-track .current i{background:var(--accent,#a5a6ff);border-color:var(--accent,#a5a6ff);color:#171717;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent,#a5a6ff) 10%,transparent)}
@@ -320,9 +320,9 @@ html:not([data-theme="light"]) .v44-inline-feedback.bad{background:color-mix(in 
 html:not([data-theme="light"]) .v44-dashboard-track span{border-radius:999px;background:color-mix(in srgb,currentColor 3%,transparent);color:var(--muted,#a0b8db)}
 html:not([data-theme="light"]) .v44-dashboard-track .done{color:#2bd86c;background:color-mix(in srgb,#107736 8%,transparent)}
 html:not([data-theme="light"]) .v44-dashboard-track .current{color:inherit;background:color-mix(in srgb,var(--accent,#a5a6ff) 9%,transparent)}
-/* visual-simulation-v45.css (sha256 a53494e0e8bc) */
+/* visual-simulation-v45.css (sha256 f5e1d5bc2d9b) */
 html:not([data-theme="light"]) .v45-has-spotlight [data-v45-control-wrap].is-spotlight{box-shadow:0 0 0 3px rgba(82,65,2,0.24);border-color:#524102}
-/* student-coach-v47.css (sha256 56c2f66d59b1) */
+/* student-coach-v47.css (sha256 a856daaa760e) */
 html:not([data-theme="light"]) .coach-dashboard-panel{border-color:color-mix(in srgb,var(--accent) 24%,var(--line));background:linear-gradient(150deg,color-mix(in srgb,var(--accent) 4%,var(--surface)),var(--surface))}
 html:not([data-theme="light"]) .coach-mini-step{border:1px solid var(--line);border-radius:14px;background:var(--surface);color:inherit}
 html:not([data-theme="light"]) .coach-mini-step:hover{border-color:color-mix(in srgb,var(--accent) 35%,var(--line))}
@@ -339,7 +339,7 @@ html:not([data-theme="light"]) [data-generation-note], html:not([data-theme="lig
 html:not([data-theme="light"]) .corrective-transfer-result{border-radius:12px}
 html:not([data-theme="light"]) .corrective-transfer-result.ok{background:rgba(8,129,89,0.09)}
 html:not([data-theme="light"]) .corrective-transfer-result.needs-work{background:rgba(137,86,3,0.11)}
-/* student-ui-v50-7-7.css (sha256 71ade236237a) */
+/* student-ui-v50-7-7.css (sha256 2a8d5d9efaf1) */
 html:not([data-theme="light"]) body:not(.assessment-mode){--student-shadow:0 14px 34px rgba(0,0,0,0.088)}
 html:not([data-theme="light"]) body:not(.view-dashboard):not(.assessment-mode) .panel{box-shadow:0 10px 28px rgba(0,0,0,0.056)}
 html:not([data-theme="light"]) .student-welcome-copy span{color:var(--muted)}
@@ -434,8 +434,8 @@ html:not([data-theme="light"]) .v5076-attention{border-radius:10px!important}
 html:not([data-theme="light"]) .v5076-core-metrics article span{color:var(--muted)!important}
 html:not([data-theme="light"]) .v5076-progress-advanced{border:1px solid var(--v5075-line)!important;border-radius:11px!important;background:#171717!important}
 html:not([data-theme="light"]) .v5076-progress-advanced>summary span{color:var(--muted)!important}
-/* ui-v51.css (sha256 c33d507419aa) */
-html:not([data-theme="light"]), html:not([data-theme="light"]):not(.x){--u-bg:#202020;--u-surface:#171717;--u-soft:#242425;--u-line:#303132;--u-line-strong:#3e4043;--u-text:#ffffff;--u-muted:#b4cae4;--u-faint:#7c8592;--u-accent:#d3d8ff;--u-accent-soft:#252628;--u-ok:#24df93;--u-ok-soft:#222523;--u-warn:#f1a800;--u-warn-soft:#22211d;--u-bad:#ffdada;--u-bad-soft:#282525;--u-shadow:0 1px 2px rgba(0,0,0,0.064);--u-shadow-pop:0 12px 32px rgba(0,0,0,0.16);--ot-primary-text:#171717}
+/* ui-v51.css (sha256 c60eae26547f) */
+html:not([data-theme="light"]), html:not([data-theme="light"]):not(.x){--u-bg:#202020;--u-surface:#171717;--u-soft:#242425;--u-line:#303132;--u-line-strong:#3e4043;--u-text:#ffffff;--u-muted:#b4cae4;--u-faint:#b4cae4;--u-accent:#d3d8ff;--u-accent-soft:#252628;--u-ok:#24df93;--u-ok-soft:#222523;--u-warn:#f1a800;--u-warn-soft:#22211d;--u-bad:#ffdada;--u-bad-soft:#282525;--u-shadow:0 1px 2px rgba(0,0,0,0.064);--u-shadow-pop:0 12px 32px rgba(0,0,0,0.16);--ot-primary-text:#171717}
 html:not([data-theme="light"]) body.accent-network{--accent:#d3d8ff;--accent-soft:#252628;--u-accent:#d3d8ff;--u-accent-soft:#252628}
 html:not([data-theme="light"]) body.accent-graphics{--accent:#d2c9ff;--accent-soft:#27272a;--u-accent:#d2c9ff;--u-accent-soft:#27272a}
 html:not([data-theme="light"]) body.accent-advanced{--accent:#26e0d1;--accent-soft:#242626;--u-accent:#26e0d1;--u-accent-soft:#242626}
@@ -490,7 +490,7 @@ html:not([data-theme="light"]) .u51-lesson-steps li button b{border-radius:50%;b
 html:not([data-theme="light"]) .u51-lesson-steps li.current button{border-color:var(--u-accent);color:var(--u-text)}
 html:not([data-theme="light"]) .u51-lesson-steps li.current button b{background:var(--u-accent);color:#171717}
 html:not([data-theme="light"]) .u51-lesson-steps li.done button b{background:var(--u-ok-soft);color:var(--u-ok)}
-/* tutorial-v52.css (sha256 226de3fff2af) */
+/* tutorial-v52.css (sha256 9ce6aaea5460) */
 html:not([data-theme="light"]){--t52-accent:var(--u-accent, #d3d8ff);--t52-accent-soft:var(--u-accent-soft, #252628);--t52-text:var(--u-text, #ffffff);--t52-muted:var(--u-muted, #b4cae4);--t52-faint:var(--u-faint, #7c8592);--t52-line:var(--u-line, #303132);--t52-line-strong:var(--u-line-strong, #3e4043);--t52-surface:var(--u-surface, #171717);--t52-soft:var(--u-soft, #242425);--t52-ok:var(--u-ok, #24df93);--t52-ok-soft:var(--u-ok-soft, #222523);--t52-warn:#ac7500;--t52-warn-soft:var(--u-warn-soft, #22211d);--t52-bad:var(--u-bad, #ffdada);--t52-bad-soft:var(--u-bad-soft, #282525)}
 html:not([data-theme="light"]) body.accent-graphics{--t52-accent:#d2c9ff;--t52-accent-soft:#27272a}
 html:not([data-theme="light"]) body.accent-advanced{--t52-accent:#26e0d1;--t52-accent-soft:#242626}
@@ -498,16 +498,16 @@ html:not([data-theme="light"]) .t52-kicker{color:var(--t52-accent)}
 html:not([data-theme="light"]) .t52 kbd{border:1px solid var(--t52-line-strong);border-bottom-width:2px;border-radius:6px;background:var(--t52-surface);color:var(--t52-text)}
 html:not([data-theme="light"]) .t52-page-head p{color:var(--t52-muted)}
 html:not([data-theme="light"]) .t52 .sr-only{border:0 !important}
-/* session-v53.css (sha256 f1f7b4ed2ab8) */
+/* session-v53.css (sha256 c3efce0904e0) */
 html:not([data-theme="light"]){--s53-1:#d3d8ff;--s53-2:#d4c7ff;--s53-3:#0fa08e;--s53-4:#8f5828;--s53-5:#ff709c;--s53-ok:#24df93;--s53-tint-1:#242527;--s53-tint-2:#272629;--s53-tint-3:#212424;--s53-tint-4:#242220;--s53-tint-5:#2b2729}
 html:not([data-theme="light"]) body.accent-graphics{--u-accent:#d4c7ff;--u-accent-soft:#272629;--t52-accent:#d4c7ff;--t52-accent-soft:#272629}
 html:not([data-theme="light"]) body.accent-network{--u-accent:#d3d8ff;--u-accent-soft:#242527;--t52-accent:#d3d8ff;--t52-accent-soft:#242527}
 html:not([data-theme="light"]) body.accent-advanced{--u-accent:#0fa08e;--u-accent-soft:#212424;--t52-accent:#0fa08e;--t52-accent-soft:#212424}
 html:not([data-theme="light"]) .student-do-now-card{border-left:4px solid var(--u-accent) !important}
-/* brand-v54.css (sha256 0b4348884a0c) */
+/* brand-v54.css (sha256 5f51a6171b7c) */
 html:not([data-theme="light"]) body.accent-advanced{--u-accent:#baf2ff;--accent:#baf2ff;--t52-accent:#baf2ff}
 html:not([data-theme="light"]) .brand-mark{background:var(--edu-teal) !important}
-/* student-v55.css (sha256 3663155bc3a7) */
+/* student-v55.css (sha256 f5bf6e6e9de6) */
 html:not([data-theme="light"]) .v55-lvl{border:1px solid var(--ui-line, var(--u-line, #303132));border-radius:999px;background:var(--ui-surface, #171717);color:var(--ui-ink, var(--edu-ink))}
 html:not([data-theme="light"]) .v55-lvl:hover{border-color:var(--edu-teal)}
 html:not([data-theme="light"]) .v55-lvl-ring{border-radius:50%;background:conic-gradient(var(--edu-teal) calc(var(--v55-lvl-percent, 0) * 1%), var(--u-soft, #262627) 0)}
@@ -522,7 +522,7 @@ html:not([data-theme="light"]) .v55-lock-flag{border-radius:999px;background:var
 html:not([data-theme="light"]) .v55-lock-dialog{background:rgba(0,0,0,0.72)}
 html:not([data-theme="light"]) .v55-lock-card{background:#171717;border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,0.4)}
 html:not([data-theme="light"]) .v55-lock-card p{color:var(--u-muted, #b4cae4)}
-/* learning-v56.css (sha256 8acf4703d512) */
+/* learning-v56.css (sha256 98f6f37e5ba1) */
 html:not([data-theme="light"]) .v56-menu-button{border:1px solid var(--u-line, #303132);border-radius:11px;background:#171717;color:var(--edu-ink)}
 html:not([data-theme="light"]) .v56-menu-button:hover{border-color:var(--edu-teal)}
 html:not([data-theme="light"]) .v56-menu-button i{color:var(--u-faint, #7c8592)}
@@ -598,7 +598,7 @@ html:not([data-theme="light"]) .mot61-streak{border-radius:var(--ui-radius-sm, 8
 html:not([data-theme="light"]) .mot61-goal-row b{color:var(--ui-accent-ink)}
 html:not([data-theme="light"]) .mot61-goal.is-done .mot61-goal-row b{color:var(--ui-ok-ink)}
 html:not([data-theme="light"]) .mot61-foot{color:var(--ui-muted)}
-/* i18n-v59.css (sha256 fe7f42c77edb) */
+/* i18n-v59.css (sha256 9a14e0f6e5b4) */
 html:not([data-theme="light"]) .edu-lang-label{color:var(--muted, #abbed3)}
 html:not([data-theme="light"]) .edu-lang-switcher__select{border:1px solid var(--line, #353738);border-radius:10px;background:var(--surface-2, #252626);color:var(--text, #ffffff)}
 html:not([data-theme="light"]) .edu-lang-switcher__apply{border:1px solid var(--line, #353738);border-radius:10px;background:var(--accent, #bac1ff);color:#171717}

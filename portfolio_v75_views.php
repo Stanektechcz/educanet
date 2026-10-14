@@ -22,7 +22,7 @@ function pf75_render_student_section(string $classId, string $studentKey): void
     $pins = pf75_pins($classId, $studentKey);
     $csrf = '<input type="hidden" name="csrf" value="' . e(csrf_token()) . '">';
     echo '<link rel="stylesheet" href="' . e(function_exists('asset_url') ? asset_url('assets/learn-v75.css?v=75.0') : 'assets/learn-v75.css?v=75.0') . '">'
-        . '<div class="p65"><section class="p65-card" aria-labelledby="pf75-h"><h2 id="pf75-h">' . e(tr('Připnuté práce')) . '</h2>'
+        . '<div class="p65 ds78"><section class="p65-card" aria-labelledby="pf75-h"><h2 id="pf75-h">' . e(tr('Připnuté práce')) . '</h2>'
         . '<p class="p65-noprint">' . e(tr('Připni odkaz na svou grafiku nebo web, vyřešenou úlohu nebo projekt a napiš, co ses naučil/a. Vidíš to jen ty a tvoji učitelé, kteří ti můžou napsat komentář.')) . '</p>';
     if ($pins === []) {
         echo '<div class="l75-empty" role="status"><p>' . e(tr('Zatím tu nic není. Začni třeba odkazem na práci, na kterou jsi hrdý/á.')) . '</p>'

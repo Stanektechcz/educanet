@@ -1,0 +1,51 @@
+/* GENEROVÁNO tools/v80_2_font_floor.php – ručně neupravovat. Spodní hranice písma 14 px pro zamčené soubory Linux Labu (linux-v57.css d1a899664d7201bd arena-v57.css fc33ef293f498982).
+   Stejné selektory jako zdroj, načítá se hned po nich (app/views/_layout.php), takže vyhrají jen u písma; zdroje se nemění (SHA v tools/lib/v67_lab_hashes.php). */
+/* linux-v57.css */
+.lab57-hero-badge{font-size:.875rem}
+.lab57-hero-stats span{font-size:.875rem}
+.lab57-race-card span:not(.btn){font-size:.875rem}
+.lab57-pack-head p{font-size:.875rem}
+.lab57-pack-inspired{font-size:.875rem}
+.lab57-pack-foot{font-size:.875rem}
+.btn.small{font-size:.875rem !important}
+.lab57-pack-levels summary{font-size:.875rem}
+.lab57-pack-levels li a, .lab57-pack-levels li .lab57-level-locked{font-size:.875rem}
+.lab57-level-mark{font-size:.875rem}
+.lab57-crumbs{font-size:.875rem}
+.lab57-chip{font-size:.875rem}
+.lab57-task strong{font-size:.875rem}
+.lab57-suggest{font-size:.875rem}
+.lab57-turnin label{font-size:.875rem}
+.lab57-golf-note{font-size:.875rem}
+.lab57-solved-meta{font-size:.875rem}
+.lab57-term-title{font-size:.875rem}
+.lab57-term-hint{font-size:.875rem}
+.lab57-touchbar button{font-size:.875rem}
+.lab57-editor-head{font-size:.875rem}
+.lab57-editor-warn{font-size:.875rem}
+.lab57-editor-msg{font-size:.875rem}
+.lab57-editor-foot button{font-size:.875rem}
+.lab57-manual-cat > p{font-size:.875rem}
+.lab57-manual-card p{font-size:.875rem}
+.lab57-manual-level{font-size:.875rem}
+.lab57-manual-badge{font-size:.875rem}
+.lab57-concept p{font-size:.875rem}
+.lab57-manual-cat-label{font-size:.875rem}
+.lab57-manual-examples .lab57-example span{font-size:.875rem}
+.lab57-try{font-size:.875rem}
+.lab57-callout strong{font-size:.875rem}
+.lab57-review-card span{font-size:.875rem}
+.lab57-badge{font-size:.875rem}
+.lab57-hub-card span:last-child{font-size:.875rem}
+.lab57-concept-chip small{font-size:.875rem}
+.lab57-review-box{font-size:.875rem}
+/* arena-v57.css */
+.arena57-badge{font-size:.875rem}
+.arena57-clock-label{font-size:.875rem}
+.arena57-members{font-size:.875rem}
+.arena57-level-no{font-size:.875rem}
+.arena57-level-text small{font-size:.875rem}
+.arena57-list code{font-size:.875rem}
+.arena57-table th{font-size:.875rem}
+.arena57-preset small{font-size:.875rem}
+.arena57-log ol{font-size:.875rem}

@@ -26,7 +26,7 @@ require_once __DIR__ . '/lib/audit_storage.php';
 $tmp = rtrim(str_replace(chr(92), '/', edu_audit_temp_storage('v67-perf')), '/');
 $opcacheDir = rtrim(str_replace(chr(92), '/', sys_get_temp_dir()), '/') . '/educanet-audit-opc-' . bin2hex(random_bytes(6));
 @mkdir($opcacheDir, 0700, true);
-register_shutdown_function(static function () use ($opcacheDir): void { edu_audit_remove_dir($opcacheDir); });
+register_shutdown_function(static function () use ($opcacheDir): void { edu_audit_remove_dir($opcacheDir); edu_audit_remove_dir($opcacheDir . '-ref'); });
 require_once $ROOT . '/bootstrap.php';
 require_once $ROOT . '/app/lib.php';
 require_once __DIR__ . '/lib/audit.php';
@@ -59,20 +59,22 @@ function v67p_snapshot(string $dir): array
 $check('úložiště auditu je dočasné (ne ostrá storage/)', $tmp !== '' && !str_starts_with($tmp, $ROOT . '/storage') && str_contains($tmp, 'educanet-audit-'));
 $fx = v61_perf_seed($modules, $tmp, 30);
 $session = ['next_class_id' => $fx['class'], 'student_label' => $fx['label'], 'local_user' => ['id' => $fx['id'], 'email' => $fx['email'], 'name' => $fx['label']]];
-$spec = static fn(string $view): array => ['kind' => 'student', 'query' => ['view' => $view], 'session' => $session, 'storage' => $tmp, 'opcache_dir' => $opcacheDir];
+// v80.2: kalibrace stroje (referenční stránka ve stejném procesu, tools/lib/v61_perf_calibration.php) – čas se porovnává normalizovaný
+v61_ref_prepare($opcacheDir . '-ref');
+$spec = static fn(string $view): array => ['kind' => 'student', 'query' => ['view' => $view], 'session' => $session, 'storage' => $tmp, 'opcache_dir' => $opcacheDir, 'ref_dir' => $opcacheDir . '-ref'];
 
 // ---------------------------------------------------------------- 1) měření přehledu
-$dash = v61_perf_measure($spec('dashboard'), V67P_RUNS, []);
-$floor = v61_perf_measure($spec('privacy'), V67P_RUNS, []);
 $limit = v61_effective_limit_ms(V61_BUDGET_STUDENT_MS);
+$dash = v61_perf_measure_stable($spec('dashboard'), V67P_RUNS, [], $limit);
+$floor = v61_perf_measure($spec('privacy'), V67P_RUNS, []);
 $check('přehled: HTTP 200 bez chyby a bez přesměrování', $dash !== null && $dash['status'] === 200 && !$dash['error'] && $dash['location'] === '' && $dash['bytes'] > 5000);
 $check(sprintf('přehled: čtení úložiště ≤ %d (naměřeno %d)', V67P_MAX_READS, (int)($dash['calls'] ?? 999)), $dash !== null && $dash['calls'] <= V67P_MAX_READS);
 $check(sprintf('přehled: žádný soubor se nečte víc než %d× (max_same %d)', V67P_MAX_SAME, (int)($dash['max_same'] ?? 99)), $dash !== null && $dash['max_same'] <= V67P_MAX_SAME);
-$check(sprintf('přehled: medián z %d běhů %.1f ms ≤ limit v61 %.1f ms (60 ms + tolerance šumu; limit beze změny)', V67P_RUNS, (float)($dash['ms'] ?? 0), $limit), $dash !== null && $dash['ms'] <= $limit);
+$check(sprintf('přehled: medián z %d běhů %.1f ms, zpomalení stroje %.2f× → normalizovaně %.1f ms ≤ limit v61 %.1f ms (60 ms + tolerance šumu; limit beze změny, v80.2 kalibrace)', V67P_RUNS, (float)($dash['ms'] ?? 0), (float)($dash['slowness'] ?? 0), (float)($dash['norm_ms'] ?? 0), $limit), $dash !== null && $dash['slow_ok'] && $dash['norm_ms'] <= $limit);
 $check(sprintf('přehled: HTML %.1f KB je menší než před v67 (%.1f KB)', ($dash['bytes'] ?? 0) / 1024, V67P_HTML_BEFORE_BYTES / 1024), $dash !== null && $dash['bytes'] < V67P_HTML_BEFORE_BYTES);
-$gap = $dash !== null && $floor !== null ? round($dash['ms'] - $floor['ms'], 1) : -1;
-$reached = ($dash['ms'] ?? 999) <= V67P_TARGET_MS ? ' (cíl splněn)' : ' (cíl nesplněn: podlaha stroje je blízko cíle)';
-echo sprintf("INFO  cíl ≤ %.0f ms: přehled %.1f ms, nejlehčí stránka (soukromí) %.1f ms = podlaha stroje; přehled je o %.1f ms nad podlahou%s\n", V67P_TARGET_MS, (float)($dash['ms'] ?? 0), (float)($floor['ms'] ?? 0), $gap, $reached);
+$gap = $dash !== null && $floor !== null ? round($dash['norm_ms'] - $floor['norm_ms'], 1) : -1;
+$reached = ($dash['norm_ms'] ?? 999) <= V67P_TARGET_MS ? ' (cíl splněn)' : ' (cíl nesplněn: podlaha stroje je blízko cíle)';
+echo sprintf("INFO  cíl ≤ %.0f ms: přehled %.1f ms, nejlehčí stránka (soukromí) %.1f ms = podlaha stroje; přehled je o %.1f ms nad podlahou%s\n", V67P_TARGET_MS, (float)($dash['norm_ms'] ?? 0), (float)($floor['norm_ms'] ?? 0), $gap, $reached);
 
 // ---------------------------------------------------------------- 2) GET nezapisuje
 $before = v67p_snapshot($tmp);

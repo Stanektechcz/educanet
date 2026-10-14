@@ -1,5 +1,5 @@
 /* EDUCANET v68 · tmavá vrstva cockpitu (soubory Labu) – GENEROVÁNO tools/v68_dark_overlay.php ze souborů assets/*.css, ručně neupravovat. Načítá se jen při tmavém motivu. */
-/* lab-editor-v58.css (sha256 149b688a2ec9) */
+/* lab-editor-v58.css (sha256 39ed1716fe22) */
 html:not([data-theme="light"]) .lab58e{--e58-ink:var(--edu-ink, #ffffff);--e58-muted:#ecf5ff;--e58-line:#373a3b;--e58-card:#171717;--e58-soft:#202121;--e58-accent:var(--edu-teal-dark, #00d2e8);--e58-accent-soft:var(--edu-teal-soft, #222626);--e58-ok:#ffffff;--e58-ok-soft:#242725;--e58-bad:#ffeeef;--e58-bad-soft:#2a2626;--e58-warn:#ffe2d6;--e58-warn-soft:#25231e;color:var(--e58-ink)}
 html:not([data-theme="light"]) .lab58e-head p{color:var(--e58-muted)}
 html:not([data-theme="light"]) .lab58e-classes a{border:1px solid var(--e58-line);border-radius:999px;color:var(--e58-ink);background:var(--e58-card)}

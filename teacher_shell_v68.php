@@ -26,9 +26,9 @@ function teacher68_theme_attr(string $tab): string
 function teacher68_head_html(string $tab): string
 {
     $scheme = ui67_color_scheme($tab, null, UI68_TEACHER_DARK_TABS);
-    $v = '?v=' . TEACHER68_ASSET_VERSION;
+    // v80.2: verze = čas změny souboru (jako asset_url žáka) – tokeny v61 se ve v80.2 změnily (písmo ≥ 14 px), stará kopie nesmí zůstat v cache
     $html = '<meta name="color-scheme" content="' . e($scheme) . '">'
-        . '<link rel="stylesheet" href="assets/tokens-v61.css' . $v . '"><link rel="stylesheet" href="assets/tokens-palette-v68.css' . $v . '">';
+        . '<link rel="stylesheet" href="' . e(teacher68_css_href('assets/tokens-v61.css')) . '"><link rel="stylesheet" href="' . e(teacher68_css_href('assets/tokens-palette-v68.css')) . '">';
     return $html;
 }
 
@@ -78,7 +78,8 @@ function teacher68_stylesheets_html(string $tab): string
 function teacher68_shell_css_html(string $tab): string
 {
     return teacher68_link_html('assets/teacher-shell-v68.css') . teacher68_link_html('assets/teacher-contrast-v69.css') . teacher68_link_html('assets/cockpit-v70.css') . teacher68_dark_html($tab)   // v69: kontrast malých popisků (AA)
-        . nav781_css_html($tab);   // v78.1: tokeny a komponenty v78 + navigace (4 sekce, drawer, spodní lišta)
+        . nav781_css_html($tab)   // v78.1: tokeny a komponenty v78 + navigace (4 sekce, drawer, spodní lišta)
+        . teacher68_link_html('assets/a11y-cockpit-v80-2.css');   // v80.2: cíle 44 px, kontrast a fokus starších vrstev (audit tools/v80_2_a11y_audit.php)
 }
 
 /** Tři tlačítka vzhledu (POST s CSRF, funguje bez JS, aria-pressed = aktuální volba). */

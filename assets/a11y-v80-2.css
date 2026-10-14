@@ -1,0 +1,10 @@
+/* v80.2 · opravy přístupnosti starších vrstev žáka (44 px, kontrast) – docs/DESIGN_SYSTEM_V78.md §12 */
+.topbar a.brand{display:inline-flex;align-items:center;min-height:44px;min-width:44px}
+.v506-dashboard-quiet-links a{display:inline-flex!important;align-items:center;justify-content:center;min-height:44px;opacity:1!important}
+.v507-shell-kicker a{display:inline-flex;align-items:center;min-height:44px;min-width:44px;opacity:1}
+.v56-tabs a{display:inline-flex;align-items:center;min-height:44px}
+.v56-lesson-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))}
+.v56-lesson-card.is-current .v56-lesson-no{background:var(--edu-orange-soft);color:var(--edu-ink);box-shadow:inset 0 0 0 2px var(--edu-orange-dark)}
+.lab57-pack-levels li a,.lab57-pack-levels li .lab57-level-locked{min-height:44px}
+.dev-entry>summary{display:flex;align-items:center;min-height:44px}
+.auth54-code b{color:inherit}

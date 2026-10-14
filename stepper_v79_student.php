@@ -49,7 +49,7 @@ function tb79_render_task(string $classId, string $studentKey, string $task): vo
     $labels = tb79_labels();
     $w = sp79s_words();
     echo sp79_student_assets_html() . '<p><a class="ui-link" href="?view=ulohy">← ' . e(tr('Úlohy s variantami')) . '</a></p>'
-        . '<section class="l75-task sp79-flow" aria-labelledby="tb75-h-' . e($task) . '"><h2 id="tb75-h-' . e($task) . '">' . e(tb75_t_title($task)) . '</h2>'
+        . '<section class="l75-task sp79-flow" aria-labelledby="tb75-h-' . e($task) . '"><h1 class="tb79-title" id="tb75-h-' . e($task) . '">' . e(tb75_t_title($task)) . '</h1>'
         . sp79_bar_html($labels, $step, $reach, static fn(int $k): string => tb79_url($task, $k), $w) . sp79_errors_html([], $w);
     $prompt = '<p class="l75-muted">' . e(tr('Varianta {n} – jen tvoje. Pokusů v této variantě: {used} z {max}.', ['n' => $e['round'], 'used' => $e['tries'], 'max' => TB75_TRIES])) . '</p>'
         . '<p class="l75-prompt"' . edu_content_lang_attr() . '>' . e((string)$v['prompt']) . '</p>' . ($v['data'] !== [] ? '<pre class="l75-data"' . edu_content_lang_attr() . '>' . e(implode("\n", $v['data'])) . '</pre>' : '');

@@ -389,7 +389,7 @@ function teacher58_modules(): array
         'projekty65' => [
             'label' => 'Cyklus projektů', 'hint' => 'Návrhy, rubriky, hodnocení, peer review a týmy', 'group' => 'podpora',
             'files' => ['competencies_v62.php', 'evidence_v62.php', 'projects_v65.php', 'projects_v65_rubrics.php', 'projects_v65_peer.php', 'projects_v65_team.php', 'projects_v65_evidence.php', 'projects_v65_teacher_actions.php', 'projects_v65_teacher_views.php'],
-            'css' => ['assets/projects-v65.css'],
+            'css' => ['assets/tokens-v78.css', 'assets/projects-v65.css'],   // v80.2: projects-v65 na tokenech v78 (kořen .p65.ds78)
             'post' => ['proj65_t_' => 'proj65_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { proj65_render_teacher_tab($c, $csrf()); },
         ],

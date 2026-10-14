@@ -4,7 +4,7 @@
 .fair64-league.fair64-bronze,.fair64-badge.fair64-bronze{color:#5a3a12}
 .fair64-league.fair64-silver,.fair64-badge.fair64-silver{color:#2c3a44}
 .fair64-league.fair64-gold,.fair64-badge.fair64-gold{color:#5a4300}
-.fair64-badge{display:inline-block;margin-left:.4rem;padding:.1rem .5rem;border:1px solid currentColor;border-radius:999px;font-size:.85rem}
+.fair64-badge{display:inline-block;margin-left:.4rem;padding:.1rem .5rem;border:1px solid currentColor;border-radius:999px;font-size:.875rem}
 .fair64-list{padding-left:1.2rem}
 .fair64-list li{min-height:44px;display:flex;align-items:center;gap:.4rem}
 .fair64-list a{display:inline-flex;align-items:center;min-height:44px}

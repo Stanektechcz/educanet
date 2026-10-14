@@ -39,7 +39,7 @@
 .t59-account h3 { margin: 0; font-size: 1.05rem; }
 .t59-account.is-disabled { opacity: .78; }
 .t59-chips { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 10px 0; }
-.t59-chips li { border: 1px solid var(--line, var(--k156)); border-radius: 999px; padding: 3px 10px; font-size: .85rem; }
+.t59-chips li { border: 1px solid var(--line, var(--k156)); border-radius: 999px; padding: 3px 10px; font-size: .875rem; }
 .t59-chips li.warn { border-color: var(--bad, var(--k158)); color: var(--bad, var(--k158)); font-weight: 600; }
 .t59-edit { margin-top: 10px; }
 .t59-edit > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-weight: 600; }
@@ -57,7 +57,7 @@
   .teacher-login-brand .teacher-login-title { margin-top: 34px; }
 }
 .teacher-account .teacher-account-link {
-  display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; font-size: .82rem; font-weight: 700;
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; font-size: .875rem; font-weight: 700;
   color: inherit; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap;
 }
 .teacher-account .teacher-account-link:focus-visible { outline: 3px solid var(--accent, var(--k12)); outline-offset: 2px; }

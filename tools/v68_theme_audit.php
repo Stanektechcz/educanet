@@ -29,15 +29,16 @@ foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.ph
 
 /** Velikosti cockpitových CSS před v68 (B) a SHA-256 žákovských CSS, která v68 nesmí změnit. */
 const V68T_SIZES = ['teacher.css' => 29613, 'teacher-ops-v46.css' => 18875, 'teacher-overview-v61.css' => 2962, 'teacher-accounts-v59.css' => 5119, 'lab-teacher-v58.css' => 4958, 'ops-v58.css' => 1409, 'identity-v58.css' => 2409, 'accounts-v58.css' => 6721];
+// v80.2: SHA přepočtené – písmo ≥ 14 px (tools/v80_2_font_floor.php), --u-faint a --ui-text-xs pro kontrast a 14 px (změna limitu, BUILD_MANIFEST_V80_2.md)
 const V68T_STUDENT_SHA = [
-    'app.css' => '9a16b9b98494f2a343a7e363a6559bed551b43b41b2c981664d74460447f1bed', 'mastery.css' => '27355d611cef59fe7aa0da58ebdf876d940f8424ec166d3220a8cf38fe7a44a1',
-    'student-ui-v50-7-7.css' => '71ade236237a47aac7a06a97f7654b75e644884bf0bc2412310ccef7286e0ba6', 'brand-v54.css' => '0b4348884a0c8b111933a546309500661afac0919ca5ff3ede80f1d4d16d5eea',
-    'login-v63.css' => 'f7c02db8a26c46afb2fc146a31bd60227e65bea0b8984261a85e967dc5061931', 'student-v55.css' => '3663155bc3a77d1211a269606fbd390e61bb7b6f6b565a18f4c9ab8a93dacb9b',   // v77: kontrast LVL/XP přes tokeny (změna limitu, BUILD_MANIFEST_V77.md)
+    'app.css' => '556486e786018ea4b193ea463e601b561e091871da563c3dedb66421dff3342b', 'mastery.css' => 'faaee26a03d054164c65c5688af9bb122269a350cbf8ce674de8d785a85b5072',
+    'student-ui-v50-7-7.css' => '2a8d5d9efaf1b5150087c2203026a2ca3ead58420cc584a6d15978c12e7f071b', 'brand-v54.css' => '5f51a6171b7cb61cded3207e366de24e92857bd681ca9d5b305f9c04767d7707',
+    'login-v63.css' => 'c0f38bbcc25a4fd3d24f1e259864b68eafc9c9297d57a4ba376264aae95fbe81', 'student-v55.css' => 'f5bf6e6e9de6a6b007912438ec6e495a0b8ac14c20ec6e48c3e8745b390d0607',   // v77: kontrast LVL/XP přes tokeny (změna limitu, BUILD_MANIFEST_V77.md)
    
-    'ui-v51.css' => 'c33d507419aa3097e1573108ce0f1d3bd54856dc00c6090666d7b816afcf3fcf', 'session-v53.css' => 'f1f7b4ed2ab8fc8a21b54d6ea8c99af33537ddfc4c84d28f711cb5007793bc91',
-    'learning-v56.css' => '8acf4703d512ce50c9d25badb92a2010c223185618bd20bc39382826d68497fd', 'profile-v60.css' => '2c80cbe4b0f6eaa83df6a32fbd33e0a50a241b79786324e9fff13cdb09832fec',
+    'ui-v51.css' => 'c60eae26547f3e846054f61ffaf1760f2750a59a43ef9887542c29b6ec4d1b96', 'session-v53.css' => 'c3efce0904e0625a58e9b02bcb41e7361675c05000208d6294c0ea31633fdeed',
+    'learning-v56.css' => '98f6f37e5ba1efa4cc0510a0268c7ecec7d57bd682d6014986a2d8d902e0757d', 'profile-v60.css' => '1bc655ec53d5d81a5f94d46a4f4e4af49eb5c5aaf8d9eb1a6a594fdd233e3bb4',
     'components-v61.css' => 'b760f9084777b6c04bba3aebdc30bf9bdc200ab5a03cbfafd210725febf1f237', 'nav-v61.css' => '8afd79e49431e65bdd518bfcf43a7dfb67282d868688186e67cd191f114eb0ff',
-    'tokens-v61.css' => 'e7905e9dc563f26c24ca3dc8fc17cc4fe25b1919229e40d59fee65e05b0b002d', 'tokens-dark-v67.css' => '5fc4fe79666dafe3c87f69920dc250eefbd03242a84c6c0b8ab2dc70e4397093',
+    'tokens-v61.css' => 'c7a46d48208185a56ae3051847d909f1b62de9d66c8787288e386422e95baef8', 'tokens-dark-v67.css' => '5fc4fe79666dafe3c87f69920dc250eefbd03242a84c6c0b8ab2dc70e4397093',
 ];
 const V68T_RETIRED_SHA = '675d9a59e955e7ffed7252538a331bdd50e4cdf05f2aaea2e84f8285adbe9848';
 const V68T_INPLACE = ['teacher.css', 'teacher-ops-v46.css', 'teacher-overview-v61.css', 'teacher-accounts-v59.css', 'lab-teacher-v58.css', 'ops-v58.css', 'identity-v58.css', 'accounts-v58.css', 'teacher-shell-v68.css'];

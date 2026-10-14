@@ -46,7 +46,7 @@ function lv75_render_student_block(string $classId, int $lessonNo): void
     $pick = lv75_pick_of($classId, $studentKey, $lessonNo);
     $chosen = is_array($pick) ? (string)$pick['l'] : '';
     echo '<link rel="stylesheet" href="' . e(function_exists('asset_url') ? asset_url('assets/learn-v75.css?v=75.0') : 'assets/learn-v75.css?v=75.0') . '">'
-        . '<section class="l75-levels" id="urovne" aria-labelledby="lv75-h"><h2 id="lv75-h">' . e(tr('Vyber si úroveň')) . '</h2>'
+        . '<section class="l75-levels ds78" id="urovne" aria-labelledby="lv75-h"><h2 id="lv75-h">' . e(tr('Vyber si úroveň')) . '</h2>'
         . '<p class="l75-muted">' . tr_html('Aktivita: {activity}', ['activity' => edu_cs((string)$levels['activity'])]) . '</p>'
         . '<p class="l75-suggest" role="note"><span class="l75-chip is-accent">' . e(tr('Doporučení')) . '</span> ' . e(lv75_t_reason($suggest)) . '</p>'
         . '<p class="l75-muted">' . e(tr('Úroveň volíš ty – nic se tím nehodnotí a můžeš ji změnit. Učitel vidí jen, kolik žáků zvolilo kterou úroveň.')) . '</p><div class="l75-level-grid">';

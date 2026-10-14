@@ -1,11 +1,11 @@
-/* GENEROVÁNO tools/v68_tokenize_css.php --derive ze souboru assets/arena-v64.css (sha256 e896926b1faa177b) – ručně neupravovat. */
+/* GENEROVÁNO tools/v68_tokenize_css.php --derive ze souboru assets/arena-v64.css (sha256 41eca793f8ccf57e) – ručně neupravovat. */
 /* EDUCANET v64 · ligy, zlepšení, role a retrospektiva týmových her, cockpit Ekonomika */
 .fair64-card,.tg64-card{margin:1rem 0;padding:1rem;border:1px solid var(--k849);border-radius:12px;background:var(--k3);color:var(--k187)}
 .fair64-league{font-size:1.2rem;margin:.25rem 0}
 .fair64-league.fair64-bronze,.fair64-badge.fair64-bronze{color:var(--k850)}
 .fair64-league.fair64-silver,.fair64-badge.fair64-silver{color:var(--k851)}
 .fair64-league.fair64-gold,.fair64-badge.fair64-gold{color:var(--k852)}
-.fair64-badge{display:inline-block;margin-left:.4rem;padding:.1rem .5rem;border:1px solid currentColor;border-radius:999px;font-size:.85rem}
+.fair64-badge{display:inline-block;margin-left:.4rem;padding:.1rem .5rem;border:1px solid currentColor;border-radius:999px;font-size:.875rem}
 .fair64-list{padding-left:1.2rem}
 .fair64-list li{min-height:44px;display:flex;align-items:center;gap:.4rem}
 .fair64-list a{display:inline-flex;align-items:center;min-height:44px}

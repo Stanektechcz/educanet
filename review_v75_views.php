@@ -13,7 +13,7 @@ require_once __DIR__ . '/taskbank_v75_views.php';
 
 function rv75_render_student_page(string $classId, string $studentKey): void
 {
-    echo tb75_css_link() . '<div class="l75-wrap"><h1>' . e(tr('Opakování před písemkou')) . '</h1>';
+    echo tb75_css_link() . '<div class="l75-wrap ds78"><h1>' . e(tr('Opakování před písemkou')) . '</h1>';
     $pack = rv75_pack($classId);
     if ($pack === null) {
         echo '<div class="l75-empty" role="status"><strong>' . e(tr('Teď tu žádné opakování není.')) . '</strong> '

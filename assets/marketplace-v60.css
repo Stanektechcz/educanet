@@ -10,7 +10,7 @@
 .mkt60-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:14px;margin-bottom:20px;}
 .mkt60-card{display:flex;flex-direction:column;gap:8px;min-width:0;padding:16px;border-radius:var(--ui-radius,16px);background:var(--ui-surface,#fff);border:1px solid var(--ui-line,#dde3e8);color:var(--ui-ink,#111827);overflow-wrap:anywhere;}
 body:not(.assessment-mode) .mkt60-card p{color:var(--ui-muted,#374151);margin:0;}
-.mkt60-type{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ui-muted,#4b5563);}
+.mkt60-type{font-size:.875rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ui-muted,#4b5563);}
 .mkt60-card-foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:auto;}
 .mkt60-soldout{padding:6px 10px;border-radius:8px;background:var(--ui-surface-2,#eef2f5);color:var(--ui-ink,#111827);}
 .mkt60-buy-form{min-width:0;}

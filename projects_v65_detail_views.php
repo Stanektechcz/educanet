@@ -18,7 +18,7 @@ function p65v_render_detail(array $record, string $classId, string $studentKey, 
 {
     p65v_assets();
     $settings = proj65_settings($classId, (string)$record['project_id']);
-    echo '<div class="p65"><section class="p65-card"><p><a href="?view=projekt65">' . e(tr('Zpět na projekty')) . '</a></p><h1>' . e((string)$record['title']) . '</h1>'
+    echo '<div class="p65 ds78"><section class="p65-card"><p><a href="?view=projekt65">' . e(tr('Zpět na projekty')) . '</a></p><h1>' . e((string)$record['title']) . '</h1>'
         . p65v_steps($record) . '<p><span class="p65-badge">' . e(p65v_state_label((string)$record['state'])) . '</span></p></section>';
     if ($flash !== '') echo '<div class="notice" role="status">' . e($flash) . '</div>';
     p65v_render_state_area($record, $settings);

@@ -37,7 +37,7 @@ function tb75_status_label(array $e): array
 
 function tb75_render_page(string $classId, string $studentKey, string $task): void
 {
-    echo tb75_css_link() . '<div class="l75-wrap">';
+    echo tb75_css_link() . '<div class="l75-wrap ds78">';
     $tasks = tb75_tasks_for_class($classId);
     if ($tasks === []) {
         echo '<h1>' . e(tr('Úlohy s variantami')) . '</h1><div class="l75-empty" role="status"><strong>' . e(tr('Pro tvou třídu zatím úlohy s variantami nejsou.')) . '</strong> '

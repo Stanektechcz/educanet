@@ -1,57 +1,58 @@
 /* EDUCANET v75 · žák: úlohy s variantami, úrovně v hodině, připnuté práce v portfoliu, opakování před písemkou.
-   Jen tokeny v61/v67 (světlý i tmavý vzhled), cíle dotyku ≥ 44 px, viditelný fokus, 390 px bez vodorovného posunu. */
-.l75-wrap { max-width: 920px; margin: 0 auto; padding: var(--ui-space-4, 16px); color: var(--ui-ink); }
-.l75-wrap h1 { margin: 0 0 var(--ui-space-2, 8px); font-size: var(--ui-text-xl, 1.5rem); }
-.l75-lead { margin: 0 0 var(--ui-space-4, 16px); max-width: 70ch; line-height: var(--ui-leading, 1.55); }
-.l75-muted { color: var(--ui-muted); font-size: var(--ui-text-sm, .875rem); }
-.l75-chip { display: inline-block; padding: 0 var(--ui-space-2, 8px); border-radius: var(--ui-radius-pill, 999px); background: var(--ui-surface-2); color: var(--ui-ink); border: 1px solid var(--ui-line); font-size: var(--ui-text-xs, .75rem); line-height: 1.8; }
-.l75-chip.is-ok { color: var(--ui-ok-ink); border-color: currentColor; }
-.l75-chip.is-warn { background: var(--ui-warn-soft); color: var(--ui-warn-ink); }
-.l75-chip.is-accent { background: var(--ui-accent-soft); color: var(--ui-accent-ink); }
-.l75-empty { padding: var(--ui-space-4, 16px); border: 1px dashed var(--ui-dashed, var(--ui-line)); border-radius: var(--ui-radius-sm, 12px); background: var(--ui-surface); line-height: var(--ui-leading, 1.55); }
-.l75-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--ui-space-3, 12px); margin: 0; padding: 0; list-style: none; }
-.l75-card, .l75-task, .l75-levels { padding: var(--ui-space-4, 16px); border: 1px solid var(--ui-line); border-radius: var(--ui-radius, 16px); background: var(--ui-surface); min-width: 0; overflow-wrap: anywhere; }
-.l75-card h2 { margin: 0 0 var(--ui-space-2, 8px); font-size: var(--ui-text-lg, 1.15rem); }
-.l75-card h2 a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ui-accent-ink, var(--ui-accent)); }
-.l75-task { margin: 0 0 var(--ui-space-4, 16px); }
-.l75-task h2, .l75-levels h2 { margin: 0 0 var(--ui-space-2, 8px); font-size: var(--ui-text-lg, 1.15rem); }
-.l75-prompt { font-weight: 600; line-height: var(--ui-leading, 1.55); }
-.l75-data { margin: var(--ui-space-2, 8px) 0; padding: var(--ui-space-3, 12px); border-radius: var(--ui-radius-sm, 12px); background: var(--ui-surface-2); color: var(--ui-ink); overflow-x: auto; max-width: 100%; font-size: var(--ui-text-sm, .875rem); white-space: pre-wrap; overflow-wrap: anywhere; }
-.l75-form { display: grid; gap: var(--ui-space-3, 12px); margin-top: var(--ui-space-3, 12px); }
-.l75-field { display: grid; gap: var(--ui-space-1, 4px); padding: var(--ui-space-2, 8px); border-radius: var(--ui-radius-sm, 12px); border: 1px solid transparent; }
-.l75-field.is-ok { border-color: var(--ui-ok-ink); }
-.l75-field.is-miss { border-color: var(--ui-bad-ink); background: var(--ui-bad-soft); }
-.l75-field label { font-weight: 600; }
-.l75-field input, .l75-field select, .l75-form textarea, .l75-form input, .l75-form select { min-height: 44px; padding: var(--ui-space-2, 8px) var(--ui-space-3, 12px); border: 1px solid var(--ui-field-border); border-radius: var(--ui-radius-sm, 12px); background: var(--ui-surface); color: var(--ui-ink); font: inherit; max-width: 100%; box-sizing: border-box; }
-.l75-mark { font-size: var(--ui-text-sm, .875rem); font-weight: 600; }
-.l75-field.is-ok .l75-mark { color: var(--ui-ok-ink); }
-.l75-field.is-miss .l75-mark { color: var(--ui-bad-ink); }
-.l75-result { margin: var(--ui-space-3, 12px) 0; padding: var(--ui-space-3, 12px); border-radius: var(--ui-radius-sm, 12px); border-left: 4px solid var(--ui-accent); background: var(--ui-surface-2); }
-.l75-result.is-ok { border-left-color: var(--ui-ok-ink); }
-.l75-result.is-miss { border-left-color: var(--ui-warn-ink); background: var(--ui-warn-soft); color: var(--ui-warn-ink); }
-.l75-key { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--ui-space-1, 4px) var(--ui-space-3, 12px); margin: 0 0 var(--ui-space-3, 12px); }
-.l75-key dt { margin: 0; }
-.l75-key dd { margin: 0; overflow-wrap: anywhere; }
-.l75-actions, .l75-form button { justify-self: start; }
-.l75-wrap .btn, .l75-levels .btn, .pf75-forms .btn, .pf75-pin .btn { min-height: 44px; }
-.l75-levels { margin: var(--ui-space-5, 24px) 0; }
-.l75-suggest { margin: var(--ui-space-2, 8px) 0; line-height: var(--ui-leading, 1.55); }
-.l75-level-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--ui-space-3, 12px); margin-top: var(--ui-space-3, 12px); }
-.l75-level { display: flex; flex-direction: column; gap: var(--ui-space-2, 8px); padding: var(--ui-space-3, 12px); border: 1px solid var(--ui-line); border-radius: var(--ui-radius-sm, 12px); background: var(--ui-surface-2); min-width: 0; }
-.l75-level h3 { margin: 0; font-size: var(--ui-text, .95rem); }
-.l75-level p { margin: 0; line-height: var(--ui-leading, 1.55); }
-.l75-level form { margin-top: auto; }
-.l75-level.is-suggested { border-color: var(--ui-accent); }
-.l75-level.is-chosen { border-width: 2px; border-color: var(--ui-ok-ink); }
-.pf75-list, .rv75-list { margin: var(--ui-space-3, 12px) 0; padding-left: 1.4em; display: grid; gap: var(--ui-space-3, 12px); }
-.pf75-pin h3 { margin: 0 0 var(--ui-space-1, 4px); font-size: var(--ui-text, .95rem); overflow-wrap: anywhere; }
-.pf75-pin h3 a { color: var(--ui-accent-ink, var(--ui-accent)); }
-.pf75-url { display: block; color: var(--ui-muted); font-size: var(--ui-text-xs, .75rem); font-weight: 400; overflow-wrap: anywhere; }
-.pf75-comment { padding: var(--ui-space-2, 8px) var(--ui-space-3, 12px); border-left: 4px solid var(--ui-accent); background: var(--ui-surface-2); border-radius: var(--ui-radius-sm, 12px); }
-.pf75-pin details summary, .pf75-forms summary, .rv75-q details summary { display: inline-flex; align-items: center; min-height: 44px; cursor: pointer; font-weight: 600; color: var(--ui-accent-ink, var(--ui-accent)); }
-.pf75-forms { display: grid; gap: var(--ui-space-2, 8px); margin-top: var(--ui-space-3, 12px); }
-.rv75-options { margin: var(--ui-space-1, 4px) 0; padding-left: 1.2em; }
-.l75-wrap a:focus-visible, .l75-wrap button:focus-visible, .l75-wrap input:focus-visible, .l75-wrap select:focus-visible, .l75-levels button:focus-visible,
-.pf75-forms :is(input, select, textarea, button, summary):focus-visible, .pf75-pin :is(a, button, textarea, summary):focus-visible, .rv75-q summary:focus-visible { outline: 3px solid var(--ui-focus, var(--ui-accent)); outline-offset: 2px; }
-@media (max-width: 480px) { .l75-wrap { padding: var(--ui-space-3, 12px); } .l75-key { grid-template-columns: 1fr; } }
-@media print { .l75-levels form, .pf75-forms, .pf75-pin details { display: none; } .pf75-pin, .pf75-comment { break-inside: avoid; } }
+   v80.2: převedeno na tokeny v78 (assets/tokens-v78.css) – kořeny .l75-wrap, .l75-levels a .p65 nesou třídu .ds78, takže světlý
+   i tmavý vzhled řídí tokeny (žák: podle zařízení); písmo jen --fs-* (nikdy < 14 px), cíle var(--target-min), viditelný fokus. Mrtvá třída .pf75-forms (v PHP ani JS se nevyskytuje) vyřazena. */
+.ds78.l75-wrap, .ds78.l75-levels { background: transparent; }
+.ds78.l75-wrap { max-width: 920px; margin: 0 auto; padding: var(--space-4); color: var(--text); }
+.ds78 .l75-wrap h1, .ds78.l75-wrap h1 { margin: 0 0 var(--space-2); font-size: var(--fs-xl); }
+.ds78 .l75-lead { margin: 0 0 var(--space-4); max-width: 70ch; line-height: var(--lh); }
+.ds78 .l75-muted { color: var(--muted); font-size: var(--fs-sm); }
+.ds78 .l75-chip { display: inline-block; padding: 0 var(--space-2); border-radius: var(--radius-pill); background: var(--surface-2); color: var(--text); border: var(--border-width) solid var(--line); font-size: var(--fs-sm); line-height: 1.8; }
+.ds78 .l75-chip.is-ok { background: var(--ok-soft); color: var(--ok); border-color: currentColor; }
+.ds78 .l75-chip.is-warn { background: var(--warn-soft); color: var(--warn); }
+.ds78 .l75-chip.is-accent { background: var(--accent-soft); color: var(--accent); }
+.ds78 .l75-empty { padding: var(--space-4); border: var(--border-width) dashed var(--border); border-radius: var(--radius-lg); background: var(--surface); line-height: var(--lh); }
+.ds78 .l75-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+.ds78 :is(.l75-card, .l75-task, .l75-levels) { padding: var(--space-4); border: var(--border-width) solid var(--line); border-radius: var(--radius-lg); background: var(--surface); min-width: 0; overflow-wrap: anywhere; }
+.ds78 .l75-card h2 { margin: 0 0 var(--space-2); font-size: var(--fs-lg); }
+.ds78 .l75-card h2 a { display: inline-flex; align-items: center; min-height: var(--target-min); color: var(--accent); }
+.ds78 .l75-task { margin: 0 0 var(--space-4); }
+.ds78 :is(.l75-task, .l75-levels) h2, .ds78.l75-levels h2 { margin: 0 0 var(--space-2); font-size: var(--fs-lg); }
+.ds78 .l75-task .tb79-title { margin: 0 0 var(--space-2); font-size: var(--fs-xl); }
+.ds78 .l75-prompt { font-weight: var(--fw-bold); line-height: var(--lh); }
+.ds78 .l75-data { margin: var(--space-2) 0; padding: var(--space-3); border-radius: var(--radius-lg); background: var(--surface-2); color: var(--text); overflow-x: auto; max-width: 100%; font-family: var(--font-mono); font-size: var(--fs-sm); white-space: pre-wrap; overflow-wrap: anywhere; }
+.ds78 .l75-form { display: grid; gap: var(--space-3); margin-top: var(--space-3); }
+.ds78 .l75-field { display: grid; gap: var(--space-1); padding: var(--space-2); border-radius: var(--radius-lg); border: var(--border-width) solid transparent; }
+.ds78 .l75-field.is-ok { border-color: var(--ok); }
+.ds78 .l75-field.is-miss { border-color: var(--danger); background: var(--danger-soft); }
+.ds78 .l75-field label { font-weight: var(--fw-bold); }
+.ds78 :is(.l75-field input, .l75-field select, .l75-form textarea, .l75-form input, .l75-form select) { min-height: var(--target-min); padding: var(--space-2) var(--space-3); border: var(--border-width) solid var(--border); border-radius: var(--radius-lg); background: var(--surface); color: var(--text); font: inherit; max-width: 100%; box-sizing: border-box; }
+.ds78 .l75-mark { font-size: var(--fs-sm); font-weight: var(--fw-bold); }
+.ds78 .l75-field.is-ok .l75-mark { color: var(--ok); }
+.ds78 .l75-field.is-miss .l75-mark { color: var(--danger); }
+.ds78 .l75-result { margin: var(--space-3) 0; padding: var(--space-3); border-radius: var(--radius-lg); border-left: 4px solid var(--accent); background: var(--surface-2); }
+.ds78 .l75-result.is-ok { border-left-color: var(--ok); }
+.ds78 .l75-result.is-miss { border-left-color: var(--warn); background: var(--warn-soft); color: var(--warn); }
+.ds78 .l75-key { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-1) var(--space-3); margin: 0 0 var(--space-3); }
+.ds78 .l75-key dt, .ds78 .l75-key dd { margin: 0; }
+.ds78 .l75-key dd { overflow-wrap: anywhere; }
+.ds78 .l75-actions, .ds78 .l75-form button { justify-self: start; }
+.ds78 :is(.l75-wrap, .l75-levels, .pf75-pin) .btn, .ds78.l75-wrap .btn, .ds78.l75-levels .btn { min-height: var(--target-min); }
+.ds78.l75-levels { margin: var(--space-5) 0; }
+.ds78 .l75-suggest { margin: var(--space-2) 0; line-height: var(--lh); }
+.ds78 .l75-level-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--space-3); margin-top: var(--space-3); }
+.ds78 .l75-level { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3); border: var(--border-width) solid var(--line); border-radius: var(--radius-lg); background: var(--surface-2); min-width: 0; }
+.ds78 .l75-level h3 { margin: 0; font-size: var(--fs-base); }
+.ds78 .l75-level p { margin: 0; line-height: var(--lh); }
+.ds78 .l75-level form { margin-top: auto; }
+.ds78 .l75-level.is-suggested { border-color: var(--accent); }
+.ds78 .l75-level.is-chosen { border-width: 2px; border-color: var(--ok); }
+.ds78 :is(.pf75-list, .rv75-list) { margin: var(--space-3) 0; padding-left: 1.4em; display: grid; gap: var(--space-3); }
+.ds78 .pf75-pin h3 { margin: 0 0 var(--space-1); font-size: var(--fs-base); overflow-wrap: anywhere; }
+.ds78 .pf75-pin h3 a { color: var(--accent); }
+.ds78 .pf75-url { display: block; color: var(--muted); font-size: var(--fs-sm); font-weight: var(--fw-normal); overflow-wrap: anywhere; }
+.ds78 .pf75-comment { padding: var(--space-2) var(--space-3); border-left: 4px solid var(--accent); background: var(--surface-2); border-radius: var(--radius-lg); }
+.ds78 :is(.pf75-pin details summary, .rv75-q details summary) { display: inline-flex; align-items: center; min-height: var(--target-min); cursor: pointer; font-weight: var(--fw-bold); color: var(--accent); }
+.ds78 .rv75-options { margin: var(--space-1) 0; padding-left: 1.2em; }
+.ds78 :is(.l75-wrap, .l75-levels, .pf75-pin, .rv75-q) :is(a, button, input, select, textarea, summary):focus-visible, .ds78.l75-wrap :is(a, button, input, select, textarea, summary):focus-visible { outline: var(--focus-width) solid var(--focus); outline-offset: 2px; }
+@media (max-width: 479px) { .ds78.l75-wrap { padding: var(--space-3); } .ds78 .l75-key { grid-template-columns: 1fr; } }
+@media print { .ds78 .l75-levels form, .ds78.l75-levels form, .ds78 .pf75-pin details { display: none; } .ds78 .pf75-pin, .ds78 .pf75-comment { break-inside: avoid; } }

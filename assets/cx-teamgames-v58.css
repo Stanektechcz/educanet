@@ -1,4 +1,4 @@
-/* GENEROVÁNO tools/v68_tokenize_css.php --derive ze souboru assets/teamgames-v58.css (sha256 dc580e6777c10d1d) – ručně neupravovat. */
+/* GENEROVÁNO tools/v68_tokenize_css.php --derive ze souboru assets/teamgames-v58.css (sha256 e0ed64c708e05c37) – ručně neupravovat. */
 /* EDUCANET v58 · Týmové hry (Štafeta, Bingo, Riskuj!, Přetahovaná, Správci sítě/webu, Úniková místnost).
    Prefix tg58-. Kontrast AA, respektuje prefers-reduced-motion, cíle dotyku >= 44px. */
 
@@ -30,7 +30,7 @@
 .tg58-card h3 { font-size: 1rem; margin: 14px 0 8px; }
 .tg58-card h3:first-child { margin-top: 0; }
 
-.tg58-badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .8rem; font-weight: 700; background: var(--tg-soft); color: var(--tg-ink); border: 1px solid var(--tg-line); }
+.tg58-badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .875rem; font-weight: 700; background: var(--tg-soft); color: var(--tg-ink); border: 1px solid var(--tg-line); }
 .tg58-badge.is-running { background: var(--tg-live-soft); color: var(--tg-live); border-color: var(--k798); }
 .tg58-badge.is-paused { background: var(--tg-warn-soft); color: var(--tg-warn); border-color: var(--k799); }
 .tg58-badge.is-finished, .tg58-badge.is-archived { background: var(--k800); color: var(--k801); }
@@ -42,7 +42,7 @@
 /* Odpočet (role=timer) */
 .tg58-clock { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 120px; padding: 10px 16px; border-radius: 14px; background: var(--tg-accent); color: var(--k3); text-align: center; }
 .tg58-clock.is-open { background: var(--k801); }
-.tg58-clock-label { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; opacity: .95; }
+.tg58-clock-label { font-size: .875rem; text-transform: uppercase; letter-spacing: .06em; opacity: .95; }
 .tg58-clock-value { font-size: 2rem; line-height: 1.1; font-variant-numeric: tabular-nums; font-weight: 800; }
 .tg58-clock.is-urgent { background: var(--tg-bad); }
 
@@ -67,7 +67,7 @@
 .tg58-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .tg58-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
 .tg58-table th, .tg58-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--tg-line); vertical-align: top; }
-.tg58-table th { font-size: .8rem; text-transform: uppercase; letter-spacing: .03em; color: var(--tg-muted); white-space: nowrap; }
+.tg58-table th { font-size: .875rem; text-transform: uppercase; letter-spacing: .03em; color: var(--tg-muted); white-space: nowrap; }
 .tg58-table td { font-variant-numeric: tabular-nums; }
 .tg58-list-plain, .tg58-list { list-style: none; margin: 0 0 8px; padding: 0; font-size: .92rem; }
 .tg58-list li { padding: 6px 0; border-bottom: 1px solid var(--tg-line); }
@@ -80,7 +80,7 @@
 
 /* Bingo */
 .tg58-bingo-grid { display: grid; gap: 8px; margin: 8px 0; grid-template-columns: repeat(var(--tg-bingo-size, 4), minmax(64px, 1fr)); }
-.tg58-bingo-cell { min-height: 64px; border: 1px solid var(--tg-line); border-radius: 10px; padding: 6px; background: var(--tg-card); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: .82rem; cursor: pointer; color: var(--tg-ink); }
+.tg58-bingo-cell { min-height: 64px; border: 1px solid var(--tg-line); border-radius: 10px; padding: 6px; background: var(--tg-card); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: .875rem; cursor: pointer; color: var(--tg-ink); }
 .tg58-bingo-cell:focus-visible { outline: 3px solid var(--tg-accent); outline-offset: 2px; }
 .tg58-bingo-cell.is-solved { background: var(--tg-live-soft); border-color: var(--k798); }
 .tg58-bingo-cell.is-solved::after { content: "✓"; font-weight: 800; color: var(--tg-live); }
@@ -94,7 +94,7 @@
 
 /* Riskuj! */
 .tg58-jeopardy-board { display: grid; gap: 6px; margin: 8px 0; grid-template-columns: repeat(var(--tg-jeop-size, 5), minmax(0, 1fr)); }
-.tg58-jeopardy-cat { font-size: .78rem; font-weight: 700; text-align: center; padding: 4px; }
+.tg58-jeopardy-cat { font-size: .875rem; font-weight: 700; text-align: center; padding: 4px; }
 .tg58-jeopardy-cell { min-height: 56px; border: 1px solid var(--tg-line); border-radius: 8px; background: var(--tg-accent-soft); color: var(--tg-accent); font-weight: 800; cursor: pointer; }
 .tg58-jeopardy-cell:disabled { background: var(--tg-soft); color: var(--tg-muted); cursor: default; }
 .tg58-jeopardy-cell:focus-visible { outline: 3px solid var(--tg-accent); outline-offset: 2px; }
@@ -102,7 +102,7 @@
 /* Přetahovaná */
 .tg58-tug-rope { position: relative; height: 34px; background: var(--tg-soft); border: 1px solid var(--tg-line); border-radius: 999px; margin: 12px 0; overflow: hidden; }
 .tg58-tug-rope i { position: absolute; top: 3px; bottom: 3px; left: 50%; width: 6px; margin-left: -3px; background: var(--tg-accent); border-radius: 999px; transform: translateX(0); }
-.tg58-tug-rope::before, .tg58-tug-rope::after { position: absolute; top: 50%; transform: translateY(-50%); font-weight: 800; font-size: .78rem; color: var(--tg-muted); }
+.tg58-tug-rope::before, .tg58-tug-rope::after { position: absolute; top: 50%; transform: translateY(-50%); font-weight: 800; font-size: .875rem; color: var(--tg-muted); }
 .tg58-tug-rope::before { content: "A"; left: 8px; }
 .tg58-tug-rope::after { content: "B"; right: 8px; }
 /* v58 A11Y-A3: textový stav vedle lana (stav nesmí nést informaci jen pozicí prvku). */
@@ -110,7 +110,7 @@
 
 /* Správci sítě / webu */
 .tg58-netadmin-map { display: grid; gap: 8px; margin: 8px 0; grid-template-columns: repeat(5, minmax(56px, 1fr)); }
-.tg58-node { min-height: 56px; border: 1px solid var(--tg-line); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .78rem; text-align: center; padding: 4px; text-decoration: none; color: var(--tg-ink); background: var(--tg-card); }
+.tg58-node { min-height: 56px; border: 1px solid var(--tg-line); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .875rem; text-align: center; padding: 4px; text-decoration: none; color: var(--tg-ink); background: var(--tg-card); }
 .tg58-node.is-free { background: var(--tg-warn-soft); border-color: var(--k799); }
 .tg58-node.is-mine { background: var(--tg-live-soft); border-color: var(--k798); }
 .tg58-node.is-other { background: var(--tg-soft); }
@@ -120,7 +120,7 @@
 /* Úniková místnost */
 .tg58-escape-lock { display: grid; gap: 8px; margin: 12px 0; }
 .tg58-escape-lock-parts { display: flex; flex-wrap: wrap; gap: 8px; }
-.tg58-escape-lock-parts label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; font-size: .85rem; }
+.tg58-escape-lock-parts label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; font-size: .875rem; }
 .tg58-escape-lock-parts input { width: 6em; text-transform: uppercase; font: inherit; padding: 8px; border: 1px solid var(--k807); border-radius: 8px; min-height: 44px; }
 .tg58-escape-role { font-size: 1.1rem; font-weight: 700; }
 
@@ -155,8 +155,8 @@
   /* v58 A11Y-A5: tabule Riskuj! má 4-5 sloupců podle her (--tg-jeop-size) – vynucené 3 sloupce
      rozjely hodnoty pod špatné kategorie. Sloupce zůstávají podle proměnné, jen se zmenší písmo/odsazení. */
   .tg58-jeopardy-board { gap: 4px; }
-  .tg58-jeopardy-cat { font-size: .68rem; padding: 2px; overflow-wrap: anywhere; }
-  .tg58-jeopardy-cell { min-height: 44px; font-size: .82rem; }
+  .tg58-jeopardy-cat { font-size: .875rem; padding: 2px; overflow-wrap: anywhere; }
+  .tg58-jeopardy-cell { min-height: 44px; font-size: .875rem; }
 }
 
 /* Projektor – samostatná stránka, tmavý vysoký kontrast */

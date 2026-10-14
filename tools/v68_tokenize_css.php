@@ -22,8 +22,9 @@ require_once __DIR__ . '/lib/v68_color.php';
 const TK68_DERIVED = [
     'app.css', 'mastery.css', 'hands-on-v50.css', 'cognitive-v43.css', 'learning-studio-v44.css', 'visual-simulation-v45.css', 'visual-practical-v48.css',
     'visual-labs-3a-v48-1.css', 'ui-v51.css', 'tutorial-v52.css', 'session-v53.css', 'brand-v54.css', 'linux-v57.css', 'arena-v57.css',
-    'arena-events-v58.css', 'marketplace-v60.css', 'projects-v60.css', 'feedback-v60.css', 'competency-v62.css', 'paths-v63.css', 'projects-v65.css',
+    'arena-events-v58.css', 'marketplace-v60.css', 'projects-v60.css', 'feedback-v60.css', 'competency-v62.css', 'paths-v63.css',
     'assessment-v66.css', 'arena-v64.css', 'motivation-v61.css', 'robots-v58.css', 'teamgames-v58.css',
+    // v80.2: projects-v65.css je na tokenech v78 (kořen .p65.ds78) – cockpit načítá originál, kopie cx-projects-v65.css vyřazena
 ];
 const TK68_LIGHT = 'assets/tokens-palette-v68.css';
 const TK68_DARK = 'assets/tokens-palette-dark-v68.css';

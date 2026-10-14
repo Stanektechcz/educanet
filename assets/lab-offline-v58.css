@@ -63,7 +63,7 @@ a:hover { color: var(--lab58off-ink); }
 .lab58off-badge {
   display: inline-block;
   margin: 0 0 6px;
-  font-size: 0.8rem;
+  font-size: .875rem;
   font-weight: 700;
   letter-spacing: 0.03em;
   color: var(--lab58off-teal-dark);
@@ -225,7 +225,7 @@ a:hover { color: var(--lab58off-ink); }
 .lab58off-footer {
   padding: 16px 20px 28px;
   text-align: center;
-  font-size: 0.85rem;
+  font-size: .875rem;
   color: #3a4a52;
 }
 

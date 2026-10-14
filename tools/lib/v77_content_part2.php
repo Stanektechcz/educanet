@@ -172,8 +172,9 @@ $dark = $read('assets/tokens-dark-v67.css');
 $tok = static fn(string $src, string $name): string => preg_match('/--' . preg_quote($name, '/') . ':\s*(#[0-9a-fA-F]{6})/', $src, $m) === 1 ? $m[1] : '#000000';
 $rLight = $ratio($tok($light, 'ui-muted'), $tok($light, 'ui-surface') === '#000000' ? '#ffffff' : $tok($light, 'ui-surface'));
 $rDark = $ratio($tok($dark, 'ui-muted'), $tok($dark, 'ui-surface'));
+// v80.2: písmo popisku LVL a nápovědy XP 8 / 10,9 px → 14 px (tools/v80_2_font_floor.php; změna limitu, BUILD_MANIFEST_V80_2.md)
 $check(sprintf('kontrast hlavičky žáka: popisek LVL a nápověda XP z tokenu --ui-muted na --ui-surface – světlý %.2f : 1, tmavý %.2f : 1 (≥ 4,5; dřív ≈ 3,07)', $rLight, $rDark),
-    $rLight >= 4.5 && $rDark >= 4.5 && str_contains($css, '.v55-lvl-ring b { font-size: .5rem; letter-spacing: .08em; color: var(--ui-muted') && str_contains($css, '.v55-lvl-meta small { font-size: .68rem; color: var(--ui-muted')
+    $rLight >= 4.5 && $rDark >= 4.5 && str_contains($css, '.v55-lvl-ring b { font-size: .875rem; letter-spacing: .08em; color: var(--ui-muted') && str_contains($css, '.v55-lvl-meta small { font-size: .875rem; color: var(--ui-muted')
     && str_contains($css, 'background: var(--ui-surface, #fff); text-decoration: none;') && !preg_match('/\.v55-lvl[^{]*\{[^}]*--u-faint/', $css));
 $check('dokumentace: CHANGELOG_V77.md, BUILD_MANIFEST_V77.md, docs/NAVOD_V77.md a sekce v77 v INSTALL.md', is_file($ROOT . '/CHANGELOG_V77.md') && is_file($ROOT . '/BUILD_MANIFEST_V77.md')
     && is_file($ROOT . '/docs/NAVOD_V77.md') && str_contains($read('INSTALL.md'), '## v77'));

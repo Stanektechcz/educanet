@@ -49,13 +49,13 @@ const DO69_VIEWS = [
     // tokenové vrstvy v78/v79 (tokens-v78, components-v78, stepper-v79, nav-student-v78-1) mají tmavý režim samy, proto tu nejsou.
     'ulohy' => [
         'css' => ['app.css', 'mastery.css', 'cognitive-v43.css', 'learning-studio-v44.css', 'visual-simulation-v45.css', 'student-ui-v50-7-7.css', 'ui-v51.css', 'tutorial-v52.css',
-            'session-v53.css', 'brand-v54.css', 'student-v55.css', 'learning-v56.css', 'components-v61.css', 'nav-v61.css', 'i18n-v59.css', 'learn-v75.css'],
+            'session-v53.css', 'brand-v54.css', 'student-v55.css', 'learning-v56.css', 'components-v61.css', 'nav-v61.css', 'i18n-v59.css'],   // v80.2: learn-v75.css je na tokenech v78 (tmavý režim sám)
         'js' => ['student-ui-v50-7-7.js', 'ui-v51.js', 'student-v55.js', 'learning-v56.js', 'nav-v61.js', 'i18n-v58.js', 'stepper-v79.js'],
         'out' => 'assets/dark/student-dark-ulohy-v69.css',
     ],
     'portfolio' => [
         'css' => ['app.css', 'mastery.css', 'cognitive-v43.css', 'learning-studio-v44.css', 'visual-simulation-v45.css', 'student-ui-v50-7-7.css', 'ui-v51.css', 'tutorial-v52.css',
-            'session-v53.css', 'brand-v54.css', 'student-v55.css', 'learning-v56.css', 'components-v61.css', 'nav-v61.css', 'i18n-v59.css', 'projects-v65.css', 'learn-v75.css'],
+            'session-v53.css', 'brand-v54.css', 'student-v55.css', 'learning-v56.css', 'components-v61.css', 'nav-v61.css', 'i18n-v59.css'],   // v80.2: projects-v65.css a learn-v75.css jsou na tokenech v78 (tmavý režim sám)
         'js' => ['student-ui-v50-7-7.js', 'ui-v51.js', 'student-v55.js', 'learning-v56.js', 'nav-v61.js', 'i18n-v58.js', 'projects-v65.js', 'stepper-v79.js'],
         'out' => 'assets/dark/student-dark-portfolio-v69.css',
     ],

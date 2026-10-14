@@ -16,8 +16,11 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  *   6) HTTP cache assetů: pravidlo pro dlouhou cache sedí na verze z asset_url(), ručně psané ?v= zůstává krátce,
  *   7) service worker (Node, atrapy API): přednačtení verzovaných assetů, nic z HTML žáka, offline stránka labu,
  *   8) tools/v61_perf_report.php běží nad úložištěm jen čtením a končí PERF_REPORT_OK/WARN.
+ *   v80.2: kalibrace stroje – každý měřicí proces po stránce změří pevnou referenční stránku (tools/lib/v61_perf_calibration.php);
+ *      čas stránky se normalizuje zpomalením stroje (limity beze změny) a poměr stránka/reference se porovná se základnou
+ *      (tools/lib/v61_perf_baseline.php, regrese > 20 % = FAIL); samotesty: +120 ms (spánek i práce CPU) a +30 % regrese.
  *
- *   php tools/v61_perf_audit.php
+ *   php tools/v61_perf_audit.php [--update-baseline[=3]]   (--update-baseline: N měření všech stránek → nová základna poměrů, nic jiného)
  * Dočasné úložiště (edu_audit_temp_storage), fiktivní žáci; ostrou storage/ nikdy nečte ani nezapisuje.
  * Konec: V61_PERF_AUDIT_OK checks=N failed=0.
  */
@@ -30,7 +33,7 @@ require_once __DIR__ . '/lib/audit_storage.php';
 $tmp = rtrim(str_replace(chr(92), '/', edu_audit_temp_storage('v61-perf')), '/');
 $opcacheDir = rtrim(str_replace(chr(92), '/', sys_get_temp_dir()), '/') . '/educanet-audit-opc-' . bin2hex(random_bytes(6));
 @mkdir($opcacheDir, 0700, true);
-register_shutdown_function(static function () use ($opcacheDir): void { edu_audit_remove_dir($opcacheDir); });
+register_shutdown_function(static function () use ($opcacheDir): void { edu_audit_remove_dir($opcacheDir); edu_audit_remove_dir($opcacheDir . '-ref'); });
 require_once $ROOT . '/bootstrap.php';
 require_once $ROOT . '/app/lib.php';
 require_once __DIR__ . '/lib/audit.php';
@@ -67,7 +70,7 @@ function v61a_changed(array $before, array $after): array
 
 function v61a_spec(string $kind, array $page, array $session, string $dir, string $opcache): array
 {
-    return ['kind' => $kind, 'query' => $page['query'], 'session' => $session, 'storage' => $dir, 'opcache_dir' => $opcache];
+    return ['kind' => $kind, 'query' => $page['query'], 'session' => $session, 'storage' => $dir, 'opcache_dir' => $opcache, 'ref_dir' => $opcache . '-ref'];
 }
 
 // ---------------------------------------------------------------- 1) fixture
@@ -93,25 +96,57 @@ $perfEnv = ['EDUCANET_TEACHER_EXPORT_KEY' => $TEACHER_KEY];
 $pages = [];
 foreach (v61_student_pages() as $p) $pages[] = ['student', $p];
 foreach (v61_teacher_pages($fx['class']) as $p) $pages[] = ['teacher', $p];
+// v80.2: kalibrace – pevná referenční stránka (měří ji každý měřicí proces hned po stránce) a základna poměrů pro tento stroj
+$check('kalibrace: referenční stránka připravena (' . V61_REF_PAGE_FILES . ' knihoven, ' . V61_REF_PAGE_DATA . ' souborů dat, deterministický obsah)', v61_ref_prepare($opcacheDir . '-ref'));
+$baseline = v61_perf_baseline();
+$baselineHere = $baseline['pages'] !== [] && $baseline['machine'] === v61_machine_id();
+$updateRounds = 0;
+foreach (array_slice($argv, 1) as $arg) if (preg_match('/^--update-baseline(?:=(\d+))?$/', (string)$arg, $um) === 1) $updateRounds = max(1, min(5, (int)($um[1] ?? 3) ?: 3));
+if ($updateRounds > 0) {
+    // Nová základna: N měření každé stránky (medián poměrů) – nic jiného se nekontroluje; změna základny = změna limitu (zapsat do manifestu).
+    $ratios = [];
+    for ($round = 1; $round <= $updateRounds; $round++) {
+        foreach ($pages as [$kind, $page]) {
+            $m = v61_perf_measure(v61a_spec($kind, $page, $kind === 'student' ? $studentSession : $teacherSession, $tmp, $opcacheDir), V61A_RUNS, $perfEnv);
+            if ($m === null || !$m['slow_ok']) { echo 'FAIL základna: měření ' . $page['id'] . " selhalo nebo je stroj přetížený\n"; exit(1); }
+            $ratios[$page['id']][] = $m['ratio'];
+            printf("kolo %d %-24s %6.1f ms ref %5.1f ms poměr %.3f\n", $round, $page['id'], $m['ms'], $m['ref_ms'], $m['ratio']);
+        }
+    }
+    $new = array_map('v61_median', $ratios);
+    $ok = v61_perf_write_baseline($new, $updateRounds . '× medián z ' . V61A_RUNS . ' běhů');
+    echo ($ok ? 'V61_PERF_BASELINE_OK pages=' . count($new) : 'V61_PERF_BASELINE_FAIL') . ' machine=' . v61_machine_id() . "\n";
+    exit($ok ? 0 : 1);
+}
 $results = [];
 foreach ($pages as [$kind, $page]) {
-    // v76: stabilní měření – 2 zahřívací běhy, medián z 11, při překročení limitu nejvýš 2 opakovaná kola (platí nejnižší medián kola).
+    // v76: stabilní měření – 2 zahřívací běhy, medián z 11, při nesplnění nejvýš 2 opakovaná kola (platí nejlepší kolo).
+    // v80.2: porovnává se normalizovaný čas (ms / zpomalení stroje) s nezměněným limitem a poměr stránka/reference se základnou.
     $limitMs = v61_effective_limit_ms($kind === 'student' ? V61_BUDGET_STUDENT_MS : V61_BUDGET_TEACHER_MS);
     // opakované kolo se spustí už nad rozpočtem bez tolerance (žák 60 ms), aby i souhrnný medián 20 stránek nebyl rukojmím jednoho hlučného kola
-    $m = v61_perf_measure_stable(v61a_spec($kind, $page, $kind === 'student' ? $studentSession : $teacherSession, $tmp, $opcacheDir), V61A_RUNS, $perfEnv, $kind === 'student' ? V61_BUDGET_STUDENT_MS : $limitMs);
+    $retryMs = $kind === 'student' ? V61_BUDGET_STUDENT_MS : $limitMs;
+    $base = $baselineHere ? (float)($baseline['pages'][$page['id']] ?? 0) : 0.0;
+    $m = v61_perf_measure_stable(v61a_spec($kind, $page, $kind === 'student' ? $studentSession : $teacherSession, $tmp, $opcacheDir), V61A_RUNS, $perfEnv,
+        static fn(array $r): bool => $r['slow_ok'] && $r['norm_ms'] <= $retryMs && !v61_is_regression($r['ratio_all'], $base));
     $results[$page['id']] = ['kind' => $kind, 'm' => $m];
     $label = ($kind === 'student' ? 'žák ' : 'učitel ') . $page['id'] . ($m !== null && ($m['rounds'] ?? 1) > 1 ? ' (kol měření: ' . $m['rounds'] . ')' : '');
     if ($m === null) { $check($label . ': měření proběhlo (' . (string)($GLOBALS['v61_perf_last_error'] ?? '?') . ')', false); continue; }
     $clean = $m['status'] === 200 && !$m['error'] && $m['location'] === '' && $m['bytes'] > 500;
     $kb = round($m['bytes'] / 1024, 1);
     $okKb = $kind === 'teacher' || $kb <= V61_BUDGET_STUDENT_KB;
-    $check(sprintf('%s: HTTP 200 bez chyby/přesměrování, %.1f ms (min %.1f, limit %.1f), %.1f KB%s, čtení %d', $label, $m['ms'], $m['ms_min'], $limitMs, $kb, $kind === 'student' ? ' (limit ' . V61_BUDGET_STUDENT_KB . ')' : '', $m['calls']), $clean && $m['ms'] <= $limitMs && $okKb);
+    $check(sprintf('%s: HTTP 200 bez chyby/přesměrování, %.1f ms (min %.1f; stroj %.2f×%s → %.1f ms, limit %.1f), %.1f KB%s, čtení %d', $label, $m['ms'], $m['ms_min'], $m['slowness_raw'], $m['slow_ok'] ? '' : ' PŘETÍŽENÝ – zopakovat', $m['norm_ms'], $limitMs, $kb, $kind === 'student' ? ' (limit ' . V61_BUDGET_STUDENT_KB . ')' : '', $m['calls']), $clean && $m['slow_ok'] && $m['norm_ms'] <= $limitMs && $okKb);
+    if ($baselineHere) {
+        $check(sprintf('%s: poměr stránka/reference %.3f (z %d běhů) ≤ základna %.3f + %d %% (regrese kódu)', $label, $m['ratio_all'], $m['runs_all'], $base, (int)(V61_REGRESSION_TOLERANCE * 100)), $base > 0 && !v61_is_regression($m['ratio_all'], $base));
+    }
 }
+if (!$baselineHere) echo 'INFO  základna poměrů je ' . ($baseline['pages'] === [] ? 'prázdná' : 'z jiného stroje') . ' – porovnání s ní se přeskakuje (absolutní limity platí); nová: php tools/v61_perf_audit.php --update-baseline' . "\n";
+$check('kalibrace: zpomalení stroje během měření (medián ' . v61_median(array_map(static fn(array $r): float => (float)($r['m']['slowness_raw'] ?? 0), $results)) . '×, uznatelné ≤ ' . V61_SLOWNESS_MAX . '×) – jinak se měření neuznává',
+    count(array_filter($results, static fn(array $r): bool => $r['m'] !== null && $r['m']['slow_ok'])) === count($results));
 $over = array_filter($results, static fn(array $r): bool => $r['m'] !== null && ($r['m']['max_same'] > V61A_MAX_SAME || $r['m']['calls'] > V61A_MAX_READS));
 $check('N+1: žádná stránka nečte stejný soubor víc než ' . V61A_MAX_SAME . '× ani víc než ' . V61A_MAX_READS . ' čtení' . ($over ? ' (' . implode(', ', array_keys($over)) . ')' : ''), $over === []);
-$check('rozpočet: medián všech 20 stránek žáka ≤ ' . V61_BUDGET_STUDENT_MS . ' ms bez tolerance (celkově rychlé, ne jen výjimečně pod limitem)', (function () use ($results): bool {
+$check('rozpočet: medián všech 20 stránek žáka ≤ ' . V61_BUDGET_STUDENT_MS . ' ms bez tolerance, normalizovaně (celkově rychlé, ne jen výjimečně pod limitem)', (function () use ($results): bool {
     $ms = [];
-    foreach ($results as $r) if ($r['kind'] === 'student' && $r['m'] !== null) $ms[] = $r['m']['ms'];
+    foreach ($results as $r) if ($r['kind'] === 'student' && $r['m'] !== null) $ms[] = $r['m']['norm_ms'];
     return count($ms) === 20 && v61_median($ms) <= V61_BUDGET_STUDENT_MS;
 })());
 
@@ -119,8 +154,31 @@ $check('rozpočet: medián všech 20 stránek žáka ≤ ' . V61_BUDGET_STUDENT_
 $slowPage = v61_student_pages()[0];
 $slowLimit = v61_effective_limit_ms(V61_BUDGET_STUDENT_MS);
 $slow = v61_perf_measure_stable(v61a_spec('student', $slowPage, $studentSession, $tmp, $opcacheDir) + ['selftest_delay_ms' => (int)(2 * V61_BUDGET_STUDENT_MS)], 3, $perfEnv, $slowLimit);
-$check('samotest stabilizace: uměle zpomalená stránka (+' . (int)(2 * V61_BUDGET_STUDENT_MS) . ' ms) zůstane nad limitem ve všech ' . (1 + V61_REMEASURE_ROUNDS) . ' kolech (' . ($slow['ms'] ?? 0) . ' ms) – skutečná regrese se odhalí',
-    $slow !== null && $slow['ms'] > $slowLimit && ($slow['rounds'] ?? 0) === 1 + V61_REMEASURE_ROUNDS);
+$check('samotest stabilizace: uměle zpomalená stránka (+' . (int)(2 * V61_BUDGET_STUDENT_MS) . ' ms spánek) zůstane po normalizaci nad limitem ve všech ' . (1 + V61_REMEASURE_ROUNDS) . ' kolech (' . ($slow['ms'] ?? 0) . ' ms → ' . ($slow['norm_ms'] ?? 0) . ' ms) – skutečná regrese se odhalí',
+    $slow !== null && $slow['norm_ms'] > $slowLimit && ($slow['rounds'] ?? 0) === 1 + V61_REMEASURE_ROUNDS);
+// v80.2: totéž s prací CPU (+120 ms referenčního stroje) – zpomalí se se strojem stejně jako skutečný kód, normalizace ji neschová
+$slowCpu = v61_perf_measure_stable(v61a_spec('student', $slowPage, $studentSession, $tmp, $opcacheDir) + ['selftest_work_ms' => 2 * V61_BUDGET_STUDENT_MS], 3, $perfEnv, $slowLimit);
+$check('samotest kalibrace: stránka zpomalená prací CPU (+' . (int)(2 * V61_BUDGET_STUDENT_MS) . ' ms referenčního stroje) zůstane nad limitem ve všech ' . (1 + V61_REMEASURE_ROUNDS) . ' kolech (' . ($slowCpu['ms'] ?? 0) . ' ms, stroj ' . ($slowCpu['slowness_raw'] ?? 0) . '× → ' . ($slowCpu['norm_ms'] ?? 0) . ' ms)',
+    $slowCpu !== null && $slowCpu['norm_ms'] > $slowLimit && ($slowCpu['rounds'] ?? 0) === 1 + V61_REMEASURE_ROUNDS);
+// v80.2: samotest regrese +30 % – střídaně čistá stránka (A) a táž stránka s prací CPU navíc, dokud netrvá o 30 % déle (B, týž proces);
+// kola se sčítají stejně jako u kontroly základny (poměr ze všech běhů), B musí být regrese proti A, A proti A (kontrola falešného poplachu) ne.
+$regSpec = v61a_spec('student', ['id' => 'hodina', 'query' => ['view' => 'hodina']], $studentSession, $tmp, $opcacheDir);
+$rows = ['a' => [], 'b' => [], 'a1' => [], 'a2' => []];
+$regInfo = [];
+for ($round = 1; $round <= 1 + V61_REMEASURE_ROUNDS; $round++) {
+    $pair = v61_perf_measure_paired($regSpec, $regSpec + ['selftest_regress_pct' => 30], 9, $perfEnv);
+    $same = v61_perf_measure_paired($regSpec, $regSpec, 7, $perfEnv);
+    if ($pair === null || $same === null) break;
+    [$rows['a'], $rows['b'], $rows['a1'], $rows['a2']] = [array_merge($rows['a'], $pair['a']), array_merge($rows['b'], $pair['b']), array_merge($rows['a1'], $same['a']), array_merge($rows['a2'], $same['b'])];
+    $r = v61_perf_pair_ratios($pair['a'], $pair['b']);
+    $regInfo[] = sprintf('kolo %d: %+d %%', $round, (int)round(100 * ($r['b'] / max(0.001, $r['a']) - 1)));
+}
+$regAB = v61_perf_pair_ratios($rows['a'], $rows['b']);
+$regAA = v61_perf_pair_ratios($rows['a1'], $rows['a2']);
+$check(sprintf('samotest regrese: stránka zpomalená o 30 %% (práce CPU) je regrese – poměr %.3f → %.3f (%+d %%; %s; tolerance %d %%)', $regAB['a'], $regAB['b'], (int)round(100 * ($regAB['b'] / max(0.001, $regAB['a']) - 1)), implode(', ', $regInfo), (int)(V61_REGRESSION_TOLERANCE * 100)),
+    count($regInfo) === 1 + V61_REMEASURE_ROUNDS && v61_is_regression($regAB['b'], $regAB['a']));
+$check(sprintf('samotest regrese (kontrola falešného poplachu): čistá stránka proti sobě regresí není – poměr %.3f → %.3f (%+d %%)', $regAA['a'], $regAA['b'], (int)round(100 * ($regAA['b'] / max(0.001, $regAA['a']) - 1))),
+    count($regInfo) === 1 + V61_REMEASURE_ROUNDS && $regAA['a'] > 0 && !v61_is_regression($regAA['b'], $regAA['a']));
 
 // ---------------------------------------------------------------- 3) GET v ustáleném stavu nezapisuje
 $writers = [];
@@ -283,4 +341,5 @@ if (is_resource($pReport)) { foreach ($pipes as $pp) fclose($pp); $badExit = pro
 $check('v61_perf_report: s neplatným adresářem úložiště skončí chybou a nic neměří', $badExit === 1 || str_contains($badOut, 'FAIL') || $badExit === 1);
 
 echo "\nPoznámka: čas = medián z " . V61A_RUNS . " běhů, limit s tolerancí šumu " . (int)(V61_NOISE_TOLERANCE * 100) . " %; opcache = souborová cache (jako sdílená paměť v PHP-FPM).\n";
+echo 'Kalibrace v80.2: čas normalizovaný zpomalením stroje (referenční stránka ' . V61_REF_NOMINAL_MS . ' ms = 1×, max ' . V61_SLOWNESS_MAX . '×), regrese poměru > ' . (int)(V61_REGRESSION_TOLERANCE * 100) . " % proti základně.\n";
 exit(audit_summary($state, 'V61_PERF'));

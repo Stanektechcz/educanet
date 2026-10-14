@@ -1,0 +1,12 @@
+/* EDUCANET v80.2 · opravy přístupnosti starších vrstev cockpitu (audit tools/v80_2_a11y_audit.php): cíle 44 px, kontrast, fokus, tabulky v rámečku.
+   Jen existující proměnné (--ui-*); jen uvnitř #t68-main; poslední styl rámce (teacher_shell_v68.php). Popis: docs/DESIGN_SYSTEM_V78.md §12. */
+#t68-main :is(.ops-panel-actions a,.ops-attention-footer a,.teacher-panel-head a,[data-ops-health] footer a,a.text-link){display:inline-flex;align-items:center;min-height:44px}
+#t68-main :is(.bulk-action-menu>summary,.saved-filter-create>summary){min-height:44px}
+#t68-main .class-filter-clear{min-height:44px}
+#t68-main .c72-scroll{max-width:100%;overflow-x:auto}
+#t68-main label.bulk-select-visible{display:inline-flex;align-items:center;min-height:44px}
+#t68-main .result-check-col input[type="checkbox"],#t68-main .class-results-table thead input[type="checkbox"]{inline-size:44px;block-size:44px;margin:0}
+#t68-main .bulk-action-popover :is(select,input:not([type="checkbox"]):not([type="radio"])){min-width:44px}
+#t68-main .project-result-mini-list i{color:inherit}
+#t68-main .saved-filter-group-icon{color:var(--ui-muted)}
+#t68-main :is(input,select,textarea):is(:focus,:focus-visible){outline:3px solid var(--ui-focus,var(--ui-accent));outline-offset:2px}

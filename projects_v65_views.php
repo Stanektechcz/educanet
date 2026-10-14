@@ -74,7 +74,7 @@ function p65v_url(string $id = ''): string
 function p65v_render_home(string $classId, string $studentKey, string $flash): void
 {
     p65v_assets();
-    echo '<div class="p65"><section class="p65-card"><div class="eyebrow">' . e(tr('Projekty')) . '</div><h1>' . e(tr('Moje projekty')) . '</h1>'
+    echo '<div class="p65 ds78"><section class="p65-card"><div class="eyebrow">' . e(tr('Projekty')) . '</div><h1>' . e(tr('Moje projekty')) . '</h1>'
         . '<p>' . e(tr('Od návrhu po portfolio: každý krok vidíš na jednom místě.')) . '</p>'
         . '<p><a class="btn secondary" href="?view=portfolio">' . e(tr('Moje portfolio')) . '</a></p></section>';
     if ($flash !== '') echo '<div class="notice" role="status">' . e($flash) . '</div>';
