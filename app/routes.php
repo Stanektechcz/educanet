@@ -104,6 +104,7 @@ return [
         // v80 · Můj pokrok (?view=pokrok): kompetence v62 a cesty v63 jen ke čtení + doporučení dalšího kroku.
         'progress80' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'paths_v63_flow.php', 'support_v80_1.php', 'support_v80_1_views.php', 'progress_v80_views.php'],   // v80.1: Od učitele
         'learning80_post' => ['learning_v80_post.php'],
+        'vd82' => ['virtualni_dilna_v82.php'],
         'diagrams' => ['app/views/_diagrams.php'],
         // POST
         'lesson_path' => ['tutorial_v52.php', 'session_v53.php', 'learning_v56.php', 'question_meta_v66.php', 'assessment_v66.php'],
@@ -144,6 +145,7 @@ return [
         ['match' => ['course', 'topics', 'tools', 'knowledgebase'], 'file' => 'views/materials_redirect.php', 'libs' => []],
         ['match' => ['materialy', 'vysledky', 'lekce'], 'file' => 'views/lesson_path.php', 'libs' => ['layout', 'tutorial_views', 'lesson_path_views']],
         ['match' => ['lab', 'prikazy'], 'file' => 'views/linux_lab.php', 'libs' => ['layout', 'linux_lab']],
+        ['match' => ['virtualni_dilna'], 'file' => 'views/virtualni_dilna_v82.php', 'libs' => ['layout', 'vd82']],
         ['match' => ['roboti'], 'file' => 'views/games_v58.php', 'libs' => ['layout', 'robots']],
         ['match' => ['ctf', 'incident'], 'file' => 'views/arena_events_v58.php', 'libs' => ['layout', 'linux_lab', 'arena_events']],
         ['match' => ['hry'], 'file' => 'views/hry.php', 'libs' => ['layout', 'linux_lab', 'teamgames']],
@@ -207,6 +209,7 @@ return [
         ['match' => ['google_login', 'local_register', 'local_login', 'acc53_change_password', 'local_resend_verification', 'local_forgot_password', 'local_reset_password', 'link_google_account', 'link_account', 'enter_class', 'logout_class'], 'file' => 'actions/auth.php', 'libs' => ['auth']],
     ],
     'actions_class' => [
+        ['match' => ['vd82_answer', 'vd82_hint'], 'file' => 'actions/virtualni_dilna_v82.php', 'libs' => ['vd82']],
         ['match' => ['start_test', 'answer', 'continue_test', 'abort_test', 'start_practice', 'practice_hint', 'practice_answer', 'continue_practice', 'abort_practice'], 'file' => 'actions/assessment.php', 'libs' => []],
         ['match' => ['submit_extra', 'submit_graphics'], 'file' => 'actions/submissions.php', 'libs' => []],
         ['match' => ['mkt60_buy', 'mkt60_cosmetic_set'], 'file' => 'actions/marketplace.php', 'libs' => ['marketplace']],
