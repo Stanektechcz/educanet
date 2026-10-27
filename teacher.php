@@ -539,7 +539,7 @@ if(in_array($tab,['grade','groups','workspace'],true)){
 <?php elseif($tab==='interventions'): ?>
 <?php teacher_render_interventions($classId); teacher_render_ops_plus_interventions($classId); ?>
 <?php elseif($tab==='analytics'): ?>
-<?php teacher_render_analytics($classId); v50_render_teacher_heatmap($classId); ?>
+<?php teacher_render_analytics($classId); v50_render_teacher_heatmap($classId); require_once __DIR__ . '/virtualni_dilna_v82.php'; vd82_render_teacher_stats($classId); ?>
 <?php elseif($tab==='team_admin'): ?>
 <?php if(teacher59_mode()!=='legacy') teacher59_render_team_admin_notice(); else teacher_render_team_admin(); ?>
 <?php elseif($tab==='demo_accounts'): ?>
