@@ -1,0 +1,64 @@
+.vd82{max-width:1440px;margin:0 auto;padding:clamp(14px,2.5vw,32px);color:var(--text,#202c3b);font:inherit}
+.vd82 *{box-sizing:border-box}
+.vd82-intro{display:flex;gap:22px;align-items:center;justify-content:space-between;margin-bottom:19px}
+.vd82-intro h1{font-size:clamp(26px,3vw,40px);line-height:1.15;margin:5px 0 9px}
+.vd82-intro p{max-width:770px;line-height:1.55;margin:0;color:var(--muted,#52657b)}
+.vd82-kicker{font-size:.75rem;letter-spacing:.075em;font-weight:800;text-transform:uppercase;color:var(--primary,#366fbb)}
+.vd82-overview{flex:0 0 175px;background:var(--surface,#fff);border:1px solid var(--border,#dce3ea);border-radius:16px;padding:16px;display:grid;gap:5px;box-shadow:0 8px 25px #192e500a}
+.vd82-overview strong{font-size:1.65rem;font-variant-numeric:tabular-nums}
+.vd82-overview span{font-size:.83rem;color:var(--muted,#53677c)}
+.vd82-overview progress{width:100%;accent-color:#3382ca;height:8px}
+.vd82-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.vd82-tabs a{border:1px solid var(--border,#d4dfeb);background:var(--surface,#fff);border-radius:12px;color:inherit;padding:12px 16px;display:flex;gap:12px;align-items:center;text-decoration:none;min-height:46px;font-weight:700}
+.vd82-tabs a span{font-size:.77rem;font-weight:600;opacity:.7}
+.vd82-tabs a[aria-current="page"]{border-color:#357cc6;background:var(--primary-soft,#eef6ff);box-shadow:inset 0 0 0 1px #357cc6}
+.vd82-message{margin:12px 0;padding:13px 16px;border:1px solid #bdcfdc;background:var(--surface,#fff);border-radius:11px}
+.vd82-workspace{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(340px,.9fr);align-items:start;gap:22px}
+.vd82-screen{position:sticky;top:16px;overflow:hidden;border-radius:17px;background:#e8f1fa;border:1px solid #b9cbdc;box-shadow:0 18px 40px #0e273522}
+.vd82-screen-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 15px;background:#142a49;color:#e8f4ff;font-size:.75rem}
+.vd82-screen-top strong{font-size:.88rem}
+.vd82-screen-top>span:first-child{color:#f2bd67;letter-spacing:4px}
+.vd82-desktop{background:linear-gradient(135deg,#22558e,#407dba 52%,#192a6c);min-height:500px;padding:27px 20px 48px;position:relative}
+.vd82-file-window{width:min(100%,530px);margin:20px auto;border:1px solid #bed4eb;border-radius:11px;overflow:hidden;background:#f7faff;box-shadow:0 16px 40px #13294580;color:#18324a}
+.vd82-window-title{background:#e4eef8;padding:12px 15px;font-weight:700;display:flex;justify-content:space-between;gap:8px}
+.vd82-path{border-bottom:1px solid #cad7e8;padding:10px 15px;color:#4b5e73;font-size:.85rem}
+.vd82-filegrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:18px}
+.vd82-folder{display:flex;flex-direction:column;gap:4px;align-items:flex-start;padding:15px;min-height:125px;border:1px solid #cfdff0;border-radius:12px;background:#fff}
+.vd82-folder>span{font-size:1.7rem}.vd82-folder small{color:#586b7e;overflow-wrap:anywhere}
+.vd82-folder.vd82-restricted{background:#f4f4f7}
+.vd82-taskbar{position:absolute;bottom:0;left:0;right:0;padding:11px 15px;display:flex;justify-content:space-between;align-items:center;gap:8px;background:#112a4cdb;color:#fff;font-size:.78rem}
+.vd82-network{min-height:500px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:25px;background:radial-gradient(ellipse,#edf7ff,#d5e6fa 80%);color:#1e3857}
+.vd82-device,.vd82-router{display:flex;flex-direction:column;align-items:center;gap:4px;border:2px solid #abc3dd;border-radius:15px;padding:13px 20px;background:#fff;min-width:190px;text-align:center}
+.vd82-device>span,.vd82-router>span{font-size:2.3rem}
+.vd82-device small,.vd82-router small{color:#64758b}
+.vd82-router.is-on{border-color:#2b9476;background:#f1fff9}
+.vd82-wire{height:55px;min-width:110px;border-left:3px dashed #b65b59;margin-left:3px;padding:13px 14px;font-size:.79rem;color:#8e3d39}
+.vd82-wire.connected{border-color:#278a6b;color:#20775c}
+.vd82-network-note{border-radius:9px;background:#fff9;padding:12px 16px;font-weight:700;text-align:center}
+.vd82-simulation-note{margin:0;padding:12px 15px;background:#f7fbfe;color:#375878;font-size:.79rem}
+.vd82-missions{background:var(--surface,#fff);border:1px solid var(--border,#d8e1ec);border-radius:17px;padding:clamp(14px,2vw,24px)}
+.vd82-missions>header h2{font-size:1.4rem;margin:0 0 7px}
+.vd82-missions>header p{margin:0 0 17px;line-height:1.55;color:var(--muted,#53667c)}
+.vd82-missions ol{padding:0;list-style:none;display:grid;gap:11px}
+.vd82-mission{border:1px solid var(--border,#d8e3ed);border-radius:12px;padding:15px;background:var(--surface,#fff)}
+.vd82-mission.is-done{border-color:#9bceb7;background:color-mix(in srgb,var(--surface,#fff) 92%,#58b78b)}
+.vd82-step-head{display:flex;gap:10px;align-items:center}
+.vd82-step-head>span{display:grid;place-items:center;width:30px;height:30px;border:1px solid #b9d0e2;border-radius:50%;flex:0 0 30px;color:#396c95;font-weight:800}
+.vd82-mission.is-done .vd82-step-head>span{background:#247e64;border-color:#247e64;color:#fff}
+.vd82-step-head h3{font-size:1rem;line-height:1.3;margin:0}
+.vd82-mission>p{line-height:1.48;font-size:.91rem;margin:10px 0;color:var(--text,#334155)}
+.vd82-choice-form{display:grid;gap:8px}
+.vd82-choice-form label{font-size:.85rem;font-weight:700}
+.vd82-choice-form select{width:100%;min-height:46px;border:1px solid #b5c9d9;border-radius:9px;padding:10px 12px;color:var(--text,#293b4e);background:var(--surface,#fff);font:inherit}
+.vd82-primary{border:0;border-radius:9px;padding:12px 15px;min-height:44px;background:#2569ad;color:#fff;font:inherit;font-weight:700;cursor:pointer}
+.vd82-primary:hover{background:#185389}
+.vd82-hint-form{margin-top:7px}
+.vd82-hint-form button{min-height:44px;background:transparent;border:0;text-decoration:underline;color:var(--primary,#356fae);font:inherit;padding:8px 4px;cursor:pointer}
+.vd82-mission .vd82-warning{font-size:.83rem;color:#965926}
+.vd82-mission .vd82-hint{border-left:3px solid #4186bc;background:var(--primary-soft,#f0f7ff);padding:10px;border-radius:6px}
+.vd82-mission .vd82-completed{color:#177b56;font-weight:700;font-size:.83rem}
+.vd82-summary{padding-top:12px;border-top:1px solid var(--border,#e1e5eb);font-size:.84rem;color:var(--muted,#4e6379);line-height:1.5}
+.vd82 :is(button,a,select):focus-visible{outline:3px solid #e5a738;outline-offset:2px}
+@media(max-width:960px){.vd82-workspace{grid-template-columns:1fr}.vd82-screen{position:static}.vd82-network,.vd82-desktop{min-height:340px}}
+@media(max-width:610px){.vd82-intro{align-items:stretch;flex-direction:column}.vd82-overview{flex-basis:auto}.vd82-tabs{flex-direction:column}.vd82-filegrid{gap:8px;padding:10px}.vd82-folder{padding:10px;min-height:110px}}
+@media(prefers-reduced-motion:reduce){.vd82 *{scroll-behavior:auto!important;transition:none!important}}
