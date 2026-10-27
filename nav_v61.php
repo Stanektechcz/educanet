@@ -146,6 +146,7 @@ function nav61_group_learn(string $view, ?string $classId = null): array
         nav61_entry('?view=materialy&sekce=temata', trm('Témata a vysvětlení'), [], $view),
         nav61_entry('?view=materialy&sekce=programy', trm('Programy a zkratky'), [], $view),
         nav61_entry('?view=prikazy', trm('Linux příkazy'), ['prikazy'], $view),
+        nav61_entry('?view=virtualni_dilna', trm('Virtuální dílna'), ['virtualni_dilna'], $view),
         nav61_entry('?view=vysledky', trm('Výsledky'), ['vysledky', 'skills'], $view),
         ...$grading,
         ...nav61_v75_items($view, $classId),
