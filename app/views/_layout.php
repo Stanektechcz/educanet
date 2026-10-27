@@ -55,6 +55,7 @@ function render_header(string $title, ?array $module = null, bool $titleIsConten
     <?= ui67_assets_html((string)$view) ?>
     <?= ui67_dark_link_html((string)$view) /* v67: tmavé tokeny jen pro ověřené pohledy a jen při volbě „tmavý“/„podle systému“ */ ?>
     <?php if ($module !== null): ?><script src="<?= e(asset_url('assets/nav-v61.js?v=61.1')) ?>" defer></script><?php endif; ?>
+    <?php if ((string)$view === 'virtualni_dilna'): ?><link rel="stylesheet" href="<?= e(asset_url('assets/virtualni-dilna-v82.css?v=82')) ?>"><?php endif; ?>
     <?php if (in_array((string)$view, ['lab', 'prikazy'], true)): ?><link rel="stylesheet" href="<?= e(asset_url('assets/linux-v57.css?v=59.1')) ?>"><link rel="stylesheet" href="<?= e(asset_url('assets/arena-v57.css?v=57.0')) ?>"><link rel="stylesheet" href="<?= e(asset_url('assets/lab-floor-v80-2.css?v=80.2')) ?>"><?php /* v80.2: písmo ≥ 14 px (zamčené soubory labu) */ endif; ?>
     <?php if ($module === null && google_auth_configured()): ?><script src="https://accounts.google.com/gsi/client" async defer></script><?php endif; ?>
     <link rel="stylesheet" href="<?= e(asset_url('assets/i18n-v59.css?v=59.0')) ?>">
