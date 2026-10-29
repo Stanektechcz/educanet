@@ -151,17 +151,18 @@ foreach (['t-vysledky' => 'Výsledky', 't-streda' => 'Středa T-14'] as $id => $
 }
 $check('hustota: na Co řešit dnes a Dnešní hodině přepínač není (jen husté tabulky)', !str_contains($b['t-dnes'], 'data-v81-density-wrap') && !str_contains($b['t-hodina'], 'data-v81-density-wrap'));
 $domHead = $headOk($b['s-domu'], 'v81-head');
-$check('Domů: pozdrav v hlavičce v81 (h1 + účel), karta Dnes s jediným primárním tlačítkem, kruh pokroku textem, 4 dlaždice, bez patičkového Pokračovat',
-    is_string($domHead) && substr_count($b['s-domu'], 'student-primary-cta') === 1 && !str_contains($b['s-domu'], 'v55-page-cta') && preg_match('~class="h81-ring__value"><strong>\d+ %</strong>~', $b['s-domu']) === 1
-    && preg_match_all('~<a class="h81-tile v81-lift" href="\?view=(ulohy|cviceni|opakovat|portfolio)">~', $b['s-domu']) === 4 && str_contains($b['s-domu'], 'href="?view=pokrok"'));
-$check('Domů bez sérií: karta cílů ani výzva týdne neukazují „v sérii“ / „Série týdnů“ (motivace bez streaků)', !str_contains($b['s-domu'], 'mot61-streak') && !str_contains($b['s-domu'], 'Série týdnů') && str_contains($b['s-domu'], 'Dnešní cíle'));
+$check('Domů: pozdrav v hlavičce v81 (h1 + účel), karta Dnes s jediným primárním tlačítkem, kruh pokroku až v detailu, 4 dlaždice, bez patičkového Pokračovat',
+    is_string($domHead) && substr_count($b['s-domu'], 'student-primary-cta') === 1 && !str_contains($b['s-domu'], 'v55-page-cta') && !str_contains($b['s-domu'], 'h81-ring__value') && preg_match('~class="h81-ring__value"><strong>\d+ %</strong>~', $b['s-detail']) === 1
+    && preg_match_all('~<a class="h81-tile v81-lift" href="\?view=(ulohy|cviceni|opakovat|portfolio)">~', $b['s-domu']) === 4 && str_contains($b['s-detail'], 'href="?view=pokrok"'));
+$check('Domů bez sérií: karta cílů ani výzva týdne neukazují „v sérii“ / „Série týdnů“ (motivace bez streaků, až v detailu)', !str_contains($b['s-domu'], 'mot61-streak') && !str_contains($b['s-domu'], 'Série týdnů') && !str_contains($b['s-domu'], 'Dnešní cíle') && str_contains($b['s-detail'], 'Dnešní cíle'));
 $check('Domů: vrstva v81 (ui + home CSS, JS), kouč v47 se na běžném přehledu nenačítá, na ?details=1 ano', str_contains($b['s-domu'], 'assets/ui-v81.css') && str_contains($b['s-domu'], 'assets/home-v81.css') && str_contains($b['s-domu'], 'assets/ui-v81.js')
     && !str_contains($b['s-domu'], 'student-coach-v47') && str_contains($b['s-detail'], 'student-coach-v47.css') && !str_contains($b['s-materialy'], 'ui-v81.css'));
-foreach (['s-domu' => 'domu', 's-pokrok' => 'pokrok', 't-dnes' => 'dnes', 't-hodina' => 'hodina'] as $id => $hid) {
+foreach (['s-pokrok' => 'pokrok', 't-dnes' => 'dnes', 't-hodina' => 'hodina'] as $id => $hid) {
     $check('nápověda „Jak to funguje“ na ' . $id . ': skrytá bez JS, se zavíracím tlačítkem, až po h1', preg_match('~<aside class="v81-hint ds78" data-v81-hint="' . $hid . '" aria-label="[^"]+" hidden>~', $b[$id]) === 1
         && strpos($b[$id], 'data-v81-hint="' . $hid . '"') > strpos($b[$id], '<h1'));
 }
-$check('ikony: hlavní stránky používají sprite (Domů ≥ 8, Co řešit dnes ≥ 8 ikon)', substr_count($b['s-domu'], 'icons-v81.svg') >= 8 && substr_count($b['t-dnes'], 'icons-v81.svg') >= 8);
+$check('Domů: nápověda je nativně sbalená a dostupná i bez JS', str_contains($b['s-domu'], '<details class="ds-acc h81-help"><summary>') && !str_contains($b['s-domu'], 'data-v81-hint="domu"'));
+$check('ikony: hlavní stránky používají sprite (Domů ≥ 7, Co řešit dnes ≥ 8 ikon)', substr_count($b['s-domu'], 'icons-v81.svg') >= 7 && substr_count($b['t-dnes'], 'icons-v81.svg') >= 8);
 $check('Co řešit dnes: mřížka priorit seřazená podle naléhavosti (ol, 6 karet, stav textem), třídy bez signálů v jednom bloku „V pořádku“, prázdné stavy s ikonou',
     preg_match_all('~<li class="v81-prio__item is-(danger|warn|info|ok)" data-v81-prio="[a-z_]+">~', $b['t-dnes']) === 6 && str_contains($b['t-dnes'], '<ol class="v81-prio__list">')
     && preg_match_all('~class="v81-chip is-[a-z]+">~', $b['t-dnes']) === 6 && (str_contains($b['t-dnes'], 'class="v81-calm ds78"') || str_contains($b['t-dnes'], 'ops-attention-class')) && str_contains($b['t-dnes'], 'v81-state ds78 is-empty'));
@@ -196,7 +197,7 @@ if (!is_array($d) || isset($d['skip'])) {
 $check('prohlížeč: běh bez chyby a bez chyb JS na stránkách' . (isset($d['error']) ? ' [' . $d['error'] . ']' : '') . ($d['errors'] ? ' [' . implode(' | ', array_slice($d['errors'], 0, 3)) . ']' : ''), !isset($d['error']) && $d['errors'] === []);
 $pg = array_column($d['pages'], null, 'id');
 $check('ikony se vykreslí (velikost ≥ 12 px, aria-hidden, <use>) na Domů a Co řešit dnes; bez vodorovného posunu na 7 stránkách',
-    ($pg['s-domu']['iconOk'] ?? 0) >= 8 && ($pg['t-dnes']['iconOk'] ?? 0) >= 8 && ($pg['s-domu']['icons'] ?? 0) === ($pg['s-domu']['iconOk'] ?? -1) && count(array_filter($d['pages'], static fn(array $p): bool => $p['hscroll'])) === 0 && count($d['pages']) === 7);
+    ($pg['s-domu']['iconOk'] ?? 0) >= 7 && ($pg['t-dnes']['iconOk'] ?? 0) >= 8 && ($pg['s-domu']['icons'] ?? 0) === ($pg['s-domu']['iconOk'] ?? -1) && count(array_filter($d['pages'], static fn(array $p): bool => $p['hscroll'])) === 0 && count($d['pages']) === 7);
 $check('hlavička v81 s h1, účelem a primární akcí na Co řešit dnes; Domů h1 + účel', ($pg['t-dnes']['head'] ?? false) && $pg['t-dnes']['h1'] && $pg['t-dnes']['purpose'] && $pg['t-dnes']['primary'] === 1 && ($pg['s-domu']['h1'] ?? false) && $pg['s-domu']['purpose']);
 foreach ($d['density'] as $x) {
     $check('hustota ' . $x['id'] . ': viditelný přepínač, výchozí Komfortní → Kompaktní (nižší řádky) → po obnovení zůstává → zpět Komfortní',

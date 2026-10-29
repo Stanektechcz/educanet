@@ -77,7 +77,7 @@
 .student-cockpit .h81 .v5075-dashboard-detail-link a { padding: 0 var(--space-4); border-radius: var(--radius-pill); color: var(--accent); font-size: var(--fs-sm); font-weight: var(--fw-bold); text-decoration: underline; text-underline-offset: .2em; }
 
 @media (min-width: 768px) {
-  .student-cockpit .h81 .h81-hero { grid-template-columns: minmax(0, 1fr) minmax(16rem, 20rem); padding: var(--space-6); }
+  .student-cockpit .h81 .h81-hero { padding: var(--space-6); }
   .student-cockpit .h81 .h81-progress { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
   .student-cockpit .h81 .h81-ring { grid-row: auto; width: 8.5rem; height: 8.5rem; }
 }
@@ -88,3 +88,12 @@
 @media (prefers-reduced-motion: reduce) {
   .student-cockpit .h81 .student-primary-cta, .student-cockpit .h81 .student-primary-cta svg, .student-cockpit .h81 .p63-go { transition: none; transform: none; }
 }
+
+/* Quiet Focus: nápověda pod aktuální akcí, analytika jen v rozbaleném detailu. */
+.student-cockpit .h81 .h81-help { order: 1; margin: 0; }
+.student-cockpit .h81 .h81-help summary { min-height: var(--target-min); }
+.student-cockpit .h81 .h81-hero { grid-template-columns: minmax(0, 1fr); }
+.student-cockpit .h81 .h81-hero__action { justify-content: flex-start; }
+.student-cockpit .h81 .h81-hero__action .student-primary-cta { width: auto; max-width: 100%; }
+.student-cockpit .h81 .h81-tiles { margin: 0; }
+.student-cockpit .h81-detail { margin-bottom: var(--space-5); }

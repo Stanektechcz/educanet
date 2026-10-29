@@ -156,3 +156,7 @@
 
 /* text jen pro čtečky i mimo .ds78 (řazení ve starší tabulce Výsledků) */
 .class-results-table .ds-sr, .dt791-pager-only .ds-sr { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* Dlouhý stav lekce zůstává čitelný i v úzkém sloupci mobilu. */
+.ds78 .lt791-facts dd{min-width:0}
+.ds78 .lt791-facts .ds-badge{max-width:100%;white-space:normal;overflow-wrap:anywhere}

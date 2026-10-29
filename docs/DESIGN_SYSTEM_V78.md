@@ -222,3 +222,9 @@ Nad tokeny v78, žádné nové barvy. Soubory: `ui_v81.php`, `assets/icons-v81.s
 **Dělej / nedělej (v81):** na stránce **jedno** plné primární tlačítko (Domů: jen v kartě Dnes; karty Co dál / Výzva mají obrys) · ikonu vždy s textem ·
 nová stránka žáka s v81 = přidat pohled do `UI81_STUDENT_VIEWS` a ověřit rozpočet `tools/v61_design_audit.php` (nezvyšovat – udělat místo) ·
 **nedělej** série/„streaky“ na Domů, nápovědu viditelnou bez JS (nešla by zavřít), přechody delší než 200 ms, `localStorage` mimo `try/catch`.
+
+### Ověření Quiet Focus 29. 10. 2026
+Domů upřednostňuje kartu Dnes. Nápověda je nativně sbalená a funguje bez JavaScriptu.
+První otevření progresu ukazuje lekce, témata a projekty; kruh, cíle a výzvy jsou pod `Další detail`.
+XP v hlavičce jsou dostupné až v Menu účtu. Měsíce kalendáře podporují šipky, Home a End a mají propojené panely.
+Výsledky a reprodukce: `docs/TEST_2026-10-29.md`.

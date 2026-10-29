@@ -702,13 +702,26 @@ var EduI18n = window.EduI18n || {locale:'cs', tr:function(s,p){return String(s).
   document.querySelectorAll('[data-t52-tabs]').forEach((tabs) => {
     const btns = [...tabs.querySelectorAll('[data-t52-tab]')];
     const show = (id, anim) => {
-      btns.forEach((b) => b.setAttribute('aria-selected', b.dataset.t52Tab === id ? 'true' : 'false'));
+      btns.forEach((b) => {
+        const active = b.dataset.t52Tab === id;
+        b.setAttribute('aria-selected', String(active));
+        b.tabIndex = active ? 0 : -1;
+      });
       document.querySelectorAll('[data-t52-panel]').forEach((p) => {
         p.hidden = p.dataset.t52Panel !== id;
         if (!p.hidden && anim) reveal(p.children, { opacity: 0, y: 10, stagger: 0.04, duration: 0.3 });
       });
     };
     btns.forEach((b) => b.addEventListener('click', () => show(b.dataset.t52Tab, true)));
+    tabs.addEventListener('keydown', (ev) => {
+      const at = btns.indexOf(document.activeElement);
+      if (at < 0 || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(ev.key)) return;
+      ev.preventDefault();
+      const next = ev.key === 'Home' ? 0 : ev.key === 'End' ? btns.length - 1
+        : (at + (ev.key === 'ArrowRight' ? 1 : -1) + btns.length) % btns.length;
+      show(btns[next].dataset.t52Tab, false);
+      btns[next].focus();
+    });
     tabs.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest', inline: 'center' });
   });
 

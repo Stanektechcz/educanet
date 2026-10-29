@@ -132,7 +132,7 @@ body.accent-advanced { --t52-accent: #0f766e; --t52-accent-soft: #e7f4f2; }
 .t52-captions li.active { color: var(--t52-text); font-weight: 600; }
 .t52-captions li.active::before { background: var(--t52-accent); color: #fff; }
 .t52-scene-controls { display: flex; flex-wrap: wrap; gap: 6px; }
-.t52-scene-controls .btn { min-height: 34px !important; padding: 0 12px; }
+.t52-scene-controls .btn { min-height: 44px !important; padding: 0 12px; }
 .t52-noanim .t52-stage { display: none; }
 .t52-need { border-style: dashed; }
 .t52-work { border-color: color-mix(in srgb, var(--t52-accent) 30%, var(--t52-line)); }

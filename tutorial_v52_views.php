@@ -415,12 +415,12 @@ function tut52_render_calendar(string $classId, array $module, array $modules, a
       </section>
       <?php endif; ?>
 
-      <div class="t52-month-tabs" role="tablist" data-t52-tabs>
+      <div class="t52-month-tabs" role="tablist" aria-label="<?= e(tr('Měsíc')) ?>" data-t52-tabs>
         <?php foreach ($months as $ym): $m = (int)substr((string)$ym, 5, 2);
             $teach = 0;
             foreach ($byDate as $d => $r) if (str_starts_with((string)$d, (string)$ym) && ($r['status'] ?? '') === 'teaching') $teach++;
         ?>
-          <button type="button" role="tab" data-t52-tab="<?= e((string)$ym) ?>" aria-selected="<?= $ym === $activeMonth ? 'true' : 'false' ?>"><?= e(tut52_month_name($m)) ?><small><?= $teach ?></small></button>
+          <button type="button" role="tab" id="month-tab-<?= e((string)$ym) ?>" aria-controls="month-panel-<?= e((string)$ym) ?>" tabindex="<?= $ym === $activeMonth ? '0' : '-1' ?>" data-t52-tab="<?= e((string)$ym) ?>" aria-selected="<?= $ym === $activeMonth ? 'true' : 'false' ?>"><?= e(tut52_month_name($m)) ?><small><?= $teach ?></small></button>
         <?php endforeach; ?>
       </div>
 
@@ -429,7 +429,7 @@ function tut52_render_calendar(string $classId, array $module, array $modules, a
           $daysInMonth = (int)date('t', $first);
           $lead = (int)date('N', $first) - 1;
       ?>
-      <div class="cal54-month" data-t52-panel="<?= e((string)$ym) ?>" <?= $ym === $activeMonth ? '' : 'hidden' ?>>
+      <div class="cal54-month" role="tabpanel" id="month-panel-<?= e((string)$ym) ?>" aria-labelledby="month-tab-<?= e((string)$ym) ?>" data-t52-panel="<?= e((string)$ym) ?>" <?= $ym === $activeMonth ? '' : 'hidden' ?>>
         <section class="cal54" aria-label="<?= e(tr('Kalendář {month}', ['month' => tut52_month_name((int)substr((string)$ym, 5, 2))])) ?>">
           <div class="cal54-title"><?= e(tut52_month_name((int)substr((string)$ym, 5, 2))) ?> <?= e(substr((string)$ym, 0, 4)) ?></div>
           <div class="cal54-head"><?php foreach ([1, 2, 3, 4, 5, 6, 7] as $isoDow): ?><span><?= e(edu_weekday_short($isoDow)) ?></span><?php endforeach; ?></div>

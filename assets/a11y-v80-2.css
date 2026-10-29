@@ -8,3 +8,19 @@
 .lab57-pack-levels li a,.lab57-pack-levels li .lab57-level-locked{min-height:44px}
 .dev-entry>summary{display:flex;align-items:center;min-height:44px}
 .auth54-code b{color:inherit}
+
+/* 2026-10-29: opacity zeslabovala i už tak tlumený text pod limit AA. */
+.social-tags .muted-tag{opacity:1}
+.view-calendar .t52-date-big{background:var(--u-accent);color:var(--u-surface)}
+.view-calendar .t52-date-big span{color:inherit!important;opacity:1!important}
+.view-calendar .cal54-head span:nth-child(n+6),.view-calendar .cal54-cell.weekend .cal54-day{color:var(--u-muted)}
+
+.view-calendar .t52-subnav a,.view-calendar .t52-month-tabs button{min-height:44px}
+.view-community a{min-width:44px}
+
+.view-calendar .t52-date-big{width:max-content;min-width:84px;padding-inline:12px}
+
+/* Aktivní hodina: čísla kroků nesmějí být bílá na světlé oranžové. */
+.v56-rail-item.current b,.v56-rail-item.done b,.v56-phase-head b{background:var(--u-accent);color:var(--ui-on-accent)}
+.view-hodina .t52-svg .layer + text{font-size:14px;text-anchor:start}
+.view-hodina .v56-topic-nav a{min-height:44px}

@@ -101,8 +101,8 @@ async function checks(b, out) {
     out.density.push({ id, before: before.density, toggle: before.toggle, text: before.toggleText, after: after && after.density, reload: reload && reload.density, back: back && back.density, rowH });
     await pg.close();
   }
-  // 3) nápověda „Jak to funguje“: viditelná poprvé, zavřít → po načtení zavřená (žák i učitel)
-  for (const [id, ctx, url] of [['s-domu', ctxS, '/?view=dashboard'], ['t-dnes', ctxT, '/teacher.php?tab=attention']]) {
+  // 3) nápověda učitele: zavřít → po načtení zavřená; Domů má nativní details (visual_qa_2026_10_29.cjs).
+  for (const [id, ctx, url] of [['t-dnes', ctxT, '/teacher.php?tab=attention']]) {
     const pg = await ctx.newPage(); errs(pg, id);
     await pg.setViewportSize({ width: 1280, height: 800 });
     await pg.goto(BASE + url, { waitUntil: 'load' });
