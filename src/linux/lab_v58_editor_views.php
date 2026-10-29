@@ -11,7 +11,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * lab58e_render_teacher_tab(string $classId, string $csrf): void.
  */
 
-if (is_file(__DIR__ . '/lab_v58_editor.php')) require_once __DIR__ . '/lab_v58_editor.php';
+if (is_file(dirname(__DIR__, 2) . '/src/linux/lab_v58_editor.php')) require_once dirname(__DIR__, 2) . '/src/linux/lab_v58_editor.php';
 
 function lab58e_h(string $s): string
 {
@@ -52,7 +52,7 @@ function lab58e_render_teacher_tab(string $classId, string $csrf): void
     $rows = array_values(array_filter(lab58e_for_class($classId), static fn(array $r): bool => lab58e_classes_in_scope((array)($r['classes'] ?? []))));
     usort($rows, static fn(array $a, array $b): int => strcmp((string)($b['updated_at'] ?? ''), (string)($a['updated_at'] ?? '')));
     ?>
-    <link rel="stylesheet" href="<?= lab58e_h('assets/lab-editor-v58.css?v=' . (is_file(__DIR__ . '/assets/lab-editor-v58.css') ? filemtime(__DIR__ . '/assets/lab-editor-v58.css') : '58')) ?>">
+    <link rel="stylesheet" href="<?= lab58e_h('assets/lab-editor-v58.css?v=' . (is_file(dirname(__DIR__, 2) . '/assets/lab-editor-v58.css') ? filemtime(dirname(__DIR__, 2) . '/assets/lab-editor-v58.css') : '58')) ?>">
     <div class="lab58e">
       <header class="t52-page-head lab58e-head">
         <div><span class="t52-kicker">Linux Lab</span><h1>Editor úrovní</h1>
@@ -80,7 +80,7 @@ function lab58e_render_teacher_tab(string $classId, string $csrf): void
         </section>
       </div>
     </div>
-    <script src="<?= lab58e_h('assets/lab-editor-v58.js?v=' . (is_file(__DIR__ . '/assets/lab-editor-v58.js') ? filemtime(__DIR__ . '/assets/lab-editor-v58.js') : '58')) ?>" defer></script>
+    <script src="<?= lab58e_h('assets/lab-editor-v58.js?v=' . (is_file(dirname(__DIR__, 2) . '/assets/lab-editor-v58.js') ? filemtime(dirname(__DIR__, 2) . '/assets/lab-editor-v58.js') : '58')) ?>" defer></script>
     <?php
 }
 

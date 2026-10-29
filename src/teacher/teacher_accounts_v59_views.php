@@ -39,10 +39,10 @@ function teacher59_assignment_text(array $account): string
 function teacher59_head_assets(string $tab): void
 {
     if (teacher59_mode() === 'legacy' || $tab === 'ucitele') return; // záložka Učitelé má CSS/JS z registru v58
-    $css = __DIR__ . '/assets/teacher-accounts-v59.css';
+    $css = dirname(__DIR__, 2) . '/assets/teacher-accounts-v59.css';
     echo '<link rel="stylesheet" href="' . e('assets/teacher-accounts-v59.css?v=' . (is_file($css) ? (string)filemtime($css) : '59')) . '">';
     if ($tab === 'ucet') {
-        $js = __DIR__ . '/assets/teacher-accounts-v59.js';
+        $js = dirname(__DIR__, 2) . '/assets/teacher-accounts-v59.js';
         echo '<script src="' . e('assets/teacher-accounts-v59.js?v=' . (is_file($js) ? (string)filemtime($js) : '59')) . '" defer></script>';
     }
 }
@@ -271,7 +271,7 @@ function teacher59_render_card_print(): void
         echo teacher59_page('Kartička', '<section class="t59-card" role="alert"><h1>Kartička už není k dispozici</h1><p>Kartičku lze vytisknout jen jednou a do 10 minut od vydání hesla. Vydejte nové jednorázové heslo.</p><p><a class="btn secondary t59-btn" href="teacher.php?tab=ucitele">Zpět</a></p></section>');
         return;
     }
-    $js = __DIR__ . '/assets/teacher-accounts-v59.js';
+    $js = dirname(__DIR__, 2) . '/assets/teacher-accounts-v59.js';
     echo teacher59_page('Kartička učitele', '<section class="t59-print-card"><div class="eyebrow">EDUCANET · učitelský účet</div><h1>' . e($card['name']) . '</h1>'
         . '<dl class="t59-dl"><dt>Adresa</dt><dd>teacher.php</dd><dt>Přihlašovací jméno</dt><dd><code>' . e($card['login']) . '</code></dd>'
         . '<dt>Jednorázové heslo</dt><dd><code class="t59-otp">' . e($card['otp']) . '</code></dd><dt>Platí do</dt><dd>' . e(date('j. n. Y H:i', (int)$card['expires_at'])) . '</dd></dl>'

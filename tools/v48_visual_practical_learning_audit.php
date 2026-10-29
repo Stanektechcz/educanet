@@ -5,7 +5,7 @@ require_once __DIR__ . '/lib/app_source.php';
 
 if(PHP_SAPI!=='cli'){http_response_code(403);exit;}
 require dirname(__DIR__).'/bootstrap.php';
-require_once dirname(__DIR__).'/visual_practical_learning_views_v48.php';
+require_once dirname(__DIR__).'/src/lessons/visual_practical_learning_views_v48.php';
 
 function v48_audit_tree_hash(string $dir): array {
     $out=[];if(!is_dir($dir))return $out;$it=new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir,FilesystemIterator::SKIP_DOTS));
@@ -30,8 +30,8 @@ foreach($specs as $id=>$spec){
 foreach(['class_1a','class_2a','class_3a','class_4a'] as $cid)if(($counts[$cid]??0)!==28)$errors[]="$cid expected 28 specs, got ".($counts[$cid]??0);
 $after=v48_audit_tree_hash($root.'/storage');if($before!==$after)$errors[]='Read-only V48 spec/audit path changed storage.';
 
-$index=edu_app_source()?:'';$teacher=(file_get_contents($root.'/teacher.php')?:'').(file_get_contents($root.'/teacher_shell_v68.php')?:'');/* v68: odkazy na CSS cockpitu jsou v teacher_shell_v68.php */$lessonMode=file_get_contents($root.'/teacher_lesson_mode.php')?:'';$sw=file_get_contents($root.'/sw.js')?:'';
-foreach(['visual_practical_learning_views_v48.php','v48_prediction','v48_compare','v48_debug','v48_build','v48_transfer',"\$view === 'visual_lab'",'visual-practical-v48.css','visual-practical-v48.js'] as $needle)if(!str_contains($index,$needle))$errors[]='index.php missing '.$needle;
+$index=edu_app_source()?:'';$teacher=(file_get_contents($root.'/teacher.php')?:'').(file_get_contents($root.'/src/teacher/teacher_shell_v68.php')?:'');/* v68: odkazy na CSS cockpitu jsou v teacher_shell_v68.php */$lessonMode=file_get_contents($root.'/src/teacher/teacher_lesson_mode.php')?:'';$sw=file_get_contents($root.'/sw.js')?:'';
+foreach(['src/lessons/visual_practical_learning_views_v48.php','v48_prediction','v48_compare','v48_debug','v48_build','v48_transfer',"\$view === 'visual_lab'",'visual-practical-v48.css','visual-practical-v48.js'] as $needle)if(!str_contains($index,$needle))$errors[]='index.php missing '.$needle;
 foreach(['v48_orchestrate','v48_state','visual-practical-v48.css','visual-practical-v48.js'] as $needle)if(!str_contains($teacher,$needle))$errors[]='teacher.php missing '.$needle;
 if(!str_contains($lessonMode,'v48_render_teacher_orchestration'))$errors[]='teacher lesson mode missing V48 orchestration panel.';
 foreach(['visual-practical-v48.css?v=48','visual-practical-v48.js?v=48'] as $needle)if(!str_contains($sw,$needle))$errors[]='service worker missing '.$needle;

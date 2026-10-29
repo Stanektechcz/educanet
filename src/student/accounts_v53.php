@@ -11,7 +11,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * - hned po prvním přihlášení si žák musí nastavit vlastní heslo.
  */
 
-require_once __DIR__ . '/accounts_v58.php';
+require_once dirname(__DIR__, 2) . '/src/student/accounts_v58.php';
 
 /**
  * Bývalé společné heslo (do v57). Od v58 ho nedostane žádný účet – konstanta slouží jen k rozpoznání

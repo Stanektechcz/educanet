@@ -29,7 +29,7 @@ function v63fx_sid(string $classId, string $who): string
 /** Zapíše soupis obou tříd a postaví identitu. */
 function v63fx_seed(string $tmp): void
 {
-    foreach (['intake_v51.php', 'identity_v58.php'] as $lib) require_once dirname(__DIR__, 2) . '/' . $lib;
+    foreach (['src/student/intake_v51.php', 'src/student/identity_v58.php'] as $lib) require_once dirname(__DIR__, 2) . '/' . $lib;
     @mkdir($tmp . '/intake', 0700, true);
     $rows = [];
     $i = 0;

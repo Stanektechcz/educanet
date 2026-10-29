@@ -9,7 +9,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * třída mimo rozsah v GET filtru se tiše ignoruje (nic nevyzradí). Nic nezapisuje – ani asistent nemá co měnit.
  */
 
-require_once __DIR__ . '/arena_v61_duels.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v61_duels.php';
 
 const ARENA61_T_STATUS = ['pending' => 'Čeká na odpověď', 'accepted' => 'Probíhá', 'done' => 'Dokončeno', 'declined' => 'Odmítnuto', 'cancelled' => 'Zrušeno', 'expired' => 'Vypršelo'];
 

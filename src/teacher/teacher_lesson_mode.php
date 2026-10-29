@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/lesson_model_v71.php';   // v71: lekce i žákovská posloupnost přes jednotný model lm71
+require_once dirname(__DIR__, 2) . '/src/lessons/lesson_model_v71.php';   // v71: lekce i žákovská posloupnost přes jednotný model lm71
 
 function teacher_lesson_mode_find(string $classId, int $number): ?array
 {
@@ -51,7 +51,7 @@ function teacher_render_lesson_mode(string $classId, int $number): void
     $outputs=array_values(array_filter(array_map('strval',(array)($lesson['worksheet']??[])),static fn($v)=>trim($v)!==''));
     $knowledge=array_values(array_filter(array_map('strval',(array)($lesson['knowledge']??[])),static fn($v)=>trim($v)!==''));
     global $modules;
-    $lessonResources = require __DIR__ . '/learning_resources.php';
+    $lessonResources = require dirname(__DIR__, 2) . '/src/content/learning_resources.php';
     $v42Pack = v42_lesson_pack($classId,$lesson,$modules[$classId],$lessonResources,'');
     $v42Override = v42_lesson_resource_override($classId,$lesson);
     $v42LaneCounts=['guided'=>0,'standard'=>0,'challenge'=>0];

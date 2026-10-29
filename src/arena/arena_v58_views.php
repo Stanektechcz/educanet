@@ -9,8 +9,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * a panel učitele uvnitř záložky Aréna (`?tab=arena&rezim=hadanka`). Logika je v arena_v58_weekly.php.
  */
 
-require_once __DIR__ . '/arena_v57_views.php';
-require_once __DIR__ . '/arena_v58_weekly.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v57_views.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v58_weekly.php';
 
 // ---------------------------------------------------------------------------
 // Žák: ?view=hadanka

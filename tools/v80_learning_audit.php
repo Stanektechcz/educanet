@@ -25,9 +25,9 @@ $tmp = rtrim(str_replace(chr(92), '/', edu_audit_temp_storage('v80-learning')), 
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'runtime_content.php', 'app/lib.php', 'ui_v67.php', 'nav_v61.php',
-    'taskbank_v75_views.php', 'learning_v80_views.php', 'widgets_v80_views.php', 'learning_v80_post.php', 'progress_v80_views.php', 'retention_v76.php', 'evidence_v62.php', 'projects_v65.php',
-    'identity_v58.php', 'linux_v57_lab.php', 'student_v55.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/ops/runtime_content.php', 'app/lib.php', 'src/ui/ui_v67.php', 'src/ui/nav_v61.php',
+    'src/assessment/taskbank_v75_views.php', 'src/lessons/learning_v80_views.php', 'src/ui/widgets_v80_views.php', 'src/lessons/learning_v80_post.php', 'src/student/progress_v80_views.php', 'src/student/retention_v76.php', 'src/assessment/evidence_v62.php', 'src/projects/projects_v65.php',
+    'src/student/identity_v58.php', 'src/linux/linux_v57_lab.php', 'src/student/student_v55.php'] as $lib) require_once $ROOT . '/' . $lib;
 app_require_libs(['core', 'layout', 'paths', 'projects65']);
 
 const V80_KEY = 'v80-learning-audit-key';
@@ -42,12 +42,12 @@ $gz = static fn(string $rel): int => strlen((string)gzencode($read($rel), 9));
 $check('úložiště auditu je dočasné (ne ostrá storage/)', STORAGE_DIR === $tmp && str_contains($tmp, 'educanet-audit-') && !str_starts_with($tmp, $ROOT . '/storage'));
 
 // ---------------------------------------------------------------- 1) soubory, rozpočty, pravidla kódu
-$php = ['hints_v80.php', 'hints_v80_gfx.php', 'learning_v80.php', 'widgets_v80.php', 'progress_v80.php', 'learning_v80_views.php', 'progress_v80_views.php', 'widgets_v80_views.php',
-    'learning_v80_post.php', 'learning_v80_teacher_views.php', 'app/views/learning_v80.php', 'app/views/pokrok_v80.php', 'app/actions/learning_v80.php'];
+$php = ['src/lessons/hints_v80.php', 'src/lessons/hints_v80_gfx.php', 'src/lessons/learning_v80.php', 'src/ui/widgets_v80.php', 'src/student/progress_v80.php', 'src/lessons/learning_v80_views.php', 'src/student/progress_v80_views.php', 'src/ui/widgets_v80_views.php',
+    'src/lessons/learning_v80_post.php', 'src/lessons/learning_v80_teacher_views.php', 'app/views/learning_v80.php', 'app/views/pokrok_v80.php', 'app/actions/learning_v80.php'];
 $guards = array_filter($php, static fn(string $f): bool => str_contains($read($f), 'declare(strict_types=1);') && str_contains($read($f), "=== basename(__FILE__)) { http_response_code(403); exit; }"));
 $check('PHP vrstvy v80 (' . count($php) . '): strict_types a 403 guard', count($guards) === count($php));
 $all = array_merge($php, ['assets/learning-v80.css', 'assets/practice-v80.js', 'lang/en/ui/learning_v80.php', 'lang/uk/ui/learning_v80.php', 'tools/v80_learning_audit.php', 'tools/lib/v80_learning_part2.php',
-    'tools/lib/v80_learning_http.php', 'tools/lib/v80_learning_browser.cjs', 'taskbank_v75.php', 'taskbank_v75_views.php', 'stepper_v79_student.php', 'retention_v76.php', 'nav_v61.php', 'tools/lib/http_harness.php', 'tools/run_audits.php']);
+    'tools/lib/v80_learning_http.php', 'tools/lib/v80_learning_browser.cjs', 'src/assessment/taskbank_v75.php', 'src/assessment/taskbank_v75_views.php', 'src/ui/stepper_v79_student.php', 'src/student/retention_v76.php', 'src/ui/nav_v61.php', 'tools/lib/http_harness.php', 'tools/run_audits.php']);
 $long = array_filter($all, static fn(string $f): bool => substr_count($read($f), "\n") >= 800 || $read($f) === '');
 $check('soubory existují a mají do 800 řádků (' . count($all) . ')' . ($long ? ' [' . implode(', ', $long) . ']' : ''), $long === []);
 $cssGz = $gz('assets/learning-v80.css');
@@ -68,7 +68,7 @@ $check('JS v80: bez innerHTML/eval/sítě/úložiště, texty jen z data-t (žá
     preg_match('~innerHTML|outerHTML|insertAdjacentHTML|eval\(|new Function|fetch\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|document\.write|localStorage|sessionStorage|import\(~', $js) !== 1
     && preg_match('~[áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]~u', $js) !== 1 && str_contains($js, 'textContent') && str_contains($js, "getAttribute('data-t')"));
 $forbidden = '~\b(exec|shell_exec|system|passthru|proc_open|popen|pcntl_exec|eval|assert|create_function|fsockopen|stream_socket_client|socket_[a-z_]+|curl_[a-z_]+|gethostbyname|dns_get_record|mail)\s*\(|`[^`]*`|file_get_contents\s*\(\s*[\'"]https?:~i';
-$bad = array_filter(['hints_v80.php', 'hints_v80_gfx.php', 'learning_v80.php', 'widgets_v80.php', 'progress_v80.php', 'learning_v80_views.php', 'progress_v80_views.php', 'widgets_v80_views.php', 'learning_v80_post.php', 'learning_v80_teacher_views.php'],
+$bad = array_filter(['src/lessons/hints_v80.php', 'src/lessons/hints_v80_gfx.php', 'src/lessons/learning_v80.php', 'src/ui/widgets_v80.php', 'src/student/progress_v80.php', 'src/lessons/learning_v80_views.php', 'src/student/progress_v80_views.php', 'src/ui/widgets_v80_views.php', 'src/lessons/learning_v80_post.php', 'src/lessons/learning_v80_teacher_views.php'],
     static fn(string $f): bool => preg_match($forbidden, (string)preg_replace(['~/\*.*?\*/~s', '~//[^\n]*~'], '', $read($f))) === 1);
 $check('invariant simulátoru: nové soubory nic nespouštějí, nepřipojují se a neposílají poštu (chmod/podsítě = čistý výpočet)' . ($bad ? ' [' . implode(', ', $bad) . ']' : ''), $bad === []);
 $routes = require $ROOT . '/app/routes.php';
@@ -82,7 +82,7 @@ $mods = teacher58_modules();
 $m80 = $mods['pokrok80'] ?? [];
 $map = teacher68_tab_map();
 $check('učitel: záložka pokrok80 (Třída a žáci) jen čtení – bez POST, bez GET registru, tmavý režim; žádná politika lr80_* pro učitele (akce žáka nejdou přes teacher.php)',
-    ($m80['label'] ?? '') === 'Pokrok a podpora žáků' && !isset($m80['post']) && !isset($m80['get']) && in_array('learning_v80_teacher_views.php', (array)($m80['files'] ?? []), true)
+    ($m80['label'] ?? '') === 'Pokrok a podpora žáků' && !isset($m80['post']) && !isset($m80['get']) && in_array('src/lessons/learning_v80_teacher_views.php', (array)($m80['files'] ?? []), true)
     && ($map['pokrok80']['section'] ?? '') === 'trida' && in_array('pokrok80', UI68_TEACHER_DARK_TABS, true)
     && array_filter(array_keys(teacher59_action_policies()), static fn($k): bool => str_starts_with((string)$k, 'lr80_')) === [] && !empty(teacher59_action_policy('lr80_hint')['deny'])
     && array_filter(array_keys(teacher59_get_policies()), static fn($k): bool => str_starts_with((string)$k, 'pokrok80|')) === []);
@@ -94,7 +94,7 @@ $domains = require $ROOT . '/lang/domains_v59.php';
 $en = require $ROOT . '/lang/en/ui/learning_v80.php';
 $uk = require $ROOT . '/lang/uk/ui/learning_v80.php';
 $check('i18n: doména learning_v80 (5 souborů UI + pohledy) v manifestu, katalogy en/uk se stejnými klíči; navigace má en/uk pro Můj pokrok',
-    array_diff(['learning_v80_views.php', 'progress_v80_views.php', 'widgets_v80_views.php', 'learning_v80_post.php', 'app/views/learning_v80.php', 'app/views/pokrok_v80.php'], $domains['domains']['learning_v80'] ?? []) === []
+    array_diff(['src/lessons/learning_v80_views.php', 'src/student/progress_v80_views.php', 'src/ui/widgets_v80_views.php', 'src/lessons/learning_v80_post.php', 'app/views/learning_v80.php', 'app/views/pokrok_v80.php'], $domains['domains']['learning_v80'] ?? []) === []
     && array_keys($en) === array_keys($uk) && count($en) >= 150 && isset((require $ROOT . '/lang/en/ui/nav_v61.php')['Můj pokrok'], (require $ROOT . '/lang/uk/ui/nav_v61.php')['Můj pokrok']));
 $GLOBALS['ui61_primary_nav'] = null;
 $hrefs = array_merge(...array_map(static fn(array $g): array => array_column($g['items'], 'href'), nav61_groups('class_3a', 'pokrok')));

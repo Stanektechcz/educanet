@@ -19,8 +19,8 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit('CLI only'); }
 
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 require dirname(__DIR__) . '/bootstrap.php';
-require_once dirname(__DIR__) . '/teacher_accounts_v59.php';
-require_once dirname(__DIR__) . '/teacher_scope_v59.php';
+require_once dirname(__DIR__) . '/src/teacher/teacher_accounts_v59.php';
+require_once dirname(__DIR__) . '/src/teacher/teacher_scope_v59.php';
 
 $command = (string)($argv[1] ?? '');
 // getopt() končí u prvního ne-přepínače (příkazu) – přepínače --klic=hodnota se proto čtou ručně.

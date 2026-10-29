@@ -16,7 +16,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * jména funkcí a closures z vlastních souborů projektu – nikdy nic od žáka.
  */
 
-require_once __DIR__ . '/lab_v58_log.php';
+require_once dirname(__DIR__, 2) . '/src/linux/lab_v58_log.php';
 
 const LAB58_CMD_RE = '/^[a-z0-9][a-z0-9._+-]{0,31}$/';
 const LAB58_ID_RE = '/^[a-z0-9-]{2,32}$/';

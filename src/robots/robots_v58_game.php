@@ -14,7 +14,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Nic se tu nespouští mimo vlastní interpret RoboScriptu (robots_v58_lang.php).
  */
 
-require_once __DIR__ . '/robots_v58_lang.php';
+require_once dirname(__DIR__, 2) . '/src/robots/robots_v58_lang.php';
 
 const ROBOTS58_W = 24;
 const ROBOTS58_H = 16;

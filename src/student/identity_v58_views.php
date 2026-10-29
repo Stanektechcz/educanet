@@ -11,7 +11,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * v79: po krocích (identity_v79.php) – Registr a kolize → Školní rok → Souhrn → Plán a účty; ?krok= a koncept roku v relaci.
  */
 
-require_once __DIR__ . '/identity_v58_rollover.php';
+require_once dirname(__DIR__, 2) . '/src/student/identity_v58_rollover.php';
 
 const IDENTITY58_TYPE_LABELS = [
     'directory_namesake' => 'Jmenovci v seznamu třídy',
@@ -59,7 +59,7 @@ function identity58_render_teacher_tab(string $csrf): void
     $dups = identity58_duplicates($reg);
     $planYear = isset($_GET['plan']) && preg_match('/^\d{4}$/', (string)$_GET['plan']) ? (int)$_GET['plan'] : null;
     $defaultYear = identity58_default_year($reg);
-    require_once __DIR__ . '/identity_v79.php';   // v79: stepper Registr a kolize → Školní rok → Souhrn → Plán a účty
+    require_once dirname(__DIR__, 2) . '/src/student/identity_v79.php';   // v79: stepper Registr a kolize → Školní rok → Souhrn → Plán a účty
     $st = id79_state($planYear, $defaultYear);
     $cur = (int)$st['cur'];
     ?>

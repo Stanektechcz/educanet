@@ -16,7 +16,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * v76: grafické úlohy pro 1.A a 2.A (barvy, jednotky CSS, specificita, rozlišení/DPI) v taskbank_v76_gen.php – připojené do TB75_TASKS.
  */
 
-require_once __DIR__ . '/taskbank_v76_gen.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/taskbank_v76_gen.php';
 
 const TB75_TASKS = [
     'net_subnet' => ['title' => 'Podsíť: síť, broadcast a počet adres', 'area' => 'site', 'minutes' => 5],

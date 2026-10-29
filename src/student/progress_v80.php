@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/widgets_v80.php';
+require_once dirname(__DIR__, 2) . '/src/ui/widgets_v80.php';
 
 /**
  * EDUCANET v80 · Můj pokrok: souhrn kompetencí (v62), cest (v63), úloh (v75/v76), exit ticketů (v72), opakování a cvičení (v80),

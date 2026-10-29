@@ -30,7 +30,7 @@ function ops67_pending_migrations(): int
 {
     $done = storage_read(STORAGE_DIR . '/migrations_v58.json.php', false);
     $n = 0;
-    foreach (glob(__DIR__ . '/migrations/[0-9][0-9][0-9][0-9]_*.php') ?: [] as $file) {
+    foreach (glob(dirname(__DIR__, 2) . '/migrations/[0-9][0-9][0-9][0-9]_*.php') ?: [] as $file) {
         if (!isset($done[basename($file, '.php')])) $n++;
     }
     return $n;

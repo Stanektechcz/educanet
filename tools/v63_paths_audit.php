@@ -23,8 +23,8 @@ require_once __DIR__ . '/lib/audit_storage.php';
 require_once __DIR__ . '/lib/audit.php';
 $tmp = rtrim(str_replace('\\', '/', edu_audit_temp_storage('v63-paths')), '/');
 require $root . '/bootstrap.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'identity_v58.php', 'linux_v57_lab.php', 'competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'ops_v58.php', 'app/lib.php',
-    'paths_v63.php', 'paths_v63_flow.php', 'paths_v63_class.php', 'paths_v63_actions.php', 'paths_v63_views.php', 'paths_v63_teacher_views.php', 'teacher_v58.php', 'nav_v61.php'] as $file) {
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/student/identity_v58.php', 'src/linux/linux_v57_lab.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/mastery_v62.php', 'src/ops/ops_v58.php', 'app/lib.php',
+    'src/paths/paths_v63.php', 'src/paths/paths_v63_flow.php', 'src/paths/paths_v63_class.php', 'src/paths/paths_v63_actions.php', 'src/paths/paths_v63_views.php', 'src/paths/paths_v63_teacher_views.php', 'src/teacher/teacher_v58.php', 'src/ui/nav_v61.php'] as $file) {
     require_once $root . '/' . $file;
 }
 require_once __DIR__ . '/lib/v63_pre.php';
@@ -154,8 +154,8 @@ $check('aktuální úroveň z ověření: 0.25 → 1, 0.5 → 2, 0.75 → 3, 1.0
 
 // --- 4) Předpočítané výstupy = simulátor ----------------------------------------------------------------------
 $fresh = v63_pre_all();
-$data = (array)require $root . '/paths_v63_pre_data.php';
-$check('predict–run–explain: paths_v63_pre_data.php přesně odpovídá výstupu simulátoru lab57_run_line (' . count($fresh) . ' případů, pevné semínko i čas)', $data['outputs'] === $fresh && $fresh !== [] && v63_pre_render($fresh) === (string)file_get_contents($root . '/paths_v63_pre_data.php'));
+$data = (array)require $root . '/src/paths/paths_v63_pre_data.php';
+$check('predict–run–explain: paths_v63_pre_data.php přesně odpovídá výstupu simulátoru lab57_run_line (' . count($fresh) . ' případů, pevné semínko i čas)', $data['outputs'] === $fresh && $fresh !== [] && v63_pre_render($fresh) === (string)file_get_contents($root . '/src/paths/paths_v63_pre_data.php'));
 $preOk = true;
 foreach (p63_paths() as $pid => $p) {
     foreach ((array)$p['steps'] as $s) {

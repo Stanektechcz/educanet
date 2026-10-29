@@ -27,8 +27,8 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  */
 
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once dirname(__DIR__) . '/accounts_v53.php';
-require_once dirname(__DIR__) . '/identity_v58_rollover.php';
+require_once dirname(__DIR__) . '/src/student/accounts_v53.php';
+require_once dirname(__DIR__) . '/src/student/identity_v58_rollover.php';
 
 function ro58_opt(array $argv, string $name): ?string
 {

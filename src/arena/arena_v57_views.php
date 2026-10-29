@@ -9,9 +9,9 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Všechny terminály jsou jen simulace (linux_v57_*). Jména na žebříčcích respektují nastavení soukromí závodu.
  */
 
-require_once __DIR__ . '/arena_v57.php';
-if (is_file(__DIR__ . '/arena_v58_views.php')) require_once __DIR__ . '/arena_v58_views.php';
-if (is_file(__DIR__ . '/arena_v58_replay.php')) require_once __DIR__ . '/arena_v58_replay.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v57.php';
+if (is_file(dirname(__DIR__, 2) . '/src/arena/arena_v58_views.php')) require_once dirname(__DIR__, 2) . '/src/arena/arena_v58_views.php';
+if (is_file(dirname(__DIR__, 2) . '/src/arena/arena_v58_replay.php')) require_once dirname(__DIR__, 2) . '/src/arena/arena_v58_replay.php';
 
 // ---------------------------------------------------------------------------
 // Drobné pomocníky

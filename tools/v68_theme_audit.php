@@ -25,7 +25,7 @@ require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
 require_once __DIR__ . '/lib/v68_color.php';
 require_once $ROOT . '/app/lib.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'ui_v67.php'] as $lib) { require_once $ROOT . '/' . $lib; }
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/ui/ui_v67.php'] as $lib) { require_once $ROOT . '/' . $lib; }
 
 /** Velikosti cockpitových CSS před v68 (B) a SHA-256 žákovských CSS, která v68 nesmí změnit. */
 const V68T_SIZES = ['teacher.css' => 29613, 'teacher-ops-v46.css' => 18875, 'teacher-overview-v61.css' => 2962, 'teacher-accounts-v59.css' => 5119, 'lab-teacher-v58.css' => 4958, 'ops-v58.css' => 1409, 'identity-v58.css' => 2409, 'accounts-v58.css' => 6721];

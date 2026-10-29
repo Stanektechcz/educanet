@@ -23,11 +23,11 @@ register_shutdown_function(static function () use ($cacheDir): void {
 });
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'cockpit_v70.php', 'tutorial_v52.php', 'learning_v56.php', 'runtime_content.php', 'session_v53.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/teacher/cockpit_v70.php', 'src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/ops/runtime_content.php', 'src/lessons/session_v53.php'] as $lib) require_once $ROOT . '/' . $lib;
 $mods = teacher58_modules();
 foreach (['kompetence75', 'ulohy75', 'urovne75', 'portfolia75', 'opakovani75', 'hodina'] as $m) foreach ((array)$mods[$m]['files'] as $f) require_once $ROOT . '/' . $f;
-require_once $ROOT . '/paths_v63_flow.php';
-require_once $ROOT . '/competency_v75_labels.php';
+require_once $ROOT . '/src/paths/paths_v63_flow.php';
+require_once $ROOT . '/src/assessment/competency_v75_labels.php';
 require_once __DIR__ . '/migrate.php';
 
 $state = audit_counter();
@@ -38,10 +38,10 @@ $modules = is_array($GLOBALS['modules'] ?? null) ? $GLOBALS['modules'] : [];
 $check('úložiště auditu je dočasné (ne ostrá storage/)', STORAGE_DIR === $tmp && str_contains($tmp, 'educanet-audit-') && str_starts_with(comp75_status_path(), $tmp . '/') && str_starts_with(tb75_path(), $tmp . '/'));
 
 // ---------------------------------------------------------------- 1) soubory, registr, politiky
-$libs = ['competencies_v75.php', 'competencies_v75_views.php', 'competency_v75_labels.php', 'paths_v75_bank.php', 'paths_v75_content_ops.php', 'paths_v75_content_gfx2.php',
-    'taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v75_views.php', 'taskbank_v75_teacher_views.php', 'levels_v75.php', 'levels_v75_views.php', 'levels_v75_teacher_views.php',
-    'levels_v75_content_1a.php', 'levels_v75_content_2a.php', 'levels_v75_content_3a.php', 'levels_v75_content_4a.php', 'portfolio_v75.php', 'portfolio_v75_views.php',
-    'portfolio_v75_teacher_views.php', 'review_v75.php', 'review_v75_views.php', 'review_v75_teacher_views.php', 'app/actions/v75.php', 'app/views/ulohy_v75.php', 'app/views/opakovani_v75.php',
+$libs = ['src/assessment/competencies_v75.php', 'src/assessment/competencies_v75_views.php', 'src/assessment/competency_v75_labels.php', 'src/paths/paths_v75_bank.php', 'src/paths/paths_v75_content_ops.php', 'src/paths/paths_v75_content_gfx2.php',
+    'src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/assessment/taskbank_v75_views.php', 'src/assessment/taskbank_v75_teacher_views.php', 'src/levels/levels_v75.php', 'src/levels/levels_v75_views.php', 'src/levels/levels_v75_teacher_views.php',
+    'src/levels/levels_v75_content_1a.php', 'src/levels/levels_v75_content_2a.php', 'src/levels/levels_v75_content_3a.php', 'src/levels/levels_v75_content_4a.php', 'src/student/portfolio_v75.php', 'src/student/portfolio_v75_views.php',
+    'src/student/portfolio_v75_teacher_views.php', 'src/student/review_v75.php', 'src/student/review_v75_views.php', 'src/student/review_v75_teacher_views.php', 'app/actions/v75.php', 'app/views/ulohy_v75.php', 'app/views/opakovani_v75.php',
     'migrations/0005_materials_history_v75.php', 'tools/lib/v75_http.php', 'tools/lib/v75_learning_part2.php'];
 $bad = [];
 foreach ($libs as $f) {
@@ -158,8 +158,8 @@ foreach ($paths2 + $paths4 as $pid => $p) foreach ((array)p63_step($p, 'predict'
 }
 $check('obsah: výpočty v předpovědích (adresy, RPO/RTO, objem, sloupce mřížky, šířka boxu, typografie, clamp) a kontrasty WCAG sedí' . ($calcBad ? ' [' . implode(', ', $calcBad) . ']' : ''), $calcBad === []);
 $bankOk = true;
-foreach (require $ROOT . '/paths_v75_bank.php' as $q) if ($q['type'] === 'single' && !in_array($q['answer'], $q['options'], true)) $bankOk = false;
-$bank = array_column(require $ROOT . '/paths_v75_bank.php', 'answer', 'id');
+foreach (require $ROOT . '/src/paths/paths_v75_bank.php' as $q) if ($q['type'] === 'single' && !in_array($q['answer'], $q['options'], true)) $bankOk = false;
+$bank = array_column(require $ROOT . '/src/paths/paths_v75_bank.php', 'answer', 'id');
 $check('banka 4.A (záloha): ≥ 20 otázek, single má odpověď mezi možnostmi, číselné odpovědi přepočítané (RPO 4 h, 96 záloh/den, 230 GB, 180 min, 23 bodů, 6 záloh, 5 GB, 4 h)', $bankOk && count($bank) >= 20
     && $bank['ops.backup.003'] === 4 && $bank['ops.backup.004'] === 24 * 60 / 15 && $bank['ops.backup.008'] === 200 + 6 * 5 && $bank['ops.backup.009'] === 360 / 2 && $bank['ops.backup.013'] === 7 + 4 + 12
     && $bank['ops.backup.016'] === intdiv(2000, 300) && $bank['ops.backup.021'] === 3 + 2 && $bank['ops.backup.019'] === 10 - 6);

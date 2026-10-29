@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-if (is_file(__DIR__ . '/ux_v79_1.php')) require_once __DIR__ . '/ux_v79_1.php';   // v79.1: řazení a stránkování výsledků, ukazatele s textem
+if (is_file(dirname(__DIR__, 2) . '/src/ui/ux_v79_1.php')) require_once dirname(__DIR__, 2) . '/src/ui/ux_v79_1.php';   // v79.1: řazení a stránkování výsledků, ukazatele s textem
 
 function teacher_class_pct(?float $value, int $decimals = 0): string
 {

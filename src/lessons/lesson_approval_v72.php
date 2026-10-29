@@ -40,7 +40,7 @@ const LC72_LOG_MAX = 500;
 const LC72_T14_DAYS = 14;
 const LC72_ACTIONS = ['lc72_approve', 'lc72_return'];
 
-require_once __DIR__ . '/lesson_model_v71.php';
+require_once dirname(__DIR__, 2) . '/src/lessons/lesson_model_v71.php';
 
 function lc72_path(): string
 {
@@ -52,7 +52,7 @@ function lc72_school_year(): array
 {
     static $year = null;
     if ($year === null) {
-        $loaded = require __DIR__ . '/school_year.php';
+        $loaded = require dirname(__DIR__, 2) . '/src/ops/school_year.php';
         $year = is_array($loaded) ? $loaded : [];
     }
     return $year;
@@ -145,7 +145,7 @@ function lc72_overlay_light(string $classId, int $number): array
         $acc = ['lessons' => [], 'days' => [], 'files' => []];
         foreach (lm71_overlay_files() as $file) {
             foreach ($others as $short) if (str_contains($file, '_' . $short . '_') || str_ends_with($file, '_' . $short . '.php')) continue 2;
-            $loaded = require __DIR__ . '/' . $file;
+            $loaded = require dirname(__DIR__, 2) . '/' . $file;
             if (is_array($loaded)) $acc = lm71_overlay_merge($acc, $file, $loaded);
         }
         $memo[$classId] = (array)($acc['lessons'][$classId] ?? []);
@@ -221,7 +221,7 @@ function lc72_decide(string $action, string $classId, int $number, string $hash,
 function lc72_teacher_handle_post(string $action): void
 {
     if (str_starts_with($action, 'lc72_svp_')) {   // v72.1: vazba na ŠVP (svp_v72.php)
-        if (!function_exists('svp72_teacher_handle_post')) require_once __DIR__ . '/svp_v72.php';
+        if (!function_exists('svp72_teacher_handle_post')) require_once dirname(__DIR__, 2) . '/src/assessment/svp_v72.php';
         svp72_teacher_handle_post($action);
         return;
     }

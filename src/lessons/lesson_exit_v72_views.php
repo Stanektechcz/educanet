@@ -12,7 +12,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Každý výstup přes e(); žádné innerHTML ani data žáka v URL.
  */
 
-require_once __DIR__ . '/lesson_exit_v72.php';
+require_once dirname(__DIR__, 2) . '/src/lessons/lesson_exit_v72.php';
 
 /** Blok pod fází lekce (žák). Nic nevypíše, pokud lekce nemá schválený obsah. */
 function lx72_render_student_block(string $classId, int $lessonNo): void

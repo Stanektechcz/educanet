@@ -4,9 +4,9 @@ declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
 /** v64 audit · dávka 5: integrace (politiky, routy, retence, i18n, invariant labu, velikosti, rozpočet). Proměnné: $check, $tmp, $root. */
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'ops_v58.php', 'economy_v64_teacher_views.php', 'teamgames_v64_views.php', 'arena_v64_views.php', 'challenges_v64.php'] as $lib) require_once $root . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/ops/ops_v58.php', 'src/student/economy_v64_teacher_views.php', 'src/teamgames/teamgames_v64_views.php', 'src/arena/arena_v64_views.php', 'src/student/challenges_v64.php'] as $lib) require_once $root . '/' . $lib;
 
-$v64Files = ['economy_v64.php', 'economy_v64_teacher_views.php', 'arena_v64_fair.php', 'arena_v64_views.php', 'teamgames_v64_roles.php', 'teamgames_v64_views.php', 'challenges_v64.php', 'app/actions/teamgames_v64.php', 'tools/v64_engagement_report.php'];
+$v64Files = ['src/student/economy_v64.php', 'src/student/economy_v64_teacher_views.php', 'src/arena/arena_v64_fair.php', 'src/arena/arena_v64_views.php', 'src/teamgames/teamgames_v64_roles.php', 'src/teamgames/teamgames_v64_views.php', 'src/student/challenges_v64.php', 'app/actions/teamgames_v64.php', 'tools/v64_engagement_report.php'];
 
 // --- Politiky učitele (deny-by-default) ---------------------------------------------------------------
 $pol = teacher59_action_policy('v64_abs_board');
@@ -16,7 +16,7 @@ $check('oprávnění: v64_ = students.manage (asistent s jen čtením akci nedos
 $mod = teacher58_modules()['ekonomika'] ?? null;
 $check('registr: modul Ekonomika existuje, mapuje POST prefix v64_ a všechny jeho soubory jsou na disku', is_array($mod) && isset($mod['post']['v64_']) && array_reduce((array)$mod['files'], static fn(bool $c, string $f): bool => $c && is_file($root . '/' . $f), true) && teacher58_available('ekonomika'));
 $check('registr: modul Ekonomika nemá zvláštní GET parametr (nic k autorizaci kromě class/month)', !isset($mod['get']));
-$check('GET: parametr month ve tvaru YYYY-MM se hlídá v teacher59_guard_get_check (zdroj)', str_contains((string)file_get_contents($root . '/teacher_scope_v59.php'), "\$tab === 'ekonomika' && isset(\$get['month'])"), false);
+$check('GET: parametr month ve tvaru YYYY-MM se hlídá v teacher59_guard_get_check (zdroj)', str_contains((string)file_get_contents($root . '/src/teacher/teacher_scope_v59.php'), "\$tab === 'ekonomika' && isset(\$get['month'])"), false);
 
 // --- Akce bez oprávnění / s neplatným vstupem (handler) -----------------------------------------------
 $_POST = ['class_id' => 'class_neexistuje', 'kind' => 'ctf', 'id' => 'x', 'on' => '1'];
@@ -37,7 +37,7 @@ $routes = require $root . '/app/routes.php';
 $hit = [];
 foreach ((array)$routes['actions_class'] as $r) if (in_array('tg64_retro', (array)$r['match'], true)) $hit = $r;
 $check('routa: akce tg64_retro vede na app/actions/teamgames_v64.php a ten existuje', ($hit['file'] ?? '') === 'actions/teamgames_v64.php' && is_file($root . '/app/' . $hit['file']));
-$check('routa: dashboard načítá challenges_v64.php, profil kompetencí také', in_array('challenges_v64.php', (array)$routes['libs']['dashboard'], true) && in_array('challenges_v64.php', (array)$routes['libs']['competency'], true));
+$check('routa: dashboard načítá challenges_v64.php, profil kompetencí také', in_array('src/student/challenges_v64.php', (array)$routes['libs']['dashboard'], true) && in_array('src/student/challenges_v64.php', (array)$routes['libs']['competency'], true));
 
 // --- Retence -------------------------------------------------------------------------------------------
 $patterns = array_column(ops58_retention_policy(), 'pattern');
@@ -47,7 +47,7 @@ $check('retence: v58_retention.php volá tg64_retro_purge (retrospektivy po ško
 // --- i18n ----------------------------------------------------------------------------------------------
 $manifest = require $root . '/lang/domains_v59.php';
 $games64 = (array)($manifest['domains']['games64'] ?? []);
-$check('i18n: doména games64 je v manifestu a obsahuje všechny žákovské soubory v64', $games64 !== [] && array_diff(['arena_v64_fair.php', 'arena_v64_views.php', 'teamgames_v64_roles.php', 'teamgames_v64_views.php', 'app/actions/teamgames_v64.php', 'challenges_v64.php'], $games64) === []);
+$check('i18n: doména games64 je v manifestu a obsahuje všechny žákovské soubory v64', $games64 !== [] && array_diff(['src/arena/arena_v64_fair.php', 'src/arena/arena_v64_views.php', 'src/teamgames/teamgames_v64_roles.php', 'src/teamgames/teamgames_v64_views.php', 'app/actions/teamgames_v64.php', 'src/student/challenges_v64.php'], $games64) === []);
 $en = require $root . '/lang/en/ui/games64.php';
 $uk = require $root . '/lang/uk/ui/games64.php';
 $check('i18n: katalogy en a uk mají stejné klíče a žádný překlad není prázdný', array_keys($en) === array_keys($uk) && count($en) >= 40 && !in_array('', $en, true) && !in_array('', $uk, true));
@@ -66,7 +66,7 @@ foreach ($v64Files as $f) {
     }
 }
 $check('invariant: soubory v64 nevolají exec/eval/síť/DNS/mail ani nemají zpětné apostrofy (token-sken)' . ($bad ? ' [' . implode(',', $bad) . ']' : ''), $bad === []);
-$ctrl = (string)file_get_contents($root . '/linux_v57_lab.php') . (string)file_get_contents($root . '/lab_v57_api.php');
+$ctrl = (string)file_get_contents($root . '/src/linux/linux_v57_lab.php') . (string)file_get_contents($root . '/lab_v57_api.php');
 $check('invariant: linux_v57_*/lab_v57_api.php v64 nijak nezmínily (fair64/eco64/tg64/ch64 tam nejsou)', preg_match('/\b(fair64|eco64|tg64|ch64)_/', $ctrl) !== 1, false);
 
 // --- Guardy, velikosti, rozpočet ----------------------------------------------------------------------
@@ -82,7 +82,7 @@ foreach ($v64Files as $f) {
 $check('soubory v64: ≤ 800 řádků, strict_types a guard proti přímému volání', $sizeOk && $guardOk);
 $cssSize = filesize($root . '/assets/arena-v64.css');
 $check('rozpočet: assets/arena-v64.css ≤ 4 kB (celkem CSS+JS fáze ≤ +20 kB, žádný JS asset, žádné CDN)', $cssSize <= 4096 && !is_file($root . '/assets/arena-v64.js') && !preg_match('#https?://#', (string)file_get_contents($root . '/assets/arena-v64.css')), false);
-$check('rozpočet: CSS karty výzvy týdne se nepřidává na dashboard (karta jen přes p63_card_assets)', !str_contains((string)file_get_contents($root . '/challenges_v64.php'), 'arena-v64.css'), false);
+$check('rozpočet: CSS karty výzvy týdne se nepřidává na dashboard (karta jen přes p63_card_assets)', !str_contains((string)file_get_contents($root . '/src/student/challenges_v64.php'), 'arena-v64.css'), false);
 
 // --- Soukromí: ELO/liga nikdy ve známkách a exportech ---------------------------------------------------
 $gradeFiles = glob($root . '/{project_grade*,grades*,teacher_export*}.php', GLOB_BRACE) ?: [];

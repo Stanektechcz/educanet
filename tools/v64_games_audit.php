@@ -17,8 +17,8 @@ require_once __DIR__ . '/lib/audit_storage.php';
 require_once __DIR__ . '/lib/audit.php';
 $tmp = rtrim(str_replace('\\', '/', edu_audit_temp_storage('v64-games')), '/');
 require $root . '/bootstrap.php';
-require_once $root . '/economy_v64.php';
-require_once $root . '/arena_v64_fair.php';
+require_once $root . '/src/student/economy_v64.php';
+require_once $root . '/src/arena/arena_v64_fair.php';
 if (session_status() !== PHP_SESSION_ACTIVE) { $_SESSION = []; }
 
 $state = audit_counter();

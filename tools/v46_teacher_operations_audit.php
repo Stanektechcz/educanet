@@ -4,8 +4,8 @@ declare(strict_types=1);
 if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 $root=dirname(__DIR__);
 require $root.'/bootstrap.php';
-require_once $root.'/teacher_class_dashboard.php';
-require_once $root.'/teacher_operations_v46.php';
+require_once $root.'/src/teacher/teacher_class_dashboard.php';
+require_once $root.'/src/teacher/teacher_operations_v46.php';
 
 function v46_storage_fingerprint(string $dir): array {
     $out=[];foreach(glob($dir.'/*.php')?:[] as $file)$out[basename($file)]=[filesize($file)?:0,filemtime($file)?:0,hash_file('sha256',$file)?:''];ksort($out);return $out;
@@ -24,7 +24,7 @@ $smart=['class_id'=>'class_2a','status'=>'all','priority'=>'all','task_status'=>
 if($sample&&!teacher_saved_filter_matches_student($smart,$sample))$errors[]='Smart filter AND pravidlo selhalo.';
 $after=v46_storage_fingerprint(STORAGE_DIR);$writes=[];foreach(array_unique(array_merge(array_keys($before),array_keys($after))) as $name)if(($before[$name]??null)!==($after[$name]??null))$writes[]=$name;
 if($writes)$errors[]='Read-only operace změnily storage: '.implode(', ',$writes);
-$teacher=file_get_contents($root.'/teacher.php')?:'';$ops=file_get_contents($root.'/teacher_operations_v46.php')?:'';$views=file_get_contents($root.'/teacher_operations_views_v46.php')?:'';$js=file_get_contents($root.'/assets/teacher-admin-v46.js')?:'';
+$teacher=file_get_contents($root.'/teacher.php')?:'';$ops=file_get_contents($root.'/src/teacher/teacher_operations_v46.php')?:'';$views=file_get_contents($root.'/src/teacher/teacher_operations_views_v46.php')?:'';$js=file_get_contents($root.'/assets/teacher-admin-v46.js')?:'';
 foreach([
     'Attention Center'=>"tab==='attention'",'Student 360'=>"tab==='student360'",'Interventions'=>"tab==='interventions'",'Analytics'=>"tab==='analytics'",'Roles'=>"tab==='team_admin'"
 ] as $label=>$needle)if(!str_contains($teacher,$needle))$errors[]="$label není zapojen v teacher.php.";

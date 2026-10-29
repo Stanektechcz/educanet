@@ -15,10 +15,10 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * nikdo nezměnil (verze 1); materiály přidané nebo upravené učiteli zůstanou. Prázdná knihovna se smaže.
  */
 
-if (!function_exists('mat74_import_candidates')) require_once dirname(__DIR__) . '/materials_v74.php';
+if (!function_exists('mat74_import_candidates')) require_once dirname(__DIR__) . '/src/ops/materials_v74.php';
 
 $mat74Sources = static function (): array {
-    $lr = is_file(dirname(__DIR__) . '/learning_resources.php') ? require dirname(__DIR__) . '/learning_resources.php' : [];
+    $lr = is_file(dirname(__DIR__) . '/src/content/learning_resources.php') ? require dirname(__DIR__) . '/src/content/learning_resources.php' : [];
     $v42Path = function_exists('adaptive_store_path') ? adaptive_store_path('lesson_resources') : STORAGE_DIR . '/adaptive_lesson_resources.json.php';
     $v42 = is_file($v42Path) ? storage_read($v42Path, false) : [];
     return mat74_import_candidates(is_array($lr) ? $lr : [], is_array($v42) ? $v42 : []);

@@ -8,7 +8,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * třída povinná a v rozsahu). Jen čtení, bez jmen žáků; česky; každý výstup přes e(). Logika v plan_v76.php.
  */
 
-require_once __DIR__ . '/plan_v76.php';
+require_once dirname(__DIR__, 2) . '/src/ops/plan_v76.php';
 
 const PV76_CLASSES = ['class_1a', 'class_2a', 'class_3a', 'class_4a'];
 

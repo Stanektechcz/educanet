@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-require_once __DIR__ . '/competencies_v62.php';
-require_once __DIR__ . '/evidence_v62.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/competencies_v62.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/evidence_v62.php';
 
 /**
  * EDUCANET v63 · výukové cesty (jádro): katalog cest, stav žáka, hodnocení kroků, důkazy a doporučení „Co dál“.
@@ -29,7 +29,7 @@ const P63_RETENTION_GRACE_DAYS = 30;
 const P63_SPACED_INTERVALS = [1, 3, 7, 14, 30];
 const P63_PATH_RE = '/^[a-z][a-z0-9_]{2,39}$/';
 const P63_STEP_RE = '/^[a-z][a-z0-9_]{1,19}$/';
-const P63_CLASS_FILES = ['class_3a' => 'paths_v63_content_os.php', 'class_1a' => 'paths_v63_content_gfx.php'];
+const P63_CLASS_FILES = ['class_3a' => 'src/paths/paths_v63_content_os.php', 'class_1a' => 'src/paths/paths_v63_content_gfx.php'];
 const P63_STEP_TYPES = ['explain', 'pre', 'parsons', 'retrieval', 'verify', 'reflect'];
 const P63_QUESTION_TYPES = ['single', 'bool', 'numeric'];
 /** Kategorie banky týmových her → kompetence, ke kterým se otázka smí vázat (kontroluje audit). */
@@ -43,7 +43,7 @@ const P63_BANK_COMPETENCY = [
     'procs' => ['lnx_services'], 'security' => ['net_security'],
 ];
 /** v76 · další cesty pilotních tříd (fáze E bod 3: 1.A ≥ 4, 3.A ≥ 5) – připojí se za cesty z P63_CLASS_FILES. */
-const P76_PATH_FILES = ['class_1a' => 'paths_v76_content_gfx.php', 'class_3a' => 'paths_v76_content_os.php'];
+const P76_PATH_FILES = ['class_1a' => 'src/paths/paths_v76_content_gfx.php', 'class_3a' => 'src/paths/paths_v76_content_os.php'];
 
 // ---------------------------------------------------------------------------
 // Katalog cest
@@ -79,8 +79,8 @@ function p63_paths_for_class(string $classId): array
     static $cache = [];
     if (!p63_enabled_for_class($classId)) return [];
     if (isset($cache[$classId])) return $cache[$classId];
-    $data = (array)require __DIR__ . '/' . p63_class_file($classId);
-    if (isset(P76_PATH_FILES[$classId]) && is_file(__DIR__ . '/' . P76_PATH_FILES[$classId])) $data += (array)require __DIR__ . '/' . P76_PATH_FILES[$classId];   // v76
+    $data = (array)require dirname(__DIR__, 2) . '/' . p63_class_file($classId);
+    if (isset(P76_PATH_FILES[$classId]) && is_file(dirname(__DIR__, 2) . '/' . P76_PATH_FILES[$classId])) $data += (array)require dirname(__DIR__, 2) . '/' . P76_PATH_FILES[$classId];   // v76
     $out = [];
     foreach ($data as $id => $path) {
         if (is_array($path) && preg_match(P63_PATH_RE, (string)$id) === 1) $out[(string)$id] = ['id' => (string)$id, 'class' => $classId] + $path;
@@ -271,8 +271,8 @@ function p63_bank(): array
     static $bank = null;
     if ($bank !== null) return $bank;
     $rows = [];
-    foreach (['teamgames_v58_bank_net.php', 'teamgames_v58_bank_gfx.php', 'paths_v75_bank.php'] as $file) {   // v75: banka cest 4.A (záloha a obnova)
-        $data = is_file(__DIR__ . '/' . $file) ? include __DIR__ . '/' . $file : [];
+    foreach (['src/teamgames/teamgames_v58_bank_net.php', 'src/teamgames/teamgames_v58_bank_gfx.php', 'src/paths/paths_v75_bank.php'] as $file) {   // v75: banka cest 4.A (záloha a obnova)
+        $data = is_file(dirname(__DIR__, 2) . '/' . $file) ? include dirname(__DIR__, 2) . '/' . $file : [];
         foreach (is_array($data) ? $data : [] as $row) if (is_array($row)) $rows[] = $row;
     }
     $teacher = storage_read(STORAGE_DIR . '/teamgames_v58_bank.json.php', false)['items'] ?? [];
@@ -406,7 +406,7 @@ function p63_parsons_secret(): string
 function p63_pre_output(string $pathId, string $stepId, string $caseId): ?string
 {
     static $data = null;
-    $data ??= is_file(__DIR__ . '/paths_v63_pre_data.php') ? (array)require __DIR__ . '/paths_v63_pre_data.php' : [];
+    $data ??= is_file(dirname(__DIR__, 2) . '/src/paths/paths_v63_pre_data.php') ? (array)require dirname(__DIR__, 2) . '/src/paths/paths_v63_pre_data.php' : [];
     $row = $data['outputs'][$pathId . '|' . $stepId . '|' . $caseId] ?? null;
     return is_array($row) ? (string)$row['out'] : null;
 }

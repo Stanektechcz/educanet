@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_once __DIR__ . '/i18n_v59.php'; }
+if (!function_exists('tr')) { require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v58.php'; require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v59.php'; }
 
 /**
  * EDUCANET v58 · Aréna – pohledy pro CTF týden (ARN-02) a Incidenty (ARN-03).
@@ -11,8 +11,8 @@ if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_on
  * Terminál je pořád jen simulace (linux_v57_*) – nic se nespouští doopravdy.
  */
 
-require_once __DIR__ . '/arena_v58_ctf.php';
-require_once __DIR__ . '/arena_v58_incident.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v58_ctf.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v58_incident.php';
 
 // ---------------------------------------------------------------------------
 // Sdílené drobné pomocníky

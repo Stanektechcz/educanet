@@ -10,7 +10,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Stránky si samy načítají své CSS/JS, takže integrace potřebuje jen routu.
  */
 
-require_once __DIR__ . '/robots_v58.php';
+require_once dirname(__DIR__, 2) . '/src/robots/robots_v58.php';
 
 const ROBOTS58_ASSET_V = '58.0';
 

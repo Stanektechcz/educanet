@@ -10,9 +10,9 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * větve/značky/reset/restore/stash/clone: linux_v58_cmd_git_more.php. Jen nad VFS – nic se nespouští, žádná síť.
  */
 
-require_once __DIR__ . '/linux_v58_cmd_git_store.php';
-require_once __DIR__ . '/linux_v58_cmd_git_diff.php';
-require_once __DIR__ . '/linux_v58_cmd_git_more.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v58_cmd_git_store.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v58_cmd_git_diff.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v58_cmd_git_more.php';
 
 /** Podpříkaz → [funkce, potřeba repozitáře (0 ne, 1 ano, 2 s pracovním stromem), usage] */
 function lab58_git_commands(): array

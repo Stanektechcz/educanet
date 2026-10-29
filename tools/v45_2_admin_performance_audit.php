@@ -12,8 +12,8 @@ if (!function_exists('teacher_class_label')) {
         return match($classId){'class_1a'=>'1.A Grafika','class_2a'=>'2.A Grafika','class_3a'=>'3.A SOSPS','class_4a'=>'4.A SOSPS',default=>$classId};
     }
 }
-require_once $root . '/teacher_curriculum.php';
-require_once $root . '/teacher_overview_dashboard.php';
+require_once $root . '/src/teacher/teacher_curriculum.php';
+require_once $root . '/src/teacher/teacher_overview_dashboard.php';
 
 $watched = [
     STORAGE_DIR . '/skill_progress.json.php',

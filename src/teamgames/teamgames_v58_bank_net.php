@@ -23,12 +23,12 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  */
 
 return array_merge(
-    require __DIR__ . '/teamgames_v58_bank_net_linux.php',
-    require __DIR__ . '/teamgames_v58_bank_net_files.php',
-    require __DIR__ . '/teamgames_v58_bank_net_ip.php',
-    require __DIR__ . '/teamgames_v58_bank_net_dns.php',
-    require __DIR__ . '/teamgames_v58_bank_net_ports.php',
-    require __DIR__ . '/teamgames_v58_bank_net_procs.php',
-    require __DIR__ . '/teamgames_v58_bank_net_security.php',
-    require __DIR__ . '/teamgames_v58_bank_net_hw.php'
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_net_linux.php',
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_net_files.php',
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_net_ip.php',
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_net_dns.php',
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_net_ports.php',
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_net_procs.php',
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_net_security.php',
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_net_hw.php'
 );

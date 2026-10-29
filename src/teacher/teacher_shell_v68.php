@@ -9,9 +9,9 @@ declare(strict_types=1);
  */
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/teacher_nav_v68.php';
-require_once __DIR__ . '/nav_v78_1_views.php';   // v78.1: navigace 4 sekce, drawer, spodní lišta, drobečky se Zpět
-require_once __DIR__ . '/ui_v81.php';   // v81: ikony, hlavička, stavy, nápověda, toasty, hustota tabulek
+require_once dirname(__DIR__, 2) . '/src/teacher/teacher_nav_v68.php';
+require_once dirname(__DIR__, 2) . '/src/ui/nav_v78_1_views.php';   // v78.1: navigace 4 sekce, drawer, spodní lišta, drobečky se Zpět
+require_once dirname(__DIR__, 2) . '/src/ui/ui_v81.php';   // v81: ikony, hlavička, stavy, nápověda, toasty, hustota tabulek
 
 const TEACHER68_ASSET_VERSION = '68.0';
 
@@ -48,8 +48,8 @@ function teacher68_css_href(string $path): string
 {
     $base = basename($path);
     $derived = 'assets/cx-' . $base;
-    $use = is_file(__DIR__ . '/' . $derived) ? $derived : $path;
-    $file = __DIR__ . '/' . $use;
+    $use = is_file(dirname(__DIR__, 2) . '/' . $derived) ? $derived : $path;
+    $file = dirname(__DIR__, 2) . '/' . $use;
     return $use . '?v=' . (is_file($file) ? (string)filemtime($file) : TEACHER68_ASSET_VERSION);
 }
 
@@ -108,9 +108,9 @@ function teacher68_nav_html(string $tab, string $classId, array $visibleTabs, st
 /** v77: počet lekcí po termínu T-14 pro odznak v menu (jen když učitel vidí „Středa: T-14“; chyba výpočtu menu nerozbije). */
 function teacher77_t14_badge_count(array $visibleTabs): int
 {
-    if (!in_array('streda77', $visibleTabs, true) || !is_file(__DIR__ . '/t14_v77.php')) return 0;
+    if (!in_array('streda77', $visibleTabs, true) || !is_file(dirname(__DIR__, 2) . '/src/teacher/t14_v77.php')) return 0;
     try {
-        require_once __DIR__ . '/t14_v77.php';
+        require_once dirname(__DIR__, 2) . '/src/teacher/t14_v77.php';
         return t1477_overdue_count();
     } catch (Throwable $e) {
         error_log('EDUCANET v77 odznak T-14: ' . get_class($e));

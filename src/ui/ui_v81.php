@@ -32,7 +32,7 @@ function ui81_href(string $url): string
 /** Verze souboru pro ?v= (čas změny; jako asset_url žáka). */
 function ui81_ver(string $rel): string
 {
-    $f = __DIR__ . '/' . $rel;
+    $f = dirname(__DIR__, 2) . '/' . $rel;
     return is_file($f) ? (string)filemtime($f) : '81';
 }
 

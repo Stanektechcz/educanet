@@ -10,7 +10,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * (žádný GET parametr registru). Formuláře jen s oprávněním content.manage. Každý výstup přes e(), odkazy přes safe_url().
  */
 
-require_once __DIR__ . '/materials_v74.php';
+require_once dirname(__DIR__, 2) . '/src/ops/materials_v74.php';
 
 function mat74_can_manage(): bool
 {

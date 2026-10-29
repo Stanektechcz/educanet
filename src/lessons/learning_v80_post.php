@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/progress_v80.php';
+require_once dirname(__DIR__, 2) . '/src/student/progress_v80.php';
 
 /**
  * EDUCANET v80 · POST akce žáka (router app/routes.php → app/actions/learning_v80.php; CSRF a třídu ověřil index.php):

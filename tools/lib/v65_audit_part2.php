@@ -88,7 +88,7 @@ ev62_append((string)ev62_student_context($CLASS, $player)['id'], [['competency' 
 $check('zámky: zvládnutá kompetence (stav zvladnuto) přihlášku povolí, „upevněno“ u téhož žáka stále ne', proj60_apply($CLASS, $player, $lockId, 'mám dns', 5)['ok'] && proj60_apply($CLASS, $player, $strictId, 'chci', 5)['error'] === 'competency_missing'
     && proj60_missing_competencies($CLASS, $player, proj60_item($strictId)) === ['net_dns_dhcp'] && proj60_missing_competencies($CLASS, $player, proj60_item($lockId)) === []);
 $check('zámky: mimo pilot kompetencí se požadavek ignoruje (class_2a nikdy nehlásí chybějící kompetence)', proj60_missing_competencies('class_2a', 'class_2a:student:' . str_repeat('a', 24), proj60_item($lockId)) === [] && !comp62_enabled_for_class('class_2a'));
-$lockSrc = (string)file_get_contents($root . '/projects_v60.php');
+$lockSrc = (string)file_get_contents($root . '/src/projects/projects_v60.php');
 $check('zámky: kontrola kompetencí běží i uvnitř storage_update (znovu nad čerstvým projektem)', preg_match('/storage_update\(proj60_applications_path\(\).*proj60_missing_competencies\(\$classId, \$studentKey, \$fresh\)/s', $lockSrc) === 1, false);
 ob_start();
 projects60_render_card($lockId, proj60_item($lockId), $CLASS, $none, 5);
@@ -120,7 +120,7 @@ $check('export: neobsahuje soukromou poznámku učitele ani peer texty (schvále
     && count(storage_read(proj65_path('peer'))) > 0 && str_contains($htmlAuthor, 'Reflexe autora'));
 $desel = port65_save_item($CLASS, $good, $p1Key, false, '');
 $check('portfolio: odebrání z výběru vrátí práci do stavu graded a z exportu zmizí; export nenabízí žádné sdílení odkazem (žádná sdílecí akce v routách)', $desel['ok'] && proj65_get(proj65_ref_cat($CLASS, $P1, 'individual', $good))['state'] === 'graded' && count(port65_view_model($CLASS, $good)) === 0
-    && !str_contains((string)file_get_contents($root . '/app/actions/projects_v65.php'), 'share') && !str_contains((string)file_get_contents($root . '/portfolio_v65.php') . (string)file_get_contents($root . '/portfolio_v65_views.php'), 'token='));
+    && !str_contains((string)file_get_contents($root . '/app/actions/projects_v65.php'), 'share') && !str_contains((string)file_get_contents($root . '/src/student/portfolio_v65.php') . (string)file_get_contents($root . '/src/student/portfolio_v65_views.php'), 'token='));
 
 // --- 11) Retence -------------------------------------------------------------------------------------------
 $leftId = (string)ev62_student_context($CLASS, $left)['id'];
@@ -195,7 +195,7 @@ $teacherHtml = (string)ob_get_clean();
 $check('učitel: záložka obsahuje nastavení projektů, návrhy ke schválení, odevzdané práce, moderaci peer review a přínos týmů (česky)', str_contains($teacherHtml, 'Nastavení projektů') && str_contains($teacherHtml, 'Návrhy ke schválení') && str_contains($teacherHtml, 'Odevzdané práce') && str_contains($teacherHtml, 'Peer review: moderace') && str_contains($teacherHtml, 'Týmy: přínos členů'));
 $check('učitel: rubriku lze klonovat a upravit (formulář proj65_t_rubric_clone), hodnocení nabízí koncept i publikaci a úroveň 1 vyžaduje komentář', str_contains($teacherHtml, 'proj65_t_rubric_clone') && str_contains($teacherHtml, 'name="publish" value="1"') && str_contains($teacherHtml, 'name="publish" value="0"') && str_contains($teacherHtml, 'u úrovně 1 povinný'));
 $teacherActions = [];
-preg_match_all("/case '(proj65_t_[a-z_]+)'/", (string)file_get_contents($root . '/projects_v65_teacher_actions.php'), $mm);
+preg_match_all("/case '(proj65_t_[a-z_]+)'/", (string)file_get_contents($root . '/src/projects/projects_v65_teacher_actions.php'), $mm);
 $teacherActions = array_unique($mm[1]);
 $policyOk = $teacherActions !== [];
 foreach ($teacherActions as $a) { $p = teacher59_action_policy($a); if (($p['class'] ?? '') !== 'required' || !empty($p['deny'])) $policyOk = false; }
@@ -203,11 +203,11 @@ $check('politiky: každá akce proj65_t_* (' . count($teacherActions) . ') má v
 $permOk = true;
 foreach ($teacherActions as $a) if (teacher_action_permission($a) !== 'projects.manage') $permOk = false;
 $check('oprávnění: akce proj65_ vyžadují projects.manage a záložka je v registru cockpitu s POST prefixem proj65_t_', $permOk && (teacher58_modules()['projekty65']['post'] ?? []) === ['proj65_t_' => 'proj65_teacher_handle_post'] && teacher58_available('projekty65'));
-$check('oprávnění: asistent nemá projects.manage v matici rolí (jen čte)', preg_match("/'assistant'=>\[[^\]]*'projects\.manage'/", (string)file_get_contents($root . '/teacher_operations_v46.php')) !== 1, false);
+$check('oprávnění: asistent nemá projects.manage v matici rolí (jen čte)', preg_match("/'assistant'=>\[[^\]]*'projects\.manage'/", (string)file_get_contents($root . '/src/teacher/teacher_operations_v46.php')) !== 1, false);
 
 // --- 14) Statický sken -------------------------------------------------------------------------------------
-$newFiles = ['projects_v65.php', 'projects_v65_rubrics.php', 'projects_v65_peer.php', 'projects_v65_team.php', 'projects_v65_evidence.php', 'portfolio_v65.php', 'projects_v65_views.php', 'projects_v65_detail_views.php', 'portfolio_v65_views.php',
-    'projects_v65_teacher_views.php', 'projects_v65_teacher_actions.php', 'app/views/projects_v65.php', 'app/views/portfolio.php', 'app/actions/projects_v65.php', 'migrations/0003_projects_v65.php', 'lang/en/ui/projects_v65.php', 'lang/uk/ui/projects_v65.php', 'tools/v65_projects_audit.php', 'tools/lib/v65_audit_part2.php'];
+$newFiles = ['src/projects/projects_v65.php', 'src/projects/projects_v65_rubrics.php', 'src/projects/projects_v65_peer.php', 'src/projects/projects_v65_team.php', 'src/projects/projects_v65_evidence.php', 'src/student/portfolio_v65.php', 'src/projects/projects_v65_views.php', 'src/projects/projects_v65_detail_views.php', 'src/student/portfolio_v65_views.php',
+    'src/projects/projects_v65_teacher_views.php', 'src/projects/projects_v65_teacher_actions.php', 'app/views/projects_v65.php', 'app/views/portfolio.php', 'app/actions/projects_v65.php', 'migrations/0003_projects_v65.php', 'lang/en/ui/projects_v65.php', 'lang/uk/ui/projects_v65.php', 'tools/v65_projects_audit.php', 'tools/lib/v65_audit_part2.php'];
 $strict = $guard = $size = $legacy = true;
 foreach ($newFiles as $f) {
     $src = (string)file_get_contents($root . '/' . $f);

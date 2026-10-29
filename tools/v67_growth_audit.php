@@ -26,8 +26,8 @@ require_once $ROOT . '/app/lib.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
 app_require_libs(['core', 'layout', 'competency', 'growth', 'paths', 'projects65']);
-require_once $ROOT . '/profile_v60.php';
-require_once $ROOT . '/growth_v67_views.php';
+require_once $ROOT . '/src/student/profile_v60.php';
+require_once $ROOT . '/src/student/growth_v67_views.php';
 require_once __DIR__ . '/lib/v62_competency_fixtures.php';
 
 $state = audit_counter();

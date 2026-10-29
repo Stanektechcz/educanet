@@ -10,15 +10,15 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * nastavení soukromí relace. Dotazuje se každé 2 s (viz assets/teamgames-v58.js), zpomalí ve skryté kartě.
  */
 
-require_once __DIR__ . '/teamgames_v58_registry.php';
-require_once __DIR__ . '/teamgames_v58_quiz.php';
-require_once __DIR__ . '/linux_v58_levels_tg.php';
-require_once __DIR__ . '/teamgames_v58_game_relay.php';
-require_once __DIR__ . '/teamgames_v58_game_bingo.php';
-require_once __DIR__ . '/teamgames_v58_game_jeopardy.php';
-require_once __DIR__ . '/teamgames_v58_game_tug.php';
-require_once __DIR__ . '/teamgames_v58_game_netadmin.php';
-require_once __DIR__ . '/teamgames_v58_game_escape.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_registry.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_quiz.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v58_levels_tg.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_relay.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_bingo.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_jeopardy.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_tug.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_netadmin.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_escape.php';
 
 function tg58_render_projector(string $gameId): void
 {

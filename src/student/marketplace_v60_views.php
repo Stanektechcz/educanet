@@ -8,7 +8,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * v60 · Vykreslení obchodu bodů (žák) – volá ho app/views/marketplace.php.
  */
 
-require_once __DIR__ . '/marketplace_v61_views.php';
+require_once dirname(__DIR__, 2) . '/src/student/marketplace_v61_views.php';
 
 function marketplace60_assets(): void
 {

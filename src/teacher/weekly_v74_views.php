@@ -9,7 +9,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * ?paleta (JSON pro rychlé hledání, palette_v74.php, politika tyden74|paleta). Každý výstup přes e().
  */
 
-require_once __DIR__ . '/weekly_v74.php';
+require_once dirname(__DIR__, 2) . '/src/teacher/weekly_v74.php';
 
 function wk74_date(string $date): string
 {

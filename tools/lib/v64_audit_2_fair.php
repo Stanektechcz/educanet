@@ -5,7 +5,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 
 /** v64 audit · dávka 2: ELO, ligy, anti-farm, absolutní žebříček, zlepšení. Proměnné: $check, $tmp, $root. */
 require_once __DIR__ . '/v64_sim_fixture.php';
-foreach (['linux_v57_lab.php', 'arena_v57.php', 'arena_v60_challenge.php', 'robots_v58.php', 'arena_v58_ctf.php', 'identity_v58.php'] as $lib) require_once $root . '/' . $lib;
+foreach (['src/linux/linux_v57_lab.php', 'src/arena/arena_v57.php', 'src/arena/arena_v60_challenge.php', 'src/robots/robots_v58.php', 'src/arena/arena_v58_ctf.php', 'src/student/identity_v58.php'] as $lib) require_once $root . '/' . $lib;
 
 $cid = 'class_3a';
 $T0 = 1_790_000_000;
@@ -30,7 +30,7 @@ $check('ELO: semestr jako robots58_semester (září–leden 1., únor–srpen 2
 
 function robots58_semester_probe(int $ts): string
 {
-    require_once dirname(__DIR__, 2) . '/robots_v58.php';
+    require_once dirname(__DIR__, 2) . '/src/robots/robots_v58.php';
     return robots58_semester($ts);
 }
 
@@ -57,7 +57,7 @@ $near = fair64_recommend($cid, 'class_3a:a', ['class_3a:a', 'class_3a:b', 'class
 $check('doporučení: soupeři do ±150 ELO, sám sebe nikdy; neznámý (1000) je mezi nimi, nic se nezakazuje', !in_array('class_3a:a', $near, true) && in_array('class_3a:neznamy', $near, true));
 
 // --- Hook v arena60_sweep_results ------------------------------------------------------------------
-$src = (string)file_get_contents($root . '/arena_v60_challenge.php');
+$src = (string)file_get_contents($root . '/src/arena/arena_v60_challenge.php');
 $check('hook: arena60_sweep_results předává dokončené výzvy do fair64_record_challenge (mimo zámek výzev)', str_contains($src, 'fair64_record_challenge($classId, $row, $now)') && str_contains($src, '$finished[] ='), false);
 fair64_record_challenge($cid, ['id' => 'chh', 'winner_key' => 'class_3a:c', 'from_key' => 'class_3a:c', 'to_key' => 'class_3a:d'], $T0);
 fair64_record_challenge($cid, ['id' => 'chh', 'winner_key' => 'class_3a:c', 'from_key' => 'class_3a:c', 'to_key' => 'class_3a:d'], $T0);

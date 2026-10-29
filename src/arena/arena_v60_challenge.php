@@ -27,7 +27,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * arény (výchozí iniciály) přes arena57_public_name()/lab57_display_name().
  */
 
-require_once __DIR__ . '/arena_v57.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v57.php';
 
 const ARENA60_MAX_OPEN_SENT = 3;
 const ARENA60_COOLDOWN_SECS = 86400; // 1 výzva na stejného adresáta / 24 h

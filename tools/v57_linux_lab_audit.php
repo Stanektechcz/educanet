@@ -60,7 +60,7 @@ set_error_handler(static function (int $errno, string $errstr, string $errfile, 
     return true;
 });
 
-require_once $ROOT . '/linux_v57_lab.php';
+require_once $ROOT . '/src/linux/linux_v57_lab.php';
 
 // ---------------------------------------------------------------------------
 // Malý test harness
@@ -202,7 +202,7 @@ v57_section_cli_guard($ROOT);
 
 function v57_section_cli_guard(string $root): void
 {
-    $files = ['linux_v57_lab.php', 'lab_v57_api.php', 'tools/v57_linux_lab_audit.php'];
+    $files = ['src/linux/linux_v57_lab.php', 'lab_v57_api.php', 'tools/v57_linux_lab_audit.php'];
     foreach ($files as $rel) {
         $path = $root . '/' . $rel;
         if (!is_file($path)) { v57_fail('cli-guard:' . $rel, 'soubor neexistuje'); continue; }
@@ -242,12 +242,12 @@ function v57_section_safety(string $root): void
     ];
     $fileFuncs = ['file_get_contents', 'fopen', 'file'];
     $patterns = array_merge(
-        glob($root . '/linux_v57_*.php') ?: [],
+        glob($root . '/src/linux/linux_v57_*.php') ?: [],
         [$root . '/lab_v57_api.php'],
-        glob($root . '/arena_v57*.php') ?: [],
+        glob($root . '/src/arena/arena_v57*.php') ?: [],
         // v58: rozšiřitelné jádro a všechna rozšíření podléhají stejnému invariantu.
-        glob($root . '/linux_v58_*.php') ?: [],
-        glob($root . '/lab_v58_*.php') ?: []
+        glob($root . '/src/linux/linux_v58_*.php') ?: [],
+        glob($root . '/src/linux/lab_v58_*.php') ?: []
     );
     $violations = [];
     foreach ($patterns as $path) {

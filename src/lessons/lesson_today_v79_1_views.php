@@ -12,7 +12,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * lt71_render_tab() sem deleguje (registr modulu i audity v70/v71 beze změny). Každý výstup přes e(). Texty česky (cockpit).
  */
 
-require_once __DIR__ . '/ux_v79_1.php';
+require_once dirname(__DIR__, 2) . '/src/ui/ux_v79_1.php';
 
 const LT791_T14_DAYS = 14;
 

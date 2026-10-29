@@ -23,12 +23,12 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  */
 
 return array_merge(
-    require __DIR__ . '/teamgames_v58_bank_gfx_color.php',
-    require __DIR__ . '/teamgames_v58_bank_gfx_type.php',
-    require __DIR__ . '/teamgames_v58_bank_gfx_formats.php',
-    require __DIR__ . '/teamgames_v58_bank_gfx_html.php',
-    require __DIR__ . '/teamgames_v58_bank_gfx_css.php',
-    require __DIR__ . '/teamgames_v58_bank_gfx_a11y.php',
-    require __DIR__ . '/teamgames_v58_bank_gfx_ux.php',
-    require __DIR__ . '/teamgames_v58_bank_gfx_license.php'
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_gfx_color.php',
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_gfx_type.php',
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_gfx_formats.php',
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_gfx_html.php',
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_gfx_css.php',
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_gfx_a11y.php',
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_gfx_ux.php',
+    require dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_bank_gfx_license.php'
 );

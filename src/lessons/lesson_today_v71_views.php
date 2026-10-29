@@ -10,8 +10,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Nové POST akce ani GET parametry nejsou (jediný formulář zůstává sess53_t_open z v70). Každý výstup přes e(). Texty česky.
  */
 
-require_once __DIR__ . '/lesson_today_v70_views.php';
-require_once __DIR__ . '/calendar_days_v71.php';
+require_once dirname(__DIR__, 2) . '/src/lessons/lesson_today_v70_views.php';
+require_once dirname(__DIR__, 2) . '/src/ops/calendar_days_v71.php';
 
 /** Model stránky: v70 + den bez lekce (jen bez ručního ?lesson=). v77: lesson kit je jen v aplikaci (Režim hodiny), MD kity vyřazené. */
 function lt71_model(array $modules, string $requestedClass, int $lessonParam, ?int $now = null): array

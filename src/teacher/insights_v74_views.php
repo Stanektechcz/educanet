@@ -9,7 +9,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * dat a navržený krok s odkazem na existující záložku. Žák kartu nikdy nevidí; nic se neukládá ani neexportuje.
  */
 
-require_once __DIR__ . '/insights_v74.php';
+require_once dirname(__DIR__, 2) . '/src/teacher/insights_v74.php';
 
 /** Karta pro model Dnešní hodiny; $now jen pro audit. */
 function in74_card_html(array $m, ?int $now = null): string

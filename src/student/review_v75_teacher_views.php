@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/review_v75.php';
+require_once dirname(__DIR__, 2) . '/src/student/review_v75.php';
 
 /**
  * EDUCANET v75 · záložka cockpitu `opakovani75` (česky): výběr rozsahu lekcí (?od=, ?do=; v79 po krocích ?krok=, review_v79.php), náhled balíčku z chyb třídy,
@@ -28,7 +28,7 @@ function rv75_render_teacher_tab(array $modules, string $classId, string $csrf):
     foreach ($classes as $cid) echo '<li><a href="' . e(rv75_tab_url($cid)) . '"' . ($cid === $class ? ' aria-current="page"' : '') . '><strong>' . e((string)($modules[$cid]['name'] ?? $cid)) . '</strong></a></li>';
     echo '</ul></nav>';
     // v79: Témata → Náhled balíčku → Zveřejnit (review_v79.php); akce op75_publish / op75_close beze změny.
-    require_once __DIR__ . '/review_v79.php';
+    require_once dirname(__DIR__, 2) . '/src/student/review_v79.php';
     rv79_render($modules, $class, $csrf);
 }
 

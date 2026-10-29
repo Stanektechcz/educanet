@@ -8,9 +8,9 @@ require $root.'/bootstrap.php';
 if(!function_exists('teacher_class_label')){
     function teacher_class_label(string $classId): string { return match($classId){'class_1a'=>'1.A Grafika','class_2a'=>'2.A Grafika','class_3a'=>'3.A SOSPS','class_4a'=>'4.A SOSPS',default=>$classId}; }
 }
-require_once $root.'/teacher_curriculum.php';
-require_once $root.'/teacher_overview_dashboard.php';
-require_once $root.'/teacher_class_dashboard.php';
+require_once $root.'/src/teacher/teacher_curriculum.php';
+require_once $root.'/src/teacher/teacher_overview_dashboard.php';
+require_once $root.'/src/teacher/teacher_class_dashboard.php';
 
 $errors=[];$storageBefore=[];
 foreach(glob(STORAGE_DIR.'/*.php')?:[] as $file)$storageBefore[$file]=hash_file('sha256',$file);
@@ -44,7 +44,7 @@ foreach(['class_1a','class_2a','class_3a','class_4a'] as $classId){
 
 $teacherSource=file_get_contents($root.'/teacher.php')?:'';
 foreach(['task_status','task_due'] as $needle)if(!str_contains($teacherSource,$needle))$errors[]="teacher.php missing $needle";
-$dashboard=file_get_contents($root.'/teacher_class_dashboard.php')?:'';
+$dashboard=file_get_contents($root.'/src/teacher/teacher_class_dashboard.php')?:'';
 foreach(['data-class-task-status','data-class-task-due','data-filter-task-status','data-filter-task-due','teacher_task_deadline_label'] as $needle)if(!str_contains($dashboard,$needle))$errors[]="teacher_class_dashboard.php missing $needle";
 $jsFile=is_file($root.'/assets/teacher-admin-v45-7.js')?$root.'/assets/teacher-admin-v45-7.js':$root.'/assets/teacher-admin-v45-6.js';
 $js=file_get_contents($jsFile)?:'';

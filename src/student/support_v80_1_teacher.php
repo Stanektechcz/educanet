@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/support_v80_1.php';
+require_once dirname(__DIR__, 2) . '/src/student/support_v80_1.php';
 
 /**
  * EDUCANET v80.1 · POST akce učitele modulu `mapa801` (Mapa třídy). CSRF, politiku teacher59 (třída povinná a v rozsahu; fráze jen vlastní

@@ -90,7 +90,7 @@ function v62fx_seed_shared(int $now): void
 /** @return array{now:int} */
 function v62fx_seed(string $tmp, int $now): array
 {
-    foreach (['intake_v51.php', 'linux_v57_lab.php', 'identity_v58.php'] as $lib) require_once dirname(__DIR__, 2) . '/' . $lib;
+    foreach (['src/student/intake_v51.php', 'src/linux/linux_v57_lab.php', 'src/student/identity_v58.php'] as $lib) require_once dirname(__DIR__, 2) . '/' . $lib;
     v62fx_write_roster($tmp);
     v62fx_seed_good($now);
     v62fx_seed_shared($now);

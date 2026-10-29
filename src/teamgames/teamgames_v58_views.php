@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_once __DIR__ . '/i18n_v59.php'; }
+if (!function_exists('tr')) { require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v58.php'; require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v59.php'; }
 
 /**
  * EDUCANET v58 · Týmové hry – žákovské stránky (`?view=hry`, `?view=hry&hra=<id>`).
@@ -15,16 +15,16 @@ if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_on
  * (lab57_render_workspace, kontext `tg:<id>`) – žádná vlastní simulace, jen napojení na existující jádro.
  */
 
-require_once __DIR__ . '/teamgames_v58_registry.php';
-require_once __DIR__ . '/teamgames_v58_quiz.php';
-require_once __DIR__ . '/linux_v58_levels_tg.php';
-require_once __DIR__ . '/teamgames_v58_game_relay.php';
-require_once __DIR__ . '/teamgames_v58_game_bingo.php';
-require_once __DIR__ . '/teamgames_v58_game_jeopardy.php';
-require_once __DIR__ . '/teamgames_v58_game_tug.php';
-require_once __DIR__ . '/teamgames_v58_game_netadmin.php';
-require_once __DIR__ . '/teamgames_v58_game_escape.php';
-require_once __DIR__ . '/teamgames_v64_views.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_registry.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_quiz.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v58_levels_tg.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_relay.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_bingo.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_jeopardy.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_tug.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_netadmin.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_escape.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v64_views.php';
 
 function tg58_assets(): void
 {

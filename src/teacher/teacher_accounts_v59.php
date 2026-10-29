@@ -58,7 +58,7 @@ function teacher59_noise_path(): string { return STORAGE_DIR . '/teacher_account
 function teacher59_locks_path(): string { return STORAGE_DIR . '/teacher_accounts_v59_locks.json.php'; }
 
 // SEC59-03/04: zámek přihlášení (login + IP, zpomalení napříč IP) a hlučný log s limitem.
-require_once __DIR__ . '/teacher_accounts_v59_limits.php';
+require_once dirname(__DIR__, 2) . '/src/teacher/teacher_accounts_v59_limits.php';
 
 /** SEC59-05: pojistka mimo úložiště – účty jsou povinné (chybějící soubor = broken, nikdy legacy). */
 function teacher59_accounts_required(): bool
@@ -216,7 +216,7 @@ function teacher59_password_context(array $account): array
 
 function teacher59_generate_otp(array $context = []): string
 {
-    require_once __DIR__ . '/accounts_v58.php';
+    require_once dirname(__DIR__, 2) . '/src/student/accounts_v58.php';
     $words = acc58_words();
     $last = count($words) - 1;
     $pick = static fn(): string => (string)$words[random_int(0, $last)];

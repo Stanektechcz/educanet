@@ -3,8 +3,8 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/taskbank_v75_gen.php';
-require_once __DIR__ . '/hints_v80_gfx.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/taskbank_v75_gen.php';
+require_once dirname(__DIR__, 2) . '/src/lessons/hints_v80_gfx.php';
 
 /**
  * EDUCANET v80 · odstupňované nápovědy a vysvětlení konkrétní chyby k úlohám s variantami (ČISTÉ funkce, nic nespouští ani neukládá).

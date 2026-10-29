@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/stepper_v79_views.php';
+require_once dirname(__DIR__, 2) . '/src/ui/stepper_v79_views.php';
 
 /**
  * EDUCANET v79 · Opakování před písemkou jako stepper: Témata (rozsah lekcí od–do) → Náhled balíčku → Zveřejnit.

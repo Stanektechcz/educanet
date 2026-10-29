@@ -79,7 +79,7 @@ $class4 = $makeClass($network4Map, [
     ['type'=>'reference','title'=>'MDN · HTTP status codes','meta'=>'Volitelná reference pro HTTP diagnostiku','url'=>$mdnHttp],
 ]);
 
-$yearpackResourceMap = json_decode((string)file_get_contents(__DIR__ . '/yearpack_resource_map.json'), true);
+$yearpackResourceMap = json_decode((string)file_get_contents(dirname(__DIR__, 2) . '/yearpack_resource_map.json'), true);
 foreach ((array)($yearpackResourceMap['class_1a'] ?? []) as $topic => $videoKey) if (isset($videos[$videoKey])) $class1[$topic] = [$videos[$videoKey]];
 foreach ((array)($yearpackResourceMap['class_2a'] ?? []) as $topic => $videoKey) if (isset($videos[$videoKey])) $class2[$topic] = [$videos[$videoKey]];
 foreach ((array)($yearpackResourceMap['class_3a'] ?? []) as $topic => $videoKey) if (isset($videos[$videoKey])) $class3[$topic] = [$videos[$videoKey]];

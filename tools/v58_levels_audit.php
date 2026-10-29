@@ -51,7 +51,7 @@ set_error_handler(static function (int $errno, string $errstr, string $errfile, 
     return true;
 });
 
-require_once $ROOT . '/linux_v57_lab.php';
+require_once $ROOT . '/src/linux/linux_v57_lab.php';
 
 // ---------------------------------------------------------------------------
 // Malý test harness (stejný styl jako v57 audit)
@@ -107,7 +107,7 @@ function v58a_section_safety(string $root): void
 {
     $forbiddenFuncs = ['exec', 'shell_exec', 'system', 'passthru', 'proc_open', 'popen', 'pcntl_exec', 'eval', 'create_function', 'assert', 'fsockopen', 'pfsockopen', 'stream_socket_client', 'socket_create', 'socket_connect', 'curl_init', 'curl_exec', 'curl_multi_exec', 'dns_get_record', 'gethostbyname', 'gethostbynamel', 'getmxrr', 'checkdnsrr', 'mail'];
     $fileFuncs = ['file_get_contents', 'fopen', 'file'];
-    $files = ['linux_v57_levels.php', 'linux_v57_levels_ops.php', 'linux_v58_levels_generators.php', 'lab_v58_editor.php', 'lab_v58_editor_views.php', 'lab_v58_content.php'];
+    $files = ['src/linux/linux_v57_levels.php', 'src/linux/linux_v57_levels_ops.php', 'src/linux/linux_v58_levels_generators.php', 'src/linux/lab_v58_editor.php', 'src/linux/lab_v58_editor_views.php', 'src/linux/lab_v58_content.php'];
     $violations = [];
     foreach ($files as $rel) {
         $path = $root . '/' . $rel;

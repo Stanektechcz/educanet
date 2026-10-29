@@ -29,7 +29,7 @@ function ds78_breakpoints(): array
 
 function ds78_tokens_css(?string $root = null): string
 {
-    $file = ($root ?? __DIR__) . '/' . DS78_TOKENS_CSS;
+    $file = ($root ?? dirname(__DIR__, 2)) . '/' . DS78_TOKENS_CSS;
     return is_file($file) ? (string)file_get_contents($file) : '';
 }
 

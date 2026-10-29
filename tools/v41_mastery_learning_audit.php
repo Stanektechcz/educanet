@@ -4,11 +4,11 @@ declare(strict_types=1);
 require_once __DIR__ . '/lib/app_source.php';
 if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 require dirname(__DIR__).'/bootstrap.php';
-require dirname(__DIR__).'/assessment_visuals.php';
-require dirname(__DIR__).'/reality_demos.php';
-require dirname(__DIR__).'/mastery_learning_views_v41.php';
+require dirname(__DIR__).'/src/assessment/assessment_visuals.php';
+require dirname(__DIR__).'/src/content/reality_demos.php';
+require dirname(__DIR__).'/src/lessons/mastery_learning_views_v41.php';
 $root=dirname(__DIR__);$errors=[];
-$files=['mastery_learning_v41.php','mastery_learning_views_v41.php','manifest.webmanifest','sw.js'];foreach($files as $f)if(!is_file($root.'/'.$f))$errors[]='missing '.$f;
+$files=['src/lessons/mastery_learning_v41.php','src/lessons/mastery_learning_views_v41.php','manifest.webmanifest','sw.js'];foreach($files as $f)if(!is_file($root.'/'.$f))$errors[]='missing '.$f;
 $index=edu_app_source()?:'';$teacher=file_get_contents($root.'/teacher.php')?:'';$progress=file_get_contents($root.'/progress.php')?:'';$js=file_get_contents($root.'/assets/app.js')?:'';$css=(file_get_contents($root.'/assets/app.css')?:'').(file_get_contents($root.'/assets/mastery.css')?:'');
 foreach(['ml_render_worked_example','ml_render_browser_lab','ml_render_transfer','ml_render_explain_back','ml_render_knowledge_map','ml_render_class_tips','ml_render_error_journal','ml_render_live_student','ml_goal_save','ml_portfolio_narrative_save','create_challenge'] as $n)if(!str_contains($index,$n))$errors[]='index missing '.$n;
 foreach(['ml_record_learning_event','confidence','latency_ms'] as $n)if(!str_contains($progress,$n))$errors[]='progress missing '.$n;

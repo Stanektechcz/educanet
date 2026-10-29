@@ -3,8 +3,8 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/taskbank_v75.php';
-require_once __DIR__ . '/hints_v80.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/taskbank_v75.php';
+require_once dirname(__DIR__, 2) . '/src/lessons/hints_v80.php';
 
 /**
  * EDUCANET v80 · podpora učení – úložiště a pravidla (rozložené opakování chyb, počty nápověd, stav cvičení, cíle).
@@ -82,7 +82,7 @@ function lr80_update(string $classId, string $ref, callable $fn, ?int $now = nul
 {
     $now ??= time();
     $out = [];
-    if (!function_exists('pg80_goals_settle')) require_once __DIR__ . '/progress_v80.php';   // cíle týdne se zarovnají při každém zápisu
+    if (!function_exists('pg80_goals_settle')) require_once dirname(__DIR__, 2) . '/src/student/progress_v80.php';   // cíle týdne se zarovnají při každém zápisu
     storage_update(lr80_path($classId), static function (array $d) use ($classId, $ref, $fn, $now, &$out): array {
         $students = is_array($d['students'] ?? null) ? $d['students'] : [];
         $limit = $now - LR80_RETENTION_DAYS * 86400;

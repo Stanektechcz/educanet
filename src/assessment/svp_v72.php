@@ -112,7 +112,7 @@ function svp72_map(): array
 {
     static $map = null;
     if ($map === null) {
-        $loaded = require __DIR__ . '/svp_v72_map.php';
+        $loaded = require dirname(__DIR__, 2) . '/src/assessment/svp_v72_map.php';
         $map = is_array($loaded) ? $loaded : [];
     }
     return $map;

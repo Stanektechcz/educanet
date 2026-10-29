@@ -11,8 +11,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Texty přes tr() (doména competency); názvy kompetencí z katalogu se překládají přes comp62_t_label().
  */
 
-require_once __DIR__ . '/competencies_v62.php';
-require_once __DIR__ . '/competency_v75_labels.php';   // v75: názvy kompetencí 2.A a 4.A
+require_once dirname(__DIR__, 2) . '/src/assessment/competencies_v62.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/competency_v75_labels.php';   // v75: názvy kompetencí 2.A a 4.A
 
 function comp62_student_assets(): void
 {
@@ -105,14 +105,14 @@ function comp62_render_student_tab(string $classId, string $studentKey): void
 {
     $subject = comp62_subject_for_class($classId);
     if (!comp62_enabled_for_class($classId) || $subject === null) return;
-    require_once __DIR__ . '/evidence_v62.php';
-    require_once __DIR__ . '/evidence_v62_adapters.php';
-    require_once __DIR__ . '/mastery_v62.php';
+    require_once dirname(__DIR__, 2) . '/src/assessment/evidence_v62.php';
+    require_once dirname(__DIR__, 2) . '/src/assessment/evidence_v62_adapters.php';
+    require_once dirname(__DIR__, 2) . '/src/assessment/mastery_v62.php';
     comp62_student_assets();
     if (function_exists('grow67_assets')) grow67_assets(); // v67: pruhy oblastí (SVG)
     ev62_sync_student($classId, $studentKey, false, true); // GET: jen levné zdroje, plná sync = cron/comp62_sync
     $mastery = m62_student($classId, $studentKey);
-    require_once __DIR__ . '/challenges_v64.php';
+    require_once dirname(__DIR__, 2) . '/src/student/challenges_v64.php';
     if ($mastery['id'] !== null) ch64_award_competency_badges((string)$mastery['id'], (array)$mastery['map'], time()); // v64: odznaky jen za milníky kompetencí
     $items = ['umim' => '', 'ucim' => '', 'zatim' => ''];
     foreach (comp62_competencies($subject) as $id => $c) {
@@ -122,8 +122,8 @@ function comp62_render_student_tab(string $classId, string $studentKey): void
     $total = count(comp62_competencies($subject));
     $known = substr_count($items['umim'], '<li ');
     $gradingLink = '';
-    if (is_file(__DIR__ . '/grading_v66_views.php')) { // v66: odkaz na „Moje hodnocení“ jen ve třídách se zapnutým návrhem hodnocení
-        require_once __DIR__ . '/grading_v66_views.php';
+    if (is_file(dirname(__DIR__, 2) . '/src/assessment/grading_v66_views.php')) { // v66: odkaz na „Moje hodnocení“ jen ve třídách se zapnutým návrhem hodnocení
+        require_once dirname(__DIR__, 2) . '/src/assessment/grading_v66_views.php';
         $gradingLink = g66v_link_html($classId);
     }
     echo '<div class="c62-wrap"><p class="c62-intro">' . e(tr('Mapa ukazuje, co už umíš podle testů, lekcí a úloh v labu. Hra sama zvládnutí nedá, je to jen trénink. Mapu vidíš jen ty.')) . '</p>'

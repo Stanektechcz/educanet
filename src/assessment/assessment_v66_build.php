@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-require_once __DIR__ . '/assessment_v66.php';
-require_once __DIR__ . '/integrity_v66.php';
-require_once __DIR__ . '/grading_v66.php';
-require_once __DIR__ . '/morning_v66.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/assessment_v66.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/integrity_v66.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/grading_v66.php';
+require_once dirname(__DIR__, 2) . '/src/teacher/morning_v66.php';
 
 /**
  * EDUCANET v66 · sestavení cache třídy (položková analýza, štítky integrity, návrhy hodnocení, ranní přehled) a retence.

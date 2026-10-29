@@ -24,8 +24,8 @@ $tmp = rtrim(str_replace('\\', '/', edu_audit_temp_storage('v66-http')), '/');
 $teacherKey = 'audit-v66-' . bin2hex(random_bytes(8));
 putenv('EDUCANET_TEACHER_EXPORT_KEY=' . $teacherKey);
 require $root . '/bootstrap.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'identity_v58.php', 'linux_v57_lab.php', 'competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'projects_v65.php',
-    'paths_v63_class.php', 'paths_v63_flow.php', 'runtime_content.php', 'tutorial_v52.php', 'session_v53.php', 'learning_v56.php', 'assessment_v66_build.php', 'ops_v58.php', 'app/lib.php'] as $file) {
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/student/identity_v58.php', 'src/linux/linux_v57_lab.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/evidence_v62_adapters.php', 'src/assessment/mastery_v62.php', 'src/projects/projects_v65.php',
+    'src/paths/paths_v63_class.php', 'src/paths/paths_v63_flow.php', 'src/ops/runtime_content.php', 'src/lessons/tutorial_v52.php', 'src/lessons/session_v53.php', 'src/lessons/learning_v56.php', 'src/assessment/assessment_v66_build.php', 'src/ops/ops_v58.php', 'app/lib.php'] as $file) {
     require_once $root . '/' . $file;
 }
 require_once __DIR__ . '/lib/v62_competency_fixtures.php';

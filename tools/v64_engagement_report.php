@@ -26,8 +26,8 @@ if ($v64eMain) {
 }
 
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once dirname(__DIR__) . '/intake_v51.php';
-require_once dirname(__DIR__) . '/motivation_v61.php';
+require_once dirname(__DIR__) . '/src/student/intake_v51.php';
+require_once dirname(__DIR__) . '/src/student/motivation_v61.php';
 
 const V64E_GAME_PREFIXES = ['v57:race:', 'v58:ctf:', 'v58:weekly:', 'v58:incident:', 'robots58:', 'tg58:'];
 

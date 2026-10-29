@@ -8,9 +8,9 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Volá je marketplace_v60_views.php. Jen HTML (vše přes e()); náhled nic nezapisuje.
  */
 
-require_once __DIR__ . '/marketplace_v61.php';
-require_once __DIR__ . '/motivation_v61.php';
-require_once __DIR__ . '/badges_v60.php';
+require_once dirname(__DIR__, 2) . '/src/student/marketplace_v61.php';
+require_once dirname(__DIR__, 2) . '/src/student/motivation_v61.php';
+require_once dirname(__DIR__, 2) . '/src/student/badges_v60.php';
 
 /** Žák vidí jen oblíbené (?oblibene=1 – whitelist hodnoty). */
 function mkt61_only_favorites(): bool

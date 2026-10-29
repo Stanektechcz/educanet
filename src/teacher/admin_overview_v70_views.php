@@ -8,8 +8,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Hesla, jednorázová hesla, IP adresy ani klíče se nikde nevypisují – jen počty, role, loginy a kódy událostí.
  */
 
-require_once __DIR__ . '/cockpit_v70.php';
-require_once __DIR__ . '/admin_overview_v70.php';
+require_once dirname(__DIR__, 2) . '/src/teacher/cockpit_v70.php';
+require_once dirname(__DIR__, 2) . '/src/teacher/admin_overview_v70.php';
 
 function ad70_bytes(?int $bytes): string
 {

@@ -17,11 +17,11 @@ require_once __DIR__ . '/lib/audit_storage.php';
 require_once __DIR__ . '/lib/audit.php';
 $tmp = rtrim(str_replace('\\', '/', edu_audit_temp_storage('v60-marketplace')), '/');
 require $root . '/bootstrap.php';
-require_once $root . '/points_v53.php';
-require_once $root . '/points_v60.php';
-require_once $root . '/marketplace_v60.php';
-require_once $root . '/teacher_operations_v46.php';
-require_once $root . '/teacher_scope_v59.php';
+require_once $root . '/src/student/points_v53.php';
+require_once $root . '/src/student/points_v60.php';
+require_once $root . '/src/student/marketplace_v60.php';
+require_once $root . '/src/teacher/teacher_operations_v46.php';
+require_once $root . '/src/teacher/teacher_scope_v59.php';
 
 $state = audit_counter();
 $check = audit_checker($state);
@@ -75,7 +75,7 @@ $check('mkt60_cosmetics: aktivní rámeček se uloží', mkt60_cosmetics($classA
 $check('mkt60_set_cosmetic: nevlastněnou položku nelze aktivovat', !mkt60_set_cosmetic($classA, $studentA, 'frame', 'neexistujici-id'));
 
 // --- 4) Cizí profil nikdy nesmí zobrazit body (profile60_data_points je jen pro isMe) ------------
-require_once $root . '/profile_v60.php';
+require_once $root . '/src/student/profile_v60.php';
 $check('profil: profile60_data() u cizího profilu nevrací body ani na záložce "body"', profile60_data($classA, $studentA, '', false, 'body') === []);
 
 // --- 5) Log nákupů/vrácení je append-only proud (marketplace_v60_log) ----------------------------
@@ -87,7 +87,7 @@ $balanceBeforeRefund = pts53_balance($classA, $studentA);
 $check('pts60_refund: vrátí body a nemaže nákup', pts60_refund($classA, $studentA, 'mkt:' . $idLimited . ':req-2', 'test') && pts53_balance($classA, $studentA) === $balanceBeforeRefund + 5);
 
 // --- 7) Rozsah učitele: mkt60_save/activate/refund respektují teacher59_action_policy() ----------
-require_once $root . '/teacher_accounts_v59.php';
+require_once $root . '/src/teacher/teacher_accounts_v59.php';
 // Skutečný účet v úložišti (ne mock) – teacher59_current()/teacher59_mode() se ověřují vždy proti storage.
 $teacherId = 't_' . bin2hex(random_bytes(8));
 storage_update(teacher59_accounts_path(), static function (array $store) use ($teacherId, $classA): array {

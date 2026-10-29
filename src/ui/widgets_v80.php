@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/learning_v80.php';
+require_once dirname(__DIR__, 2) . '/src/lessons/learning_v80.php';
 
 /**
  * EDUCANET v80 · interaktivní cvičení v prohlížeči (?view=cviceni): kalkulačka podsítí, stavebnice chmod, míchání barev, souboj specificity.

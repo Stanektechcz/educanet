@@ -16,8 +16,8 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  */
 
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once dirname(__DIR__) . '/identity_v58.php';
-require_once dirname(__DIR__) . '/assessment_v66_build.php';
+require_once dirname(__DIR__) . '/src/student/identity_v58.php';
+require_once dirname(__DIR__) . '/src/assessment/assessment_v66_build.php';
 
 $classFilter = '';
 foreach ($argv as $arg) {

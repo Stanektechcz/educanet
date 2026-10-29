@@ -22,17 +22,17 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  */
 
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once dirname(__DIR__) . '/ops_v58.php';
-require_once dirname(__DIR__) . '/linux_v57_lab.php';
-require_once dirname(__DIR__) . '/lab_v58_log.php';
-require_once dirname(__DIR__) . '/identity_v58.php';
-require_once dirname(__DIR__) . '/evidence_v62.php';
-require_once dirname(__DIR__) . '/paths_v63_class.php';
-require_once dirname(__DIR__) . '/teamgames_v64_roles.php';
-require_once dirname(__DIR__) . '/projects_v65.php';
-require_once dirname(__DIR__) . '/projects_v65_evidence.php';
-require_once dirname(__DIR__) . '/assessment_v66_build.php';
-require_once dirname(__DIR__) . '/retention_v76.php';
+require_once dirname(__DIR__) . '/src/ops/ops_v58.php';
+require_once dirname(__DIR__) . '/src/linux/linux_v57_lab.php';
+require_once dirname(__DIR__) . '/src/linux/lab_v58_log.php';
+require_once dirname(__DIR__) . '/src/student/identity_v58.php';
+require_once dirname(__DIR__) . '/src/assessment/evidence_v62.php';
+require_once dirname(__DIR__) . '/src/paths/paths_v63_class.php';
+require_once dirname(__DIR__) . '/src/teamgames/teamgames_v64_roles.php';
+require_once dirname(__DIR__) . '/src/projects/projects_v65.php';
+require_once dirname(__DIR__) . '/src/projects/projects_v65_evidence.php';
+require_once dirname(__DIR__) . '/src/assessment/assessment_v66_build.php';
+require_once dirname(__DIR__) . '/src/student/retention_v76.php';
 
 function v58r_flag(array $argv, string $name): bool
 {

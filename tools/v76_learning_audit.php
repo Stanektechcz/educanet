@@ -28,11 +28,11 @@ register_shutdown_function(static function () use ($cacheDir): void {
 });
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
-foreach (['adaptive_learning.php', 'tutorial_v52.php', 'learning_v56.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_today_v70.php', 'lesson_reflect_v73.php',
-    'svp_v72.php', 'lesson_approval_v72.php', 'competencies_v62.php', 'competencies_v75.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'paths_v63_class.php',
-    'taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'levels_v75.php', 'projects_v65.php', 'projects_v65_evidence.php', 'portfolio_v65.php', 'portfolio_v75.php',
-    'portfolio_v75_views.php', 'portfolio_v65_views.php', 'retention_v76.php', 'observation_v76.php', 'plan_v76.php', 'svp_export_v76.php',
-    'teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/lessons/adaptive_learning.php', 'src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/lessons/lesson_today_v70.php', 'src/lessons/lesson_reflect_v73.php',
+    'src/assessment/svp_v72.php', 'src/lessons/lesson_approval_v72.php', 'src/assessment/competencies_v62.php', 'src/assessment/competencies_v75.php', 'src/assessment/evidence_v62.php', 'src/assessment/mastery_v62.php', 'src/paths/paths_v63.php', 'src/paths/paths_v63_class.php',
+    'src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/assessment/taskbank_v76.php', 'src/levels/levels_v75.php', 'src/projects/projects_v65.php', 'src/projects/projects_v65_evidence.php', 'src/student/portfolio_v65.php', 'src/student/portfolio_v75.php',
+    'src/student/portfolio_v75_views.php', 'src/student/portfolio_v65_views.php', 'src/student/retention_v76.php', 'src/teacher/observation_v76.php', 'src/ops/plan_v76.php', 'src/assessment/svp_export_v76.php',
+    'src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php'] as $lib) require_once $ROOT . '/' . $lib;
 require_once __DIR__ . '/lib/v63_paths_fixtures.php';
 
 $state = audit_counter();
@@ -41,8 +41,8 @@ $read = static fn(string $rel): string => (string)@file_get_contents($ROOT . '/'
 $throws = static function (callable $fn, string $needle = ''): bool { try { $fn(); } catch (RuntimeException $e) { return $needle === '' || str_contains($e->getMessage(), $needle); } return false; };
 $check('úložiště auditu je dočasné (ne ostrá storage/)', STORAGE_DIR === $tmp && str_contains($tmp, 'educanet-audit-'));
 $bad = [];
-foreach (['plan_v76.php', 'plan_v76_views.php', 'svp_export_v76.php', 'svp_export_v76_views.php', 'observation_v76.php', 'taskbank_v76.php', 'taskbank_v76_gen.php', 'retention_v76.php',
-    'paths_v76_content_gfx.php', 'paths_v76_content_os.php', 'tools/v76_learning_audit.php', 'tools/lib/v76_learning_part2.php', 'tools/v76_http_audit.php', 'tools/lib/v76_http.php'] as $f) {
+foreach (['src/ops/plan_v76.php', 'src/ops/plan_v76_views.php', 'src/assessment/svp_export_v76.php', 'src/assessment/svp_export_v76_views.php', 'src/teacher/observation_v76.php', 'src/assessment/taskbank_v76.php', 'src/assessment/taskbank_v76_gen.php', 'src/student/retention_v76.php',
+    'src/paths/paths_v76_content_gfx.php', 'src/paths/paths_v76_content_os.php', 'tools/v76_learning_audit.php', 'tools/lib/v76_learning_part2.php', 'tools/v76_http_audit.php', 'tools/lib/v76_http.php'] as $f) {
     $s = $read($f);
     $guard = str_starts_with($f, 'tools/v76_') ? "if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }" : "basename(__FILE__)) { http_response_code(403); exit; }";
     if ($s === '' || !str_contains($s, 'declare(strict_types=1);') || !str_contains($s, $guard) || substr_count($s, "\n") > 800

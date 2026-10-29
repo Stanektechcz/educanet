@@ -10,15 +10,15 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * učitele. POST akce `tg58_*`: CSRF a oprávnění (students.manage) už ověřil teacher.php.
  */
 
-require_once __DIR__ . '/teamgames_v58_registry.php';
-require_once __DIR__ . '/teamgames_v58_quiz.php';
-require_once __DIR__ . '/linux_v58_levels_tg.php';
-require_once __DIR__ . '/teamgames_v58_game_relay.php';
-require_once __DIR__ . '/teamgames_v58_game_bingo.php';
-require_once __DIR__ . '/teamgames_v58_game_jeopardy.php';
-require_once __DIR__ . '/teamgames_v58_game_tug.php';
-require_once __DIR__ . '/teamgames_v58_game_netadmin.php';
-require_once __DIR__ . '/teamgames_v58_game_escape.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_registry.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_quiz.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v58_levels_tg.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_relay.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_bingo.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_jeopardy.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_tug.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_netadmin.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_game_escape.php';
 
 // ---------------------------------------------------------------------------
 // Pomocníci

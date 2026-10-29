@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/levels_v75.php';
+require_once dirname(__DIR__, 2) . '/src/levels/levels_v75.php';
 
 /**
  * EDUCANET v75 · záložka cockpitu `urovne75` (česky): návrhy úrovní Základ / Standard / Výzva pro L1–L16, schválení po lekcích

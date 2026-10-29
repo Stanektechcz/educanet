@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/widgets_v80.php';   // + learning_v80.php (opakování, stav cvičení)
+require_once dirname(__DIR__, 2) . '/src/ui/widgets_v80.php';   // + learning_v80.php (opakování, stav cvičení)
 
 /**
  * EDUCANET v80.1 · podpora žáka učitelem: rychlá zpětná vazba a přidělení procvičování (úložiště, pravidla, stav splnění).

@@ -112,7 +112,7 @@ function feedback60_render_mine(string $classId, string $studentKey): void
 /** Malý souhrn pro záložku Odznaky vlastního profilu. */
 function feedback60_render_profile_summary(string $classId, string $studentKey): void
 {
-    require_once __DIR__ . '/profile_v60_ui.php';
+    require_once dirname(__DIR__, 2) . '/src/student/profile_v60_ui.php';
     $sum = fb60_summary($classId, $studentKey);
     echo profile60_panel_open(tr('Nahlášené chyby a návrhy'), tr('Hlášení'), tr('Nahlásit chybu nebo návrh'), '?view=hlaseni', '', 'fb60-profile')
         . profile60_stats([[(string)(int)$sum['total'], tr('Nahlášeno'), 'teal'], [(string)(int)$sum['confirmed'], tr('potvrzeno'), 'yellow']])

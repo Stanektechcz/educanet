@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/portfolio_v75.php';
+require_once dirname(__DIR__, 2) . '/src/student/portfolio_v75.php';
 
 /**
  * EDUCANET v75 · záložka cockpitu `portfolia75` (česky): připnuté práce žáků třídy v rozsahu, reflexe a komentář učitele

@@ -27,8 +27,8 @@ require_once $ROOT . '/bootstrap.php';
 require_once $ROOT . '/app/lib.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/v61_perf_fixture.php';
-foreach (['intake_v51.php', 'teacher_operations_v46.php', 'identity_v58.php', 'identity_v58_rollover.php', 'linux_v57_lab.php', 'competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php',
-    'paths_v63.php', 'projects_v60.php', 'projects_v65.php', 'challenges_v64.php', 'growth_v67.php', 'ops_v67.php', 'rollover_v67.php'] as $lib) { require_once $ROOT . '/' . $lib; }
+foreach (['src/student/intake_v51.php', 'src/teacher/teacher_operations_v46.php', 'src/student/identity_v58.php', 'src/student/identity_v58_rollover.php', 'src/linux/linux_v57_lab.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/evidence_v62_adapters.php', 'src/assessment/mastery_v62.php',
+    'src/paths/paths_v63.php', 'src/projects/projects_v60.php', 'src/projects/projects_v65.php', 'src/student/challenges_v64.php', 'src/student/growth_v67.php', 'src/ops/ops_v67.php', 'src/ops/rollover_v67.php'] as $lib) { require_once $ROOT . '/' . $lib; }
 require_once __DIR__ . '/lib/v62_competency_fixtures.php';
 require_once __DIR__ . '/backup_storage.php';
 require_once __DIR__ . '/migrate.php';
@@ -98,7 +98,7 @@ storage_update($tmp . '/v67_nightly.json.php', static fn(array $d): array => ['v
 $check('health: noční přepočet „zatím neproběhl“ = WARN, po zápisu stavu PASS, starý stav WARN', $firstNightly === 'WARN' && $secondNightly === 'PASS' && ($byName(ops67_items())['noční_přepočet'] ?? '') === 'WARN');
 $health = ops67_health_check();
 $check('health: výsledek má tvar týdenní kontroly (status, summary, counts, issues) a nevypisuje klíč ani cesty k tajemstvím', in_array($health['status'], ['PASS', 'WARN'], true) && isset($health['summary'], $health['counts'], $health['issues']) && !str_contains(json_encode($health), 'secrets'));
-$panel = (string)file_get_contents($ROOT . '/ops_v61.php');
+$panel = (string)file_get_contents($ROOT . '/src/ops/ops_v61.php');
 $check('health: cockpit (panel Provoz) má sloupec Provoz a týdenní health spouští kontrolu ops', str_contains($panel, '>Provoz</th>') && str_contains($panel, "'ops'") && str_contains((string)file_get_contents(__DIR__ . '/v61_weekly_health.php'), 'ops67_health_check'));
 [$whExit, $whOut] = v67o_run($php, [__DIR__ . '/v61_weekly_health.php', '--skip=selftest,preflight,perf', '--no-log', '--no-record'], ['EDUCANET_STORAGE_DIR' => $tmp, 'EDUCANET_BACKUP_DIR' => $bk], $ROOT);
 $check('health: tools/v61_weekly_health.php vypíše řádek kontroly ops a konec WEEKLY_HEALTH_*', preg_match('/^(PASS|WARN|FAIL) ops\b/m', $whOut) === 1 && preg_match('/^WEEKLY_HEALTH_(OK|WARN|FAIL)\b/m', $whOut) === 1);

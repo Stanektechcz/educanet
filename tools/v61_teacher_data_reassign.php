@@ -23,8 +23,8 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once dirname(__DIR__) . '/teacher_accounts_v59.php';
-require_once dirname(__DIR__) . '/teacher_scope_v59.php';
+require_once dirname(__DIR__) . '/src/teacher/teacher_accounts_v59.php';
+require_once dirname(__DIR__) . '/src/teacher/teacher_scope_v59.php';
 require_once __DIR__ . '/migrate.php';
 
 /** @return array<string,string> krátký název => soubor úložiště */

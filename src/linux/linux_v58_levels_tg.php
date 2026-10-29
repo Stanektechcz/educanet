@@ -19,7 +19,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * file_contains) – žádné vlastní spouštění, žádná síť.
  */
 
-require_once __DIR__ . '/teamgames_v58_core.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_core.php';
 
 const TG58_LAB_RELAY_LEGS = 4;
 const TG58_LAB_NETADMIN_TYPES = ['dns', 'firewall', 'disk', 'config'];
@@ -203,7 +203,7 @@ function tg58_escape_net_level(): array
  */
 function tg58_escape_fragment(string $gameId, string $teamId, string $role): ?string
 {
-    if (!function_exists('lab57_secret') && is_file(__DIR__ . '/linux_v57_lab.php')) require_once __DIR__ . '/linux_v57_lab.php';
+    if (!function_exists('lab57_secret') && is_file(dirname(__DIR__, 2) . '/src/linux/linux_v57_lab.php')) require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_lab.php';
     if (!function_exists('lab57_secret')) return null;
     try {
         return strtoupper(substr(hash_hmac('sha256', $gameId . '|' . $teamId . '|' . $role, lab57_secret()), 0, 4));

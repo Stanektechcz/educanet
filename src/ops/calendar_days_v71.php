@@ -103,7 +103,7 @@ function cd71_school_year(): array
 {
     static $year = null;
     if ($year === null) {
-        $loaded = require __DIR__ . '/school_year.php';
+        $loaded = require dirname(__DIR__, 2) . '/src/ops/school_year.php';
         $year = is_array($loaded) ? $loaded : [];
     }
     return $year;
@@ -166,7 +166,7 @@ function cd71_day_card(string $classId, array $row, ?array $schoolYear = null): 
         'focus' => $focus, 'capstone' => trim((string)explode('·', $focus)[0]),
         'projects' => in_array($kind, ['project', 'assessment', 'portfolio'], true),
         'tasks' => [], 'differentiation' => [], 'teacher_notes' => [], 'substitution' => [], 'safety' => [],   // v77: plný obsah z overlaye
-        'meta' => ['source' => 'calendar_days_v71.php', 'status' => 'zakladni', 'overlay' => ''],
+        'meta' => ['source' => 'src/ops/calendar_days_v71.php', 'status' => 'zakladni', 'overlay' => ''],
     ];
 }
 

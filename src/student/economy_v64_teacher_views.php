@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-require_once __DIR__ . '/economy_v64.php';
-require_once __DIR__ . '/arena_v64_fair.php';
-require_once __DIR__ . '/teamgames_v64_roles.php';
+require_once dirname(__DIR__, 2) . '/src/student/economy_v64.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v64_fair.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v64_roles.php';
 
 /**
  * EDUCANET v64 · cockpit učitele: záložka „Ekonomika“ (vždy česky).

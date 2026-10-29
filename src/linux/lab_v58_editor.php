@@ -27,7 +27,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 
 // Vlastní kontrola (bez závislosti na editoru z jejího pohledu, ale editor ji potřebuje) – ať
 // lab58e_check_row() funguje i tehdy, když tento soubor někdo požaduje samostatně.
-if (is_file(__DIR__ . '/lab_v58_content.php')) require_once __DIR__ . '/lab_v58_content.php';
+if (is_file(dirname(__DIR__, 2) . '/src/linux/lab_v58_content.php')) require_once dirname(__DIR__, 2) . '/src/linux/lab_v58_content.php';
 
 const LAB58E_CLASS_IDS = ['class_1a', 'class_2a', 'class_3a', 'class_4a'];
 const LAB58E_MAX_FILES = 30;

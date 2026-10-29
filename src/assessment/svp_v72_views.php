@@ -11,7 +11,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Externí odkaz jen přes safe_url() s rel="noopener noreferrer". Každý výstup přes e(); data žáků se tu nezobrazují.
  */
 
-require_once __DIR__ . '/svp_v72.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/svp_v72.php';
 
 function svp72_chip(array $status): string
 {

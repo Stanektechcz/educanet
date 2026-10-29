@@ -63,14 +63,14 @@ $bad = [];
 foreach ($empties as $label => $out) if (!$explained($out) || !$hasAction($out)) $bad[] = $label;
 $check('prázdné stavy (' . count($empties) . ' vykreslených): role=status, co tu bude + proč je prázdno, tlačítko co dělat' . ($bad ? ' [' . implode('; ', $bad) . ']' : ''), $bad === [] && count($empties) === 11);
 $src = [
-    'Komu dnes pomoct – nikdo' => ['insights_v74_views.php', "'Otevřít Přehled třídy'"],
-    'Knihovna materiálů – prázdná' => ['materials_v74_views.php', 'href="#mat74-pridat">Přidat první materiál</a>'],
-    'Hlášení – žádná / filtr' => ['feedback_v60_teacher_views.php', "'Zrušit filtr' : 'Otevřít Co řešit dnes'"],
-    'Středa T-14 – třída bez lekcí' => ['t14_v77_views.php', "'Otevřít Schvalování lekcí', [], 'btn secondary'"],
-    'Výsledky třídy – bez žáků' => ['teacher_class_dashboard.php', "ux791_empty_html('Třída zatím nemá žáky'"],
-    'Žák – Úlohy bez sady' => ['taskbank_v75_views.php', '<a class="btn primary" href="?view=dashboard">\' . e(tr(\'Zpět na přehled\'))'],
-    'Žák – Portfolio bez připnutých prací' => ['portfolio_v75_views.php', '<a class="btn primary" href="#sp79-top">\' . e(tr(\'Připnout první práci\'))'],
-    'Žák – Náhled portfolia prázdný' => ['portfolio_v65_views.php', "e(tr('Připnout práci'))"],
+    'Komu dnes pomoct – nikdo' => ['src/teacher/insights_v74_views.php', "'Otevřít Přehled třídy'"],
+    'Knihovna materiálů – prázdná' => ['src/ops/materials_v74_views.php', 'href="#mat74-pridat">Přidat první materiál</a>'],
+    'Hlášení – žádná / filtr' => ['src/student/feedback_v60_teacher_views.php', "'Zrušit filtr' : 'Otevřít Co řešit dnes'"],
+    'Středa T-14 – třída bez lekcí' => ['src/teacher/t14_v77_views.php', "'Otevřít Schvalování lekcí', [], 'btn secondary'"],
+    'Výsledky třídy – bez žáků' => ['src/teacher/teacher_class_dashboard.php', "ux791_empty_html('Třída zatím nemá žáky'"],
+    'Žák – Úlohy bez sady' => ['src/assessment/taskbank_v75_views.php', '<a class="btn primary" href="?view=dashboard">\' . e(tr(\'Zpět na přehled\'))'],
+    'Žák – Portfolio bez připnutých prací' => ['src/student/portfolio_v75_views.php', '<a class="btn primary" href="#sp79-top">\' . e(tr(\'Připnout první práci\'))'],
+    'Žák – Náhled portfolia prázdný' => ['src/student/portfolio_v65_views.php', "e(tr('Připnout práci'))"],
 ];
 $miss = [];
 foreach ($src as $label => [$file, $needle]) if (!str_contains($read($file), $needle)) $miss[] = $label;
@@ -82,7 +82,7 @@ $uk65 = require $ROOT . '/lang/uk/ui/projects_v65.php';
 $check('i18n žáka: nové texty prázdných stavů mají en i uk překlad', isset($en75['Zpět na přehled'], $uk75['Zpět na přehled'], $en75['Připnout první práci'], $uk75['Připnout první práci'], $en65['Připnout práci'], $uk65['Připnout práci'],
     $en65['Vyber ohodnocený projekt výše, nebo připni odkaz na svou práci níže.'], $uk65['Vyber ohodnocený projekt výše, nebo připni odkaz na svou práci níže.']));
 $check('ukazatele: Výsledky třídy – rozložení známek přes ind791_bars_html (text + tabulka pro čtečky), Dnešní hodina – pruh postupu žáka má text „N/4 fáze“',
-    str_contains($read('teacher_class_dashboard.php'), "ind791_bars_html('Průměrná projektová známka studentů – počet žáků podle známky'") && str_contains($html, '/4 fáze'));
+    str_contains($read('src/teacher/teacher_class_dashboard.php'), "ind791_bars_html('Průměrná projektová známka studentů – počet žáků podle známky'") && str_contains($html, '/4 fáze'));
 
 // ---------------------------------------------------------------- 5) HTTP
 audit_prewarm_accounts($GLOBALS['modules']);
@@ -171,8 +171,8 @@ foreach ($formPages as $label => $body) {
 $check('formuláře (' . count($formPages) . ' stránek, ' . $fields . ' polí): popisek u každého pole, e-mail/heslo s autocomplete, čísla s inputmode, adresy type=url, jméno učitele autocomplete=username'
     . ($formBad ? ' [' . implode('; ', array_slice($formBad, 0, 6)) . ']' : ''), $formBad === [] && $fields > 150);
 $check('formuláře: na mobilu 1 sloupec (CSS v79.1 pro starší mřížky formulářů), v hero kartě fieldset + legenda + nápověda pod polem (aria-describedby)',
-    str_contains($css, '.teacher-two-col, .teacher-feedback-grid') && str_contains($read('lesson_today_v79_1_views.php'), '<fieldset class="lt791-fs"><legend>Hodina s kódem pro žáky</legend>') && str_contains($read('lesson_today_v79_1_views.php'), 'aria-describedby="lt791-kind-h"')
-    && str_contains($read('lesson_today_v79_1_views.php'), '<p class="ds-help" id="lt791-kind-h">'));
+    str_contains($css, '.teacher-two-col, .teacher-feedback-grid') && str_contains($read('src/lessons/lesson_today_v79_1_views.php'), '<fieldset class="lt791-fs"><legend>Hodina s kódem pro žáky</legend>') && str_contains($read('src/lessons/lesson_today_v79_1_views.php'), 'aria-describedby="lt791-kind-h"')
+    && str_contains($read('src/lessons/lesson_today_v79_1_views.php'), '<p class="ds-help" id="lt791-kind-h">'));
 
 // ---------------------------------------------------------------- 6) prohlížeč
 $node = getenv('EDUCANET_NODE') ?: 'node';

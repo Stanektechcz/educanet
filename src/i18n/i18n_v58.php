@@ -86,7 +86,7 @@ function edu_i18n_catalog(string $locale, string $domain): array
     $key = $locale . '/' . $domain;
     if (array_key_exists($key, $cache)) return $cache[$key];
     if (!isset(EDU_LOCALES[$locale]) || preg_match('/^[a-z0-9_]{1,32}$/', $domain) !== 1) return $cache[$key] = [];
-    $file = __DIR__ . '/lang/' . $locale . '/' . $domain . '.php';
+    $file = dirname(__DIR__, 2) . '/lang/' . $locale . '/' . $domain . '.php';
     $data = is_file($file) ? require $file : [];
     return $cache[$key] = is_array($data) ? $data : [];
 }

@@ -78,7 +78,7 @@ function pal74_render_html(string $tab, string $classId): string
  */
 function pal74_students(): array
 {
-    if (!function_exists('tp721_names_hidden') && is_file(__DIR__ . '/teacher_prefs_v72_1.php')) require_once __DIR__ . '/teacher_prefs_v72_1.php';
+    if (!function_exists('tp721_names_hidden') && is_file(dirname(__DIR__, 2) . '/src/teacher/teacher_prefs_v72_1.php')) require_once dirname(__DIR__, 2) . '/src/teacher/teacher_prefs_v72_1.php';
     if (function_exists('tp721_names_hidden') && tp721_names_hidden()) return ['ok' => true, 'names_hidden' => true, 'items' => []];
     if (function_exists('c70_tab_visible') && !c70_tab_visible('student360')) return ['ok' => true, 'names_hidden' => false, 'items' => []];
     $names = $GLOBALS['modules'] ?? [];

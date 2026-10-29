@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/lesson_model_v71.php';
+require_once dirname(__DIR__, 2) . '/src/lessons/lesson_model_v71.php';
 
 function teacher_curriculum_spec(): array
 {
@@ -243,7 +243,7 @@ function teacher_curriculum_materials(string $classId): array
 function teacher_render_curriculum(string $classId): void
 {
     $specs=teacher_curriculum_spec(); $spec=$specs[$classId]??reset($specs); $lessons=teacher_curriculum_lessons($classId); $state=teacher_curriculum_state($classId);
-    $defs=teacher_curriculum_checklist_definitions($classId); $skill=require __DIR__.'/skill_catalog.php'; $curr=(array)($skill['curricula'][$classId]??[]); $branches=(array)($skill['branches']??[]);
+    $defs=teacher_curriculum_checklist_definitions($classId); $skill=require dirname(__DIR__, 2).'/src/assessment/skill_catalog.php'; $curr=(array)($skill['curricula'][$classId]??[]); $branches=(array)($skill['branches']??[]);
     $ready=0; foreach($lessons as $lesson)if(teacher_curriculum_lesson_readiness($lesson)['ready'])$ready++;
     $prepared=count(array_filter((array)$state['lessons'],static fn($r)=>is_array($r)&&!empty($r['prepared'])));
     $allItems=[]; foreach($defs as $s)foreach((array)$s['items'] as $id=>$txt)$allItems[$id]=$txt;
@@ -262,7 +262,7 @@ function teacher_render_curriculum(string $classId): void
 
     <aside class="curriculum-side">
       <section class="teacher-panel curriculum-sticky"><div class="teacher-panel-head compact"><div><span>Capstone</span><h3><?=e((string)$spec['capstone'])?></h3></div></div><p>Hlavní syntetický projekt navazující na roční cestu.</p><?php $cap=project_find($classId,(string)$spec['capstone_project_id']); if($cap): ?><a class="btn secondary wide" href="?tab=workspace&class=<?=e($classId)?>&project=<?=e((string)$cap['id'])?>">Otevřít Project Workspace</a><?php endif; ?><div class="curriculum-assessment"><strong>Hodnocení</strong><?php foreach((array)$spec['assessment'] as $item): ?><span>✓ <?=e((string)$item)?></span><?php endforeach; ?></div></section>
-      <section class="teacher-panel"><div class="teacher-panel-head compact"><div><span>Materiály</span><h3>Balíček pro třídu</h3></div></div><div class="curriculum-material-links"><?php foreach(teacher_curriculum_materials($classId) as $m): if(!is_file(__DIR__.'/'.$m['file']))continue; ?><a href="<?=e((string)$m['file'])?>" target="_blank"><strong><?=e((string)$m['label'])?></strong><span>↗</span></a><?php endforeach; ?></div><a class="text-link" href="materials/TEACHER_OVERVIEW.md" target="_blank">Souhrn všech tříd →</a></section>
+      <section class="teacher-panel"><div class="teacher-panel-head compact"><div><span>Materiály</span><h3>Balíček pro třídu</h3></div></div><div class="curriculum-material-links"><?php foreach(teacher_curriculum_materials($classId) as $m): if(!is_file(dirname(__DIR__, 2).'/'.$m['file']))continue; ?><a href="<?=e((string)$m['file'])?>" target="_blank"><strong><?=e((string)$m['label'])?></strong><span>↗</span></a><?php endforeach; ?></div><a class="text-link" href="materials/TEACHER_OVERVIEW.md" target="_blank">Souhrn všech tříd →</a></section>
     </aside></section>
 
     <section class="teacher-panel curriculum-checklist-panel"><div class="teacher-panel-head"><div><span>Interaktivní checklist</span><h2>Příprava <?=e(teacher_class_label($classId))?></h2></div><small>Stav se ukládá pro aktuální učitelský účet/jméno.</small></div><div class="curriculum-checklist-grid"><?php foreach($defs as $sectionId=>$section): ?><section><h3><?=e((string)$section['title'])?></h3><?php foreach((array)$section['items'] as $id=>$text): $checked=!empty($state['items'][$id]['done']); ?><form method="post" class="curriculum-check-row <?=$checked?'done':''?>"><input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="action" value="teacher_curriculum_toggle"><input type="hidden" name="class_id" value="<?=e($classId)?>"><input type="hidden" name="item_id" value="<?=e((string)$id)?>"><input type="hidden" name="checked" value="<?=$checked?'0':'1'?>"><button type="submit" aria-label="<?= $checked?'Označit jako nesplněné':'Označit jako splněné' ?>"><?=$checked?'✓':'○'?></button><span><?=e((string)$text)?></span></form><?php endforeach; ?></section><?php endforeach; ?></div></section>

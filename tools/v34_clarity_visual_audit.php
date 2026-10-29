@@ -4,7 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/lib/app_source.php';
 if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 
-require dirname(__DIR__).'/assessment_visuals.php';
+require dirname(__DIR__).'/src/assessment/assessment_visuals.php';
 
 $root=dirname(__DIR__);
 $errors=[];

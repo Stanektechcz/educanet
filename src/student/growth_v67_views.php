@@ -11,8 +11,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * jen osu a pruhy. Všechny odkazy a formuláře jsou funkční bez JavaScriptu.
  */
 
-require_once __DIR__ . '/growth_v67.php';
-require_once __DIR__ . '/competency_v62_views.php';
+require_once dirname(__DIR__, 2) . '/src/student/growth_v67.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/competency_v62_views.php';
 
 function grow67_assets(): void
 {

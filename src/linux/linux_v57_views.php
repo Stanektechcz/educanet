@@ -36,14 +36,14 @@ function lab57_render_v58_assets(): void
 function lab57_v58_hub_items(): array
 {
     $items = [];
-    if (is_file(__DIR__ . '/arena_v58_views.php')) $items[] = ['href' => '?view=hadanka', 'icon' => '🧩', 'title' => trm('Týdenní hádanka'), 'desc' => trm('Nová výzva každé pondělí – vyhraje nejkratší řešení.')];
-    if (is_file(__DIR__ . '/arena_v58_events_views.php')) {
+    if (is_file(dirname(__DIR__, 2) . '/src/arena/arena_v58_views.php')) $items[] = ['href' => '?view=hadanka', 'icon' => '🧩', 'title' => trm('Týdenní hádanka'), 'desc' => trm('Nová výzva každé pondělí – vyhraje nejkratší řešení.')];
+    if (is_file(dirname(__DIR__, 2) . '/src/arena/arena_v58_events_views.php')) {
         $items[] = ['href' => '?view=ctf', 'icon' => '🚩', 'title' => trm('CTF týden'), 'desc' => trm('Sezónní soutěž v kategoriích, body podle obtížnosti.')];
         $items[] = ['href' => '?view=incident', 'icon' => '🚨', 'title' => trm('Incidenty'), 'desc' => trm('Oprav problém na čas a napiš krátký postmortem.')];
     }
-    if (is_file(__DIR__ . '/teamgames_v58_views.php')) $items[] = ['href' => '?view=hry', 'icon' => '🤝', 'title' => trm('Týmové hry'), 'desc' => trm('Spolupracujte na síti, webu i v kvízu.')];
-    if (is_file(__DIR__ . '/robots_v58_views.php')) $items[] = ['href' => '?view=roboti', 'icon' => '🤖', 'title' => trm('Robotí liga'), 'desc' => trm('Naprogramuj robota a pošli ho do zápasu.')];
-    if (is_file(__DIR__ . '/lab-offline.html')) $items[] = ['href' => 'lab-offline.html', 'icon' => '⇩', 'title' => trm('Offline trénink'), 'desc' => trm('Manuál a pískoviště i bez připojení k síti.')];
+    if (is_file(dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_views.php')) $items[] = ['href' => '?view=hry', 'icon' => '🤝', 'title' => trm('Týmové hry'), 'desc' => trm('Spolupracujte na síti, webu i v kvízu.')];
+    if (is_file(dirname(__DIR__, 2) . '/src/robots/robots_v58_views.php')) $items[] = ['href' => '?view=roboti', 'icon' => '🤖', 'title' => trm('Robotí liga'), 'desc' => trm('Naprogramuj robota a pošli ho do zápasu.')];
+    if (is_file(dirname(__DIR__, 2) . '/lab-offline.html')) $items[] = ['href' => 'lab-offline.html', 'icon' => '⇩', 'title' => trm('Offline trénink'), 'desc' => trm('Manuál a pískoviště i bez připojení k síti.')];
     return $items;
 }
 

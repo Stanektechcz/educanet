@@ -64,7 +64,7 @@ function v61_perf_seed_student(string $classId, string $label, int $n, array $ba
  */
 function v61_perf_seed(array $modules, string $dir, int $count = 30): array
 {
-    foreach (['accounts_v53.php', 'intake_v51.php', 'points_v53.php', 'linux_v57_lab.php'] as $lib) require_once dirname(__DIR__, 2) . '/' . $lib;
+    foreach (['src/student/accounts_v53.php', 'src/student/intake_v51.php', 'src/student/points_v53.php', 'src/linux/linux_v57_lab.php'] as $lib) require_once dirname(__DIR__, 2) . '/' . $lib;
     $labels = v61_perf_roster($count);
     v61_perf_write_roster($dir, $labels);
     acc53_provision_all($modules);
@@ -76,9 +76,9 @@ function v61_perf_seed(array $modules, string $dir, int $count = 30): array
     $levelIds = [];
     foreach (array_keys(lab57_packs()) as $pid) foreach (lab57_pack_levels((string)$pid) as $lv) $levelIds[] = (string)$lv['id'];
     foreach ($labels as $n => $label) v61_perf_seed_student(V61_PERF_CLASS, $label, $n, $badgeIds, $levelIds);
-    foreach (['runtime_content.php', 'tutorial_v52.php', 'session_v53.php'] as $lib) require_once dirname(__DIR__, 2) . '/' . $lib;
+    foreach (['src/ops/runtime_content.php', 'src/lessons/tutorial_v52.php', 'src/lessons/session_v53.php'] as $lib) require_once dirname(__DIR__, 2) . '/' . $lib;
     require_once __DIR__ . '/audit_storage.php';
-    $schoolYear = require dirname(__DIR__, 2) . '/school_year.php';
+    $schoolYear = require dirname(__DIR__, 2) . '/src/ops/school_year.php';
     edu_audit_open_sessions([V61_PERF_CLASS => $modules[V61_PERF_CLASS]], $schoolYear, date('Y-m-d'), []);
     $first = $labels[0];
     $acc = null;

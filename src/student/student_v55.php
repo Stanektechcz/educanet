@@ -94,7 +94,7 @@ function v55_badge_collection(string $classId, array $module, array $simulationM
         ];
     }
     // v58 LAB-08: odznaky za Linux dovednosti (odvozené ze stavu labu – nikdy dvakrát).
-    if (!function_exists('lab58_badges') && function_exists('lab57_solved') && is_file(__DIR__ . '/lab_v58_learning.php')) require_once __DIR__ . '/lab_v58_learning.php';
+    if (!function_exists('lab58_badges') && function_exists('lab57_solved') && is_file(dirname(__DIR__, 2) . '/src/linux/lab_v58_learning.php')) require_once dirname(__DIR__, 2) . '/src/linux/lab_v58_learning.php';
     if (function_exists('lab58_badges')) {
         try {
             foreach (lab58_badges($classId, adaptive_student_key($classId)) as $lb) {
@@ -471,7 +471,7 @@ function v58_nav_live_activity(string $classId, bool $labOn): ?array
         if (is_array($race)) return ['href' => '?view=lab&zavod=' . rawurlencode((string)$race['id']), 'label' => trm('Závod!')];
     }
     // Týmová hra: jádro týmových her je samostatné (bez dalších závislostí), načte se jen když existuje.
-    if (!function_exists('tg58_live_for_class') && is_file(__DIR__ . '/teamgames_v58_core.php')) require_once __DIR__ . '/teamgames_v58_core.php';
+    if (!function_exists('tg58_live_for_class') && is_file(dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_core.php')) require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_core.php';
     if (function_exists('tg58_live_for_class')) {
         try { $game = tg58_live_for_class($classId); } catch (Throwable $e) { error_log('EDUCANET v58 navigace: ' . $e->getMessage()); $game = null; }
         if (is_array($game)) return ['href' => '?view=hry&hra=' . rawurlencode((string)($game['id'] ?? '')), 'label' => trm('Hra!')];

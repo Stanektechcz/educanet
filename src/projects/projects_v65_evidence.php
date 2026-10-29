@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-require_once __DIR__ . '/evidence_v62.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/evidence_v62.php';
 
 /**
  * v65 · Důkazy kompetencí z publikovaného hodnocení projektu a retence osobních textů.

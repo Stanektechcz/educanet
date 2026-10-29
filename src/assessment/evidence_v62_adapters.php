@@ -3,8 +3,8 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 // v65: projekty hodnocené rubrikou s kompetencemi dávají důkaz s verzí (proj65_evidence_candidates); funkce musí být k dispozici i z CLI a cockpitu.
-require_once __DIR__ . '/projects_v65.php';
-require_once __DIR__ . '/projects_v65_evidence.php';
+require_once dirname(__DIR__, 2) . '/src/projects/projects_v65.php';
+require_once dirname(__DIR__, 2) . '/src/projects/projects_v65_evidence.php';
 
 /**
  * EDUCANET v62 · adaptéry zdrojů důkazů (jen čtení, zdrojová data se nemění).
@@ -18,7 +18,7 @@ require_once __DIR__ . '/projects_v65_evidence.php';
 
 const EV62_SYNC_TTL = 600;
 
-require_once __DIR__ . '/teamgames_v64_roles.php'; // v64: přínos člena týmu pro skóre týmové hry
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v64_roles.php'; // v64: přínos člena týmu pro skóre týmové hry
 
 /** Paměť jednoho požadavku (proudy se čtou jednou na třídu, ne jednou na žáka). */
 function ev62_memo(string $key, callable $compute)
@@ -36,7 +36,7 @@ function ev62_memo_reset(): void
 
 function ev62_require_lab(): void
 {
-    if (!function_exists('lab57_level')) require_once __DIR__ . '/linux_v57_lab.php';
+    if (!function_exists('lab57_level')) require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_lab.php';
 }
 
 /** Tagy úrovně labu (pack:/cmd:) z deklarace úrovně – čte jen metadata, svět nestaví. @return list<string> */

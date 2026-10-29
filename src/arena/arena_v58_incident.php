@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_once __DIR__ . '/i18n_v59.php'; }
+if (!function_exists('tr')) { require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v58.php'; require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v59.php'; }
 
 /**
  * EDUCANET v58 · Aréna – Incidenty (ARN-03, inspirace SadServers).
@@ -20,11 +20,11 @@ if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_on
  * postmortem:{cause,fix,prevention,submitted_at,points,teacher_note}}. Zápisy jen přes lab57_store_update.
  */
 
-require_once __DIR__ . '/linux_v57_lab.php';
-require_once __DIR__ . '/economy_v64.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_lab.php';
+require_once dirname(__DIR__, 2) . '/src/student/economy_v64.php';
 // arena57_roster()/arena57_snake_teams() jsou zamčené API (§6 V58_PLAN) pro sestavení týmů – načteno
 // defenzivně (stejný vzor jako lab_v57_api.php/teacher.php), ať modul funguje i mimo běžné pořadí načítání.
-if (is_file(__DIR__ . '/arena_v57.php')) require_once __DIR__ . '/arena_v57.php';
+if (is_file(dirname(__DIR__, 2) . '/src/arena/arena_v57.php')) require_once dirname(__DIR__, 2) . '/src/arena/arena_v57.php';
 
 const ARENA58_INC_ID_RE = '/^[a-z0-9]{6,32}$/';
 const ARENA58_INC_PACK = 'incident';

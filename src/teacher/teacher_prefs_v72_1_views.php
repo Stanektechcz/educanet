@@ -12,8 +12,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * GET jen ?class= (obecná kontrola rozsahu teacher59); žádný nový GET parametr registru. Každý výstup přes e(); data žáků se nezobrazují.
  */
 
-require_once __DIR__ . '/teacher_prefs_v72_1.php';
-if (is_file(__DIR__ . '/cockpit_v70.php')) require_once __DIR__ . '/cockpit_v70.php';
+require_once dirname(__DIR__, 2) . '/src/teacher/teacher_prefs_v72_1.php';
+if (is_file(dirname(__DIR__, 2) . '/src/teacher/cockpit_v70.php')) require_once dirname(__DIR__, 2) . '/src/teacher/cockpit_v70.php';
 
 function tp721_render_tab(array $modules, string $classId, string $csrf): void
 {

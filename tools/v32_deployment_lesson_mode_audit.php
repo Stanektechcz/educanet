@@ -8,8 +8,8 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 
 $tmpStorage = rtrim(str_replace('\\', '/', edu_audit_temp_storage('v32-deploy')), '/'); // v61: audit nikdy nesahá na ostrou storage/
 require dirname(__DIR__) . '/bootstrap.php';
-require dirname(__DIR__) . '/teacher_curriculum.php';
-require dirname(__DIR__) . '/teacher_lesson_mode.php';
+require dirname(__DIR__) . '/src/teacher/teacher_curriculum.php';
+require dirname(__DIR__) . '/src/teacher/teacher_lesson_mode.php';
 
 $root = dirname(__DIR__);
 $errors=[];
@@ -17,7 +17,7 @@ $assert=static function(bool $ok,string $message) use (&$errors):void{if(!$ok)$e
 
 foreach([
     'private/educanet.secrets.php','educanet.secrets.example.php','tools/install_teacher_secret.sh',
-    'tools/check_install.php','teacher_lesson_mode.php','calendar.ics.php'
+    'tools/check_install.php','src/teacher/teacher_lesson_mode.php','calendar.ics.php'
 ] as $file) $assert(is_file($root.'/'.$file),'Chybí '.$file);
 
 $template=file_get_contents($root.'/private/educanet.secrets.php')?:'';
@@ -42,7 +42,7 @@ foreach(['class_1a','class_2a','class_3a','class_4a'] as $cid){
     }
 }
 
-$curriculum=file_get_contents($root.'/teacher_curriculum.php')?:'';
+$curriculum=file_get_contents($root.'/src/teacher/teacher_curriculum.php')?:'';
 $assert(str_contains($curriculum,'$number>28'),'Teacher checklist toggle není rozšířený na lekci 28.');
 $assert(str_contains($curriculum,'Spustit hodinu'),'Výuka nemá vstup do Lesson Mode.');
 

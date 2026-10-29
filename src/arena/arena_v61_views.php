@@ -8,8 +8,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Volá je arena_v60_challenge_views.php. Jen HTML nad arena_v61_duels.php; vše přes e().
  */
 
-require_once __DIR__ . '/arena_v61_duels.php';
-require_once __DIR__ . '/profile_v60_ui.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v61_duels.php';
+require_once dirname(__DIR__, 2) . '/src/student/profile_v60_ui.php';
 
 /** Odveta k dokončenému souboji: formulář s tlačítkem, nebo důvod, proč teď nejde. */
 function arena61_rematch_html(array $row, string $studentKey, array $rematched, int $now): string

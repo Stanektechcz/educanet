@@ -21,7 +21,7 @@ function sess53_teacher_handle_post(string $action, array $modules): void
 
     if ($action === 'sess53_t_open') {
         if (!isset($modules[$classId]) || (function_exists('teacher59_can_class') && !teacher59_can_class($classId))) throw new RuntimeException('Neznámá třída.');
-        $schoolYear = require __DIR__ . '/school_year.php';
+        $schoolYear = require dirname(__DIR__, 2) . '/src/ops/school_year.php';
         $rt = runtime_content_load_classes([$classId]);
         $lessons = tut52_lessons($classId, $modules[$classId], $rt['nextLessons'], $rt['extendedLessons'], $schoolYear, null);
         $lessonNo = 0;
@@ -87,7 +87,7 @@ function sess53_render_teacher_tab(array $modules, string $classId): void
     $sessionsToday = [];
     foreach ($modules as $cid => $module) $sessionsToday[(string)$cid] = sess53_for_class_date((string)$cid, $date);
     $session = $sessionsToday[$classId] ?? null;
-    $schoolYear = require __DIR__ . '/school_year.php';
+    $schoolYear = require dirname(__DIR__, 2) . '/src/ops/school_year.php';
     // Třídy v pořadí, jak je učitel dnes učí.
     $byTime = $modules;
     uksort($byTime, static function ($a, $b) use ($schoolYear): int {

@@ -16,7 +16,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Statistiky pro žáky jsou souhrnná čísla bez jmen a vidí je jen žák, který sám výzvy přijímá (opt-in).
  */
 
-require_once __DIR__ . '/arena_v60_challenge.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v60_challenge.php';
 
 const ARENA61_TEACHER_ROW_LIMIT = 200;
 

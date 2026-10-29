@@ -5,8 +5,8 @@ declare(strict_types=1);
 if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 require dirname(__DIR__) . '/bootstrap.php';
 
-$tours = require dirname(__DIR__) . '/knowledge_tours.php';
-foreach (['knowledge_tours_next.php','knowledge_tours_plus.php','knowledge_tours_more.php','knowledge_tours_ecosystem.php','knowledge_tours_yearpack.php','knowledge_tours_v30.php'] as $file) {
+$tours = require dirname(__DIR__) . '/src/knowledge/knowledge_tours.php';
+foreach (['src/knowledge/knowledge_tours_next.php','src/knowledge/knowledge_tours_plus.php','src/knowledge/knowledge_tours_more.php','src/knowledge/knowledge_tours_ecosystem.php','src/knowledge/knowledge_tours_yearpack.php','src/knowledge/knowledge_tours_v30.php'] as $file) {
     $extra = require dirname(__DIR__) . '/' . $file;
     foreach ($extra as $classId => $items) {
         $tours[$classId] = array_replace($tours[$classId] ?? [], is_array($items) ? $items : []);

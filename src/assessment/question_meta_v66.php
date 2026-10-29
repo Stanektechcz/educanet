@@ -58,8 +58,8 @@ function q66_bank_rows(): array
     static $rows = null;
     if ($rows !== null) return $rows;
     $rows = [];
-    foreach (['teamgames_v58_bank_net.php', 'teamgames_v58_bank_gfx.php'] as $file) {
-        $path = __DIR__ . '/' . $file;
+    foreach (['src/teamgames/teamgames_v58_bank_net.php', 'src/teamgames/teamgames_v58_bank_gfx.php'] as $file) {
+        $path = dirname(__DIR__, 2) . '/' . $file;
         $data = is_file($path) ? include $path : [];
         foreach (is_array($data) ? $data : [] as $row) {
             if (is_array($row) && is_string($row['id'] ?? null) && $row['id'] !== '') $rows[$row['id']] = $row;

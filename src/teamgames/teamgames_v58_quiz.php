@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_once __DIR__ . '/i18n_v59.php'; }
+if (!function_exists('tr')) { require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v58.php'; require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v59.php'; }
 
 /**
  * EDUCANET v58 · Týmové hry – kvízová banka (kategorie, výběr otázek, kontrola odpovědí).
@@ -19,7 +19,7 @@ if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_on
  * (tg58_quiz_public) – kontrolu dělá jen server (tg58_quiz_check), řešení se odkrývá až tg58_quiz_reveal().
  */
 
-require_once __DIR__ . '/teamgames_v58_core.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_core.php';
 
 const TG58_QUIZ_TYPES = ['single', 'multi', 'bool', 'numeric', 'order', 'text', 'command'];
 
@@ -111,8 +111,8 @@ function tg58_quiz_builtin_bank(): array
 function tg58_quiz_external_bank(): array
 {
     $items = [];
-    foreach (['teamgames_v58_bank_net.php', 'teamgames_v58_bank_gfx.php'] as $file) {
-        $path = __DIR__ . '/' . $file;
+    foreach (['src/teamgames/teamgames_v58_bank_net.php', 'src/teamgames/teamgames_v58_bank_gfx.php'] as $file) {
+        $path = dirname(__DIR__, 2) . '/' . $file;
         if (!is_file($path)) continue;
         try {
             $data = include $path;

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // v59 OPS-02: trm()/tr() i při načtení bez bootstrap.php (CLI audity).
-if (!function_exists('trm')) { require_once __DIR__ . '/i18n_v58.php'; require_once __DIR__ . '/i18n_v59.php'; }
+if (!function_exists('trm')) { require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v58.php'; require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v59.php'; }
 
 function assessment_visual_spec(string $classId, string $topic, string $questionText = ''): array
 {

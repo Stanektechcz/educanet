@@ -61,7 +61,7 @@ function lr73_render_tab(array $modules, string $csrf): void
     echo '<div class="c70-grid"><div class="c70-col"><section class="c70-card" aria-labelledby="lr73-form-h"><h2 id="lr73-form-h">Reflexe lekce ' . $n . '</h2>';
     if (function_exists('teacher_permission') && teacher_permission('content.manage')) {
         // v79: stepper Stav → Kde jsme skončili → Co upravit → Hotovo (stejná akce lr73_save; koncept v relaci). Načítá se jen tady, ne v Dnešní hodině.
-        require_once __DIR__ . '/lesson_reflect_v79.php';
+        require_once dirname(__DIR__, 2) . '/src/lessons/lesson_reflect_v79.php';
         $st = lr79_state($classId, $n);
         $other = sp79_draft('reflexe');
         if ($lessonParam === 0 && $other['data'] !== [] && str_starts_with((string)$other['scope'], $classId . '|') && (string)$other['scope'] !== $classId . '|' . $n) {

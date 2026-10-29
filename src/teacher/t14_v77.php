@@ -117,8 +117,8 @@ function t1477_overdue_count(?string $today = null, ?array $classes = null): int
     $cached = $_SESSION['t1477_badge'] ?? null;
     if (session_status() === PHP_SESSION_ACTIVE && is_array($cached) && ($cached['sig'] ?? '') === $sig && is_int($cached['n'] ?? null)) return $memo[$key] = $cached['n'];
     if (!function_exists('lc72_overlay_light')) {
-        if (!is_file(__DIR__ . '/lesson_approval_v72.php')) return $memo[$key] = 0;
-        require_once __DIR__ . '/lesson_approval_v72.php';
+        if (!is_file(dirname(__DIR__, 2) . '/src/lessons/lesson_approval_v72.php')) return $memo[$key] = 0;
+        require_once dirname(__DIR__, 2) . '/src/lessons/lesson_approval_v72.php';
     }
     $records = lc72_records();
     $end = date('Y-m-d', (int)strtotime($today . ' +' . T1477_DAYS . ' days'));

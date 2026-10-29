@@ -21,8 +21,8 @@ edu_audit_temp_storage('v69-cleanup');
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once $ROOT . '/app/redirects_v68.php';
-require_once $ROOT . '/student_links_v69.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php'] as $lib) require_once $ROOT . '/' . $lib;
+require_once $ROOT . '/src/student/student_links_v69.php';
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php'] as $lib) require_once $ROOT . '/' . $lib;
 require_once __DIR__ . '/v69_retire.php';
 
 const V69C_RETIRED_SHA = [
@@ -110,6 +110,6 @@ $check('v69_task_url míří přímo na cílové pohledy, neznámý druh a chyb�
 $sw = (string)file_get_contents($ROOT . '/sw.js');
 $check('sw.js: bez přednačtení vyřazených assetů, cache verze v69', !str_contains($sw, 'one-task') && str_contains($sw, 'educanet-v69-ui'));
 $routes = (string)file_get_contents($ROOT . '/app/routes.php');
-$check('routes.php: žádná route ani skupina knihoven One Task; layout načítá student_links_v69.php', !str_contains($routes, 'one_task') && str_contains($routes, 'student_links_v69.php'));
+$check('routes.php: žádná route ani skupina knihoven One Task; layout načítá student_links_v69.php', !str_contains($routes, 'one_task') && str_contains($routes, 'src/student/student_links_v69.php'));
 
 exit(audit_summary($state, 'V69_CLEANUP'));

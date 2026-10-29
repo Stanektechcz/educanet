@@ -13,7 +13,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Heslo se učiteli ukáže jednou v oznámení po vydání a na kartičkách (jen dokud je 'pending').
  */
 
-require_once __DIR__ . '/accounts_v58.php';
+require_once dirname(__DIR__, 2) . '/src/student/accounts_v58.php';
 
 const ACC58_REVEAL_TTL = 300;
 const ACC58_ASSET_VERSION = '58.0';

@@ -128,7 +128,7 @@ $export = port65v_export_html([], 'Žák 1', pf75_export_section_html('class_3a'
 $check('portfolio: lokální HTML export v65 obsahuje připnuté práce (název, druh, odkaz jen jako text, reflexe) – bez <a>, skriptů a formulářů, značky odstraněné, znaky escapované',
     ($pin['ok'] ?? false) && str_contains($export, 'Připnuté práce') && str_contains($export, 'Plakát v76 &amp; logo') && !str_contains($export, '<b>v76') && str_contains($export, 'https://example.org/plakat')
     && str_contains($export, 'Hierarchie.') && preg_match('/<a\s|<script|<form/i', $export) !== 1 && pf75_export_section_html('class_3a', '') === ''
-    && str_contains($read('portfolio_v65_views.php'), 'pf75_export_section_html($classId, $studentKey)'));
+    && str_contains($read('src/student/portfolio_v65_views.php'), 'pf75_export_section_html($classId, $studentKey)'));
 $lv = lv75_student_hash($key3);
 storage_update(STORAGE_DIR . '/levels_v75_picks.json.php', static fn(array $d): array => ['v' => 1, 'classes' => ['class_3a' => ['1' => [$lv => ['l' => 'vyzva', 's' => 'standard', 'at' => 1], 'other' => ['l' => 'zaklad']]]]]);
 $otherKey = v63fx_key('class_3a', 'b');
@@ -160,7 +160,7 @@ $check('registr: moduly plan76 (GET tisk) a svp76 (GET tisk, csv) bez POST akcí
     && !isset($mods['plan76']['post']) && !isset($mods['svp76']['post']) && array_keys((array)$mods['kompetence']['post']) === ['comp62_', 'ob76_'] && $filesOk($mods['kompetence']));
 $map = teacher68_tab_map();
 $check('navigace: obě záložky v sekci Výuka a v UI68_TEACHER_DARK_TABS (tmavý režim), „Související“ v cockpit_v70', isset($map['plan76'], $map['svp76']) && in_array('plan76', UI68_TEACHER_DARK_TABS, true)
-    && in_array('svp76', UI68_TEACHER_DARK_TABS, true) && str_contains($read('cockpit_v70.php'), "'plan76' => [") && str_contains($read('cockpit_v70.php'), "'svp76' => ["));
+    && in_array('svp76', UI68_TEACHER_DARK_TABS, true) && str_contains($read('src/teacher/cockpit_v70.php'), "'plan76' => [") && str_contains($read('src/teacher/cockpit_v70.php'), "'svp76' => ["));
 $get = teacher59_get_policies();
 $check('politiky: ob76_add = třída povinná, neznámé ob76_x zakázané, oprávnění grading.manage (asistent ho nemá); GET plan76|tisk, svp76|tisk, svp76|csv = třída povinná',
     teacher59_action_policy('ob76_add') === ['class' => 'required'] && (teacher59_action_policy('ob76_delete')['deny'] ?? false) === true && teacher_action_permission('ob76_add') === 'grading.manage'
@@ -170,5 +170,5 @@ $css = (int)@filesize($ROOT . '/assets/cockpit-v76.css') + (int)@filesize($ROOT 
 $cssV76 = $read('assets/cockpit-v76.css') . $read('assets/print-v76.css');
 $check('rozpočet: CSS v76 ' . round($css / 1024, 1) . ' kB (limit fáze 20 kB), žádný nový JS; cockpit CSS jen tokeny (pevné barvy jen v @media print)', $css > 0 && $css <= 20480
     && preg_match('/#[0-9a-f]{3,6}\b/i', (string)preg_replace('/@media print\s*\{[^}]*(\{[^}]*\}[^}]*)*\}/', '', $read('assets/cockpit-v76.css'))) !== 1 && !is_file($ROOT . '/assets/plan-v76.js'));
-$check('soukromí: plán, ŠVP a pozorování nevypisují jména do CSV/tisku; stránky k tisku a CSV mají no-store; CSV nosniff', str_contains($read('plan_v76_views.php'), "header('Cache-Control: no-store')")
-    && str_contains($read('svp_export_v76_views.php'), "header('X-Content-Type-Options: nosniff')") && !str_contains($read('svp_export_v76.php'), 'project_students_for_class') && !str_contains($read('plan_v76.php'), 'project_students_for_class'));
+$check('soukromí: plán, ŠVP a pozorování nevypisují jména do CSV/tisku; stránky k tisku a CSV mají no-store; CSV nosniff', str_contains($read('src/ops/plan_v76_views.php'), "header('Cache-Control: no-store')")
+    && str_contains($read('src/assessment/svp_export_v76_views.php'), "header('X-Content-Type-Options: nosniff')") && !str_contains($read('src/assessment/svp_export_v76.php'), 'project_students_for_class') && !str_contains($read('src/ops/plan_v76.php'), 'project_students_for_class'));

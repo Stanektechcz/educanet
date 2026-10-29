@@ -23,9 +23,9 @@ require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
 $tmp = rtrim(str_replace('\\', '/', edu_audit_temp_storage('v61-teacher')), '/');
 require $root . '/bootstrap.php';
-foreach (['teacher_operations_v46.php', 'intake_v51.php', 'accounts_v53.php', 'linux_v57_lab.php', 'teacher_v58.php', 'teacher_accounts_v59_admin.php',
-    'points_v53.php', 'points_v60.php', 'marketplace_v60.php', 'projects_v60.php', 'feedback_v60.php', 'teacher_class_dashboard.php',
-    'teacher_overview_v61.php', 'teacher_overview_v61_views.php'] as $file) {
+foreach (['src/teacher/teacher_operations_v46.php', 'src/student/intake_v51.php', 'src/student/accounts_v53.php', 'src/linux/linux_v57_lab.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_accounts_v59_admin.php',
+    'src/student/points_v53.php', 'src/student/points_v60.php', 'src/student/marketplace_v60.php', 'src/projects/projects_v60.php', 'src/student/feedback_v60.php', 'src/teacher/teacher_class_dashboard.php',
+    'src/teacher/teacher_overview_v61.php', 'src/teacher/teacher_overview_v61_views.php'] as $file) {
     require_once $root . '/' . $file;
 }
 require_once __DIR__ . '/lib/v59_scope_fixtures.php';
@@ -397,9 +397,9 @@ $check('v32/v33 audity už nečtou starý kalendář (kontrolují vykreslenou st
 
 // --- 10) Zdroj: bez CDN, innerHTML, shellových funkcí; modul je pod 800 řádků ------------------------------------
 $src = '';
-foreach (['teacher_overview_v61.php', 'teacher_overview_v61_views.php', 'tools/v61_teacher_data_reassign.php', 'assets/teacher-overview-v61.js', 'assets/teacher-overview-v61.css'] as $f) $src .= (string)file_get_contents($root . '/' . $f);
+foreach (['src/teacher/teacher_overview_v61.php', 'src/teacher/teacher_overview_v61_views.php', 'tools/v61_teacher_data_reassign.php', 'assets/teacher-overview-v61.js', 'assets/teacher-overview-v61.css'] as $f) $src .= (string)file_get_contents($root . '/' . $f);
 $check('zdroj: bez CDN, innerHTML, eval a shellových funkcí', !preg_match('~https?://|innerHTML|\beval\s*\(|\b(shell_exec|exec|system|passthru|proc_open|popen)\s*\(~', $src), false);
-$check('zdroj: soubory modulu pod 800 řádků', array_reduce(['teacher_overview_v61.php', 'teacher_overview_v61_views.php', 'tools/v61_teacher_data_reassign.php'], static fn(bool $ok, string $f): bool => $ok && count(file($root . '/' . $f)) < 800, true), false);
+$check('zdroj: soubory modulu pod 800 řádků', array_reduce(['src/teacher/teacher_overview_v61.php', 'src/teacher/teacher_overview_v61_views.php', 'tools/v61_teacher_data_reassign.php'], static fn(bool $ok, string $f): bool => $ok && count(file($root . '/' . $f)) < 800, true), false);
 $check('zdroj: tools/v61_teacher_data_reassign.php je CLI-only s guardem a bez přímého RMW (storage_update_many)', str_contains((string)file_get_contents($root . '/tools/v61_teacher_data_reassign.php'), "PHP_SAPI !== 'cli'") && str_contains((string)file_get_contents($root . '/tools/v61_teacher_data_reassign.php'), 'storage_update_many'), false);
 
 exit(audit_summary($state, 'V61_TEACHER'));

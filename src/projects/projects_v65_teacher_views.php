@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-require_once __DIR__ . '/projects_v65_teacher_actions.php';
+require_once dirname(__DIR__, 2) . '/src/projects/projects_v65_teacher_actions.php';
 
 /**
  * v65 · Učitelský cockpit cyklu projektů (modul 'projekty65', vždy česky). Fronta práce učitele je záměrně krátká:

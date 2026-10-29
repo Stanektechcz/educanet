@@ -144,7 +144,7 @@ foreach ($files as $path) {
     $refs = array_keys(array_filter($sources, static fn(string $src): bool => str_contains($src, $base)));
     // dynamické odkazy: cx-<originál> přes teacher68_css_href(), tmavé vrstvy žáka přes sprintf(UI69_STUDENT_DARK_CSS, pohled)
     if ($refs === [] && str_starts_with($name, 'cx-') && is_file($ROOT . '/assets/' . substr($name, 3))) $refs = ['teacher_shell_v68.php (kopie ' . substr($name, 3) . ')'];
-    if ($refs === [] && preg_match('~^dark/student-dark-([a-z]+)-v69\.css$~', $name, $dm) === 1 && str_contains($sources['ui_v67.php'] ?? '', "'" . $dm[1] . "'")) $refs = ['ui_v67.php (UI69_STUDENT_DARK_CSS, pohled ' . $dm[1] . ')'];
+    if ($refs === [] && preg_match('~^dark/student-dark-([a-z]+)-v69\.css$~', $name, $dm) === 1 && str_contains($sources['src/ui/ui_v67.php'] ?? '', "'" . $dm[1] . "'")) $refs = ['ui_v67.php (UI69_STUDENT_DARK_CSS, pohled ' . $dm[1] . ')'];
     $stats[$name] = [
         'bytes' => strlen($raw), 'gzip' => strlen((string)gzencode($raw, 9)), 'lines' => substr_count($raw, "\n") + 1,
         'rules' => count(array_filter($rules, static fn(array $r): bool => $r['at'] === '')), 'selectors' => $sel, 'decls' => $decl, 'vars' => $vars,

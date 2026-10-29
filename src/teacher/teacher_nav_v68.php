@@ -14,7 +14,7 @@ declare(strict_types=1);
  */
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/ui_v67.php';
+require_once dirname(__DIR__, 2) . '/src/ui/ui_v67.php';
 
 /** Záložky cockpitu s tmavým režimem (po převodu CSS na tokeny a kontrole kontrastu; ostatní zůstanou světlé). */
 const UI68_TEACHER_DARK_TABS = [
@@ -199,7 +199,7 @@ function teacher68_redirect_url(string $rawTab, array $get, array $visibleTabs):
 /** Drobečková navigace: [popisek, url|null][] – od v78.1 podle 4 sekcí: Cockpit › sekce › záložka (nav781_breadcrumb, odkaz na sekci nese třídu). */
 function teacher68_breadcrumb(string $tab, string $classId = '', string $sectionParam = ''): array
 {
-    require_once __DIR__ . '/nav_v78_1.php';
+    require_once dirname(__DIR__, 2) . '/src/ui/nav_v78_1.php';
     return nav781_breadcrumb($tab, $classId, $sectionParam);
 }
 

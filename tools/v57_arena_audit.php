@@ -15,8 +15,8 @@ if (!mkdir($tmp, 0770, true) && !is_dir($tmp)) { fwrite(STDERR, "Nelze vytvořit
 $GLOBALS['lab57_storage_override'] = $tmp;
 $GLOBALS['lab57_secret_override'] = 'arena57-audit-secret';
 
-require_once $root . '/linux_v57_lab.php';
-require_once $root . '/arena_v57.php';
+require_once $root . '/src/linux/linux_v57_lab.php';
+require_once $root . '/src/arena/arena_v57.php';
 
 $GLOBALS['audit_xp'] = [];
 if (!function_exists('learning_award_once')) {

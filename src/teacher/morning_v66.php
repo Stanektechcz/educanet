@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-require_once __DIR__ . '/teacher_overview_v61.php';
-require_once __DIR__ . '/assessment_v66.php';
-require_once __DIR__ . '/integrity_v66.php';
-require_once __DIR__ . '/grading_v66.php';
-require_once __DIR__ . '/paths_v63.php';
+require_once dirname(__DIR__, 2) . '/src/teacher/teacher_overview_v61.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/assessment_v66.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/integrity_v66.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/grading_v66.php';
+require_once dirname(__DIR__, 2) . '/src/paths/paths_v63.php';
 
 /**
  * EDUCANET v66 · cockpit „5 minut ráno“: co má učitel udělat dnes, seřazené podle dopadu.

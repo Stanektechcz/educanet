@@ -7,11 +7,11 @@ require dirname(__DIR__) . '/bootstrap.php';
 if (!function_exists('teacher_class_label')) {
     function teacher_class_label(string $classId): string { return ['class_1a'=>'1.A','class_2a'=>'2.A','class_3a'=>'3.A','class_4a'=>'4.A'][$classId] ?? $classId; }
 }
-require dirname(__DIR__) . '/teacher_curriculum.php';
+require dirname(__DIR__) . '/src/teacher/teacher_curriculum.php';
 
 $root = dirname(__DIR__);
 $specs = teacher_curriculum_spec();
-$skill = require $root . '/skill_catalog.php';
+$skill = require $root . '/src/assessment/skill_catalog.php';
 $projects = project_catalog();
 
 $esc = static fn(string $s): string => str_replace('|','\\|',$s);

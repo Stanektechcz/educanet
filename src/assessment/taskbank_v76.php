@@ -40,7 +40,7 @@ function tb76_record_evidence(string $classId, string $ref, string $task, array 
     $score = tb76_round_score($entry);
     if ($score === null || preg_match('/^stu_[0-9a-f]{16}$/', $ref) !== 1) return 0;
     try {
-        if (!function_exists('ev62_append')) require_once __DIR__ . '/evidence_v62.php';
+        if (!function_exists('ev62_append')) require_once dirname(__DIR__, 2) . '/src/assessment/evidence_v62.php';
         if (!function_exists('comp62_enabled_for_class') || !comp62_enabled_for_class($classId)) return 0;
         $subject = (string)comp62_subject_for_class($classId);
         $comp = tb76_task_competency($subject, $task);

@@ -32,8 +32,8 @@ putenv('EDUCANET_TEACHER_EXPORT_KEY=' . V74M_KEY);
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'cockpit_v70.php',
-    'tutorial_v52.php', 'learning_v56.php', 'runtime_content.php', 'session_v53.php', 'accounts_v53.php', 'intake_v51.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/teacher/cockpit_v70.php',
+    'src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/ops/runtime_content.php', 'src/lessons/session_v53.php', 'src/student/accounts_v53.php', 'src/student/intake_v51.php'] as $lib) require_once $ROOT . '/' . $lib;
 $mods = teacher58_modules();
 foreach (array_unique(array_merge((array)$mods['hodina']['files'], (array)$mods['materialy74']['files'])) as $f) require_once $ROOT . '/' . $f;
 require_once __DIR__ . '/migrate.php';
@@ -54,8 +54,8 @@ $tree = static function (string $dir): string {
 $check('úložiště auditu i cache modelu jsou dočasné (ne ostrá storage/ ani cache/ projektu)', STORAGE_DIR === $tmp && str_contains($tmp, 'educanet-audit-') && str_starts_with(mat74_path(), $tmp . '/'));
 
 // ---------------------------------------------------------------- 1) soubory, registr, politiky
-$libs = ['materials_v74.php', 'materials_v74_views.php', 'insights_v74.php', 'insights_v74_views.php', 'bulk_approval_v74.php', 'bulk_approval_v74_views.php',
-    'weekly_v74.php', 'weekly_v74_views.php', 'palette_v74.php', 'migrations/0004_materials_v74.php', 'tools/lib/v74_cockpit_http.php'];
+$libs = ['src/ops/materials_v74.php', 'src/ops/materials_v74_views.php', 'src/teacher/insights_v74.php', 'src/teacher/insights_v74_views.php', 'src/teacher/bulk_approval_v74.php', 'src/teacher/bulk_approval_v74_views.php',
+    'src/teacher/weekly_v74.php', 'src/teacher/weekly_v74_views.php', 'src/ui/palette_v74.php', 'migrations/0004_materials_v74.php', 'tools/lib/v74_cockpit_http.php'];
 $cli = ['tools/v74_materials_audit.php', 'tools/v74_cockpit_audit.php'];
 $bad = [];
 foreach (array_merge($libs, $cli) as $f) {
@@ -68,7 +68,7 @@ $m74 = $mods['materialy74'] ?? [];
 $map = teacher68_tab_map();
 $check('registr: modul `materialy74` (POST jen prefix mat74_, bez GET), v sekci Výuka, v UI68_TEACHER_DARK_TABS; Dnešní hodina načítá knihovnu, dál nemá post/get a CSS beze změny',
     array_keys((array)($m74['post'] ?? [])) === ['mat74_'] && !isset($m74['get']) && in_array('materialy74', teacher58_tabs(), true) && ($map['materialy74']['section'] ?? '') === 'vyuka'
-    && in_array('materialy74', UI68_TEACHER_DARK_TABS, true) && in_array('materials_v74_views.php', (array)$mods['hodina']['files'], true) && !isset($mods['hodina']['post']) && !isset($mods['hodina']['get'])
+    && in_array('materialy74', UI68_TEACHER_DARK_TABS, true) && in_array('src/ops/materials_v74_views.php', (array)$mods['hodina']['files'], true) && !isset($mods['hodina']['post']) && !isset($mods['hodina']['get'])
     && ($mods['hodina']['css'] ?? []) === ['assets/cockpit-v71.css']);
 $policyOk = true;
 foreach (MAT74_ACTIONS as $a) $policyOk = $policyOk && teacher59_action_policy($a) === ['class' => 'required'] && teacher_action_permission($a) === 'content.manage';

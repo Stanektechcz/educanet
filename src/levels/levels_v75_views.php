@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/levels_v75.php';
+require_once dirname(__DIR__, 2) . '/src/levels/levels_v75.php';
 
 /**
  * EDUCANET v75 · diferenciace v hodině – žákovské UI v lekci v56 (volba Základ / Standard / Výzva, akce dif75_pick).

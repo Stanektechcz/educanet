@@ -16,8 +16,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Soubor se načítá i bez bootstrap.php (CLI audit), proto jsou pomocníci aplikace chráněni function_exists.
  */
 
-require_once __DIR__ . '/linux_v57_lab.php';
-require_once __DIR__ . '/economy_v64.php'; // v64: společný strop XP z her
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_lab.php';
+require_once dirname(__DIR__, 2) . '/src/student/economy_v64.php'; // v64: společný strop XP z her
 
 const ARENA57_ID_RE = '/^[a-z0-9]{6,32}$/';
 const ARENA57_TEAM_NAMES = ['Tučňáci', 'Pakety', 'Jádra', 'Bajty', 'Routeři', 'Shelláci', 'Démoni', 'Pingři', 'Kořeny', 'Sokety', 'Rouráci', 'Kernelníci'];

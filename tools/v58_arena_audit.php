@@ -15,11 +15,11 @@ if (!mkdir($tmp, 0770, true) && !is_dir($tmp)) { fwrite(STDERR, "Nelze vytvořit
 $GLOBALS['lab57_storage_override'] = $tmp;
 $GLOBALS['lab57_secret_override'] = 'arena58-audit-secret';
 
-require_once $root . '/linux_v57_lab.php';
-require_once $root . '/arena_v57.php';
-require_once $root . '/arena_v58_weekly.php';
-require_once $root . '/arena_v58_replay.php';
-require_once $root . '/arena_v58_views.php';
+require_once $root . '/src/linux/linux_v57_lab.php';
+require_once $root . '/src/arena/arena_v57.php';
+require_once $root . '/src/arena/arena_v58_weekly.php';
+require_once $root . '/src/arena/arena_v58_replay.php';
+require_once $root . '/src/arena/arena_v58_views.php';
 
 if (!function_exists('learning_award_once')) {
     $GLOBALS['audit_xp'] = [];
@@ -144,7 +144,7 @@ try {
     at(1500);
 
     // --- Bezpečnostní invariant: token-sken vlastních souborů --------------------
-    $ownFiles = ['arena_v57.php', 'arena_v57_views.php', 'arena_v58_weekly.php', 'arena_v58_replay.php', 'arena_v58_views.php', 'linux_v58_levels_weekly.php'];
+    $ownFiles = ['src/arena/arena_v57.php', 'src/arena/arena_v57_views.php', 'src/arena/arena_v58_weekly.php', 'src/arena/arena_v58_replay.php', 'src/arena/arena_v58_views.php', 'src/linux/linux_v58_levels_weekly.php'];
     $scanOk = true;
     $scanDetail = '';
     foreach ($ownFiles as $f) {
@@ -310,8 +310,8 @@ declare(strict_types=1);
 $root = ' . var_export($root, true) . ';
 $GLOBALS["lab57_storage_override"] = ' . var_export($tmp, true) . ';
 $GLOBALS["lab57_secret_override"] = ' . var_export('arena58-audit-secret', true) . ';
-require_once $root . "/linux_v57_lab.php";
-require_once $root . "/arena_v58_weekly.php";
+require_once $root . "/src/linux/linux_v57_lab.php";
+require_once $root . "/src/arena/arena_v58_weekly.php";
 $student = $argv[1]; $now = (int)$argv[2]; $week = $argv[3]; $levelId = $argv[4];
 $level = lab57_level($levelId);
 $world = lab57_build_world($level, lab57_seed("class_3a", $student, "weekly:" . $week, $level), [], $now);

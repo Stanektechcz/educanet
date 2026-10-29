@@ -11,11 +11,11 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Každý výstup přes e(); data žáků se tu nezobrazují.
  */
 
-require_once __DIR__ . '/lesson_approval_v72.php';
-require_once __DIR__ . '/lesson_glossary_v72.php';
-if (is_file(__DIR__ . '/svp_v72_views.php')) require_once __DIR__ . '/svp_v72_views.php';   // v72.1: vazba na ŠVP
-if (is_file(__DIR__ . '/ai_prompts_v72_1.php')) require_once __DIR__ . '/ai_prompts_v72_1.php';   // v72.1: AI prompty pro studenta (náhled)
-if (is_file(__DIR__ . '/cockpit_v70.php')) require_once __DIR__ . '/cockpit_v70.php';
+require_once dirname(__DIR__, 2) . '/src/lessons/lesson_approval_v72.php';
+require_once dirname(__DIR__, 2) . '/src/lessons/lesson_glossary_v72.php';
+if (is_file(dirname(__DIR__, 2) . '/src/assessment/svp_v72_views.php')) require_once dirname(__DIR__, 2) . '/src/assessment/svp_v72_views.php';   // v72.1: vazba na ŠVP
+if (is_file(dirname(__DIR__, 2) . '/src/teacher/ai_prompts_v72_1.php')) require_once dirname(__DIR__, 2) . '/src/teacher/ai_prompts_v72_1.php';   // v72.1: AI prompty pro studenta (náhled)
+if (is_file(dirname(__DIR__, 2) . '/src/teacher/cockpit_v70.php')) require_once dirname(__DIR__, 2) . '/src/teacher/cockpit_v70.php';
 
 function lc72_render_tab(array $modules, string $classId, string $csrf): void
 {

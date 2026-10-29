@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 require dirname(__DIR__) . '/bootstrap.php';
-require dirname(__DIR__) . '/teacher_operations_v46.php';
-require dirname(__DIR__) . '/teacher_demo_accounts.php';
+require dirname(__DIR__) . '/src/teacher/teacher_operations_v46.php';
+require dirname(__DIR__) . '/src/teacher/teacher_demo_accounts.php';
 
 $root = dirname(__DIR__);
 $checks = [];
@@ -15,8 +15,8 @@ $check = static function (bool $ok, string $label) use (&$checks): void {
 };
 
 $teacher = (string)file_get_contents($root . '/teacher.php');
-$ops = (string)file_get_contents($root . '/teacher_operations_v46.php');
-$module = (string)file_get_contents($root . '/teacher_demo_accounts.php');
+$ops = (string)file_get_contents($root . '/src/teacher/teacher_operations_v46.php');
+$module = (string)file_get_contents($root . '/src/teacher/teacher_demo_accounts.php');
 
 $check(function_exists('teacher_demo_account_create'), 'create helper exists');
 $check(function_exists('teacher_demo_account_reset_password'), 'password reset helper exists');
@@ -32,7 +32,7 @@ $check(str_contains($module, "empty(\$current['is_test_account'])"), 'delete res
 $check(str_contains($module, 'local_password_hash($password)'), 'password stored as hash');
 $check(!str_contains($module, "'password' => \$password,\n        'created_at'"), 'plaintext password not stored in account record');
 // v68: CSS cockpitu načítá teacher68_stylesheets_html() s verzí podle času změny souboru (filemtime) – cache key se mění sám.
-$shell = (string)file_get_contents($root . '/teacher_shell_v68.php');
+$shell = (string)file_get_contents($root . '/src/teacher/teacher_shell_v68.php');
 $check(str_contains($shell, "teacher68_link_html('assets/teacher.css')") && str_contains($shell, 'filemtime'), 'teacher CSS cache key bumped (version = filemtime)');
 
 $failed = array_values(array_filter($checks, static fn(array $row): bool => !$row[0]));

@@ -53,12 +53,12 @@ function aip721_prompts(string $classId, int $number, bool $draft = false): arra
     static $memo = [];
     $key = $classId . '#' . $number . ($draft ? '#d' : '');
     if (isset($memo[$key])) return $memo[$key];
-    if (!function_exists('aip76_lesson_in_scope')) require_once __DIR__ . '/ai_prompts_v76.php';
+    if (!function_exists('aip76_lesson_in_scope')) require_once dirname(__DIR__, 2) . '/src/teacher/ai_prompts_v76.php';
     if (aip76_lesson_in_scope($number)) {
         $fromContent = aip76_prompts_for($classId, $number, $draft);
         if ($fromContent !== null) return $memo[$key] = $fromContent;
     }
-    if (!function_exists('aip77_original_prompts')) require_once __DIR__ . '/ai_prompts_v77.php';
+    if (!function_exists('aip77_original_prompts')) require_once dirname(__DIR__, 2) . '/src/teacher/ai_prompts_v77.php';
     return $memo[$key] = aip77_original_prompts($classId, $number);
 }
 

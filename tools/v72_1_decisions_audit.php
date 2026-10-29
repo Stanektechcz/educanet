@@ -33,13 +33,13 @@ putenv('EDUCANET_TEACHER_EXPORT_KEY=' . V721_KEY);
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'cockpit_v70.php',
-    'tutorial_v52.php', 'learning_v56.php', 'runtime_content.php', 'session_v53.php', 'accounts_v53.php', 'intake_v51.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/teacher/cockpit_v70.php',
+    'src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/ops/runtime_content.php', 'src/lessons/session_v53.php', 'src/student/accounts_v53.php', 'src/student/intake_v51.php'] as $lib) require_once $ROOT . '/' . $lib;
 $mods = teacher58_modules();
 foreach (array_unique(array_merge((array)$mods['hodina']['files'], (array)$mods['schvalovani']['files'], (array)$mods['nastaveni_vyuky']['files'])) as $f) require_once $ROOT . '/' . $f;
-require_once $ROOT . '/lesson_exit_v72_views.php';
-require_once $ROOT . '/grading_v66_views.php';
-require_once $ROOT . '/ai_prompts_v77.php';   // v77: generátor promptů běží za běhu (lesson kity vyřazené – změna limitu auditu, BUILD_MANIFEST_V77.md)
+require_once $ROOT . '/src/lessons/lesson_exit_v72_views.php';
+require_once $ROOT . '/src/assessment/grading_v66_views.php';
+require_once $ROOT . '/src/teacher/ai_prompts_v77.php';   // v77: generátor promptů běží za běhu (lesson kity vyřazené – změna limitu auditu, BUILD_MANIFEST_V77.md)
 require_once __DIR__ . '/lib/v59_scope_fixtures.php';
 
 $state = audit_counter();
@@ -49,7 +49,7 @@ $throws = static function (callable $fn): bool { try { $fn(); return false; } ca
 $check('úložiště auditu i cache modelu jsou dočasné (ne ostrá storage/ ani cache/ projektu)', STORAGE_DIR === $tmp && str_contains($tmp, 'educanet-audit-') && !str_starts_with(lm71_cache_dir(), $ROOT));
 
 // ---------------------------------------------------------------- 1) soubory, registr, politiky
-$libs = ['svp_v72.php', 'svp_v72_map.php', 'svp_v72_views.php', 'teacher_prefs_v72_1.php', 'teacher_prefs_v72_1_views.php', 'ai_prompts_v72_1.php', 'ai_prompts_v77.php',
+$libs = ['src/assessment/svp_v72.php', 'src/assessment/svp_v72_map.php', 'src/assessment/svp_v72_views.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/teacher/teacher_prefs_v72_1_views.php', 'src/teacher/ai_prompts_v72_1.php', 'src/teacher/ai_prompts_v77.php',
     'lang/en/ui/lesson_v72_1.php', 'lang/uk/ui/lesson_v72_1.php'];
 $cli = ['tools/v72_1_decisions_audit.php'];
 $bad = [];
@@ -63,7 +63,7 @@ $nv = $mods['nastaveni_vyuky'] ?? [];
 $map = teacher68_tab_map();
 $check('registr: nový modul `nastaveni_vyuky` (POST jen prefix tp721_, bez GET), v sekci Výuka a v UI68_TEACHER_DARK_TABS; `schvalovani` má soubory ŠVP; `hodina` dál bez post/get',
     array_keys((array)($nv['post'] ?? [])) === ['tp721_'] && !isset($nv['get']) && in_array('nastaveni_vyuky', teacher58_tabs(), true) && ($map['nastaveni_vyuky']['section'] ?? '') === 'vyuka'
-    && in_array('nastaveni_vyuky', UI68_TEACHER_DARK_TABS, true) && array_intersect(['svp_v72.php', 'svp_v72_views.php', 'ai_prompts_v72_1.php'], (array)$mods['schvalovani']['files']) === ['svp_v72.php', 'svp_v72_views.php', 'ai_prompts_v72_1.php']
+    && in_array('nastaveni_vyuky', UI68_TEACHER_DARK_TABS, true) && array_intersect(['src/assessment/svp_v72.php', 'src/assessment/svp_v72_views.php', 'src/teacher/ai_prompts_v72_1.php'], (array)$mods['schvalovani']['files']) === ['src/assessment/svp_v72.php', 'src/assessment/svp_v72_views.php', 'src/teacher/ai_prompts_v72_1.php']
     && !isset($mods['hodina']['post']) && !isset($mods['hodina']['get']) && array_column(c70_related_rules()['nastaveni_vyuky'] ?? [], 0) === ['hodina', 'schvalovani', 'hodnoceni66']);
 $check('politiky: lc72_svp_approve / lc72_svp_return / tp721_class_exit = třída povinná a v rozsahu; tp721_self_names bez třídy; jiné tp721_* / lc72_svp_* zakázané',
     teacher59_action_policy('lc72_svp_approve') === ['class' => 'required'] && teacher59_action_policy('lc72_svp_return') === ['class' => 'required']
@@ -175,16 +175,16 @@ $check('AI prompty: 112 lekcí × 6 promptů (v77 za běhu místo lesson kitů),
 $aiBlock = audit_capture(static fn() => aip721_render_student_block('class_4a', 9));
 $check('žák: blok „Procvič si s AI (dobrovolné)“ v <details>, 5 bodů upozornění (tr), 6 promptů česky, bez JS, odkazů a formulářů; v lekci se volá pod exit ticketem',
     str_contains($aiBlock, '<details class="lx72-card lx72-ai" id="ai-prompty">') && str_contains($aiBlock, 'Procvič si s AI (dobrovolné)') && substr_count($aiBlock, '<pre class="lx72-prompt"') === 6
-    && substr_count($aiBlock, '<li>') === 5 && !preg_match('/<script|<a\s|<form|on[a-z]+=/i', $aiBlock) && str_contains($read('learning_v56_views.php'), 'aip721_render_student_block($classId, $lessonNo)')
-    && in_array('ai_prompts_v72_1.php', (array)(require $ROOT . '/app/routes.php')['libs']['lesson_path_views'], true));
+    && substr_count($aiBlock, '<li>') === 5 && !preg_match('/<script|<a\s|<form|on[a-z]+=/i', $aiBlock) && str_contains($read('src/lessons/learning_v56_views.php'), 'aip721_render_student_block($classId, $lessonNo)')
+    && in_array('src/teacher/ai_prompts_v72_1.php', (array)(require $ROOT . '/app/routes.php')['libs']['lesson_path_views'], true));
 $en = require $ROOT . '/lang/en/ui/lesson_v72_1.php';
 $uk = require $ROOT . '/lang/uk/ui/lesson_v72_1.php';
 $msgids = array_merge(['Procvič si s AI (dobrovolné)', 'Než začneš:', 'Prompt označ a zkopíruj do AI nástroje. Prompty jsou česky – AI ti může odpovídat i v jiném jazyce, když ji o to požádáš.'], aip721_privacy_lines());
 $check('i18n: doména lesson_v72_1 v manifestu, všech ' . count($msgids) . ' textů bloku AI má překlad en i uk; nové texty exit ticketu v doméně lesson_v72',
-    ((require $ROOT . '/lang/domains_v59.php')['domains']['lesson_v72_1'] ?? []) === ['ai_prompts_v72_1.php'] && array_diff($msgids, array_keys($en)) === [] && array_diff($msgids, array_keys($uk)) === []
+    ((require $ROOT . '/lang/domains_v59.php')['domains']['lesson_v72_1'] ?? []) === ['src/teacher/ai_prompts_v72_1.php'] && array_diff($msgids, array_keys($en)) === [] && array_diff($msgids, array_keys($uk)) === []
     && isset((require $ROOT . '/lang/uk/ui/lesson_v72.php')['Režim: podklad ke známce'], (require $ROOT . '/lang/en/ui/lesson_v72.php')['Domácí příprava (dobrovolné)']));
 $prev = aip721_teacher_preview_html('class_3a', 5);
-$check('učitel: náhled AI promptů ve Schvalování lekcí (6 promptů, česky)', substr_count($prev, '<li><strong>') === 6 && str_contains($read('lesson_approval_v72_views.php'), 'aip721_teacher_preview_html($class, $n)'));
+$check('učitel: náhled AI promptů ve Schvalování lekcí (6 promptů, česky)', substr_count($prev, '<li><strong>') === 6 && str_contains($read('src/lessons/lesson_approval_v72_views.php'), 'aip721_teacher_preview_html($class, $n)'));
 
 require __DIR__ . '/lib/v72_1_decisions_http.php';
 exit(audit_summary($state, 'V72_1_DECISIONS'));

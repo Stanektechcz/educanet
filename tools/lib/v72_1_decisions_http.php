@@ -46,7 +46,7 @@ try {
     $check('HTTP: lc72_svp_approve s CSRF schválí vazbu 4.A L4, ostatní lekce zůstanou návrh', in_array((int)$svpPost['status'], [302, 303], true) && svp72_status('class_4a', 4)['status'] === 'schvaleno'
         && svp72_status('class_4a', 5)['status'] === 'navrh');
     audit_login_student($h, 'class_3a', 'Audit Čtvrťák');
-    $year = require $ROOT . '/school_year.php';
+    $year = require $ROOT . '/src/ops/school_year.php';
     $cur = $h->request('GET', '/', ['view' => 'lekce', 'n' => (string)v56_current_lesson_number('class_3a', $year)]);
     $check('HTTP žák: aktuální lekce má dobrovolné AI prompty s upozorněním na soukromí (čistá odpověď)', audit_response_clean($cur) && str_contains((string)$cur['body'], 'Procvič si s AI (dobrovolné)')
         && str_contains((string)$cur['body'], 'Nevkládej přihlašovací údaje školy'));

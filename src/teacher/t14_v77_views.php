@@ -10,7 +10,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * GET jen ?class= (obecná kontrola rozsahu teacher59). Každý výstup přes e().
  */
 
-require_once __DIR__ . '/t14_v77.php';
+require_once dirname(__DIR__, 2) . '/src/teacher/t14_v77.php';
 
 const T1477_WEEKDAYS = ['neděle', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota'];
 

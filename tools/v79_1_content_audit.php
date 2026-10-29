@@ -26,12 +26,12 @@ require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
 require_once __DIR__ . '/lib/v79_1_forms.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'cockpit_v70.php', 'tutorial_v52.php', 'learning_v56.php', 'runtime_content.php',
-    'session_v53.php', 'accounts_v53.php', 'intake_v51.php', 'app/lib.php', 'ui_v67.php', 'teacher_shell_v68.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/teacher/cockpit_v70.php', 'src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/ops/runtime_content.php',
+    'src/lessons/session_v53.php', 'src/student/accounts_v53.php', 'src/student/intake_v51.php', 'app/lib.php', 'src/ui/ui_v67.php', 'src/teacher/teacher_shell_v68.php'] as $lib) require_once $ROOT . '/' . $lib;
 $mods = teacher58_modules();
 foreach (['hodina', 'prehled', 'schvalovani'] as $m) foreach ((array)$mods[$m]['files'] as $f) require_once $ROOT . '/' . $f;
-require_once $ROOT . '/t14_v77.php';
-require_once $ROOT . '/t14_v77_views.php';
+require_once $ROOT . '/src/teacher/t14_v77.php';
+require_once $ROOT . '/src/teacher/t14_v77_views.php';
 
 const V791_KEY = 'v79-1-content-audit-key';
 const V791_CSS_BUDGET = 15 * 1024;
@@ -43,12 +43,12 @@ $read = static fn(string $rel): string => (string)@file_get_contents($ROOT . '/'
 $check('úložiště auditu je dočasné (ne ostrá storage/)', STORAGE_DIR === $tmp && str_contains($tmp, 'educanet-audit-') && !str_starts_with($tmp, $ROOT . '/storage'));
 
 // ---------------------------------------------------------------- 1) soubory, rozpočty, registr, politiky
-$php = ['ux_v79_1.php', 'lesson_today_v79_1_views.php'];
+$php = ['src/ui/ux_v79_1.php', 'src/lessons/lesson_today_v79_1_views.php'];
 $guards = array_filter($php, static fn(string $f): bool => str_contains($read($f), 'declare(strict_types=1);') && str_contains($read($f), "=== basename(__FILE__)) { http_response_code(403); exit; }"));
 $check('PHP vrstvy v79.1: strict_types a 403 guard', count($guards) === count($php));
 $touched = array_merge($php, ['assets/content-v79-1.css', 'assets/today-v79-1.js', 'tools/v79_1_content_audit.php', 'tools/lib/v79_1_content_http.php', 'tools/lib/v79_1_content_browser.cjs', 'tools/lib/v79_1_forms.php',
-    'lesson_today_v71_views.php', 'teacher_overview_v61_views.php', 'lesson_approval_v72_views.php', 'teacher_class_dashboard.php', 'cockpit_v70.php', 'insights_v74_views.php', 'materials_v74_views.php',
-    'feedback_v60_teacher_views.php', 't14_v77_views.php', 'taskbank_v75_views.php', 'portfolio_v75_views.php', 'portfolio_v65_views.php', 'ui_v67.php']);
+    'src/lessons/lesson_today_v71_views.php', 'src/teacher/teacher_overview_v61_views.php', 'src/lessons/lesson_approval_v72_views.php', 'src/teacher/teacher_class_dashboard.php', 'src/teacher/cockpit_v70.php', 'src/teacher/insights_v74_views.php', 'src/ops/materials_v74_views.php',
+    'src/student/feedback_v60_teacher_views.php', 'src/teacher/t14_v77_views.php', 'src/assessment/taskbank_v75_views.php', 'src/student/portfolio_v75_views.php', 'src/student/portfolio_v65_views.php', 'src/ui/ui_v67.php']);
 $long = array_filter($touched, static fn(string $f): bool => substr_count($read($f), "\n") >= 800 || $read($f) === '');
 $check('soubory existují a mají do 800 řádků (' . count($touched) . ')' . ($long ? ' [' . implode(', ', $long) . ']' : ''), $long === []);
 $css = $read('assets/content-v79-1.css');
@@ -73,9 +73,9 @@ $check('JS v79.1: bez innerHTML/eval/sítě; localStorage jen v try/catch (bez �
 $h = $mods['hodina'];
 $check('registr: Dnešní hodina dál jen čtení (bez post/get), CSS v71 beze změny, JS today-v79-1.js, soubory v79.1; lt71_render_tab deleguje na lt791_render_tab',
     !isset($h['post']) && !isset($h['get']) && ($h['css'] ?? []) === ['assets/cockpit-v71.css'] && ($h['js'] ?? []) === ['assets/today-v79-1.js']
-    && in_array('lesson_today_v79_1_views.php', $h['files'], true) && in_array('ux_v79_1.php', $h['files'], true) && str_contains($read('lesson_today_v71_views.php'), "if (function_exists('lt791_render_tab')) { lt791_render_tab(\$modules, \$classId, \$now); return; }"));
+    && in_array('src/lessons/lesson_today_v79_1_views.php', $h['files'], true) && in_array('src/ui/ux_v79_1.php', $h['files'], true) && str_contains($read('src/lessons/lesson_today_v71_views.php'), "if (function_exists('lt791_render_tab')) { lt791_render_tab(\$modules, \$classId, \$now); return; }"));
 $check('registr: Přehled třídy a Schvalování načítají ux_v79_1.php; Výsledky třídy (teacher_class_dashboard.php) ho připojí; CSS v79.1 na každé záložce cockpitu (nav781_css_html)',
-    in_array('ux_v79_1.php', $mods['prehled']['files'], true) && in_array('ux_v79_1.php', $mods['schvalovani']['files'], true) && str_contains($read('teacher_class_dashboard.php'), "require_once __DIR__ . '/ux_v79_1.php'")
+    in_array('src/ui/ux_v79_1.php', $mods['prehled']['files'], true) && in_array('src/ui/ux_v79_1.php', $mods['schvalovani']['files'], true) && str_contains($read('src/teacher/teacher_class_dashboard.php'), "require_once dirname(__DIR__, 2) . '/src/ui/ux_v79_1.php'")
     && str_contains(nav781_css_html('hodina'), 'assets/content-v79-1.css') && str_contains(nav781_css_html('design78'), 'assets/content-v79-1.css'));
 $get = teacher59_get_policies();
 $want = [];

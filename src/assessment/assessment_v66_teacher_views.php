@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-require_once __DIR__ . '/assessment_v66_build.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/assessment_v66_build.php';
 
 /**
  * EDUCANET v66 · cockpit učitele: záložka „Testy a hodnocení“ (hodnoceni66, vždy česky).

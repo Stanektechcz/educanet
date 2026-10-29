@@ -31,12 +31,12 @@ $tmp = rtrim(str_replace('\\', '/', edu_audit_temp_storage('v59-teacher-scope'))
 $sharedKey = 'audit-shared-key-' . bin2hex(random_bytes(6));
 putenv('EDUCANET_TEACHER_EXPORT_KEY=' . $sharedKey);
 require $root . '/bootstrap.php';
-foreach (['teacher_operations_v46.php', 'teacher_operations_plus_v46_1.php', 'teacher_operations_control_v46_2.php', 'intake_v51.php', 'session_v53.php',
-    'accounts_v53.php', 'runtime_content.php', 'linux_v57_lab.php', 'arena_v57.php', 'teacher_v58.php', 'robots_v58.php', 'teamgames_v58_teacher_views.php',
-    'arena_v58_ctf.php', 'arena_v58_incident.php', 'lab_v58_editor.php', 'teacher_demo_accounts.php', 'teacher_accounts_v59_admin.php',
-    'teamgames_v58_projector_views.php', 'intake_v51_teacher.php',
-    'points_v53.php', 'points_v60.php', 'marketplace_v60.php', 'marketplace_v60_teacher_views.php',
-    'projects_v60.php', 'projects_v60_teacher_views.php', 'feedback_v60.php', 'feedback_v60_teacher_views.php'] as $file) {
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_operations_plus_v46_1.php', 'src/teacher/teacher_operations_control_v46_2.php', 'src/student/intake_v51.php', 'src/lessons/session_v53.php',
+    'src/student/accounts_v53.php', 'src/ops/runtime_content.php', 'src/linux/linux_v57_lab.php', 'src/arena/arena_v57.php', 'src/teacher/teacher_v58.php', 'src/robots/robots_v58.php', 'src/teamgames/teamgames_v58_teacher_views.php',
+    'src/arena/arena_v58_ctf.php', 'src/arena/arena_v58_incident.php', 'src/linux/lab_v58_editor.php', 'src/teacher/teacher_demo_accounts.php', 'src/teacher/teacher_accounts_v59_admin.php',
+    'src/teamgames/teamgames_v58_projector_views.php', 'src/student/intake_v51_teacher.php',
+    'src/student/points_v53.php', 'src/student/points_v60.php', 'src/student/marketplace_v60.php', 'src/student/marketplace_v60_teacher_views.php',
+    'src/projects/projects_v60.php', 'src/projects/projects_v60_teacher_views.php', 'src/student/feedback_v60.php', 'src/student/feedback_v60_teacher_views.php'] as $file) {
     require_once $root . '/' . $file;
 }
 require_once __DIR__ . '/lib/v59_scope_fixtures.php';
@@ -394,9 +394,9 @@ if ($static['guards_missing']) echo 'INFO  bez guardu: ' . implode(', ', $static
 $teacherSrc = $read($root . '/teacher.php');
 $catchBlock = (string)strstr((string)strstr($teacherSrc, "    } catch (Throwable \$e) {\n        // v59 · SEC59-16"), 'teacher_redirect(', true);
 $check('SEC59-16: teacher.php/intake/registrace ukazují text jen u RuntimeException, jinak obecná hláška + error_log', str_contains($catchBlock, '$e instanceof RuntimeException ? $e->getMessage() : \'Akci se nepodařilo dokončit.\'') && str_contains($catchBlock, 'error_log(')
-    && str_contains($read($root . '/intake_v51.php'), '$e instanceof RuntimeException ? $e->getMessage() : \'\'') && str_contains($read($root . '/app/actions/session_join.php'), '$joinError instanceof RuntimeException ? $joinError->getMessage() : \'\'')
+    && str_contains($read($root . '/src/student/intake_v51.php'), '$e instanceof RuntimeException ? $e->getMessage() : \'\'') && str_contains($read($root . '/app/actions/session_join.php'), '$joinError instanceof RuntimeException ? $joinError->getMessage() : \'\'')
     && str_contains($read($root . '/lang/en/ui/auth.php'), "'Akci se nepodařilo dokončit.' =>") && str_contains($read($root . '/lang/uk/ui/auth.php'), "'Akci se nepodařilo dokončit.' =>"), false);
-$check('SEC59-14: cookie educanet_teacher_actor má Secure podle educanet_is_https() (i za proxy)', str_contains($read($root . '/teacher_tasks.php'), "'secure'=>educanet_is_https()"), false);
+$check('SEC59-14: cookie educanet_teacher_actor má Secure podle educanet_is_https() (i za proxy)', str_contains($read($root . '/src/teacher/teacher_tasks.php'), "'secure'=>educanet_is_https()"), false);
 $check('SEC59-18: teacher.php posílá no-store hned po bootstrapu (před jakýmkoli výstupem)', (int)strpos($teacherSrc, "header('Cache-Control: no-store, max-age=0')") > 0
     && (int)strpos($teacherSrc, "header('Cache-Control: no-store, max-age=0')") < (int)strpos($teacherSrc, '<!doctype html>'), false);
 

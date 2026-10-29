@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/stepper_v79.php';
+require_once dirname(__DIR__, 2) . '/src/ui/stepper_v79.php';
 
 /**
  * EDUCANET v79 · vykreslení stepperu (komponenta v78 `.ds-stepper` uvnitř `.ds78`): pruh kroků (desktop) / kompaktní „2/4“

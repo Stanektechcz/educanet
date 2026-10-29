@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-require_once __DIR__ . '/competencies_v62.php'; // COMP62_RETENTION_GRACE_DAYS i při volání z CLI retence
+require_once dirname(__DIR__, 2) . '/src/assessment/competencies_v62.php'; // COMP62_RETENTION_GRACE_DAYS i při volání z CLI retence
 
 /**
  * EDUCANET v62 · záznam důkazu (append-only).

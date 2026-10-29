@@ -15,11 +15,11 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  */
 
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once dirname(__DIR__) . '/intake_v51.php'; // roster z dotazníků (jako core skupina v index.php)
-require_once dirname(__DIR__) . '/identity_v58.php';
-require_once dirname(__DIR__) . '/competencies_v62.php';
-require_once dirname(__DIR__) . '/evidence_v62.php';
-require_once dirname(__DIR__) . '/evidence_v62_adapters.php';
+require_once dirname(__DIR__) . '/src/student/intake_v51.php'; // roster z dotazníků (jako core skupina v index.php)
+require_once dirname(__DIR__) . '/src/student/identity_v58.php';
+require_once dirname(__DIR__) . '/src/assessment/competencies_v62.php';
+require_once dirname(__DIR__) . '/src/assessment/evidence_v62.php';
+require_once dirname(__DIR__) . '/src/assessment/evidence_v62_adapters.php';
 
 function v62b_arg(array $argv, string $name): ?string
 {

@@ -15,23 +15,23 @@ $storageDir = edu_audit_temp_storage('v55');
 $root = dirname(__DIR__);
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 require $root . '/bootstrap.php';
-require $root . '/runtime_content.php';
-require_once $root . '/tutorial_v52.php';
-require_once $root . '/tutorial_v52_views.php';
-require_once $root . '/intake_v51.php';
-require_once $root . '/accounts_v53.php';
-require_once $root . '/points_v53.php';
-require_once $root . '/session_v53.php';
-require_once $root . '/student_v55.php';
-require_once $root . '/student_v55_views.php';
+require $root . '/src/ops/runtime_content.php';
+require_once $root . '/src/lessons/tutorial_v52.php';
+require_once $root . '/src/lessons/tutorial_v52_views.php';
+require_once $root . '/src/student/intake_v51.php';
+require_once $root . '/src/student/accounts_v53.php';
+require_once $root . '/src/student/points_v53.php';
+require_once $root . '/src/lessons/session_v53.php';
+require_once $root . '/src/student/student_v55.php';
+require_once $root . '/src/student/student_v55_views.php';
 
 $state = audit_counter();
 $check = audit_checker($state);
 $read = static fn(string $rel): string => (string)@file_get_contents($root . '/' . $rel);
-$views = $read('student_v55_views.php');
+$views = $read('src/student/student_v55_views.php');
 $css = $read('assets/student-v55.css');
 $js = $read('assets/student-v55.js');
-$schoolYear = require $root . '/school_year.php';
+$schoolYear = require $root . '/src/ops/school_year.php';
 
 // --- Menu a LVL prstenec (přímá volání se skutečnými daty tříd) ---
 $nav = v55_primary_nav('class_2a', 'dashboard');
@@ -112,8 +112,8 @@ $check('méně času = nižší váha hodnocení',
 $check('zadání je kratší, když je míň času', count(v55_bonus_tasks('class_2a', $modules['class_2a'], [], $long)) > count(v55_bonus_tasks('class_2a', $modules['class_2a'], [], $short)));
 $check('body za bonus zohledňují váhu', v55_bonus_points(1, 1.0) === 3 && v55_bonus_points(1, 0.5) === 2 && v55_bonus_points(4, 1.0) === 0);
 $check('žák váhu nevidí (zdrojová kontrola žákovské šablony)', !str_contains($views, 'weight_label') && !preg_match('/váha/u', $views), false);
-$check('učitel váhu vidí (zdrojová kontrola učitelské šablony)', str_contains($read('session_v53_teacher.php'), 'v55_weight_label'), false);
-$check('bonus má termín odevzdání s rezervou (zdrojová kontrola)', str_contains($read('student_v55.php'), 'V55_RESERVE_MINUTES * 60'), false);
+$check('učitel váhu vidí (zdrojová kontrola učitelské šablony)', str_contains($read('src/lessons/session_v53_teacher.php'), 'v55_weight_label'), false);
+$check('bonus má termín odevzdání s rezervou (zdrojová kontrola)', str_contains($read('src/student/student_v55.php'), 'V55_RESERVE_MINUTES * 60'), false);
 
 // Skutečný běh: sestavení zadání stejnou funkcí jako aplikace (v55_bonus_assignment), spuštění
 // a odevzdání bonusu se ověřuje zápisem/čtením z dočasného úložiště, ne textem.

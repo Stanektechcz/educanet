@@ -6,9 +6,9 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 $root = dirname(__DIR__);
 require $root . '/bootstrap.php';
 
-$next = require $root . '/next_lessons.php';
-$extended = require $root . '/extended_lessons.php';
-foreach (['lessons_plus.php','lessons_more.php','lessons_ecosystem.php','lessons_yearpack.php'] as $file) {
+$next = require $root . '/src/content/next_lessons.php';
+$extended = require $root . '/src/content/extended_lessons.php';
+foreach (['src/lessons/lessons_plus.php','src/lessons/lessons_more.php','src/lessons/lessons_ecosystem.php','src/lessons/lessons_yearpack.php'] as $file) {
     $data = require $root . '/' . $file;
     foreach ($data as $classId => $lessons) {
         if (!isset($extended[$classId])) $extended[$classId] = [];
@@ -16,9 +16,9 @@ foreach (['lessons_plus.php','lessons_more.php','lessons_ecosystem.php','lessons
     }
 }
 
-$yearKnowledge = require $root . '/knowledge_extensions_yearpack.php';
-$yearTours = require $root . '/knowledge_tours_yearpack.php';
-$yearSims = require $root . '/simulations_yearpack.php';
+$yearKnowledge = require $root . '/src/knowledge/knowledge_extensions_yearpack.php';
+$yearTours = require $root . '/src/knowledge/knowledge_tours_yearpack.php';
+$yearSims = require $root . '/src/content/simulations_yearpack.php';
 
 $expect = [
     'class_1a' => ['name' => '1.A', 'subject_contains' => ['Grafika', 'webdesign']],

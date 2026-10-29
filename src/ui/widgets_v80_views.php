@@ -3,8 +3,8 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/widgets_v80.php';
-require_once __DIR__ . '/learning_v80_views.php';
+require_once dirname(__DIR__, 2) . '/src/ui/widgets_v80.php';
+require_once dirname(__DIR__, 2) . '/src/lessons/learning_v80_views.php';
 
 /**
  * EDUCANET v80 · stránka Interaktivní cvičení (?view=cviceni, ?w=<cvičení>). Formulář funguje bez JS a kontroluje ho server;

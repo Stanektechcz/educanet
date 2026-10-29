@@ -33,7 +33,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  *      acc58_login_gate, acc58_change_password, acc58_migrate, acc58_auto_migrate, acc58_class_cards.
  */
 
-require_once __DIR__ . '/accounts_v53.php';
+require_once dirname(__DIR__, 2) . '/src/student/accounts_v53.php';
 
 const ACC58_OTP_TTL_DAYS = 14;
 const ACC58_OTP_MAX_TTL_DAYS = 60;

@@ -30,7 +30,7 @@ const PROJ60_COMPETENCY_STATES = ['rozpracovano' => 1, 'zvladnuto' => 2, 'upevne
 /** Id kompetencí ze všech předmětů katalogu comp62 (pro validaci vstupu učitele). @return array<string,string> id → popis */
 function proj60_known_competencies(): array
 {
-    require_once __DIR__ . '/competencies_v62.php';
+    require_once dirname(__DIR__, 2) . '/src/assessment/competencies_v62.php';
     $out = [];
     foreach (array_keys(comp62_catalog()) as $subject) {
         foreach (comp62_competencies((string)$subject) as $id => $c) $out[(string)$id] = (string)$c['label'];
@@ -72,7 +72,7 @@ function proj60_missing_competencies(string $classId, string $studentKey, array 
 {
     $required = array_values(array_filter((array)($project['required_competencies'] ?? []), 'is_array'));
     if ($required === []) return [];
-    foreach (['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php'] as $lib) require_once __DIR__ . '/' . $lib;
+    foreach (['src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/mastery_v62.php'] as $lib) require_once dirname(__DIR__, 2) . '/' . $lib;
     if (!comp62_enabled_for_class($classId)) return [];
     $map = (array)(m62_student($classId, $studentKey)['map'] ?? []);
     $missing = [];

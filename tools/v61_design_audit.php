@@ -28,7 +28,7 @@ require_once $ROOT . '/app/lib.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
 require_once __DIR__ . '/lib/v61_design_css.php';
-foreach (['student_v55.php', 'nav_v61.php', 'profile_v60_ui.php'] as $rel) { require_once $ROOT . '/' . $rel; }
+foreach (['src/student/student_v55.php', 'src/ui/nav_v61.php', 'src/student/profile_v60_ui.php'] as $rel) { require_once $ROOT . '/' . $rel; }
 
 $state = audit_counter();
 $check = audit_checker($state);
@@ -72,7 +72,7 @@ foreach (['edu-yellow' => '#f3b21f', 'edu-orange' => '#ec6b10', 'edu-teal' => '#
 }
 $check('most: starší tokeny (--u-radius, --edu-radius, --v506-radius, --u-line-strong) berou hodnoty z --ui-*', $resolve('u-radius') === '16px' && $resolve('edu-radius') === '16px' && $resolve('v506-radius') === '16px' && $resolve('u-line-strong') === '#6b7885' && $resolve('u-font') === $resolve('ui-font'));
 $used = [];
-foreach ([$componentsCss, $read('nav_v61.php')] as $src) { preg_match_all('/var\(--(ui-[a-z0-9-]+)/', $src, $m); $used = array_merge($used, $m[1]); }
+foreach ([$componentsCss, $read('src/ui/nav_v61.php')] as $src) { preg_match_all('/var\(--(ui-[a-z0-9-]+)/', $src, $m); $used = array_merge($used, $m[1]); }
 $undefined = array_values(array_diff(array_unique($used), array_keys($counts)));
 $check('každý použitý token --ui-* v components-v61.css je definovaný' . ($undefined ? ' [' . implode(', ', $undefined) . ']' : ''), $undefined === [] && $used !== []);
 
@@ -87,7 +87,7 @@ foreach (v61d_rules($noComments($tokensCss)) as $rule) {
 $check('tokens-v61.css: barevné hodnoty jsou jen v deklaracích tokenů', $nonTokenColor === 0);
 $newBytes = strlen($tokensCss) + strlen($componentsCss);
 $check('nové styly (tokeny + komponenty) ≤ 20 KB (' . $newBytes . ' B)', $newBytes <= V61D_CSS_BUDGET_BYTES);
-$check('soubory CSS/PHP nové vrstvy ≤ 800 řádků', max(substr_count($tokensCss, "\n"), substr_count($componentsCss, "\n"), substr_count($read('nav_v61.php'), "\n"), substr_count($read('tools/v61_design_audit.php'), "\n")) <= 800);
+$check('soubory CSS/PHP nové vrstvy ≤ 800 řádků', max(substr_count($tokensCss, "\n"), substr_count($componentsCss, "\n"), substr_count($read('src/ui/nav_v61.php'), "\n"), substr_count($read('tools/v61_design_audit.php'), "\n")) <= 800);
 
 // ---------------------------------------------------------------- 3) komponenty: fokus, ≥ 44 px, profil je generuje
 $componentRules = v61d_rules($noComments($componentsCss));

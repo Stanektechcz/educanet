@@ -25,7 +25,7 @@ const V78D_KEY = 'v78d-audit-teacher-key';
 putenv('EDUCANET_TEACHER_EXPORT_KEY=' . V78D_KEY);
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'design_v78.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/ui/design_v78.php'] as $lib) require_once $ROOT . '/' . $lib;
 
 $state = audit_counter();
 $check = audit_checker($state);
@@ -35,14 +35,14 @@ $stripCss = static fn(string $css): string => (string)preg_replace('~/\*.*?\*/~s
 
 // ---------------------------------------------------------------- 0) soubory
 $newCss = [DS78_COMPONENTS_CSS, DS78_DEMO_CSS];
-$files = [DS78_TOKENS_CSS, DS78_COMPONENTS_CSS, DS78_DEMO_CSS, DS78_JS, 'design_v78.php', 'design_v78_views.php', 'tools/v78_design_tokens_audit.php', 'tools/lib/v78_design_http.php', 'tools/v78_css_inventory.php'];
+$files = [DS78_TOKENS_CSS, DS78_COMPONENTS_CSS, DS78_DEMO_CSS, DS78_JS, 'src/ui/design_v78.php', 'src/ui/design_v78_views.php', 'tools/v78_design_tokens_audit.php', 'tools/lib/v78_design_http.php', 'tools/v78_css_inventory.php'];
 $missing = array_values(array_filter($files, static fn(string $f): bool => !is_file($ROOT . '/' . $f)));
 $check('soubory v78 existují (' . count($files) . ')' . ($missing ? ': chybí ' . implode(', ', $missing) : ''), $missing === []);
 $long = [];
 foreach ($files as $f) if (is_file($ROOT . '/' . $f) && count(file($ROOT . '/' . $f)) > 800) $long[] = $f;
 $check('soubory v78 do 800 řádků' . ($long ? ': ' . implode(', ', $long) : ''), $long === []);
 $guards = true;
-foreach (['design_v78.php', 'design_v78_views.php', 'tools/lib/v78_design_http.php'] as $f) {
+foreach (['src/ui/design_v78.php', 'src/ui/design_v78_views.php', 'tools/lib/v78_design_http.php'] as $f) {
     $src = $read($f);
     $guards = $guards && str_contains($src, 'declare(strict_types=1);') && str_contains($src, "basename((string)(\$_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)");
 }
@@ -96,7 +96,7 @@ foreach ($newCss as $f) {
 $js = $read(DS78_JS);
 $jsCode = (string)preg_replace(['~/\*.*?\*/~s', '~^\s*//.*$~m'], '', $js);
 if (preg_match_all($colorRe, $js, $m)) $raw[] = DS78_JS . ': ' . implode(' ', $m[0]);
-foreach (['design_v78.php', 'design_v78_views.php'] as $f) {
+foreach (['src/ui/design_v78.php', 'src/ui/design_v78_views.php'] as $f) {
     $src = $read($f);
     if (preg_match_all('~#[0-9a-f]{6}\b|\b(?:rgba?|hsla?)\(~i', $src, $m)) $raw[] = $f . ': ' . implode(' ', array_unique($m[0]));
     preg_match_all('~style="([^"]*)"~', $src, $m);
@@ -155,7 +155,7 @@ $check('žádné externí zdroje v CSS v78 (@import, url(), webfont)', preg_matc
 $mods = teacher58_modules();
 $m = $mods['design78'] ?? [];
 $check('modul design78: jen admin, bez POST a GET parametru, soubory a CSS/JS v78', !empty($m['admin']) && !isset($m['post']) && !isset($m['get'])
-    && ($m['files'] ?? []) === ['design_v78.php', 'design_v78_views.php'] && ($m['css'] ?? []) === [DS78_TOKENS_CSS, DS78_COMPONENTS_CSS, DS78_DEMO_CSS] && ($m['js'] ?? []) === [DS78_JS]);
+    && ($m['files'] ?? []) === ['src/ui/design_v78.php', 'src/ui/design_v78_views.php'] && ($m['css'] ?? []) === [DS78_TOKENS_CSS, DS78_COMPONENTS_CSS, DS78_DEMO_CSS] && ($m['js'] ?? []) === [DS78_JS]);
 $map = teacher68_tab_map();
 $check('menu: Správa › Design systém (admin, bez ?class=), tmavý režim, TEACHER59_ADMIN_TABS', ($map['design78']['section'] ?? '') === 'sprava' && ($map['design78']['admin'] ?? false) === true
     && ($map['design78']['class'] ?? true) === false && in_array('design78', UI68_TEACHER_DARK_TABS, true) && in_array('design78', TEACHER59_ADMIN_TABS, true));
@@ -163,7 +163,7 @@ $check('viditelnost: admin záložku vidí, učitel a asistent ne', in_array('de
     && !in_array('design78', teacher68_visible_tabs('teacher', false, teacher58_tabs()), true) && !in_array('design78', teacher68_visible_tabs('assistant', false, teacher58_tabs()), true));
 $check('žádná nová POST akce ani GET politika v78 (deny-by-default: ds78_* zakázané)', teacher59_action_policy('ds78_x')['deny'] === true
     && array_filter(array_keys(teacher59_get_policies()), static fn(string $k): bool => str_starts_with($k, 'design78|')) === []);
-$views = $read('design_v78_views.php');
+$views = $read('src/ui/design_v78_views.php');
 $check('ukázka nic neodesílá: bez <form>, všechna tlačítka type="button", fiktivní jména', !str_contains($views, '<form') && substr_count($views, '<button') === substr_count($views, '<button type="button"')
     && str_contains($views, 'Adam Ukázkový'));
 

@@ -5,8 +5,8 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 
 putenv('EDUCANET_DEV_BYPASS=1');
 require dirname(__DIR__) . '/bootstrap.php';
-require_once dirname(__DIR__) . '/hands_on_learning_v50.php';
-require_once dirname(__DIR__) . '/independent_growth_v50.php';
+require_once dirname(__DIR__) . '/src/lessons/hands_on_learning_v50.php';
+require_once dirname(__DIR__) . '/src/student/independent_growth_v50.php';
 
 function v50_assert(bool $ok, string $message): void {
     if (!$ok) throw new RuntimeException($message);

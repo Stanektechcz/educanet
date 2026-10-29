@@ -12,7 +12,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Rollback: php tools/migrate.php --rollback=0005_materials_history_v75 [--apply] – vrátí historii do hlavního souboru (stav v74).
  */
 
-if (!function_exists('mat74_history_path')) require_once dirname(__DIR__) . '/materials_v74.php';
+if (!function_exists('mat74_history_path')) require_once dirname(__DIR__) . '/src/ops/materials_v74.php';
 
 return [
     'id' => '0005_materials_history_v75',

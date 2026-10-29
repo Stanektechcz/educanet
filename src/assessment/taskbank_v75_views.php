@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/taskbank_v75.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/taskbank_v75.php';
 
 /**
  * EDUCANET v75 · banka úloh s variantami – žákovské UI (?view=ulohy, akce tb75_answer / tb75_next). Texty přes tr(),
@@ -68,7 +68,7 @@ function tb75_render_page(string $classId, string $studentKey, string $task): vo
 function tb75_render_task(string $classId, string $studentKey, string $task, string $returnView = 'ulohy'): void
 {
     if ($returnView === 'ulohy') {
-        require_once __DIR__ . '/stepper_v79_student.php';   // v79: Zadání → Řešení → Kontrola → Co dál (tb75_answer / tb75_next beze změny)
+        require_once dirname(__DIR__, 2) . '/src/ui/stepper_v79_student.php';   // v79: Zadání → Řešení → Kontrola → Co dál (tb75_answer / tb75_next beze změny)
         tb79_render_task($classId, $studentKey, $task);
         return;
     }
@@ -143,7 +143,7 @@ function tb75_handle_post(string $action, string $classId): void
         $_SESSION['flash'] = match ((string)$res['error']) { 'empty' => tr('Vyplň aspoň jedno pole.'), 'solved', 'shown' => tr('Tahle varianta je uzavřená – vezmi si další.'), default => tr('Úlohu se nepodařilo najít.') };
         redirect_to($back);
     }
-    require_once __DIR__ . '/learning_v80.php';   // v80: chybná pole → opakování za 1/3/7 dní; vysvětlení konkrétní chyby (jen v relaci, odpověď se neukládá)
+    require_once dirname(__DIR__, 2) . '/src/lessons/learning_v80.php';   // v80: chybná pole → opakování za 1/3/7 dní; vysvětlení konkrétní chyby (jen v relaci, odpověď se neukládá)
     lr80_on_task_result($classId, $studentKey, $task, (array)$res['result']);
     $why = $res['result']['ok'] ? [] : hn80_diagnose(tb75_variant($task, tb75_student_ref($classId, $studentKey), (int)$res['entry']['round']), $answers);
     $_SESSION['tb75_last'] = ['task' => $task, 'round' => (int)$res['entry']['round'], 'fields' => $res['result']['fields'], 'correct' => $res['result']['correct'], 'why' => $why];

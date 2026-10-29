@@ -82,9 +82,9 @@ function r76_retention_purge(bool $dryRun, ?int $now = null): array
     };
     $levelPath = STORAGE_DIR . '/levels_v75_picks.json.php';
     if (is_file($levelPath)) { if ($dryRun) $scrubLevels(storage_read($levelPath, false)); else storage_update($levelPath, $scrubLevels); }
-    require_once __DIR__ . '/learning_v80.php';   // v80: podpora učení (stejné ref jako úlohy v75)
+    require_once dirname(__DIR__, 2) . '/src/lessons/learning_v80.php';   // v80: podpora učení (stejné ref jako úlohy v75)
     $res['learning'] = lr80_retention_purge(array_values(array_unique($refs)), $dryRun);
-    require_once __DIR__ . '/support_v80_1.php';   // v80.1: zpětná vazba a přidělení od učitele (stejné ref jako úlohy v75)
+    require_once dirname(__DIR__, 2) . '/src/student/support_v80_1.php';   // v80.1: zpětná vazba a přidělení od učitele (stejné ref jako úlohy v75)
     $res['support'] = ts801_retention_purge(array_values(array_unique($refs)), $dryRun);
     return $res;
 }

@@ -8,7 +8,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Jen HTML nad daty z motivation_v61.php; vše přes e(). Styl: design systém v61 (.ui-*) + assets/motivation-v61.css.
  */
 
-require_once __DIR__ . '/motivation_v61.php';
+require_once dirname(__DIR__, 2) . '/src/student/motivation_v61.php';
 
 function mot61_assets(): void
 {

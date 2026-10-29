@@ -72,7 +72,7 @@ $check('eco64: report inflace (medián, p90, podíl omezených, změna m/m)', $r
 
 // Napojení zdrojů: žádný herní zdroj nevolá learning_award_once napřímo.
 $direct = [];
-foreach (['arena_v57.php', 'arena_v58_ctf.php', 'arena_v58_weekly.php', 'arena_v58_incident.php', 'robots_v58.php', 'teamgames_v58_core.php'] as $f) {
+foreach (['src/arena/arena_v57.php', 'src/arena/arena_v58_ctf.php', 'src/arena/arena_v58_weekly.php', 'src/arena/arena_v58_incident.php', 'src/robots/robots_v58.php', 'src/teamgames/teamgames_v58_core.php'] as $f) {
     if (preg_match('/\blearning_award_once\(/', (string)file_get_contents($root . '/' . $f)) === 1) $direct[] = $f;
 }
 $check('eco64: všech 6 herních zdrojů XP jde přes eco64_award (žádné přímé learning_award_once)', $direct === [], false);

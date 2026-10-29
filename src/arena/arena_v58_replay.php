@@ -16,8 +16,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * přehrávání (play/pause/rychlost/krok, klávesnice).
  */
 
-require_once __DIR__ . '/arena_v57_views.php';
-require_once __DIR__ . '/arena_v58_weekly.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v57_views.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v58_weekly.php';
 
 /** @return list<array{t:int,kind:string,text:string}> časová osa v sekundách od startu závodu */
 function arena58_replay_timeline(array $race): array

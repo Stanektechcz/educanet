@@ -30,11 +30,11 @@ function v42_lessons_for_class(string $classId): array
         $r=$nextLessons[$classId];$r['number']=2;$r['source']='next';$rows[]=$r;
         foreach((array)($extendedLessons[$classId]??[]) as $lesson){if(is_array($lesson)){$lesson['source']='extended';$rows[]=$lesson;}}
     } else {
-        $next = require __DIR__ . '/next_lessons.php';
+        $next = require dirname(__DIR__, 2) . '/src/content/next_lessons.php';
         if (isset($next[$classId]) && is_array($next[$classId])) { $r=$next[$classId]; $r['number']=2; $r['source']='next'; $rows[]=$r; }
-        $extended = require __DIR__ . '/extended_lessons.php';
-        foreach (['lessons_plus.php','lessons_more.php','lessons_ecosystem.php','lessons_yearpack.php','lessons_v30.php'] as $file) {
-            $extra = require __DIR__ . '/' . $file;
+        $extended = require dirname(__DIR__, 2) . '/src/content/extended_lessons.php';
+        foreach (['src/lessons/lessons_plus.php','src/lessons/lessons_more.php','src/lessons/lessons_ecosystem.php','src/lessons/lessons_yearpack.php','src/lessons/lessons_v30.php'] as $file) {
+            $extra = require dirname(__DIR__, 2) . '/' . $file;
             if (isset($extra[$classId]) && is_array($extra[$classId])) $extended[$classId]=array_merge($extended[$classId]??[],$extra[$classId]);
         }
         foreach ((array)($extended[$classId] ?? []) as $lesson) { if(is_array($lesson)){ $lesson['source']='extended'; $rows[]=$lesson; } }

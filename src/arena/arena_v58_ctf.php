@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_once __DIR__ . '/i18n_v59.php'; }
+if (!function_exists('tr')) { require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v58.php'; require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v59.php'; }
 
 /**
  * EDUCANET v58 · Aréna – CTF týden (ARN-02, inspirace picoCTF).
@@ -23,13 +23,13 @@ if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_on
  * Události řešení: storage/linux_v58/ctx_ctf_<id>.events.json.php (výchozí cesta jádra pro kontext ctf:<id>).
  */
 
-require_once __DIR__ . '/linux_v57_lab.php';
-require_once __DIR__ . '/economy_v64.php';
-require_once __DIR__ . '/arena_v64_fair.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_lab.php';
+require_once dirname(__DIR__, 2) . '/src/student/economy_v64.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v64_fair.php';
 // arena57_roster()/arena57_snake_teams()/arena57_public_name() jsou zamčené API (§6 V58_PLAN) – voláme je,
 // ale nikdy je neupravujeme. Načteno defenzivně (stejný vzor jako lab_v57_api.php/teacher.php), aby modul
 // fungoval i ve chvíli, kdy by ho něco natáhlo bez arena_v57.php v cestě (např. izolovaný audit/test).
-if (is_file(__DIR__ . '/arena_v57.php')) require_once __DIR__ . '/arena_v57.php';
+if (is_file(dirname(__DIR__, 2) . '/src/arena/arena_v57.php')) require_once dirname(__DIR__, 2) . '/src/arena/arena_v57.php';
 
 const ARENA58_CTF_ID_RE = '/^[a-z0-9]{6,32}$/';
 const ARENA58_CTF_PACK = 'ctf';

@@ -14,20 +14,20 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 
 // v59 · i18n: nástroje/testy tenhle soubor někdy načítají přímo bez bootstrap.php – tr()/edu_locale() musí existovat.
 if (!function_exists('tr')) {
-    require_once __DIR__ . '/i18n_v58.php';
-    require_once __DIR__ . '/i18n_v59.php';
+    require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v58.php';
+    require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v59.php';
 }
-require_once __DIR__ . '/linux_v57_core.php';
-require_once __DIR__ . '/linux_v57_world.php';
-require_once __DIR__ . '/linux_v57_shell.php';
-require_once __DIR__ . '/linux_v57_cmd_files.php';
-require_once __DIR__ . '/linux_v57_cmd_shell.php';
-require_once __DIR__ . '/linux_v57_cmd_text.php';
-require_once __DIR__ . '/linux_v57_cmd_sys.php';
-require_once __DIR__ . '/linux_v57_cmd_net.php';
-require_once __DIR__ . '/linux_v57_manual.php';
-require_once __DIR__ . '/linux_v57_levels.php';
-require_once __DIR__ . '/linux_v57_levels_ops.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_core.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_world.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_shell.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_cmd_files.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_cmd_shell.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_cmd_text.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_cmd_sys.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_cmd_net.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_manual.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_levels.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v57_levels_ops.php';
 
 const LAB57_XP = [1 => 15, 2 => 25, 3 => 40];
 const LAB57_CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -41,7 +41,7 @@ const LAB57_RATE_SUBMITS = 12;
 function lab57_storage_dir(): string
 {
     if (isset($GLOBALS['lab57_storage_override']) && is_string($GLOBALS['lab57_storage_override'])) return $GLOBALS['lab57_storage_override'];
-    return defined('STORAGE_DIR') ? STORAGE_DIR : __DIR__ . '/storage';
+    return defined('STORAGE_DIR') ? STORAGE_DIR : dirname(__DIR__, 2) . '/storage';
 }
 
 /** Atomická úprava JSON souboru: jeden zámek LOCK_EX drží čtení, úpravu i zápis. */
@@ -750,4 +750,4 @@ function lab57_student_summary(string $classId, string $studentKey): array
 }
 
 // v58: rozšiřitelné jádro (registry, kontexty, události, log) + načtení rozšíření linux_v58_cmd_*/linux_v58_levels_*.
-require_once __DIR__ . '/linux_v58_ext.php';
+require_once dirname(__DIR__, 2) . '/src/linux/linux_v58_ext.php';

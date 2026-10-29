@@ -8,7 +8,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * týmová hra s retrospektivou, CSRF, cockpit Ekonomika). Proměnné: $check, $tmp, $root.
  */
 require_once __DIR__ . '/http_harness.php';
-foreach (['teamgames_v58_registry.php', 'teamgames_v58_game_escape.php', 'paths_v63.php'] as $lib) require_once $root . '/' . $lib;
+foreach (['src/teamgames/teamgames_v58_registry.php', 'src/teamgames/teamgames_v58_game_escape.php', 'src/paths/paths_v63.php'] as $lib) require_once $root . '/' . $lib;
 if (!function_exists('v63fx_seed')) require_once __DIR__ . '/v63_paths_fixtures.php';
 
 $C3 = 'class_3a';

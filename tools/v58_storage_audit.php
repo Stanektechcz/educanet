@@ -163,12 +163,12 @@ try {
         }
     }
     $check('token-sken: žádné zápisy starými obaly mimo jádro', $hits === [], implode(', ', array_slice($hits, 0, 8)));
-    $kernel = (string)file_get_contents($root . '/storage_v58.php');
+    $kernel = (string)file_get_contents($root . '/src/ops/storage_v58.php');
     foreach (['storage_read', 'storage_update', 'storage_update_many', 'storage_write', 'storage_append', 'storage_scan'] as $fn) {
         $check("jádro definuje $fn", preg_match('/function ' . $fn . '\(/', $kernel) === 1);
     }
     $boot = (string)file_get_contents($root . '/bootstrap.php');
-    $check('bootstrap načítá storage_v58.php a nedefinuje storage_update znovu', str_contains($boot, "require_once __DIR__ . '/storage_v58.php'") && preg_match('/function storage_update\(/', $boot) !== 1);
+    $check('bootstrap načítá storage_v58.php a nedefinuje storage_update znovu', str_contains($boot, "require_once __DIR__ . '/src/ops/storage_v58.php'") && preg_match('/function storage_update\(/', $boot) !== 1);
     $check('storage_v58.php: strict_types, guard, < 800 řádků', str_contains($kernel, 'declare(strict_types=1);') && str_contains($kernel, '=== basename(__FILE__)) { http_response_code(403); exit; }') && substr_count($kernel, "\n") < 800);
 
     // 2 + 3. souběh a čtení během zápisu ----------------------------------------------
@@ -245,7 +245,7 @@ try {
         return $d;
     });
     $check('DAT58-04: čtení vlastního zamčeného souboru uvnitř $mutate vrátí potvrzený stav', ($nestedRead['seen'] ?? null) === 'původní');
-    foreach (['teamgames_v58_core.php' => 'function tg58_read', 'robots_v58.php' => 'function robots58_read', 'linux_v57_lab.php' => 'function lab57_store_read'] as $mod => $fn) {
+    foreach (['src/teamgames/teamgames_v58_core.php' => 'function tg58_read', 'src/robots/robots_v58.php' => 'function robots58_read', 'src/linux/linux_v57_lab.php' => 'function lab57_store_read'] as $mod => $fn) {
         $src = (string)file_get_contents($root . '/' . $mod);
         $body = substr($src, (int)strpos($src, $fn), 400);
         $check("DAT58-04: $mod čte přes storage_read (sdílený zámek)", str_contains($body, 'storage_read('));

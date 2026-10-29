@@ -9,7 +9,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * (viz tools/backup_storage.php, tools/restore_storage.php, tools/v58_retention.php).
  */
 
-require_once __DIR__ . '/ops_v61.php';
+require_once dirname(__DIR__, 2) . '/src/ops/ops_v61.php';
 
 function ops58_format_bytes(int $bytes): string
 {

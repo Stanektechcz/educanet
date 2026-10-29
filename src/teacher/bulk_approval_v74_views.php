@@ -10,7 +10,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * – žádný GET parametr registru (krok má jen informativní politiku hromadne74|krok). Formuláře jen s oprávněním content.manage. Každý výstup přes e(); data žáků se nezobrazují.
  */
 
-require_once __DIR__ . '/bulk_approval_v74.php';
+require_once dirname(__DIR__, 2) . '/src/teacher/bulk_approval_v74.php';
 
 function ba74_can_manage(): bool
 {
@@ -24,7 +24,7 @@ function ba74_class_name(array $modules, string $class): string
 
 function ba74_render_tab(array $modules, string $classId, string $csrf): void
 {
-    require_once __DIR__ . '/bulk_approval_v79.php';   // v79: stepper Rozsah → Náhled změn → Potvrzení → Výsledek
+    require_once dirname(__DIR__, 2) . '/src/teacher/bulk_approval_v79.php';   // v79: stepper Rozsah → Náhled změn → Potvrzení → Výsledek
     $classes = function_exists('c70_classes') ? c70_classes() : [];
     $today = date('Y-m-d');
     $scope = is_string($_GET['rozsah'] ?? null) && isset(BA74_SCOPES[(string)$_GET['rozsah']]) ? (string)$_GET['rozsah'] : 'tyden';

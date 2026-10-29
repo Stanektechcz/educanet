@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_once __DIR__ . '/i18n_v59.php'; }
-require_once __DIR__ . '/teamgames_v64_roles.php';
-require_once __DIR__ . '/economy_v64.php';
+if (!function_exists('tr')) { require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v58.php'; require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v59.php'; }
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v64_roles.php';
+require_once dirname(__DIR__, 2) . '/src/student/economy_v64.php';
 
 /**
  * EDUCANET v58 · Týmové hry – úložiště, životní cyklus relace, týmy, soukromí jmen, signály, XP.
@@ -56,7 +56,7 @@ function tg58_storage_dir(): string
 {
     if (is_string($GLOBALS['tg58_storage_override'] ?? null)) return $GLOBALS['tg58_storage_override'];
     if (function_exists('lab57_storage_dir')) return lab57_storage_dir();
-    return defined('STORAGE_DIR') ? STORAGE_DIR : __DIR__ . '/storage';
+    return defined('STORAGE_DIR') ? STORAGE_DIR : dirname(__DIR__, 2) . '/storage';
 }
 
 function tg58_index_path(): string

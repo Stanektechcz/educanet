@@ -71,7 +71,7 @@ function ad70_accounts(): array
 function ad70_ops(bool $full): array
 {
     $out = ['size' => null, 'files' => null, 'free' => null, 'backup_days' => null, 'backup_at' => '', 'missing_ext' => [], 'health' => 'none', 'health_days' => null, 'school_year' => ''];
-    if (!function_exists('ops58_health')) require_once __DIR__ . '/ops_v58.php';
+    if (!function_exists('ops58_health')) require_once dirname(__DIR__, 2) . '/src/ops/ops_v58.php';
     $backup = ops58_last_backup();
     if (is_array($backup)) {
         $ts = strtotime((string)($backup['created_at'] ?? '')) ?: 0;

@@ -46,7 +46,7 @@ function skill67_stamp(string $classId): string
     }
     sort($kb);
     $level = (int)(learning_level((int)($profile['xp'] ?? 0))['level'] ?? 1);
-    $catalog = (string)(@filemtime(__DIR__ . '/skill_catalog.php') ?: 0) . ':' . (string)(@filemtime(__DIR__ . '/skill_trees.php') ?: 0);
+    $catalog = (string)(@filemtime(dirname(__DIR__, 2) . '/src/assessment/skill_catalog.php') ?: 0) . ':' . (string)(@filemtime(dirname(__DIR__, 2) . '/src/assessment/skill_trees.php') ?: 0);
     return sha1($classId . '|' . $level . '|' . implode(',', $kb) . '|' . (string)storage_signature(STORAGE_DIR . '/project_grades.json.php') . '|' . $catalog);
 }
 

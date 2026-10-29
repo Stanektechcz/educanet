@@ -9,7 +9,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Cockpit česky. Každý výstup přes e(); ikony jsou pevné SVG s currentColor.
  */
 
-require_once __DIR__ . '/design_v78.php';
+require_once dirname(__DIR__, 2) . '/src/ui/design_v78.php';
 
 /** Ikona (24 × 24, tah currentColor); neznámé jméno = prázdný řetězec. */
 function ds78_icon(string $name): string

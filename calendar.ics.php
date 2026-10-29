@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 require __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/teacher_curriculum.php';
-$schoolYear = require __DIR__ . '/school_year.php';
+require_once __DIR__ . '/src/teacher/teacher_curriculum.php';
+$schoolYear = require __DIR__ . '/src/ops/school_year.php';
 
 $classId = (string)($_GET['class'] ?? ($_SESSION['next_class_id'] ?? ''));
 $allowed = ['class_1a','class_2a','class_3a','class_4a'];

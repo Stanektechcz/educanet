@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-require_once __DIR__ . '/paths_v63_class.php';
+require_once dirname(__DIR__, 2) . '/src/paths/paths_v63_class.php';
 
 /**
  * EDUCANET v63 · cockpit učitele: záložka „Výukové cesty“ (vždy česky).
@@ -59,8 +59,8 @@ function p63_teacher_student_key(string $classId, string $hash): string
 /** v66: zásah z ranního přehledu se zapíše do logu (jen hash učitele a žáka, žádná jména). */
 function p63_teacher_log_morning(string $action, bool $ok, string $classId, string $pathId, string $studentHash): void
 {
-    if (!$ok || ($_POST['from'] ?? '') !== 'morning66' || !is_file(__DIR__ . '/morning_v66.php')) return;
-    require_once __DIR__ . '/morning_v66.php';
+    if (!$ok || ($_POST['from'] ?? '') !== 'morning66' || !is_file(dirname(__DIR__, 2) . '/src/teacher/morning_v66.php')) return;
+    require_once dirname(__DIR__, 2) . '/src/teacher/morning_v66.php';
     m66_log_action($classId, $action === 'p63_assign_student' ? 'assign_student' : 'assign_class', a66_actor_hash(), $action === 'p63_assign_student' ? $studentHash : '', $pathId);
 }
 

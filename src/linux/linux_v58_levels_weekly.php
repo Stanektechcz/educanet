@@ -17,7 +17,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * hraje se výhradně přes kontext weekly:<týden>, ne přes ?view=lab&uroven=tyden-N.
  */
 
-require_once __DIR__ . '/arena_v58_weekly.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v58_weekly.php';
 
 const ARENA58_WEEKLY_PACK_ID = 'tyden';
 

@@ -5,10 +5,10 @@ require_once __DIR__ . '/lib/app_source.php';
 if(PHP_SAPI!=='cli'){http_response_code(403);exit;}
 $root=dirname(__DIR__);
 require $root.'/bootstrap.php';
-require $root.'/runtime_content.php';
-require_once $root.'/teacher_operations_v46.php';
-require_once $root.'/student_learning_coach_v47.php';
-require_once $root.'/student_learning_coach_views_v47.php';
+require $root.'/src/ops/runtime_content.php';
+require_once $root.'/src/teacher/teacher_operations_v46.php';
+require_once $root.'/src/student/student_learning_coach_v47.php';
+require_once $root.'/src/student/student_learning_coach_views_v47.php';
 function v47_fp(string $dir):array{$o=[];foreach(glob($dir.'/*.php')?:[] as $f)$o[basename($f)]=[filesize($f)?:0,filemtime($f)?:0,hash_file('sha256',$f)?:''];ksort($o);return $o;}
 // i18n (v59): student-facing Czech texty ve views/logice se postupně obalují no-op markerem trm('…')
 // (vykreslení pak jde přes tr($label)) – needle kontrola musí tolerovat holý řetězec i obalený tvar.
@@ -33,11 +33,11 @@ foreach(array_keys($modules) as $classId){
     $classes[$classId]=['quick_items'=>count((array)$quick['items']),'deep_items'=>count((array)$deep['items']),'mistakes'=>count($mistakes),'review_due'=>(int)($forecast['buckets'][0]??0)];
 }
 $after=v47_fp(STORAGE_DIR);$writes=[];foreach(array_unique(array_merge(array_keys($before),array_keys($after))) as $n)if(($before[$n]??null)!==($after[$n]??null))$writes[]=$n;if($writes)$errors[]='Read-only v47 změnilo storage: '.implode(', ',$writes);
-$index=edu_app_source()?:'';$views=file_get_contents($root.'/student_learning_coach_views_v47.php')?:'';$core=file_get_contents($root.'/student_learning_coach_v47.php')?:'';$sw=file_get_contents($root.'/sw.js')?:'';
+$index=edu_app_source()?:'';$views=file_get_contents($root.'/src/student/student_learning_coach_views_v47.php')?:'';$core=file_get_contents($root.'/src/student/student_learning_coach_v47.php')?:'';$sw=file_get_contents($root.'/sw.js')?:'';
 // "'label'=>'Studium'" žilo jen v mrtvém komentáři app/views/_layout.php ř. 65 (nikdy nerenderováno) –
 // navigace v55 dnes nemá samostatnou položku "Studium"/"Trénink" (viz student_v55.php v55_primary_nav()),
 // takže reálný ekvivalent neexistuje a marker se maže bez náhrady (funkce zůstává ověřená přes route+akce).
-foreach(["student_learning_coach_v47.php","view === 'study'","view === 'mistakes'",'coach_preferences_save','coach_step_toggle','coach_exit_ticket','Spustit dnešní plán','coachDashboardSnapshot'] as $needle)if(!v47_hasLit($index,$needle))$errors[]='index.php chybí marker '.$needle;
+foreach(["src/student/student_learning_coach_v47.php","view === 'study'","view === 'mistakes'",'coach_preferences_save','coach_step_toggle','coach_exit_ticket','Spustit dnešní plán','coachDashboardSnapshot'] as $needle)if(!v47_hasLit($index,$needle))$errors[]='index.php chybí marker '.$needle;
 foreach(['render_student_coach_view','render_student_mistakes_view','render_student_coach_dashboard','Exit ticket','Mistake Notebook'] as $needle)if(!v47_hasLit($views,$needle))$errors[]='Views chybí '.$needle;
 foreach(['coach_plan','coach_mistake_notebook','coach_confidence_calibration','coach_review_forecast','coach_week_summary','static $cache=[]'] as $needle)if(!str_contains($core,$needle))$errors[]='Core chybí '.$needle;
 // Dřív se testoval literální marker "educanet-vNN-shell" v komentářích sw.js (vždy PASS bez ohledu na

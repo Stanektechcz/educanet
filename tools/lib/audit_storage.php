@@ -43,7 +43,7 @@ function edu_audit_remove_dir(string $dir): void
 function edu_audit_open_sessions(array $modules, array $schoolYear, string $date = EDU_AUDIT_TEACHING_DATE, array $intakeClasses = ['class_1a']): array
 {
     // Učitelská záložka má načtenou v56 (zadání hodiny = kroky projektu lekce) – stejně i tady.
-    require_once dirname(__DIR__, 2) . '/learning_v56.php';
+    require_once dirname(__DIR__, 2) . '/src/lessons/learning_v56.php';
     $opened = [];
     foreach ($modules as $classId => $module) {
         $classId = (string)$classId;

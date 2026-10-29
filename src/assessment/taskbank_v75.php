@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/taskbank_v75_gen.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/taskbank_v75_gen.php';
 
 /**
  * EDUCANET v75 · banka úloh s variantami – stav žáků, odevzdání a souhrny (zápis jen storage_update).
@@ -112,7 +112,7 @@ function tb75_submit(string $classId, string $studentKey, string $task, array $a
         return $d;
     });
     if (($out['ok'] ?? false) && is_array($out['entry'] ?? null)) {   // v76: dokončené kolo = důkaz kompetence (zdroj task)
-        require_once __DIR__ . '/taskbank_v76.php';
+        require_once dirname(__DIR__, 2) . '/src/assessment/taskbank_v76.php';
         $out['evidence'] = tb76_record_evidence($classId, $ref, $task, $out['entry'], $now);
     }
     return $out;

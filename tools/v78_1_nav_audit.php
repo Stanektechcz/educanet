@@ -24,7 +24,7 @@ $tmp = rtrim(str_replace(chr(92), '/', edu_audit_temp_storage('v78-1-nav')), '/'
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'ui_v67.php', 'cockpit_v70.php', 'nav_v78_1.php', 'nav_v61.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/ui/ui_v67.php', 'src/teacher/cockpit_v70.php', 'src/ui/nav_v78_1.php', 'src/ui/nav_v61.php'] as $lib) require_once $ROOT . '/' . $lib;
 
 const V781_KEY = 'v78-1-nav-audit-key';
 const V781_CSS_BUDGET = 15 * 1024;
@@ -37,7 +37,7 @@ $check('úložiště auditu je dočasné (ne ostrá storage/)', STORAGE_DIR === 
 $check('bez souboru účtů je režim legacy (role z EDUCANET_TEACHER_ROLE)', teacher59_mode() === 'legacy');
 
 // ---------------------------------------------------------------- 1) soubory a rozpočty
-$php = ['nav_v78_1.php', 'nav_v78_1_views.php'];
+$php = ['src/ui/nav_v78_1.php', 'src/ui/nav_v78_1_views.php'];
 $guards = array_filter($php, static fn(string $f): bool => str_contains($read($f), "declare(strict_types=1);") && str_contains($read($f), "=== basename(__FILE__)) { http_response_code(403); exit; }"));
 $check('PHP vrstvy: strict_types a 403 guard knihovny (' . implode(', ', $php) . ')', count($guards) === count($php));
 $lines = [];

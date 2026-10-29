@@ -17,7 +17,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Original zdrojových souborů se nikdy nepřepisuje. Texty jsou česky (cockpit).
  */
 
-require_once __DIR__ . '/lesson_model_v71_sources.php';
+require_once dirname(__DIR__, 2) . '/src/lessons/lesson_model_v71_sources.php';
 
 const LM71_TITLE_MAX = 70;
 const LM71_GOAL_MIN = 20;
@@ -42,7 +42,7 @@ function lm71_cache_dir(): string
 {
     $env = getenv('EDUCANET_LM71_CACHE_DIR');
     if (is_string($env) && $env !== '' && (str_starts_with($env, '/') || preg_match('~^[A-Za-z]:[\\\\/]~', $env) === 1)) return rtrim(str_replace('\\', '/', $env), '/');
-    return __DIR__ . '/cache/lesson_model';
+    return dirname(__DIR__, 2) . '/cache/lesson_model';
 }
 
 function lm71_cache_path(string $classId): string
@@ -58,7 +58,7 @@ function lm71_source_data(): array
     $data = [];
     foreach (lm71_sources() as $id => $src) {
         if ($src['shape'] === 'primary') continue;
-        $path = __DIR__ . '/' . $src['file'];
+        $path = dirname(__DIR__, 2) . '/' . $src['file'];
         $loaded = is_file($path) ? require $path : [];
         $data[$id] = is_array($loaded) ? $loaded : [];
     }
@@ -72,7 +72,7 @@ function lm71_overlay_data(): array
     if ($overlay !== null) return $overlay;
     $overlay = ['lessons' => [], 'days' => [], 'files' => []];
     foreach (lm71_overlay_files() as $file) {
-        $loaded = require __DIR__ . '/' . $file;
+        $loaded = require dirname(__DIR__, 2) . '/' . $file;
         if (is_array($loaded)) $overlay = lm71_overlay_merge($overlay, $file, $loaded);
     }
     return $overlay;
@@ -210,7 +210,7 @@ function lm71_cache_status(?string $modelDir = null): array
     foreach (LM71_CLASSES as $classId) {
         $cached = lm71_cache_read($modelDir !== null ? rtrim($modelDir, '/') . '/' . $classId . '.php' : lm71_cache_path($classId));
         $out['model'][$classId] = $cached === null ? 'chybí' : ((string)($cached['hash'] ?? '') === $modelHash ? 'aktuální' : 'zastaralá');
-        $runtimePath = __DIR__ . '/cache/runtime/' . $classId . '.php';
+        $runtimePath = dirname(__DIR__, 2) . '/cache/runtime/' . $classId . '.php';
         $runtime = null;
         if (is_file($runtimePath)) {
             try { $runtime = include $runtimePath; } catch (Throwable $e) { $runtime = null; }
@@ -249,8 +249,8 @@ function lm71_curriculum_rows(string $classId): array
 /** Žákovská posloupnost lekce (témata, test, kroky) – v56_lesson_bundle nad zdroji lm71. */
 function lm71_bundle(string $classId, array $module, int $number): array
 {
-    if (!function_exists('tut52_family')) require_once __DIR__ . '/tutorial_v52.php';
-    if (!function_exists('v56_lesson_bundle')) require_once __DIR__ . '/learning_v56.php';
+    if (!function_exists('tut52_family')) require_once dirname(__DIR__, 2) . '/src/lessons/tutorial_v52.php';
+    if (!function_exists('v56_lesson_bundle')) require_once dirname(__DIR__, 2) . '/src/lessons/learning_v56.php';
     $raw = lm71_raw($classId)['lessons'];
     $next = isset($raw[2]) ? [$classId => $raw[2]] : [];
     $extended = [$classId => array_values(array_filter($raw, static fn($row, $n): bool => (int)$n >= 3 && is_array($row), ARRAY_FILTER_USE_BOTH))];
@@ -356,7 +356,7 @@ function lm71_materials(string $classId, array $topicKeys): array
 {
     static $resources = null;
     if ($resources === null) {
-        $loaded = is_file(__DIR__ . '/learning_resources.php') ? require __DIR__ . '/learning_resources.php' : [];
+        $loaded = is_file(dirname(__DIR__, 2) . '/src/content/learning_resources.php') ? require dirname(__DIR__, 2) . '/src/content/learning_resources.php' : [];
         $resources = is_array($loaded) ? $loaded : [];
     }
     $out = [];
@@ -459,7 +459,7 @@ function lm71_lesson(string $classId, int $number, ?array $module = null): array
     ];
     if ($ov !== []) $model = lm71_apply_overlay($model, $ov, $raw);
     if (empty($model['curriculum']['svp'])) {   // v72.1: návrh vazby na ŠVP školy (svp_v72_map.php); mimo overlay i otisk obsahu
-        if (!function_exists('svp72_curriculum')) require_once __DIR__ . '/svp_v72.php';
+        if (!function_exists('svp72_curriculum')) require_once dirname(__DIR__, 2) . '/src/assessment/svp_v72.php';
         $model['curriculum']['svp'] = svp72_curriculum($classId, $number);
     }
     $model['meta']['content_hash'] = substr(hash('sha256', (string)json_encode([$model['title'], $model['goal'], $model['timeline'], $model['tasks'], $model['exit_ticket'], $model['teacher_notes']])), 0, 16);
@@ -507,7 +507,7 @@ function lm71_lessons(string $classId, ?array $module = null): array
 /** Karta dne bez lekce (intro, projekt, mastery, obhajoby, retrospektiva, portfolio, uzavření) – viz calendar_days_v71.php. */
 function lm71_day(string $classId, array $calendarRow): array
 {
-    if (!function_exists('cd71_day_card')) require_once __DIR__ . '/calendar_days_v71.php';
+    if (!function_exists('cd71_day_card')) require_once dirname(__DIR__, 2) . '/src/ops/calendar_days_v71.php';
     $card = cd71_day_card($classId, $calendarRow);
     $ov = (array)(lm71_raw($classId)['overlay']['days'][(int)$card['slot']] ?? []);
     if ($ov !== []) $card = cd71_apply_overlay($card, $ov);

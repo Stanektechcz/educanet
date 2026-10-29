@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 // v59 OPS-02: tr()/trn() i při načtení bez bootstrap.php (CLI audity, podprocesy).
-if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_once __DIR__ . '/i18n_v59.php'; }
+if (!function_exists('tr')) { require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v58.php'; require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v59.php'; }
 
 /**
  * EDUCANET v58 · Týmové hry – Přetahovaná.
@@ -16,8 +16,8 @@ if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_on
  * neměl pocit, že ho spolužáci vidí „pomalého“.
  */
 
-require_once __DIR__ . '/teamgames_v58_registry.php';
-require_once __DIR__ . '/teamgames_v58_quiz.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_registry.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v58_quiz.php';
 
 const TG58_TUG_ANSWER_COOLDOWN_S = 4;
 const TG58_TUG_RECENT_MAX = 6;

@@ -30,8 +30,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 // lab_v58_content.php (CNT-03) je stejně bez vlastního auto-loaderu (nejde o cmd/levels soubor) –
 // tady se zpřístupní cnt58_check_text() všem, kdo tuto vrstvu už načítají (lab, teacher.php ho
 // vždy require_once-uje bez ohledu na záložku, takže i týmové hry ho po dispatchi mají k dispozici).
-if (is_file(__DIR__ . '/lab_v58_content.php')) require_once __DIR__ . '/lab_v58_content.php';
-if (is_file(__DIR__ . '/lab_v58_editor.php')) require_once __DIR__ . '/lab_v58_editor.php';
+if (is_file(dirname(__DIR__, 2) . '/src/linux/lab_v58_content.php')) require_once dirname(__DIR__, 2) . '/src/linux/lab_v58_content.php';
+if (is_file(dirname(__DIR__, 2) . '/src/linux/lab_v58_editor.php')) require_once dirname(__DIR__, 2) . '/src/linux/lab_v58_editor.php';
 
 // ---------------------------------------------------------------------------
 // Soubory a stromy

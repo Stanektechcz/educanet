@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-require_once __DIR__ . '/competencies_v62.php';
-require_once __DIR__ . '/evidence_v62.php';
-require_once __DIR__ . '/mastery_v62.php';
-require_once __DIR__ . '/projects_v65.php';
-require_once __DIR__ . '/assessment_v66.php';
-require_once __DIR__ . '/teacher_prefs_v72_1.php';   // v72.1: exit ticket jako podklad ke známce (volba učitele třídy)
+require_once dirname(__DIR__, 2) . '/src/assessment/competencies_v62.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/evidence_v62.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/mastery_v62.php';
+require_once dirname(__DIR__, 2) . '/src/projects/projects_v65.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/assessment_v66.php';
+require_once dirname(__DIR__, 2) . '/src/teacher/teacher_prefs_v72_1.php';   // v72.1: exit ticket jako podklad ke známce (volba učitele třídy)
 
 /**
  * EDUCANET v66 · návrh hodnocení (známka 1–5 + slovní hodnocení) s řetězcem důkazů. Rozhoduje učitel.

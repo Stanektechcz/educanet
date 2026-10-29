@@ -7,7 +7,7 @@ function skill_catalog_config(): array
 {
     static $catalog = null;
     if (is_array($catalog)) return $catalog;
-    $catalog = require __DIR__ . '/skill_catalog.php';
+    $catalog = require dirname(__DIR__, 2) . '/src/assessment/skill_catalog.php';
     return is_array($catalog) ? $catalog : [];
 }
 function skill_branches(): array { return (array)(skill_catalog_config()['branches'] ?? []); }
@@ -446,7 +446,7 @@ function skill_learning_mark(string $classId,string $skillSlug): void
 function skill_knowledge_tours(): array
 {
     static $all=null;if(is_array($all))return $all;$all=[];
-    foreach(['knowledge_tours.php','knowledge_tours_next.php','knowledge_tours_plus.php','knowledge_tours_more.php','knowledge_tours_ecosystem.php','knowledge_tours_yearpack.php'] as $file){$path=__DIR__.'/'.$file;if(!is_file($path))continue;$rows=require $path;if(!is_array($rows))continue;foreach($rows as $classId=>$topics){if(!isset($all[$classId]))$all[$classId]=[];$all[$classId]=array_replace($all[$classId],(array)$topics);}}
+    foreach(['src/knowledge/knowledge_tours.php','src/knowledge/knowledge_tours_next.php','src/knowledge/knowledge_tours_plus.php','src/knowledge/knowledge_tours_more.php','src/knowledge/knowledge_tours_ecosystem.php','src/knowledge/knowledge_tours_yearpack.php'] as $file){$path=dirname(__DIR__, 2).'/'.$file;if(!is_file($path))continue;$rows=require $path;if(!is_array($rows))continue;foreach($rows as $classId=>$topics){if(!isset($all[$classId]))$all[$classId]=[];$all[$classId]=array_replace($all[$classId],(array)$topics);}}
     if(isset($all['class_2a']))$all['class_1a']=array_replace($all['class_2a'],(array)($all['class_1a']??[]));
     return $all;
 }

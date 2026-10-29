@@ -18,8 +18,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * tenhle soubor nic nespouští, jen čte uložené události a data.
  */
 
-require_once __DIR__ . '/arena_v57.php';
-require_once __DIR__ . '/economy_v64.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v57.php';
+require_once dirname(__DIR__, 2) . '/src/student/economy_v64.php';
 
 const ARENA58_WEEKLY_TZ = 'Europe/Prague';
 const ARENA58_WEEKLY_ID_RE = '/^(\d{4})t(\d{2})$/';

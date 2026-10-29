@@ -9,7 +9,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * GET ?pololeti=1|2 jen přepíná pohled (není parametr registru). Logika v svp_export_v76.php.
  */
 
-require_once __DIR__ . '/svp_export_v76.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/svp_export_v76.php';
 
 function sx76_tab_url(string $class, int $half, array $extra = []): string
 {

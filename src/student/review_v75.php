@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/taskbank_v75.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/taskbank_v75.php';
 
 /**
  * EDUCANET v75 · „Opakování před písemkou“: učitel vybere rozsah lekcí → automatický balíček z chyb celé třídy v exit ticketech (v72)

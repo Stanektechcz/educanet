@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/portfolio_v75.php';
+require_once dirname(__DIR__, 2) . '/src/student/portfolio_v75.php';
 
 /**
  * EDUCANET v75 · portfolio – žákovská sekce „Připnuté práce“ na stránce ?view=portfolio (pod výběrem projektů v65).
@@ -33,7 +33,7 @@ function pf75_render_student_section(string $classId, string $studentKey): void
         echo '</ol>';
     }
     if (count($pins) < PF75_MAX) {
-        require_once __DIR__ . '/portfolio_v79.php';   // v79: stepper Odkaz → Reflexe → Uložit (akce pf75_s_pin beze změny)
+        require_once dirname(__DIR__, 2) . '/src/student/portfolio_v79.php';   // v79: stepper Odkaz → Reflexe → Uložit (akce pf75_s_pin beze změny)
         echo pf79_render($classId, $studentKey, $pins, $csrf);
     }
     else echo '<p class="l75-muted p65-noprint">' . e(tr('Máš připnuto nejvíc {n} prací. Další přidáš, až nějakou odebereš.', ['n' => PF75_MAX])) . '</p>';

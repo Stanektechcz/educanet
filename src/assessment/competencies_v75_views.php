@@ -8,7 +8,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * náhled cest a schválení / vrácení návrhu (POST kp75_approve / kp75_return, CSRF a politika v teacher.php, content.manage).
  */
 
-require_once __DIR__ . '/competencies_v75.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/competencies_v75.php';
 
 function comp75_tab_url(string $classId): string
 {

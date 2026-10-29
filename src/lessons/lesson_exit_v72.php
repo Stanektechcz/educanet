@@ -23,8 +23,8 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 const LX72_RETENTION_DAYS = 365;
 const LX72_HASH_LEN = 20;
 
-require_once __DIR__ . '/lesson_approval_v72.php';
-require_once __DIR__ . '/teacher_prefs_v72_1.php';   // v72.1: režim exit ticketu třídy (jen zpětná vazba / podklad ke známce)
+require_once dirname(__DIR__, 2) . '/src/lessons/lesson_approval_v72.php';
+require_once dirname(__DIR__, 2) . '/src/teacher/teacher_prefs_v72_1.php';   // v72.1: režim exit ticketu třídy (jen zpětná vazba / podklad ke známce)
 
 function lx72_path(string $classId): string
 {

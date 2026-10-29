@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-require_once __DIR__ . '/assessment_v66_teacher_views.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/assessment_v66_teacher_views.php';
 
 /**
  * EDUCANET v66 · cockpit: návrhy hodnocení, integrita, exporty CSV a vykreslení záložky „Testy a hodnocení“ (vždy česky).
@@ -209,7 +209,7 @@ function a66t_render_tab(string $requestedClass, string $csrf): void
 {
     $classes = a66t_classes();
     $print = 'assets/assessment-v66-print.css';
-    echo '<link rel="stylesheet" href="' . e($print . '?v=' . (is_file(__DIR__ . '/' . $print) ? (string)filemtime(__DIR__ . '/' . $print) : '66')) . '" media="print">';
+    echo '<link rel="stylesheet" href="' . e($print . '?v=' . (is_file(dirname(__DIR__, 2) . '/' . $print) ? (string)filemtime(dirname(__DIR__, 2) . '/' . $print) : '66')) . '" media="print">';
     echo '<section class="teacher-panel a66-wrap"><h2>Testy a hodnocení</h2>';
     if ($classes === []) {
         echo '<p class="teacher-empty">Nemáte přiřazenou žádnou třídu.</p></section>';

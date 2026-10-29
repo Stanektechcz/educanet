@@ -9,7 +9,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * s CSRF, politikou teacher59 a oprávněním students.manage – návrat zpět sem přes return_tab=hodina). Texty česky.
  */
 
-require_once __DIR__ . '/cockpit_v70.php';
+require_once dirname(__DIR__, 2) . '/src/teacher/cockpit_v70.php';
 
 /** Odkaz na záložku cockpitu jen tehdy, když ji role vidí ('' = nezobrazit). */
 function lt70_tab_link(string $tab, string $classId, string $label, array $extra = [], string $class = 'c70-link'): string

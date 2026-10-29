@@ -11,7 +11,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * nikam se nepřipojuje.
  */
 
-require_once __DIR__ . '/tools/backup_storage.php';
+require_once dirname(__DIR__, 2) . '/tools/backup_storage.php';
 
 /** Aktuální školní rok jako "2025/2026" (školní rok začíná v září). */
 function ops58_school_year(?int $timestamp = null): string
@@ -25,7 +25,7 @@ function ops58_school_year(?int $timestamp = null): string
 function ops58_backup_dir(): string
 {
     $env = trim((string)getenv('EDUCANET_BACKUP_DIR'));
-    return $env !== '' ? $env : dirname(__DIR__) . '/educanet-backups';
+    return $env !== '' ? $env : dirname(dirname(__DIR__, 2)) . '/educanet-backups';
 }
 
 /**

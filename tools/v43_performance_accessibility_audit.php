@@ -6,7 +6,7 @@ $root=dirname(__DIR__);$errors=[];
 $css=$root.'/assets/cognitive-v43.css';$js=$root.'/assets/cognitive-v43.js';
 $cssKb=round(filesize($css)/1024,1);$jsKb=round(filesize($js)/1024,1);
 if($cssKb>48)$errors[]="cognitive CSS too large: {$cssKb}KB";if($jsKb>48)$errors[]="cognitive JS too large: {$jsKb}KB";
-$cssText=file_get_contents($css)?:'';$jsText=file_get_contents($js)?:'';$view=file_get_contents($root.'/cognitive_visualization_views_v43.php')?:'';
+$cssText=file_get_contents($css)?:'';$jsText=file_get_contents($js)?:'';$view=file_get_contents($root.'/src/lessons/cognitive_visualization_views_v43.php')?:'';
 foreach(['prefers-reduced-motion','content-visibility','container-type'] as $n)if(!str_contains($cssText,$n))$errors[]="CSS missing $n";
 foreach(['navigator.connection','hardwareConcurrency','startViewTransition','motion-reduced'] as $n)if(!str_contains($jsText,$n))$errors[]="JS missing $n";
 foreach(['input type="range"','button type="button"','aria-label'] as $n)if(!str_contains($view,$n))$errors[]="views missing $n";

@@ -11,10 +11,10 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * vyžaduje class_id v rozsahu). Retence a pilot jsou rozhodnutí školy (viz docs/KOMPETENCE_V62.md).
  */
 
-require_once __DIR__ . '/competencies_v62.php';
-require_once __DIR__ . '/evidence_v62.php';
-require_once __DIR__ . '/evidence_v62_adapters.php';
-require_once __DIR__ . '/mastery_v62.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/competencies_v62.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/evidence_v62.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/evidence_v62_adapters.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/mastery_v62.php';
 
 /** @return list<string> pilotní třídy v rozsahu přihlášeného učitele */
 function comp62_teacher_classes(): array

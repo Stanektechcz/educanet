@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-require_once __DIR__ . '/teamgames_v64_roles.php';
+require_once dirname(__DIR__, 2) . '/src/teamgames/teamgames_v64_roles.php';
 
 /**
  * EDUCANET v64 · žákovské šablony týmových her: moje role a retrospektiva po hře (3 otázky).

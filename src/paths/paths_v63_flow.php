@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-require_once __DIR__ . '/paths_v63.php';
+require_once dirname(__DIR__, 2) . '/src/paths/paths_v63.php';
 
 /**
  * EDUCANET v63 · výukové cesty (tok): odevzdání kroku, důkazy, reflexe a doporučení „Co dál“.

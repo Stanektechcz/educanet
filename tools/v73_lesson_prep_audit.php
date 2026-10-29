@@ -32,8 +32,8 @@ putenv('EDUCANET_SUBSTITUTION_CONTACT');
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'cockpit_v70.php',
-    'tutorial_v52.php', 'learning_v56.php', 'runtime_content.php', 'session_v53.php', 'accounts_v53.php', 'intake_v51.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/teacher/cockpit_v70.php',
+    'src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/ops/runtime_content.php', 'src/lessons/session_v53.php', 'src/student/accounts_v53.php', 'src/student/intake_v51.php'] as $lib) require_once $ROOT . '/' . $lib;
 $mods = teacher58_modules();
 $tabs = ['hodina_tisk', 'hodina_projektor', 'hodina_zastup'];
 foreach ($tabs as $t) foreach ((array)$mods[$t]['files'] as $f) require_once $ROOT . '/' . $f;
@@ -45,7 +45,7 @@ $read = static fn(string $rel): string => (string)@file_get_contents($ROOT . '/'
 $check('úložiště auditu i cache modelu jsou dočasné (ne ostrá storage/ ani cache/ projektu)', STORAGE_DIR === $tmp && str_contains($tmp, 'educanet-audit-') && !str_starts_with(lm71_cache_dir(), $ROOT));
 
 // ---------------------------------------------------------------- 1) soubory, registr, rozpočet
-$libs = ['lesson_prep_v73.php', 'lesson_print_v73_views.php', 'lesson_projector_v73_views.php'];
+$libs = ['src/lessons/lesson_prep_v73.php', 'src/lessons/lesson_print_v73_views.php', 'src/lessons/lesson_projector_v73_views.php'];
 $cli = ['tools/v73_lesson_prep_audit.php'];
 $bad = [];
 foreach (array_merge($libs, $cli) as $f) {
@@ -59,7 +59,7 @@ $regBad = [];
 foreach ($tabs as $t) {
     $m = $mods[$t] ?? [];
     if (isset($m['post']) || isset($m['get']) || !in_array($t, teacher58_tabs(), true) || ($map[$t]['section'] ?? '') !== 'dnes' || !in_array($t, UI68_TEACHER_DARK_TABS, true)
-        || !in_array('lesson_prep_v73.php', (array)$m['files'], true) || !isset(c70_related_rules()[$t])) $regBad[] = $t;
+        || !in_array('src/lessons/lesson_prep_v73.php', (array)$m['files'], true) || !isset(c70_related_rules()[$t])) $regBad[] = $t;
 }
 $getPolicies = array_filter(array_keys(teacher59_get_policies()), static fn(string $k): bool => preg_match('/^hodina_(tisk|projektor|zastup)\|/', $k) === 1);
 $check('registr: tisk, projektor a zástup jsou jen pro čtení (bez post/get), v sekci Dnes, v UI68_TEACHER_DARK_TABS, se „Souvisejícím“; žádná vlastní GET politika' . ($regBad ? ' [' . implode(', ', $regBad) . ']' : ''),
@@ -68,7 +68,7 @@ $check('Režim hodiny (`teach`) zůstává v mapě i v navigaci (vyřadí se až
 $assets = ['assets/lesson-print-v73.css', 'assets/lesson-projector-v73.css', 'assets/lesson-v73.js', 'assets/cockpit-v73.css'];
 $size = array_sum(array_map(static fn(string $f): int => strlen($read($f)), $assets));
 $check('rozpočet fáze: CSS+JS v73 = ' . $size . ' B ≤ 20 kB, JS jen defer a bez innerHTML/fetch/odesílání dat', $size <= 20480 && !preg_match('/innerHTML|fetch\(|XMLHttpRequest|sendBeacon|localStorage/', $read('assets/lesson-v73.js'))
-    && ($mods['hodina_projektor']['js'] ?? []) === ['assets/lesson-v73.js'] && str_contains($read('teacher_v58.php'), "'js' => ['assets/lesson-v73.js']"));
+    && ($mods['hodina_projektor']['js'] ?? []) === ['assets/lesson-v73.js'] && str_contains($read('src/teacher/teacher_v58.php'), "'js' => ['assets/lesson-v73.js']"));
 $literal = '~#[0-9a-fA-F]{3,8}\b|\brgba?\s*\(|\bhsla?\s*\(|(?<![-\w.#%])(?:white|black)(?![-\w(])~';
 $printCss = $read('assets/lesson-print-v73.css');
 $screenPart = (string)preg_replace('~@media print\s*\{.*\}\s*$~s', '', (string)preg_replace('~/\*.*?\*/~s', '', $printCss));
@@ -99,7 +99,7 @@ putenv('EDUCANET_SUBSTITUTION_CONTACT=' . str_repeat('x', 400));
 $longContact = lp73_substitution_contact();
 putenv('EDUCANET_SUBSTITUTION_CONTACT');
 $check('kontakt na koordinaci: z konfigurace školy (bez řídicích znaků, max ' . LP73_CONTACT_MAX . ' znaků), bez nastavení obecná role – nikdy data žáků ani učitelů',
-    $defaultContact === LP73_CONTACT_DEFAULT && $envContact === V73P_CONTACT && mb_strlen($longContact) === LP73_CONTACT_MAX + 1 && !str_contains($read('lesson_prep_v73.php'), 'phone'));
+    $defaultContact === LP73_CONTACT_DEFAULT && $envContact === V73P_CONTACT && mb_strlen($longContact) === LP73_CONTACT_MAX + 1 && !str_contains($read('src/lessons/lesson_prep_v73.php'), 'phone'));
 $ov5 = (array)(lm71_raw('class_3a')['overlay']['lessons'][5] ?? []);
 $model5 = lm71_lesson('class_3a', 5);
 $q = lp73_exit_questions($model5);

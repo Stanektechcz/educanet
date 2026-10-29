@@ -15,25 +15,25 @@ $storageDir = edu_audit_temp_storage('v56');
 $root = dirname(__DIR__);
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 require $root . '/bootstrap.php';
-require $root . '/runtime_content.php';
-require_once $root . '/tutorial_v52.php';
-require_once $root . '/tutorial_v52_views.php';
-require_once $root . '/intake_v51.php';
-require_once $root . '/accounts_v53.php';
-require_once $root . '/points_v53.php';
-require_once $root . '/session_v53.php';
-require_once $root . '/student_v55.php';
-require_once $root . '/student_v55_views.php';
-require_once $root . '/learning_v56.php';
-require_once $root . '/learning_v56_views.php';
+require $root . '/src/ops/runtime_content.php';
+require_once $root . '/src/lessons/tutorial_v52.php';
+require_once $root . '/src/lessons/tutorial_v52_views.php';
+require_once $root . '/src/student/intake_v51.php';
+require_once $root . '/src/student/accounts_v53.php';
+require_once $root . '/src/student/points_v53.php';
+require_once $root . '/src/lessons/session_v53.php';
+require_once $root . '/src/student/student_v55.php';
+require_once $root . '/src/student/student_v55_views.php';
+require_once $root . '/src/lessons/learning_v56.php';
+require_once $root . '/src/lessons/learning_v56_views.php';
 
 $state = audit_counter();
 $check = audit_checker($state);
 $read = static fn(string $rel): string => (string)@file_get_contents($root . '/' . $rel);
 $css = $read('assets/learning-v56.css');
 $js = $read('assets/learning-v56.js');
-$views = $read('learning_v56_views.php');
-$schoolYear = require $root . '/school_year.php';
+$views = $read('src/lessons/learning_v56_views.php');
+$schoolYear = require $root . '/src/ops/school_year.php';
 $runtime = runtime_content_load_classes(array_keys($modules));
 $nextLessons = $runtime['nextLessons'];
 $extendedLessons = $runtime['extendedLessons'];
@@ -83,7 +83,7 @@ $lessonState = v56_lesson_state($classId, $key, $bundle);
 $check('po odevzdání je lekce hotová', $lessonState['complete'] && (int)$lessonState['percent'] === 100);
 $check('XP se přičítá za každou fázi', V56_XP['theory'] > 0 && V56_XP['test'] > 0 && V56_XP['project'] > 0 && V56_XP['submit'] > 0);
 $check('dnešní hodina i lekce používají stejnou stránku (zdrojová kontrola)', substr_count(edu_app_source(), 'v56_render_lesson(') === 2, false);
-$check('jediné Pokračovat vychází z v56 (zdrojová kontrola)', str_contains($read('student_v55_views.php'), 'v56_next_step('), false);
+$check('jediné Pokračovat vychází z v56 (zdrojová kontrola)', str_contains($read('src/student/student_v55_views.php'), 'v56_next_step('), false);
 
 // --- Materiály (přímá volání) ---
 $idx = v56_materials_index($classId, $modules[$classId], $nextLessons, $extendedLessons, $schoolYear);
@@ -187,7 +187,7 @@ $check('horní lišta zůstane v řádku i na mobilu', str_contains($css, '.topb
 $check('na mobilu zůstane značka školy', str_contains($css, '.topbar .brand .brand-mark'), false);
 
 // --- Učitelské rozhraní: zbylé implementační detaily (zdrojová kontrola) ---
-$teacherFile = $read('session_v53_teacher.php');
+$teacherFile = $read('src/lessons/session_v53_teacher.php');
 $check('třídy jsou seřazené podle rozvrhu dne (zdrojová kontrola)', str_contains($teacherFile, 'uksort($byTime') && str_contains($teacherFile, 'foreach ($byTime as $cid'), false);
 $check('učitel má obsah lekcí ze stejného zdroje jako žák (zdrojová kontrola)', str_contains($read('teacher.php'), 'runtime_content_load_classes(array_keys($modules))') && str_contains($read('teacher.php'), '$teacherRuntime[\'extendedLessons\']'), false);
 

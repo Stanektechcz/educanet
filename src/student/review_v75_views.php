@@ -3,8 +3,8 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/review_v75.php';
-require_once __DIR__ . '/taskbank_v75_views.php';
+require_once dirname(__DIR__, 2) . '/src/student/review_v75.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/taskbank_v75_views.php';
 
 /**
  * EDUCANET v75 · „Opakování před písemkou“ – žákovské UI (?view=opakovani). Otázky z exit ticketů se zobrazí jako samotest

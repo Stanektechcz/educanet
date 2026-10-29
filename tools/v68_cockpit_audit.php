@@ -23,7 +23,7 @@ $tmp = rtrim(str_replace(chr(92), '/', edu_audit_temp_storage('v68-cockpit')), '
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'ui_v67.php', 'app/redirects_v68.php'] as $lib) { require_once $ROOT . '/' . $lib; }
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/ui/ui_v67.php', 'app/redirects_v68.php'] as $lib) { require_once $ROOT . '/' . $lib; }
 
 /** SHA-256 snímku politik teacher59: stav před v68 bez teacher68_theme_set a GET politik ?student=, od v69 bez POST akcí vyřazených záložek (skill_*, ml_live_*, ml_failure_inject, teacher_automation_*, teacher_notification_read*, teacher_saved_filter_pin/default/watch, teacher_review_ack, teacher_sla_policy_save, v50_teacher_growth_control); změna jiné politiky audit shodí. */
 const V68C_POST_POLICY_SHA = '656e6ab3383dd1f14b02e3ee6799157ff5c9ac50f021808617245eea74afe55c';

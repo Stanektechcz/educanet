@@ -14,8 +14,8 @@ declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
 /** v73: společné soubory přípravného balíčku (model hodiny jako Dnešní hodina, bez postupu žáků). */
-const TEACHER58_V73_PREP_FILES = ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'calendar_days_v71.php', 'lesson_today_v70.php', 'lesson_today_v70_views.php',
-    'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'svp_v72.php', 'svp_v72_map.php', 'teacher_prefs_v72_1.php', 'lesson_prep_v73.php'];
+const TEACHER58_V73_PREP_FILES = ['src/teacher/cockpit_v70.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/ops/calendar_days_v71.php', 'src/lessons/lesson_today_v70.php', 'src/lessons/lesson_today_v70_views.php',
+    'src/lessons/lesson_glossary_v72.php', 'src/lessons/lesson_approval_v72.php', 'src/assessment/svp_v72.php', 'src/assessment/svp_v72_map.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/lessons/lesson_prep_v73.php'];
 
 /** @return array<string, array<string, mixed>> */
 function teacher58_modules(): array
@@ -29,11 +29,11 @@ function teacher58_modules(): array
         // ?class= hlídá obecná kontrola rozsahu (teacher59_guard_get_check), ?lesson= je jen číslo 1–28 (náhled jiné lekce).
         'hodina' => [
             'label' => 'Dnešní hodina', 'hint' => 'Téma, materiály, úkoly a postup žáků v dnešní lekci', 'group' => 'podpora',
-            'files' => ['points_v53.php', 'teacher_class_dashboard.php', 'teacher_overview_v61.php', 'competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php',
-                'paths_v63.php', 'paths_v63_class.php', 'cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'calendar_days_v71.php',
-                'lesson_today_v70.php', 'lesson_today_v70_views.php', 'lesson_today_v71_views.php',
-                'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'lesson_exit_v72_views.php', 'lesson_reflect_v73.php', 'lesson_reflect_v73_views.php',
-                'materials_v74.php', 'materials_v74_views.php', 'insights_v74.php', 'insights_v74_views.php', 'ux_v79_1.php', 'lesson_today_v79_1_views.php'],   // v74: knihovna materiálů a „Komu dnes pomoct“ (jen čtení); v73: karta „Minule“ z reflexe (jen čtení); v72: stav schválení a souhrn exit ticketu (jen čtení); v72.1: jména a režim exit ticketu
+            'files' => ['src/student/points_v53.php', 'src/teacher/teacher_class_dashboard.php', 'src/teacher/teacher_overview_v61.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/mastery_v62.php',
+                'src/paths/paths_v63.php', 'src/paths/paths_v63_class.php', 'src/teacher/cockpit_v70.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/ops/calendar_days_v71.php',
+                'src/lessons/lesson_today_v70.php', 'src/lessons/lesson_today_v70_views.php', 'src/lessons/lesson_today_v71_views.php',
+                'src/lessons/lesson_glossary_v72.php', 'src/lessons/lesson_approval_v72.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/lessons/lesson_exit_v72.php', 'src/lessons/lesson_exit_v72_views.php', 'src/lessons/lesson_reflect_v73.php', 'src/lessons/lesson_reflect_v73_views.php',
+                'src/ops/materials_v74.php', 'src/ops/materials_v74_views.php', 'src/teacher/insights_v74.php', 'src/teacher/insights_v74_views.php', 'src/ui/ux_v79_1.php', 'src/lessons/lesson_today_v79_1_views.php'],   // v74: knihovna materiálů a „Komu dnes pomoct“ (jen čtení); v73: karta „Minule“ z reflexe (jen čtení); v72: stav schválení a souhrn exit ticketu (jen čtení); v72.1: jména a režim exit ticketu
             // v71: model lekce lm71 (plán po minutách, poznámky, pracovní list, úplnost) a karty dnů bez lekce; stále jen čtení.
             'css' => ['assets/cockpit-v71.css'], 'js' => ['assets/today-v79-1.js'],   // v79.1: rozvržení (lesson_today_v79_1_views.php, CSS assets/content-v79-1.css v rámci cockpitu), sbalitelné sekce na mobilu
             'render' => static function (array $m, string $c): void { lt71_render_tab($m, $c); },
@@ -42,8 +42,8 @@ function teacher58_modules(): array
         // politiky v teacher_scope_v59.php (třída povinná a v rozsahu), oprávnění lc72_ = content.manage (asistent jen čte). GET jen ?class= a ?lesson=.
         'schvalovani' => [
             'label' => 'Schvalování lekcí', 'hint' => 'Návrhy obsahu lekcí: náhled, schválení a vrácení', 'group' => 'podpora',
-            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php',
-                'svp_v72.php', 'svp_v72_map.php', 'svp_v72_views.php', 'ai_prompts_v72_1.php', 'ai_prompts_v76.php', 'ai_prompts_v77.php', 'lesson_approval_v72_views.php', 'bulk_approval_v74.php', 'bulk_approval_v74_views.php', 'ux_v79_1.php'],   // v79.1: tabulka lekcí (řazení, filtr, stránkování)   // v72.1: vazba na ŠVP + náhled AI promptů; v74: karta „Hromadné schválení“ (jen čtení)
+            'files' => ['src/teacher/cockpit_v70.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/lessons/lesson_glossary_v72.php', 'src/lessons/lesson_approval_v72.php', 'src/lessons/lesson_exit_v72.php',
+                'src/assessment/svp_v72.php', 'src/assessment/svp_v72_map.php', 'src/assessment/svp_v72_views.php', 'src/teacher/ai_prompts_v72_1.php', 'src/teacher/ai_prompts_v76.php', 'src/teacher/ai_prompts_v77.php', 'src/lessons/lesson_approval_v72_views.php', 'src/teacher/bulk_approval_v74.php', 'src/teacher/bulk_approval_v74_views.php', 'src/ui/ux_v79_1.php'],   // v79.1: tabulka lekcí (řazení, filtr, stránkování)   // v72.1: vazba na ŠVP + náhled AI promptů; v74: karta „Hromadné schválení“ (jen čtení)
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v72.css'],
             'post' => ['lc72_' => 'lc72_teacher_handle_post'],   // v72.1: lc72_svp_approve / lc72_svp_return předává handler do svp72_teacher_handle_post
             'render' => static function (array $m, string $c) use ($csrf): void { lc72_render_tab($m, $c, $csrf()); },
@@ -52,7 +52,7 @@ function teacher58_modules(): array
         // po třídách (tp721_class_exit, třída povinná a v rozsahu, content.manage). Exact politiky v teacher_scope_v59.php; GET jen ?class=.
         'nastaveni_vyuky' => [
             'label' => 'Nastavení výuky', 'hint' => 'Jména žáků a režim exit ticketu', 'group' => 'podpora',
-            'files' => ['cockpit_v70.php', 'grading_v66.php', 'teacher_prefs_v72_1.php', 'teacher_prefs_v72_1_views.php'],
+            'files' => ['src/teacher/cockpit_v70.php', 'src/assessment/grading_v66.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/teacher/teacher_prefs_v72_1_views.php'],
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v72.css'],
             'post' => ['tp721_' => 'tp721_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { tp721_render_tab($m, $c, $csrf()); },
@@ -61,19 +61,19 @@ function teacher58_modules(): array
         // JEN ČTENÍ: žádná POST akce ani GET parametr registru (obecné ?class= hlídá teacher59_guard_get_check, ?lesson= je jen číslo 1–28).
         'hodina_tisk' => [
             'label' => 'Tisk hodiny', 'hint' => 'A4 plán hodiny a pracovní list', 'group' => 'podpora',
-            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['lesson_print_v73_views.php']),
+            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['src/lessons/lesson_print_v73_views.php']),
             'css' => ['assets/lesson-print-v73.css'], 'js' => ['assets/lesson-v73.js'],
             'render' => static function (array $m, string $c): void { lp73_render_print($m); },
         ],
         'hodina_projektor' => [
             'label' => 'Projektor', 'hint' => 'Úsek hodiny, cíl, kód a zadání velkým písmem', 'group' => 'podpora',
-            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['lesson_projector_v73_views.php']),
+            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['src/lessons/lesson_projector_v73_views.php']),
             'css' => ['assets/lesson-projector-v73.css'], 'js' => ['assets/lesson-v73.js'],
             'render' => static function (array $m, string $c): void { pj73_render_projector($m); },
         ],
         'hodina_zastup' => [
             'label' => 'Zástup', 'hint' => 'List pro zastupujícího bez jmen žáků', 'group' => 'podpora',
-            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['lesson_print_v73_views.php']),
+            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['src/lessons/lesson_print_v73_views.php']),
             'css' => ['assets/lesson-print-v73.css'], 'js' => ['assets/lesson-v73.js'],
             'render' => static function (array $m, string $c): void { lp73_render_substitution($m); },
         ],
@@ -82,7 +82,7 @@ function teacher58_modules(): array
         // exact politiky v teacher_scope_v59.php, oprávnění view + oprávnění toku v handleru). Poslední krok každého toku volá původní akci modulu.
         'priprava79' => [
             'label' => 'Příprava hodiny', 'hint' => 'Třída, plán, materiály, pak tisk nebo projektor', 'group' => 'podpora',
-            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['lesson_print_v73_views.php', 'materials_v74.php', 'materials_v74_views.php', 'stepper_v79.php', 'stepper_v79_views.php', 'priprava_v79.php']),
+            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['src/lessons/lesson_print_v73_views.php', 'src/ops/materials_v74.php', 'src/ops/materials_v74_views.php', 'src/ui/stepper_v79.php', 'src/ui/stepper_v79_views.php', 'src/teacher/priprava_v79.php']),
             'css' => ['assets/cockpit-v71.css', 'assets/lesson-print-v73.css', 'assets/stepper-v79.css'], 'js' => ['assets/stepper-v79.js'],
             'post' => ['sp79_' => 'sp79_teacher_handle_post'],
             'render' => static function (array $m, string $c): void { pp79_render_tab($m, $c); },
@@ -90,7 +90,7 @@ function teacher58_modules(): array
         // v73 · Reflexe hodiny: POST lr73_save (exact politika: třída povinná a v rozsahu, content.manage – asistent jen čte). GET jen ?class= a ?lesson=.
         'reflexe73' => [
             'label' => 'Reflexe hodiny', 'hint' => 'Jak hodina proběhla a co příště', 'group' => 'podpora',
-            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['lesson_reflect_v73.php', 'lesson_reflect_v73_views.php', 'stepper_v79.php', 'stepper_v79_views.php', 'lesson_reflect_v79.php']),   // v79: stepper
+            'files' => array_merge(TEACHER58_V73_PREP_FILES, ['src/lessons/lesson_reflect_v73.php', 'src/lessons/lesson_reflect_v73_views.php', 'src/ui/stepper_v79.php', 'src/ui/stepper_v79_views.php', 'src/lessons/lesson_reflect_v79.php']),   // v79: stepper
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v73.css', 'assets/stepper-v79.css'], 'js' => ['assets/stepper-v79.js'],
             'post' => ['lr73_' => 'lr73_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { lr73_render_tab($m, $csrf()); },
@@ -99,8 +99,8 @@ function teacher58_modules(): array
         // POST ba74_approve má exact politiku v teacher_scope_v59.php (class_ids[] povinné a v rozsahu; handler ověří každou položku), oprávnění ba74_ = content.manage.
         'hromadne74' => [
             'label' => 'Hromadné schválení', 'hint' => 'Lekce a vazby na ŠVP po týdnech, třídách nebo za rok', 'group' => 'podpora',
-            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php',
-                'svp_v72.php', 'svp_v72_map.php', 'bulk_approval_v74.php', 'bulk_approval_v74_views.php', 'stepper_v79.php', 'stepper_v79_views.php', 'bulk_approval_v79.php'],   // v79: stepper
+            'files' => ['src/teacher/cockpit_v70.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/lessons/lesson_glossary_v72.php', 'src/lessons/lesson_approval_v72.php', 'src/lessons/lesson_exit_v72.php',
+                'src/assessment/svp_v72.php', 'src/assessment/svp_v72_map.php', 'src/teacher/bulk_approval_v74.php', 'src/teacher/bulk_approval_v74_views.php', 'src/ui/stepper_v79.php', 'src/ui/stepper_v79_views.php', 'src/teacher/bulk_approval_v79.php'],   // v79: stepper
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v72.css', 'assets/cockpit-v74.css', 'assets/stepper-v79.css'], 'js' => ['assets/stepper-v79.js'],
             'post' => ['ba74_' => 'ba74_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { ba74_render_tab($m, $c, $csrf()); },
@@ -109,7 +109,7 @@ function teacher58_modules(): array
         // oprávnění mat74_ = content.manage (asistent jen čte); handler ověří, že materiál patří třídě. GET jen ?class=, ?lesson=, ?stav=, ?q=, ?mat=, ?verze=.
         'materialy74' => [
             'label' => 'Knihovna materiálů', 'hint' => 'Materiály k lekcím, ověření, verze a obnova', 'group' => 'podpora',
-            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'materials_v74.php', 'materials_v74_views.php'],
+            'files' => ['src/teacher/cockpit_v70.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/ops/materials_v74.php', 'src/ops/materials_v74_views.php'],
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v72.css', 'assets/cockpit-v74.css'],
             'post' => ['mat74_' => 'mat74_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { mat74_render_tab($m, $c, $csrf()); },
@@ -118,10 +118,10 @@ function teacher58_modules(): array
         // v teacher_scope_v59.php (každý přihlášený učitel, data jen z tříd v rozsahu); jinak jen ?tyden=.
         'tyden74' => [
             'label' => 'Týdenní souhrn', 'hint' => 'Odučeno vs. plán, schválení, žáci a termíny', 'group' => 'podpora',
-            'files' => ['points_v53.php', 'teacher_class_dashboard.php', 'teacher_overview_v61.php', 'competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php',
-                'paths_v63.php', 'paths_v63_class.php', 'cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_today_v70.php',
-                'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'svp_v72.php', 'svp_v72_map.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'lesson_reflect_v73.php',
-                'insights_v74.php', 'weekly_v74.php', 'weekly_v74_views.php', 'palette_v74.php'],
+            'files' => ['src/student/points_v53.php', 'src/teacher/teacher_class_dashboard.php', 'src/teacher/teacher_overview_v61.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/mastery_v62.php',
+                'src/paths/paths_v63.php', 'src/paths/paths_v63_class.php', 'src/teacher/cockpit_v70.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/lessons/lesson_today_v70.php',
+                'src/lessons/lesson_glossary_v72.php', 'src/lessons/lesson_approval_v72.php', 'src/assessment/svp_v72.php', 'src/assessment/svp_v72_map.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/lessons/lesson_exit_v72.php', 'src/lessons/lesson_reflect_v73.php',
+                'src/teacher/insights_v74.php', 'src/teacher/weekly_v74.php', 'src/teacher/weekly_v74_views.php', 'src/ui/palette_v74.php'],
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v74.css'], 'js' => ['assets/lesson-v73.js'],
             'get' => [
                 'paleta' => static function (array $m): void { pal74_json(); },
@@ -132,7 +132,7 @@ function teacher58_modules(): array
         // schválení s rozsahem t14. Odznak „po termínu“ v menu: t1477_overdue_count() z teacher_shell_v68.php.
         'streda77' => [
             'label' => 'Středa: T-14', 'hint' => 'Co schválit do 14 dní a co je po termínu', 'group' => 'podpora',
-            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_approval_v72.php', 'svp_v72.php', 'svp_v72_map.php', 't14_v77.php', 't14_v77_views.php'],
+            'files' => ['src/teacher/cockpit_v70.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/lessons/lesson_approval_v72.php', 'src/assessment/svp_v72.php', 'src/assessment/svp_v72_map.php', 'src/teacher/t14_v77.php', 'src/teacher/t14_v77_views.php'],
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v77.css'],
             'render' => static function (array $m, string $c): void { t1477_render_tab($m, $c); },
         ],
@@ -140,7 +140,7 @@ function teacher58_modules(): array
         // (exact politiky v teacher_scope_v59.php: třída povinná a v rozsahu; oprávnění kp75_ = content.manage, asistent jen čte). GET jen ?class=.
         'kompetence75' => [
             'label' => 'Kompetence 2.A a 4.A', 'hint' => 'Návrh katalogu a cest, vazba na ŠVP a schválení', 'group' => 'podpora',
-            'files' => ['cockpit_v70.php', 'competencies_v62.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'svp_v72.php', 'competencies_v75.php', 'competencies_v75_views.php'],
+            'files' => ['src/teacher/cockpit_v70.php', 'src/assessment/competencies_v62.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/assessment/svp_v72.php', 'src/assessment/competencies_v75.php', 'src/assessment/competencies_v75_views.php'],
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v75.css'],
             'post' => ['kp75_' => 'comp75_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { comp75_render_tab($m, $c, $csrf()); },
@@ -148,7 +148,7 @@ function teacher58_modules(): array
         // v80 · Pokrok a podpora žáků: cíle na týden, odznaky za zlepšení, opakování chyb, počty nápověd a cvičení (jen čtení, bez POST; GET jen ?class=).
         'pokrok80' => [
             'label' => 'Pokrok a podpora žáků', 'hint' => 'Cíle, odznaky, opakování chyb a nápovědy', 'group' => 'podpora',
-            'files' => ['cockpit_v70.php', 'teacher_prefs_v72_1.php', 'taskbank_v75_gen.php', 'taskbank_v75.php', 'hints_v80_gfx.php', 'hints_v80.php', 'learning_v80.php', 'widgets_v80.php', 'progress_v80.php', 'learning_v80_teacher_views.php'],
+            'files' => ['src/teacher/cockpit_v70.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/lessons/hints_v80_gfx.php', 'src/lessons/hints_v80.php', 'src/lessons/learning_v80.php', 'src/ui/widgets_v80.php', 'src/student/progress_v80.php', 'src/lessons/learning_v80_teacher_views.php'],
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v75.css'],
             'render' => static function (array $m, string $c): void { lr80_render_teacher_tab($m, $c); },
         ],
@@ -157,9 +157,9 @@ function teacher58_modules(): array
         // (asistent jen čte). GET jen ?class= a filtry mapy (zdroj, oblast, od, do, razeni, smer, zobrazeni – informativní politiky, jen zobrazení).
         'mapa801' => [
             'label' => 'Mapa třídy', 'hint' => 'Kdo co umí, zpětná vazba a procvičování jedním klikem', 'group' => 'podpora',
-            'files' => ['cockpit_v70.php', 'teacher_prefs_v72_1.php', 'competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'competencies_v75_views.php',
-                'taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'hints_v80_gfx.php', 'hints_v80.php', 'learning_v80.php', 'widgets_v80.php', 'progress_v80.php', 'ux_v79_1.php',
-                'classmap_v80_1.php', 'support_v80_1.php', 'support_v80_1_teacher.php', 'classmap_v80_1_views.php'],
+            'files' => ['src/teacher/cockpit_v70.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/mastery_v62.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/assessment/competencies_v75_views.php',
+                'src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/assessment/taskbank_v76.php', 'src/lessons/hints_v80_gfx.php', 'src/lessons/hints_v80.php', 'src/lessons/learning_v80.php', 'src/ui/widgets_v80.php', 'src/student/progress_v80.php', 'src/ui/ux_v79_1.php',
+                'src/teacher/classmap_v80_1.php', 'src/student/support_v80_1.php', 'src/student/support_v80_1_teacher.php', 'src/teacher/classmap_v80_1_views.php'],
             'css' => ['assets/cockpit-v71.css', 'assets/classmap-v80-1.css'], 'js' => ['assets/classmap-v80-1.js'],
             'post' => ['ts801_' => 'ts801_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { cm801_render_tab($m, $c, $csrf()); },
@@ -167,7 +167,7 @@ function teacher58_modules(): array
         // v75 · Úlohy s variantami: úspěšnost po úlohách, přehled žáků a klíč k variantě žáka (jen čtení; ?zak= je pořadí v tabulce, ?kolo= číslo kola).
         'ulohy75' => [
             'label' => 'Úlohy s variantami', 'hint' => 'Úspěšnost třídy a klíč k variantě každého žáka', 'group' => 'podpora',
-            'files' => ['cockpit_v70.php', 'teacher_prefs_v72_1.php', 'taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v75_teacher_views.php'],
+            'files' => ['src/teacher/cockpit_v70.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/assessment/taskbank_v75_teacher_views.php'],
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v75.css'],
             'render' => static function (array $m, string $c): void { tb75_render_teacher_tab($m, $c); },
         ],
@@ -175,7 +175,7 @@ function teacher58_modules(): array
         // exact politiky, content.manage) a rozložení voleb žáků bez jmen. GET jen ?class=.
         'urovne75' => [
             'label' => 'Úrovně v hodině', 'hint' => 'Základ, Standard, Výzva: schválení a volby žáků', 'group' => 'podpora',
-            'files' => ['cockpit_v70.php', 'levels_v75.php', 'levels_v75_teacher_views.php'],
+            'files' => ['src/teacher/cockpit_v70.php', 'src/levels/levels_v75.php', 'src/levels/levels_v75_teacher_views.php'],
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v75.css'],
             'post' => ['lv75_' => 'lv75_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { lv75_render_teacher_tab($m, $c, $csrf()); },
@@ -184,7 +184,7 @@ function teacher58_modules(): array
         // GET ?tisk=1 = samostatná stránka k tisku (politika portfolia75|tisk: třída povinná a v rozsahu); jinak ?zak= (pořadí v seznamu).
         'portfolia75' => [
             'label' => 'Portfolia žáků', 'hint' => 'Připnuté práce, reflexe a komentáře', 'group' => 'podpora',
-            'files' => ['cockpit_v70.php', 'teacher_prefs_v72_1.php', 'taskbank_v75_gen.php', 'taskbank_v75.php', 'portfolio_v75.php', 'portfolio_v75_teacher_views.php'],
+            'files' => ['src/teacher/cockpit_v70.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/student/portfolio_v75.php', 'src/student/portfolio_v75_teacher_views.php'],
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v75.css'],
             'post' => ['pf75_' => 'pf75_teacher_handle_post'],
             'get' => [
@@ -196,8 +196,8 @@ function teacher58_modules(): array
         // content.manage) a GET ?tisk=1 = verze k tisku s klíčem (politika opakovani75|tisk: třída povinná a v rozsahu).
         'opakovani75' => [
             'label' => 'Opakování před písemkou', 'hint' => 'Balíček z chyb třídy, zveřejnění a tisk', 'group' => 'podpora',
-            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_glossary_v72.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php',
-                'taskbank_v75_gen.php', 'taskbank_v75.php', 'review_v75.php', 'review_v75_teacher_views.php', 'stepper_v79.php', 'stepper_v79_views.php', 'review_v79.php'],   // v79: stepper
+            'files' => ['src/teacher/cockpit_v70.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/lessons/lesson_glossary_v72.php', 'src/lessons/lesson_approval_v72.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/lessons/lesson_exit_v72.php',
+                'src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/student/review_v75.php', 'src/student/review_v75_teacher_views.php', 'src/ui/stepper_v79.php', 'src/ui/stepper_v79_views.php', 'src/student/review_v79.php'],   // v79: stepper
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v75.css', 'assets/stepper-v79.css'], 'js' => ['assets/stepper-v79.js'],
             'post' => ['op75_' => 'rv75_teacher_handle_post'],
             'get' => [
@@ -209,7 +209,7 @@ function teacher58_modules(): array
         // GET ?tisk=1 = stránka k tisku (politika plan76|tisk: třída povinná a v rozsahu). Kalendář se nikdy sám nemění.
         'plan76' => [
             'label' => 'Plán vs. skutečnost', 'hint' => 'Odučeno, posuny, prognóza a jak dohnat', 'group' => 'podpora',
-            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_today_v70.php', 'lesson_reflect_v73.php', 'plan_v76.php', 'plan_v76_views.php'],
+            'files' => ['src/teacher/cockpit_v70.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/lessons/lesson_today_v70.php', 'src/lessons/lesson_reflect_v73.php', 'src/ops/plan_v76.php', 'src/ops/plan_v76_views.php'],
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v76.css'],
             'get' => [
                 'tisk' => static function (array $m): void { pv76_print_page(); },
@@ -220,8 +220,8 @@ function teacher58_modules(): array
         // (politiky svp76|tisk a svp76|csv: třída povinná a v rozsahu); ?pololeti=1|2 jen přepíná pohled.
         'svp76' => [
             'label' => 'Plnění ŠVP', 'hint' => 'Výsledky ŠVP po pololetích, mezery, tisk a CSV', 'group' => 'podpora',
-            'files' => ['cockpit_v70.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_today_v70.php', 'lesson_reflect_v73.php', 'svp_v72.php',
-                'plan_v76.php', 'svp_export_v76.php', 'svp_export_v76_views.php'],
+            'files' => ['src/teacher/cockpit_v70.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/lessons/lesson_today_v70.php', 'src/lessons/lesson_reflect_v73.php', 'src/assessment/svp_v72.php',
+                'src/ops/plan_v76.php', 'src/assessment/svp_export_v76.php', 'src/assessment/svp_export_v76_views.php'],
             'css' => ['assets/cockpit-v71.css', 'assets/cockpit-v76.css'],
             'get' => [
                 'tisk' => static function (array $m): void { sx76_print_page(); },
@@ -232,19 +232,19 @@ function teacher58_modules(): array
         // v70 · Přehled správy: účty a role, pokrytí tříd, provoz, kvalita dat a doporučení – jen administrátor, jen čtení.
         'sprava_prehled' => [
             'label' => 'Přehled správy', 'hint' => 'Účty, role, pokrytí tříd, zálohy a doporučení', 'group' => 'podpora', 'admin' => true,
-            'files' => ['ops_v58.php', 'identity_v58.php', 'cockpit_v70.php', 'admin_overview_v70.php', 'admin_overview_v70_views.php'],
+            'files' => ['src/ops/ops_v58.php', 'src/student/identity_v58.php', 'src/teacher/cockpit_v70.php', 'src/teacher/admin_overview_v70.php', 'src/teacher/admin_overview_v70_views.php'],
             'render' => static function (array $m, string $c): void { ad70_render_tab(); },
         ],
         // v78 · Design systém: ukázka tokenů a komponent v78 (jen administrátor, jen čtení, fiktivní data, bez POST a bez GET parametru registru).
         'design78' => [
             'label' => 'Design systém', 'hint' => 'Tokeny, komponenty a kontrast (ukázka v78)', 'group' => 'podpora', 'admin' => true,
-            'files' => ['design_v78.php', 'design_v78_views.php'],
+            'files' => ['src/ui/design_v78.php', 'src/ui/design_v78_views.php'],
             'css' => ['assets/tokens-v78.css', 'assets/components-v78.css', 'assets/design-v78.css'], 'js' => ['assets/components-v78.js'],
             'render' => static function (array $m, string $c): void { ds78_render_tab($m, $c); },
         ],
         'roboti' => [
             'label' => 'Robotí liga', 'hint' => 'Programovatelná aréna – zápasy robotů', 'group' => 'hry',
-            'files' => ['robots_v58.php', 'robots_v58_views.php'],
+            'files' => ['src/robots/robots_v58.php', 'src/robots/robots_v58_views.php'],
             'post' => ['robots58_' => 'robots58_teacher_handle_post'],
             'get' => [
                 'robots_poll' => static function (array $m): void { robots58_teacher_poll(); },
@@ -254,7 +254,7 @@ function teacher58_modules(): array
         ],
         'hry' => [
             'label' => 'Týmové hry', 'hint' => 'Štafeta, bingo, Riskuj!, přetahovaná, správci, úniková místnost', 'group' => 'hry',
-            'files' => ['teamgames_v58_core.php', 'teamgames_v58_teacher_views.php', 'teamgames_v58_projector_views.php'],
+            'files' => ['src/teamgames/teamgames_v58_core.php', 'src/teamgames/teamgames_v58_teacher_views.php', 'src/teamgames/teamgames_v58_projector_views.php'],
             'post' => ['tg58_' => 'tg58_teacher_handle_post'],
             'get' => [
                 'tg_poll' => static function (array $m): void { if (function_exists('tg58_teacher_poll')) tg58_teacher_poll(); },
@@ -264,21 +264,21 @@ function teacher58_modules(): array
         ],
         'ctf' => [
             'label' => 'CTF týden', 'hint' => 'Hledání vlajek ve vlastním cvičném systému', 'group' => 'hry',
-            'files' => ['arena_v58_ctf.php', 'arena_v58_events_views.php'],
+            'files' => ['src/arena/arena_v58_ctf.php', 'src/arena/arena_v58_events_views.php'],
             'css' => ['assets/arena-events-v58.css'], 'js' => ['assets/arena-events-v58.js'],
             'post' => ['arena58_ctf_' => 'arena58_ctf_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { arena58_ctf_render_teacher_tab($c, $csrf()); },
         ],
         'incidenty' => [
             'label' => 'Incidenty', 'hint' => 'Opravy serveru na čas a postmortem', 'group' => 'hry',
-            'files' => ['arena_v58_incident.php', 'arena_v58_events_views.php'],
+            'files' => ['src/arena/arena_v58_incident.php', 'src/arena/arena_v58_events_views.php'],
             'css' => ['assets/arena-events-v58.css'], 'js' => ['assets/arena-events-v58.js'],
             'post' => ['arena58_inc_' => 'arena58_inc_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { arena58_inc_render_teacher_tab($c, $csrf()); },
         ],
         'labdata' => [
             'label' => 'Analytika labu', 'hint' => 'Chyby třídy, dohled, přehrávání, export', 'group' => 'hry',
-            'files' => ['lab_v58_teacher.php', 'lab_v58_teacher_views.php'],
+            'files' => ['src/linux/lab_v58_teacher.php', 'src/linux/lab_v58_teacher_views.php'],
             'css' => ['assets/lab-teacher-v58.css'], 'js' => ['assets/lab-teacher-v58.js'],
             'post' => ['lab58t_' => 'lab58t_teacher_handle_post'],
             'get' => [
@@ -289,26 +289,26 @@ function teacher58_modules(): array
         ],
         'editor' => [
             'label' => 'Editor úrovní', 'hint' => 'Vlastní úlohy do Linux Labu s kontrolou řešitelnosti', 'group' => 'hry',
-            'files' => ['lab_v58_editor.php', 'lab_v58_editor_views.php'],
+            'files' => ['src/linux/lab_v58_editor.php', 'src/linux/lab_v58_editor_views.php'],
             'post' => ['lab58e_' => 'lab58e_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { lab58e_render_teacher_tab($c, $csrf()); },
         ],
         'identita' => [
             'label' => 'Identita a nový rok', 'hint' => 'student_id, kolize jmen, plán přechodu roku (náhled)', 'group' => 'podpora',
-            'files' => ['identity_v58.php', 'identity_v58_rollover.php', 'identity_v58_views.php', 'stepper_v79.php', 'stepper_v79_views.php', 'identity_v79.php'], 'css' => ['assets/identity-v58.css', 'assets/stepper-v79.css'], 'js' => ['assets/stepper-v79.js'], 'admin' => true,   // v79: stepper
+            'files' => ['src/student/identity_v58.php', 'src/student/identity_v58_rollover.php', 'src/student/identity_v58_views.php', 'src/ui/stepper_v79.php', 'src/ui/stepper_v79_views.php', 'src/student/identity_v79.php'], 'css' => ['assets/identity-v58.css', 'assets/stepper-v79.css'], 'js' => ['assets/stepper-v79.js'], 'admin' => true,   // v79: stepper
             'post' => ['identity58_' => 'identity58_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { identity58_render_teacher_tab($csrf()); },
         ],
         'provoz' => [
             'label' => 'Provoz', 'hint' => 'Zdraví úložiště, zálohy, údržba dat (náhled)', 'group' => 'podpora',
-            'files' => ['ops_v58.php', 'ops_v58_views.php'], 'css' => ['assets/ops-v58.css'], 'admin' => true,
+            'files' => ['src/ops/ops_v58.php', 'src/ops/ops_v58_views.php'], 'css' => ['assets/ops-v58.css'], 'admin' => true,
             'render' => static function (array $m, string $c) use ($csrf): void { ops58_render_health_tab($csrf()); },
         ],
         // v59 · AUTHZ58-07: správa učitelských účtů – jen admin a jen v režimu účtů (POST akce obsluhuje teacher59_handle_post v teacher.php).
         'ucitele' => [
             'label' => 'Učitelé', 'hint' => 'Účty učitelů, třídy, předměty a jednorázová hesla', 'group' => 'podpora',
             'admin' => true, 'accounts_only' => true,
-            'files' => ['teacher_accounts_v59_admin.php', 'teacher_accounts_v59_views.php'],
+            'files' => ['src/teacher/teacher_accounts_v59_admin.php', 'src/teacher/teacher_accounts_v59_views.php'],
             'css' => ['assets/teacher-accounts-v59.css'], 'js' => ['assets/teacher-accounts-v59.js'],
             'get' => [
                 'karticka' => static function (array $m): void { teacher59_render_card_print(); },
@@ -320,7 +320,7 @@ function teacher58_modules(): array
         // (teacher_require_permission('content.manage') ho zastaví dřív, než sem dorazí).
         'obchod' => [
             'label' => 'Obchod', 'hint' => 'Katalog obchodu bodů, nákupy a vrácení', 'group' => 'podpora',
-            'files' => ['marketplace_v60.php', 'marketplace_v60_teacher_views.php', 'points_v53.php', 'points_v60.php'],
+            'files' => ['src/student/marketplace_v60.php', 'src/student/marketplace_v60_teacher_views.php', 'src/student/points_v53.php', 'src/student/points_v60.php'],
             'css' => ['assets/marketplace-v60.css'],
             'post' => ['mkt60_' => 'mkt60_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { mkt60_render_teacher_tab($c, $csrf()); },
@@ -329,7 +329,7 @@ function teacher58_modules(): array
         // kromě rozsahu tříd, který si seznam vynucuje sám přes teacher59_allowed_class_ids(); asistent nemá co měnit).
         'souboje' => [
             'label' => 'Souboje', 'hint' => 'Přehled výzev a soubojů žáků, statistiky tříd', 'group' => 'hry',
-            'files' => ['arena_v61_duels.php', 'arena_v61_teacher_views.php'],
+            'files' => ['src/arena/arena_v61_duels.php', 'src/arena/arena_v61_teacher_views.php'],
             'css' => ['assets/motivation-v61.css'],
             'render' => static function (array $m, string $c) use ($csrf): void { arena61_render_teacher_tab($c, $csrf()); },
         ],
@@ -338,7 +338,7 @@ function teacher58_modules(): array
         // teacher59_action_policy()/teacher59_entity_resolve()); asistent má jen 'view' → post neprojde.
         'projekty' => [
             'label' => 'Projekty', 'hint' => 'Nabídky projektů podle levelu a přihlášky žáků', 'group' => 'podpora',
-            'files' => ['projects_v60.php', 'projects_v60_teacher_views.php'],
+            'files' => ['src/projects/projects_v60.php', 'src/projects/projects_v60_teacher_views.php'],
             'css' => ['assets/projects-v60.css'],
             'post' => ['proj60_' => 'proj60_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { proj60_render_teacher_tab($c, $csrf()); },
@@ -348,7 +348,7 @@ function teacher58_modules(): array
         // oprávnění ov61_ = content.manage (asistent jen čte).
         'prehled' => [
             'label' => 'Přehled třídy', 'hint' => 'Kdo zaostává a co čeká na schválení', 'group' => 'podpora',
-            'files' => ['points_v53.php', 'points_v60.php', 'feedback_v60.php', 'projects_v60.php', 'marketplace_v60.php', 'teacher_class_dashboard.php', 'teacher_overview_v61.php', 'teacher_overview_v61_views.php', 'ux_v79_1.php'],   // v79.1: tabulka žáků (řazení, filtr, stránkování), prázdné stavy
+            'files' => ['src/student/points_v53.php', 'src/student/points_v60.php', 'src/student/feedback_v60.php', 'src/projects/projects_v60.php', 'src/student/marketplace_v60.php', 'src/teacher/teacher_class_dashboard.php', 'src/teacher/teacher_overview_v61.php', 'src/teacher/teacher_overview_v61_views.php', 'src/ui/ux_v79_1.php'],   // v79.1: tabulka žáků (řazení, filtr, stránkování), prázdné stavy
             'css' => ['assets/teacher-overview-v61.css'], 'js' => ['assets/teacher-overview-v61.js'],
             'post' => ['ov61_' => 'ov61_teacher_handle_post'],
             'get' => [
@@ -360,7 +360,7 @@ function teacher58_modules(): array
         // (fb60_list + politika fb60_decide → entita fb60_report); asistent má jen 'view' → post neprojde.
         'hlaseni' => [
             'label' => 'Hlášení', 'hint' => 'Chyby a návrhy vylepšení od žáků, odměny body a XP', 'group' => 'podpora',
-            'files' => ['feedback_v60.php', 'feedback_v60_teacher_views.php', 'points_v53.php'],
+            'files' => ['src/student/feedback_v60.php', 'src/student/feedback_v60_teacher_views.php', 'src/student/points_v53.php'],
             'css' => ['assets/feedback-v60.css'],
             'post' => ['fb60_' => 'fb60_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { fb60_render_teacher_tab($c, $csrf()); },
@@ -370,7 +370,7 @@ function teacher58_modules(): array
         // Žádný zvláštní GET parametr registru.
         'kompetence' => [
             'label' => 'Kompetence', 'hint' => 'Mapa „umím / učím se / zatím ne“ za třídu (pilot 3.A a 1.A)', 'group' => 'podpora',
-            'files' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'teacher_prefs_v72_1.php', 'observation_v76.php', 'competency_v62_teacher_views.php'],
+            'files' => ['src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/evidence_v62_adapters.php', 'src/assessment/mastery_v62.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/teacher/observation_v76.php', 'src/assessment/competency_v62_teacher_views.php'],
             'css' => ['assets/competency-v62.css', 'assets/cockpit-v76.css'],
             'post' => ['comp62_' => 'comp62_teacher_handle_post', 'ob76_' => 'ob76_teacher_handle_post'],   // v76: ruční pozorování (ob76_add, grading.manage)
             'render' => static function (array $m, string $c) use ($csrf): void { comp62_render_teacher_tab($c, $csrf()); },
@@ -379,7 +379,7 @@ function teacher58_modules(): array
         // POST v64_abs_board má exact politiku v teacher_scope_v59.php (třída povinná a v rozsahu), oprávnění v64_ = students.manage.
         'ekonomika' => [
             'label' => 'Ekonomika', 'hint' => 'Strop XP z her, žebříčky u akcí a retrospektivy týmů', 'group' => 'hry',
-            'files' => ['economy_v64.php', 'arena_v64_fair.php', 'teamgames_v64_roles.php', 'economy_v64_teacher_views.php'],
+            'files' => ['src/student/economy_v64.php', 'src/arena/arena_v64_fair.php', 'src/teamgames/teamgames_v64_roles.php', 'src/student/economy_v64_teacher_views.php'],
             'css' => ['assets/arena-v64.css'],
             'post' => ['v64_' => 'eco64_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { eco64_render_teacher_tab($c, $csrf()); },
@@ -388,7 +388,7 @@ function teacher58_modules(): array
         // POST proj65_t_* mají exact politiky v teacher_scope_v59.php (třída povinná a v rozsahu), oprávnění proj65_ = projects.manage. Žádný zvláštní GET parametr.
         'projekty65' => [
             'label' => 'Cyklus projektů', 'hint' => 'Návrhy, rubriky, hodnocení, peer review a týmy', 'group' => 'podpora',
-            'files' => ['competencies_v62.php', 'evidence_v62.php', 'projects_v65.php', 'projects_v65_rubrics.php', 'projects_v65_peer.php', 'projects_v65_team.php', 'projects_v65_evidence.php', 'projects_v65_teacher_actions.php', 'projects_v65_teacher_views.php'],
+            'files' => ['src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/projects/projects_v65.php', 'src/projects/projects_v65_rubrics.php', 'src/projects/projects_v65_peer.php', 'src/projects/projects_v65_team.php', 'src/projects/projects_v65_evidence.php', 'src/projects/projects_v65_teacher_actions.php', 'src/projects/projects_v65_teacher_views.php'],
             'css' => ['assets/tokens-v78.css', 'assets/projects-v65.css'],   // v80.2: projects-v65 na tokenech v78 (kořen .p65.ds78)
             'post' => ['proj65_t_' => 'proj65_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { proj65_render_teacher_tab($c, $csrf()); },
@@ -398,7 +398,7 @@ function teacher58_modules(): array
         // (asistent jen čte). Žádný zvláštní GET parametr registru.
         'cesty' => [
             'label' => 'Výukové cesty', 'hint' => 'Přiřazení cest, trychtýř kroků a kalibrace (1.A a 3.A)', 'group' => 'podpora',
-            'files' => ['competencies_v62.php', 'evidence_v62.php', 'paths_v63.php', 'paths_v63_class.php', 'paths_v63_teacher_views.php'],
+            'files' => ['src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/paths/paths_v63.php', 'src/paths/paths_v63_class.php', 'src/paths/paths_v63_teacher_views.php'],
             'css' => ['assets/paths-v63.css'],
             'post' => ['p63_' => 'p63_teacher_handle_post'],
             'render' => static function (array $m, string $c) use ($csrf): void { p63_render_teacher_tab($c, $csrf()); },
@@ -408,7 +408,7 @@ function teacher58_modules(): array
         // teacher_scope_v59.php (třída povinná a v rozsahu); GET export=items|proposals má politiku hodnoceni66|export (třída povinná).
         'hodnoceni66' => [
             'label' => 'Testy a hodnocení', 'hint' => 'Ráno, položková analýza, návrhy hodnocení', 'group' => 'podpora',
-            'files' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'paths_v63_class.php', 'projects_v65.php', 'assessment_v66_build.php', 'assessment_v66_teacher_views.php', 'assessment_v66_teacher_grading.php'],
+            'files' => ['src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/mastery_v62.php', 'src/paths/paths_v63.php', 'src/paths/paths_v63_class.php', 'src/projects/projects_v65.php', 'src/assessment/assessment_v66_build.php', 'src/assessment/assessment_v66_teacher_views.php', 'src/assessment/assessment_v66_teacher_grading.php'],
             'css' => ['assets/assessment-v66.css'], 'js' => ['assets/assessment-v66.js'],
             'post' => ['a66_' => 'a66t_handle_post', 'g66_' => 'a66t_handle_post'],
             'get' => [
@@ -432,7 +432,7 @@ function teacher58_available(string $tab): bool
     if (!isset($filesOk[$tab])) {
         $filesOk[$tab] = true;
         foreach ((array)($mod['files'] ?? []) as $file) {
-            $fileExists[$file] ??= is_file(__DIR__ . '/' . $file);
+            $fileExists[$file] ??= is_file(dirname(__DIR__, 2) . '/' . $file);
             if (!$fileExists[$file]) { $filesOk[$tab] = false; break; }
         }
     }
@@ -468,7 +468,7 @@ function teacher58_own_class_tabs(): array
 function teacher58_load(string $tab): void
 {
     if (!teacher58_available($tab)) return;
-    foreach ((array)(teacher58_modules()[$tab]['files'] ?? []) as $file) require_once __DIR__ . '/' . $file;
+    foreach ((array)(teacher58_modules()[$tab]['files'] ?? []) as $file) require_once dirname(__DIR__, 2) . '/' . $file;
 }
 
 /** Líné načtení modulu podle záložky nebo prefixu POST akce. */
@@ -553,7 +553,7 @@ function teacher58_head_assets(string $tab): void
     foreach ((array)(teacher58_modules()[$tab]['css'] ?? []) as $css) {
         // v68: sdílené moduly mají tokenizovanou kopii pro cockpit (assets/cx-*.css), jinak originál.
         if (function_exists('teacher68_css_href')) { echo '<link rel="stylesheet" href="' . e(teacher68_css_href($css)) . '">'; continue; }   // teacher_v58.php běží jen v cockpitu
-        $file = __DIR__ . '/' . $css;
+        $file = dirname(__DIR__, 2) . '/' . $css;
         $v = is_file($file) ? (string)filemtime($file) : '58';
         echo '<link rel="stylesheet" href="' . e($css . '?v=' . $v) . '">';
     }
@@ -564,7 +564,7 @@ function teacher58_foot_assets(string $tab): void
 {
     if (!teacher58_is_tab($tab)) return;
     foreach ((array)(teacher58_modules()[$tab]['js'] ?? []) as $js) {
-        $file = __DIR__ . '/' . $js;
+        $file = dirname(__DIR__, 2) . '/' . $js;
         $v = is_file($file) ? (string)filemtime($file) : '58';
         echo '<script src="' . e($js . '?v=' . $v) . '" defer></script>';
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-require_once __DIR__ . '/paths_v63_flow.php';
+require_once dirname(__DIR__, 2) . '/src/paths/paths_v63_flow.php';
 
 /**
  * EDUCANET v63 · obsluha POST akcí výukových cest (logika pro app/actions/paths.php): odevzdání kroku, posun řádku

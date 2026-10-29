@@ -3,8 +3,8 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/classmap_v80_1.php';
-require_once __DIR__ . '/support_v80_1.php';
+require_once dirname(__DIR__, 2) . '/src/teacher/classmap_v80_1.php';
+require_once dirname(__DIR__, 2) . '/src/student/support_v80_1.php';
 
 /**
  * EDUCANET v80.1 · záložka cockpitu `mapa801` – Mapa třídy (česky, desktop první, responzivní od 320 px).

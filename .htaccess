@@ -27,7 +27,7 @@ Options -MultiViews
     # nezávisle na .htaccess podadresářů a nezávisle na tom, jestli je
     # aplikace nainstalovaná v kořeni domény, nebo v podadresáři (vzory jsou
     # relativní – bez počátečního "^/").
-    RewriteCond %{REQUEST_URI} (^|/)(V1|storage|private|tools|tests|app|docs|lang|migrations|database|lab-runtime|cache|\.claude)(/|$) [NC]
+    RewriteCond %{REQUEST_URI} (^|/)(V1|storage|private|tools|tests|app|src|docs|lang|migrations|database|lab-runtime|cache|\.claude)(/|$) [NC]
     RewriteRule ^ - [F,L]
 
     # materials/ je zakázané celé, kromě materials/school_year/SCHOOL_YEAR_*.md

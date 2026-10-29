@@ -23,7 +23,7 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 $ROOT = dirname(__DIR__);
 $GLOBALS['lab57_storage_override'] = sys_get_temp_dir() . '/v58_export_manual_' . bin2hex(random_bytes(6));
 
-require_once $ROOT . '/linux_v57_lab.php';
+require_once $ROOT . '/src/linux/linux_v57_lab.php';
 
 $manual = function_exists('lab58_manual') ? lab58_manual() : v57_manual_base();
 if (!is_array($manual)) {

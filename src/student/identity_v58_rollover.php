@@ -13,7 +13,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Každý soubor se mění vlastním storage_update() – zámky se nevnořují.
  */
 
-require_once __DIR__ . '/identity_v58.php';
+require_once dirname(__DIR__, 2) . '/src/student/identity_v58.php';
 
 const IDENTITY58_BACKUP_MAX_AGE = 3600;
 const IDENTITY58_CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -40,7 +40,7 @@ function identity58_backup_dir(?string $override = null): string
 {
     if ($override !== null && trim($override) !== '') return rtrim(str_replace('\\', '/', $override), '/');
     $env = trim((string)getenv('EDUCANET_BACKUP_DIR'));
-    return $env !== '' ? rtrim(str_replace('\\', '/', $env), '/') : str_replace('\\', '/', dirname(__DIR__)) . '/educanet-backups';
+    return $env !== '' ? rtrim(str_replace('\\', '/', $env), '/') : str_replace('\\', '/', dirname(dirname(__DIR__, 2))) . '/educanet-backups';
 }
 
 function identity58_same_path(string $a, string $b): bool

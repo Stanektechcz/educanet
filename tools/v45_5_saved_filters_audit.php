@@ -8,9 +8,9 @@ require $root.'/bootstrap.php';
 if(!function_exists('teacher_class_label')){
     function teacher_class_label(string $classId): string { return match($classId){'class_1a'=>'1.A Grafika','class_2a'=>'2.A Grafika','class_3a'=>'3.A SOSPS','class_4a'=>'4.A SOSPS',default=>$classId}; }
 }
-require_once $root.'/teacher_curriculum.php';
-require_once $root.'/teacher_overview_dashboard.php';
-require_once $root.'/teacher_class_dashboard.php';
+require_once $root.'/src/teacher/teacher_curriculum.php';
+require_once $root.'/src/teacher/teacher_overview_dashboard.php';
+require_once $root.'/src/teacher/teacher_class_dashboard.php';
 
 $errors=[];$storageBefore=[];
 foreach(glob(STORAGE_DIR.'/*.php')?:[] as $file)$storageBefore[$file]=hash_file('sha256',$file);
@@ -35,10 +35,10 @@ foreach(['class_1a','class_2a','class_3a','class_4a'] as $classId){
 $teacherSource=file_get_contents($root.'/teacher.php')?:'';
 foreach(['teacher_saved_filter_save','teacher_saved_filter_delete'] as $needle)if(!str_contains($teacherSource,$needle))$errors[]="teacher.php missing $needle";
 if(!str_contains($teacherSource,'teacher-admin-v45-5.js')&&!str_contains($teacherSource,'teacher-admin-v45-6.js')&&!str_contains($teacherSource,'teacher-admin-v45-7.js'))$errors[]='teacher.php missing compatible saved-filter admin JS';
-$dashboard=file_get_contents($root.'/teacher_class_dashboard.php')?:'';
+$dashboard=file_get_contents($root.'/src/teacher/teacher_class_dashboard.php')?:'';
 // v69: souhrn „Studenti podle aktivního filtru“ byl jen v vyřazeném Přehledu třídy (class_overview).
 foreach(['teacher_render_saved_filters','data-saved-filter-panel','data-save-filter-form'] as $needle)if(!str_contains($dashboard,$needle))$errors[]="teacher_class_dashboard.php missing $needle";
-$tasks=file_get_contents($root.'/teacher_tasks.php')?:'';
+$tasks=file_get_contents($root.'/src/teacher/teacher_tasks.php')?:'';
 foreach(['teacher_saved_filters_path','teacher_saved_filters_for_current_teacher','teacher_saved_filter_save','teacher_saved_filter_delete'] as $needle)if(!str_contains($tasks,$needle))$errors[]="teacher_tasks.php missing $needle";
 $jsFile=is_file($root.'/assets/teacher-admin-v45-7.js')?$root.'/assets/teacher-admin-v45-7.js':(is_file($root.'/assets/teacher-admin-v45-6.js')?$root.'/assets/teacher-admin-v45-6.js':$root.'/assets/teacher-admin-v45-5.js');
 $js=file_get_contents($jsFile)?:'';

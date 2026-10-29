@@ -29,7 +29,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 /** Adresář katalogů msgid pro jazyk. */
 function edu_tr_dir(string $locale): string
 {
-    return __DIR__ . '/lang/' . $locale . '/ui';
+    return dirname(__DIR__, 2) . '/lang/' . $locale . '/ui';
 }
 
 /** Sloučený katalog msgid všech domén jazyka (líně, jednou za request; opcache drží pole v paměti). */

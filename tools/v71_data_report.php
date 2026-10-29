@@ -42,7 +42,7 @@ $_ENV['EDUCANET_STORAGE_DIR'] = $copy;
 putenv('EDUCANET_LM71_CACHE_DIR=' . $tmp . '/lesson_model');
 
 require_once $ROOT . '/bootstrap.php';
-foreach (['identity_v58.php', 'teacher_tasks.php', 'lesson_model_v71.php'] as $lib) if (is_file($ROOT . '/' . $lib)) require_once $ROOT . '/' . $lib;
+foreach (['src/student/identity_v58.php', 'src/teacher/teacher_tasks.php', 'src/lessons/lesson_model_v71.php'] as $lib) if (is_file($ROOT . '/' . $lib)) require_once $ROOT . '/' . $lib;
 
 /** Hash žáka z klíče (`třída:student:H` i `třída:s:H`). */
 function dr71_hash(string $key): string

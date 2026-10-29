@@ -10,9 +10,9 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * odznaky jsou v jednom SVG spritu (badges_v60.php), data se počítají jen pro aktivní záložku.
  */
 
-require_once __DIR__ . '/badges_v60.php';
-require_once __DIR__ . '/profile_v60_ui.php';
-require_once __DIR__ . '/motivation_v61_views.php';
+require_once dirname(__DIR__, 2) . '/src/student/badges_v60.php';
+require_once dirname(__DIR__, 2) . '/src/student/profile_v60_ui.php';
+require_once dirname(__DIR__, 2) . '/src/student/motivation_v61_views.php';
 
 function profile60_assets(): void
 {
@@ -127,7 +127,7 @@ function profile60_cosmetics(string $classId, string $target): array
 {
     return profile60_memo('cosmetics|' . $target, static function () use ($classId, $target): array {
         $empty = ['frame_id' => '', 'frame_colors' => [], 'title' => ''];
-        if (!function_exists('mkt60_cosmetics') && is_file(__DIR__ . '/marketplace_v60.php')) { require_once __DIR__ . '/marketplace_v60.php'; }
+        if (!function_exists('mkt60_cosmetics') && is_file(dirname(__DIR__, 2) . '/src/student/marketplace_v60.php')) { require_once dirname(__DIR__, 2) . '/src/student/marketplace_v60.php'; }
         if (!function_exists('mkt60_cosmetics') || !function_exists('mkt60_item')) return $empty;
         $active = mkt60_cosmetics($classId, $target);
         $frame = is_string($active['frame'] ?? null) ? (string)$active['frame'] : '';

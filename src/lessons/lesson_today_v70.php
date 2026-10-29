@@ -16,7 +16,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * lt70_class_allowed(). Neznámá nebo cizí třída = prázdný výsledek. Texty jsou česky (cockpit je vždy česky).
  */
 
-require_once __DIR__ . '/lesson_model_v71.php';   // v71: obsah lekce jen přes jednotný model lm71 (konec paralelních loaderů)
+require_once dirname(__DIR__, 2) . '/src/lessons/lesson_model_v71.php';   // v71: obsah lekce jen přes jednotný model lm71 (konec paralelních loaderů)
 
 const LT70_LESSONS_MAX = 28;
 const LT70_RESOURCES_PER_TOPIC = 2;
@@ -28,7 +28,7 @@ function lt70_school_year(): array
 {
     static $year = null;
     if ($year === null) {
-        $loaded = require __DIR__ . '/school_year.php';
+        $loaded = require dirname(__DIR__, 2) . '/src/ops/school_year.php';
         $year = is_array($loaded) ? $loaded : [];
     }
     return $year;

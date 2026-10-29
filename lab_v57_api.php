@@ -8,11 +8,11 @@ declare(strict_types=1);
  */
 
 require __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/linux_v57_lab.php';
-if (is_file(__DIR__ . '/arena_v57.php')) require_once __DIR__ . '/arena_v57.php';
+require_once __DIR__ . '/src/linux/linux_v57_lab.php';
+if (is_file(__DIR__ . '/src/arena/arena_v57.php')) require_once __DIR__ . '/src/arena/arena_v57.php';
 // v58 · soutěžní kontexty labu (CTF týden, incidenty) potřebují svá pravidla přístupu i v API.
-if (is_file(__DIR__ . '/arena_v58_ctf.php')) require_once __DIR__ . '/arena_v58_ctf.php';
-if (is_file(__DIR__ . '/arena_v58_incident.php')) require_once __DIR__ . '/arena_v58_incident.php';
+if (is_file(__DIR__ . '/src/arena/arena_v58_ctf.php')) require_once __DIR__ . '/src/arena/arena_v58_ctf.php';
+if (is_file(__DIR__ . '/src/arena/arena_v58_incident.php')) require_once __DIR__ . '/src/arena/arena_v58_incident.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');

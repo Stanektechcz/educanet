@@ -1,3 +1,4 @@
+location ^~ /src/ { deny all; return 404; }
 # EDUCANET v59 · pravidla nginx pro aaPanel – is.stanektech.cz
 #
 # Na serveru ulož jako:  /www/server/educanet/educanet-rules.conf   (vlastník root, 0644)

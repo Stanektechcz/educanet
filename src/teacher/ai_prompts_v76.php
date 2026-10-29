@@ -89,10 +89,10 @@ function aip76_prompts_for(string $classId, int $number, bool $draft = false): ?
 {
     if (!aip76_lesson_in_scope($number)) return null;
     if (!function_exists('lc72_student_overlay')) {
-        if (!is_file(__DIR__ . '/lesson_approval_v72.php')) return null;
-        require_once __DIR__ . '/lesson_approval_v72.php';
+        if (!is_file(dirname(__DIR__, 2) . '/src/lessons/lesson_approval_v72.php')) return null;
+        require_once dirname(__DIR__, 2) . '/src/lessons/lesson_approval_v72.php';
     }
-    if (!function_exists('lg72_term') && is_file(__DIR__ . '/lesson_glossary_v72.php')) require_once __DIR__ . '/lesson_glossary_v72.php';
+    if (!function_exists('lg72_term') && is_file(dirname(__DIR__, 2) . '/src/lessons/lesson_glossary_v72.php')) require_once dirname(__DIR__, 2) . '/src/lessons/lesson_glossary_v72.php';
     $ov = $draft ? lc72_overlay($classId, $number) : lc72_student_overlay($classId, $number);
     if (!is_array($ov) || $ov === []) return null;
     $prompts = aip76_prompts($classId, $ov);

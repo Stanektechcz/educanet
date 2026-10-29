@@ -24,7 +24,7 @@ const COMP75_STATUS = ['navrh' => 'návrh', 'schvaleno' => 'schváleno', 'vracen
 const COMP75_ACTIONS = ['kp75_approve', 'kp75_return'];
 const COMP75_NOTE_MAX = 300;
 /** Obsah cest tříd v75 (načítá ho paths_v63.php až po schválení třídy). */
-const COMP75_PATH_FILES = ['class_2a' => 'paths_v75_content_gfx2.php', 'class_4a' => 'paths_v75_content_ops.php'];
+const COMP75_PATH_FILES = ['class_2a' => 'src/paths/paths_v75_content_gfx2.php', 'class_4a' => 'src/paths/paths_v75_content_ops.php'];
 
 /** Návrh katalogů (stejný tvar jako comp62_catalog()). @return array<string,array<string,mixed>> */
 function comp75_draft_catalog(): array
@@ -127,7 +127,7 @@ function comp75_hash(string $classId): string
     if ($subject === null) return '';
     $catalog = comp75_draft_catalog()[$subject];
     $map = array_intersect_key(comp75_svp_map(), comp75_flat($subject));
-    $paths = is_file(__DIR__ . '/' . (COMP75_PATH_FILES[$classId] ?? '')) ? comp75_draft_paths($classId) : [];
+    $paths = is_file(dirname(__DIR__, 2) . '/' . (COMP75_PATH_FILES[$classId] ?? '')) ? comp75_draft_paths($classId) : [];
     return substr(sha1((string)json_encode([$catalog, $map, array_map(static fn(array $p): array => [$p['competency'], array_column((array)$p['steps'], 'id')], $paths)])), 0, 12);
 }
 
@@ -149,7 +149,7 @@ function comp75_draft_paths(string $classId): array
     static $memo = [];
     if (!isset(COMP75_PATH_FILES[$classId])) return [];
     if (isset($memo[$classId])) return $memo[$classId];
-    $data = require __DIR__ . '/' . COMP75_PATH_FILES[$classId];
+    $data = require dirname(__DIR__, 2) . '/' . COMP75_PATH_FILES[$classId];
     $out = [];
     foreach ((array)$data as $id => $p) if (is_array($p)) $out[(string)$id] = ['id' => (string)$id, 'class' => $classId] + $p;
     return $memo[$classId] = $out;

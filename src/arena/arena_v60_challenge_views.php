@@ -9,9 +9,9 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  * Vzhled sdílí design systém profilu (profile_v60_ui.php, assets/profile-v60.css).
  */
 
-require_once __DIR__ . '/profile_v60_ui.php';
-require_once __DIR__ . '/arena_v64_views.php';
-require_once __DIR__ . '/arena_v61_views.php';
+require_once dirname(__DIR__, 2) . '/src/student/profile_v60_ui.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v64_views.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v61_views.php';
 
 /** Skrytá pole POST formuláře výzvy (CSRF + akce + id). */
 function arena60_form_open(string $action, string $id = '', array $extra = []): string

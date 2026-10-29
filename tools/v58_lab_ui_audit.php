@@ -42,8 +42,8 @@ set_error_handler(static function (int $no, string $str, string $file, int $line
     return true;
 });
 
-require_once $ROOT . '/linux_v57_lab.php';
-require_once $ROOT . '/linux_v57_views.php';
+require_once $ROOT . '/src/linux/linux_v57_lab.php';
+require_once $ROOT . '/src/linux/linux_v57_views.php';
 
 // ---------------------------------------------------------------------------
 // Lokální náhrady závislostí (žádný app/, bootstrap.php ani session).
@@ -172,7 +172,7 @@ $module = ['accent' => 'default'];
 $hasRealBadges = function_exists('lab58_badges');
 $hasRealReview = function_exists('lab58_review_today');
 $hasRealSkillMap = function_exists('lab58_skill_map');
-$hubFiles = ['arena_v58_views.php', 'arena_v58_events_views.php', 'teamgames_v58_views.php', 'robots_v58_views.php'];
+$hubFiles = ['src/arena/arena_v58_views.php', 'src/arena/arena_v58_events_views.php', 'src/teamgames/teamgames_v58_views.php', 'src/robots/robots_v58_views.php'];
 $anyGameReal = false;
 foreach ($hubFiles as $hf) { if (is_file($ROOT . '/' . $hf)) $anyGameReal = true; }
 $offlineExists = is_file($ROOT . '/lab-offline.html');
@@ -393,10 +393,10 @@ v58ui_check('home:skillmap-link-shown', str_contains($homeWith['html'], 'sekce=d
 // Rozcestník se řídí is_file() na vlastnický soubor modulu – ověříme shodu v obou směrech (ne jen "existuje-li").
 $hubHtml = v58ui_render(static fn() => lab57_render_hub_section())['html'];
 $hubFileToHrefs = [
-    'arena_v58_views.php' => ['?view=hadanka'],
-    'arena_v58_events_views.php' => ['?view=ctf', '?view=incident'],
-    'teamgames_v58_views.php' => ['?view=hry'],
-    'robots_v58_views.php' => ['?view=roboti'],
+    'src/arena/arena_v58_views.php' => ['?view=hadanka'],
+    'src/arena/arena_v58_events_views.php' => ['?view=ctf', '?view=incident'],
+    'src/teamgames/teamgames_v58_views.php' => ['?view=hry'],
+    'src/robots/robots_v58_views.php' => ['?view=roboti'],
 ];
 foreach ($hubFileToHrefs as $file => $hrefs) {
     $exists = is_file($ROOT . '/' . $file);

@@ -60,7 +60,7 @@ function mot61_school_year(): array
 {
     static $year = null;
     if ($year === null) {
-        $file = __DIR__ . '/school_year.php';
+        $file = dirname(__DIR__, 2) . '/src/ops/school_year.php';
         $loaded = is_file($file) ? require $file : [];
         $year = is_array($loaded) ? $loaded : [];
     }

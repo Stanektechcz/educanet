@@ -148,7 +148,7 @@ function c70_related_html(string $tab, array $visibleTabs, string $classId = '')
 /** Dnešní výuka tříd v rozsahu (pro rozcestník Dnes a Výuka): čas, lekce, stav hodiny. @return list<array<string,mixed>> */
 function c70_today_rows(): array
 {
-    if (!function_exists('lt70_school_year')) require_once __DIR__ . '/lesson_today_v70.php';
+    if (!function_exists('lt70_school_year')) require_once dirname(__DIR__, 2) . '/src/lessons/lesson_today_v70.php';
     $year = lt70_school_year();
     $today = date('Y-m-d');
     $catalog = $GLOBALS['modules'] ?? [];
@@ -176,7 +176,7 @@ function c70_hub_html(string $sectionId): string
     try {
         if (in_array($sectionId, ['dnes', 'vyuka', 'trida'], true)) return c70_hub_classes_html($sectionId);
         if ($sectionId === 'sprava' && c70_tab_visible('sprava_prehled')) {
-            if (!function_exists('ad70_overview')) require_once __DIR__ . '/admin_overview_v70.php';
+            if (!function_exists('ad70_overview')) require_once dirname(__DIR__, 2) . '/src/teacher/admin_overview_v70.php';
             $o = ad70_overview(false);
             return c70_kpis_html(ad70_kpi_items($o), 'Souhrn správy') . '<p><a class="c70-link" href="?tab=sprava_prehled">Celý přehled správy a doporučení →</a></p>';
         }

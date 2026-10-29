@@ -15,7 +15,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  *   proud marketplace_v60_log (storage_append) – log nákupů/vrácení/administrace (jen pro dohled).
  */
 
-require_once __DIR__ . '/marketplace_v61.php';
+require_once dirname(__DIR__, 2) . '/src/student/marketplace_v61.php';
 
 const MKT60_TYPES = ['cosmetic', 'content', 'lab_hint', 'other'];
 const MKT60_COSMETIC_SLOTS = ['frame', 'title'];

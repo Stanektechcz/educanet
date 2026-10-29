@@ -19,15 +19,15 @@ require_once __DIR__ . '/lib/audit_storage.php';
 edu_audit_temp_storage('v63-pre');
 $root = dirname(__DIR__);
 require_once $root . '/bootstrap.php';
-require_once $root . '/intake_v51.php';
-require_once $root . '/identity_v58.php';
-require_once $root . '/linux_v57_lab.php';
-require_once $root . '/paths_v63.php';
+require_once $root . '/src/student/intake_v51.php';
+require_once $root . '/src/student/identity_v58.php';
+require_once $root . '/src/linux/linux_v57_lab.php';
+require_once $root . '/src/paths/paths_v63.php';
 require_once __DIR__ . '/lib/v63_pre.php';
 
 $apply = in_array('--apply', $argv, true);
 $check = in_array('--check', $argv, true);
-$file = $root . '/paths_v63_pre_data.php';
+$file = $root . '/src/paths/paths_v63_pre_data.php';
 
 try {
     $outputs = v63_pre_all();

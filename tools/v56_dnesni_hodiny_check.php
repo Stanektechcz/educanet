@@ -4,21 +4,21 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit('CLI only'); }
 $root = dirname(__DIR__);
 chdir($root);
 require $root . '/bootstrap.php';
-require $root . '/runtime_content.php';
-require_once $root . '/tutorial_v52.php';
-require_once $root . '/tutorial_v52_views.php';
-require_once $root . '/intake_v51.php';
-require_once $root . '/accounts_v53.php';
-require_once $root . '/points_v53.php';
-require_once $root . '/session_v53.php';
-require_once $root . '/student_v55.php';
-require_once $root . '/learning_v56.php';
+require $root . '/src/ops/runtime_content.php';
+require_once $root . '/src/lessons/tutorial_v52.php';
+require_once $root . '/src/lessons/tutorial_v52_views.php';
+require_once $root . '/src/student/intake_v51.php';
+require_once $root . '/src/student/accounts_v53.php';
+require_once $root . '/src/student/points_v53.php';
+require_once $root . '/src/lessons/session_v53.php';
+require_once $root . '/src/student/student_v55.php';
+require_once $root . '/src/lessons/learning_v56.php';
 $runtime = runtime_content_load_classes(array_keys($modules));
 $nextLessons = $runtime['nextLessons'];
 $extendedLessons = $runtime['extendedLessons'];
 $GLOBALS['nextLessons'] = $nextLessons;
 $GLOBALS['extendedLessons'] = $extendedLessons;
-$schoolYear = require $root . '/school_year.php';
+$schoolYear = require $root . '/src/ops/school_year.php';
 $today = date('Y-m-d');
 
 $ok = 0; $bad = 0;
@@ -69,7 +69,7 @@ foreach ($order as $cid => $start) {
         }
         $say(is_array($room), 'zasedací pořádek pro výběr místa');
         $say($seats >= 20, "volných míst v učebně: {$seats}");
-        $intakeHtml = (string)@file_get_contents($root . "/intake_v51_views.php"); $say(substr_count($intakeHtml, "intake_v51_step_open(") >= 5, "dotazník má " . substr_count($intakeHtml, "intake_v51_step_open(") . " sekcí");
+        $intakeHtml = (string)@file_get_contents($root . "/src/student/intake_v51_views.php"); $say(substr_count($intakeHtml, "intake_v51_step_open(") >= 5, "dotazník má " . substr_count($intakeHtml, "intake_v51_step_open(") . " sekcí");
         echo "  →    Žák: přihlásí se → zadá kód {$sess['code']} → jméno, e-mail, místo → dotazník\n";
         continue;
     }

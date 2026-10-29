@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 // v59 OPS-02: tr()/trn() i při načtení bez bootstrap.php (CLI audity, podprocesy).
-if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_once __DIR__ . '/i18n_v59.php'; }
+if (!function_exists('tr')) { require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v58.php'; require_once dirname(__DIR__, 2) . '/src/i18n/i18n_v59.php'; }
 
 /**
  * EDUCANET v58 · Robotí liga – úložiště, zápasy, týmy, odevzdání, výsledky, liga a XP.
@@ -18,9 +18,9 @@ if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_on
  * XP se připisuje výhradně v požadavku daného žáka (learning_award_once drží profil v jeho session).
  */
 
-require_once __DIR__ . '/robots_v58_game.php';
-require_once __DIR__ . '/economy_v64.php';
-require_once __DIR__ . '/arena_v64_fair.php';
+require_once dirname(__DIR__, 2) . '/src/robots/robots_v58_game.php';
+require_once dirname(__DIR__, 2) . '/src/student/economy_v64.php';
+require_once dirname(__DIR__, 2) . '/src/arena/arena_v64_fair.php';
 
 const ROBOTS58_ID_RE = '/^[a-z0-9]{8,32}$/';
 const ROBOTS58_TEAMS_MIN = 2;
@@ -51,7 +51,7 @@ function robots58_now(): int
 function robots58_dir(): string
 {
     if (is_string($GLOBALS['robots58_storage_override'] ?? null)) return $GLOBALS['robots58_storage_override'];
-    return defined('STORAGE_DIR') ? (string)STORAGE_DIR : __DIR__ . '/storage';
+    return defined('STORAGE_DIR') ? (string)STORAGE_DIR : dirname(__DIR__, 2) . '/storage';
 }
 
 function robots58_path(string $kind = 'main', string $id = ''): string

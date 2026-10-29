@@ -496,7 +496,7 @@ function intake_v51_regenerate_activation(string $studentKey): string
 function intake_v51_v1_data_dir(): string
 {
     $custom = getenv('EDUCANET_V1_DATA_DIR');
-    return is_string($custom) && trim($custom) !== '' ? rtrim(trim($custom), '/\\') : __DIR__ . '/V1/data';
+    return is_string($custom) && trim($custom) !== '' ? rtrim(trim($custom), '/\\') : dirname(__DIR__, 2) . '/V1/data';
 }
 
 function intake_v51_v1_read(string $name): array

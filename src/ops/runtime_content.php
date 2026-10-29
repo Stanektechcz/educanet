@@ -6,7 +6,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
 
 function runtime_content_cache_dir(): string
 {
-    return __DIR__ . '/cache/runtime';
+    return dirname(__DIR__, 2) . '/cache/runtime';
 }
 
 function runtime_content_cache_path(string $classId): string

@@ -283,7 +283,7 @@ function v56_mark_theory(string $classId, string $studentKey, int $lessonNo, str
 /** v66: je test této lekce označený jako sumativní? (lazy načtení vrstvy v66; bez ní vždy false) */
 function v56_is_summative(string $classId, int $lessonNo): bool
 {
-    $file = __DIR__ . '/assessment_v66.php';
+    $file = dirname(__DIR__, 2) . '/src/assessment/assessment_v66.php';
     if (!is_file($file)) return false;
     require_once $file;
     return a66_is_summative($classId, 'v56:l' . $lessonNo);
@@ -372,7 +372,7 @@ const V56_LAB_GATE_STEP = 2;
 function v56_lab_ensure_loaded(): void
 {
     if (function_exists('lab57_level')) return;
-    $file = __DIR__ . '/linux_v57_lab.php';
+    $file = dirname(__DIR__, 2) . '/src/linux/linux_v57_lab.php';
     if (is_file($file)) require_once $file;
 }
 

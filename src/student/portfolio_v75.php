@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
-require_once __DIR__ . '/taskbank_v75.php';
+require_once dirname(__DIR__, 2) . '/src/assessment/taskbank_v75.php';
 
 /**
  * EDUCANET v75 · portfolio žáka – připnuté práce (navazuje na výběr projektů v65 na stránce ?view=portfolio).
