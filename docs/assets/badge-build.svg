@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="118" height="24" viewBox="0 0 118 24" role="img" aria-label="manifest: v59">
+  <title>manifest: v59</title>
+  <clipPath id="r"><rect width="118" height="24" rx="6"/></clipPath>
+  <g clip-path="url(#r)"><rect width="77" height="24" fill="#0c113f"/><rect x="77" width="41" height="24" fill="#f3b21f"/></g>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" text-anchor="middle">
+    <text x="38" y="16" fill="#ffffff">manifest</text>
+    <text x="98" y="16" fill="#0c113f">v59</text>
+  </g>
+</svg>

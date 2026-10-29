@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-labelledby="t d">
+  <title id="t">EDUCANET</title>
+  <desc id="d">Jeden aktuální krok. Cesta výuky po krocích s terminálem a malou sítí.</desc>
+  <rect width="1280" height="320" fill="#0c113f"/>
+  <!-- tyrkysová karta jako na přihlášení -->
+  <clipPath id="card"><rect x="24" y="24" width="636" height="272" rx="20"/></clipPath>
+  <rect x="24" y="24" width="636" height="272" rx="20" fill="#007a87"/>
+  <g clip-path="url(#card)">
+    <circle cx="630" cy="300" r="110" fill="#05616c"/>
+    <circle cx="60" cy="30" r="80" fill="none" stroke="#e2f6f8" stroke-opacity=".2" stroke-width="2"/>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="62" y="130" font-size="88" font-weight="700" fill="#ffffff" letter-spacing="1">EDUCANET<tspan fill="#f3b21f">.</tspan></text>
+    <text x="66" y="200" font-size="46" font-weight="700" fill="#ffffff">Jeden aktuální krok.</text>
+    <text x="66" y="250" font-size="30" fill="#e2f6f8">Ostatní počká v dalším detailu.</text>
+  </g>
+  <!-- cesta s kroky -->
+  <path d="M716 236 C 790 236, 800 160, 880 160 S 980 236, 1060 196" fill="none" stroke="#3d3c66" stroke-width="10" stroke-linecap="round"/>
+  <path d="M716 236 C 790 236, 800 160, 880 160" fill="none" stroke="#3cc8d6" stroke-width="10" stroke-linecap="round"/>
+  <path d="M880 160 S 980 236, 1060 196" fill="none" stroke="#3cc8d6" stroke-width="4" stroke-dasharray="2 14" stroke-linecap="round"/>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" text-anchor="middle">
+    <circle cx="716" cy="236" r="26" fill="#f3b21f"/>
+    <text x="716" y="245" fill="#0c113f">1</text>
+    <circle cx="880" cy="160" r="34" fill="#ec6b10"/>
+    <circle cx="880" cy="160" r="44" fill="none" stroke="#ec6b10" stroke-opacity=".45" stroke-width="4"/>
+    <text x="880" y="170" fill="#ffffff" font-size="30">2</text>
+    <circle cx="1060" cy="196" r="26" fill="#1b2249" stroke="#8a90b8" stroke-width="3"/>
+    <text x="1060" y="205" fill="#b4b9d3">3</text>
+  </g>
+  <!-- terminál -->
+  <g transform="translate(1000 40)">
+    <rect width="240" height="104" rx="12" fill="#1b2249" stroke="#2e3561" stroke-width="2"/>
+    <circle cx="20" cy="18" r="5" fill="#ec6b10"/>
+    <circle cx="36" cy="18" r="5" fill="#f3b21f"/>
+    <circle cx="52" cy="18" r="5" fill="#3cc8d6"/>
+    <g font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">
+      <text x="18" y="58" fill="#3cc8d6">$ <tspan fill="#eef0f8">ls lekce/</tspan></text>
+      <text x="18" y="88" fill="#3cc8d6">$ <tspan fill="#eef0f8">ping brana</tspan></text>
+    </g>
+  </g>
+  <!-- malá síť -->
+  <g stroke="#3d3c66" stroke-width="3">
+    <line x1="1110" y1="250" x2="1170" y2="220"/>
+    <line x1="1170" y1="220" x2="1230" y2="256"/>
+    <line x1="1170" y1="220" x2="1170" y2="282"/>
+  </g>
+  <g>
+    <rect x="1156" y="206" width="28" height="28" rx="6" fill="#3cc8d6"/>
+    <circle cx="1110" cy="250" r="11" fill="#e2f6f8"/>
+    <circle cx="1230" cy="256" r="11" fill="#e2f6f8"/>
+    <circle cx="1170" cy="282" r="11" fill="#f3b21f"/>
+  </g>
+</svg>

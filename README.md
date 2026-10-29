@@ -1,53 +1,42 @@
+<p align="center">
+  <img src="docs/assets/banner.svg" alt="EDUCANET – jeden aktuální krok" width="100%">
+</p>
+
+<p align="center">
+  <img src="docs/assets/badge-php.svg" alt="PHP 8.1+">
+  <img src="docs/assets/badge-build.svg" alt="RELEASE_MANIFEST.json: v59">
+  <img src="docs/assets/badge-qa.svg" alt="Vizuální QA: 52 zobrazení, 72 interakcí">
+  <img src="docs/assets/badge-licence.svg" alt="Licence neuvedena">
+</p>
+
 # EDUCANET / Quiet Study
 
-EDUCANET je školní aplikace pro výuku grafiky, webdesignu, operačních systémů a počítačových sítí ve třídách 1.A až 4.A. Quiet Study označuje studentské rozhraní s jedním doporučeným krokem a podrobnostmi na vyžádání.
+Školní aplikace pro výuku grafiky, webdesignu, operačních systémů a počítačových sítí ve třídách 1.A až 4.A. Quiet Study je studentské rozhraní, které ukazuje jeden doporučený krok a podrobnosti otevírá až na vyžádání.
 
-Student v [index.php](index.php) najde lekce, kalendář, materiály, procvičování, projekty a vlastní pokrok. Učitel v [teacher.php](teacher.php) připravuje hodiny, spravuje přístupy, sleduje práci třídy a hodnotí projekty. Aplikace používá souborové JSON úložiště.
+**Pro koho.** Student v [index.php](index.php) najde lekce, kalendář, materiály, procvičování, projekty a vlastní pokrok. Učitel v [teacher.php](teacher.php) připravuje hodiny, spravuje přístupy, sleduje práci třídy a hodnotí projekty. Data leží v souborovém JSON úložišti, databáze není potřeba.
 
-## Moduly
+<p align="center">
+  <img src="docs/nahled-2026-10-29.png" alt="Přihlášení studenta a učitele na šířce 1440 a 390 px" width="820">
+</p>
 
-| Zdrojový kód | Obsah |
+## Co aplikace umí
+
+| | |
 | --- | --- |
-| [src/lessons/](src/lessons/) | Model a schvalování lekcí, hodiny, tutoriály, adaptivní podpora a vizuální laboratoře. |
-| [src/content/](src/content/) | Obsahové soubory lekcí, základní kurikulum, zdroje a simulace. |
-| [src/knowledge/](src/knowledge/) | Znalostní knihovna a řízené průchody materiály. |
-| [src/teacher/](src/teacher/) | Učitelský cockpit, přípravy, účty, oprávnění a přehledy tříd. |
-| [src/student/](src/student/) | Studentské rozhraní, účty, profily, portfolio, pokrok a zpětná vazba. |
-| [src/assessment/](src/assessment/) | Testy, úlohy, kompetence, dovednosti, hodnocení a ŠVP. |
-| [src/projects/](src/projects/) | Projektové pracoviště, týmy, evidence práce a recenze spolužáků. |
-| [src/paths/](src/paths/), [src/levels/](src/levels/) | Výukové cesty, obsah a obtížnost aktivit. |
-| [src/linux/](src/linux/) | Simulovaný Linux Lab, příkazy, úrovně a učitelské nástroje labu. |
-| [src/arena/](src/arena/), [src/teamgames/](src/teamgames/), [src/robots/](src/robots/) | Aréna, týmové hry, kvízové banky a robotí liga. |
-| [src/i18n/](src/i18n/), [src/ui/](src/ui/) | Překlady, navigace, motivy a sdílené prvky rozhraní. |
-| [src/ops/](src/ops/) | Úložiště, cache, provoz, školní rok a kalendář. |
+| **Lekce a hodina** | Model lekcí se schvalováním, Dnešní hodina, kód hodiny pro připojení třídy, tutoriály a vizuální laboratoře. [src/lessons/](src/lessons/) |
+| **Linux Lab** | Simulovaný terminál s příkazy a úrovněmi, bez externího brokeru. Učitel má k labu vlastní nástroje. [src/linux/](src/linux/) |
+| **Projekty** | Projektové pracoviště, týmy a role, evidence práce a recenze spolužáků. [src/projects/](src/projects/) |
+| **Hodnocení** | Testy, úlohy, kompetence, dovednosti a vazba na ŠVP. [src/assessment/](src/assessment/) |
+| **Hry a aréna** | Aréna, týmové hry, kvízové banky a robotí liga. [src/arena/](src/arena/), [src/teamgames/](src/teamgames/), [src/robots/](src/robots/) |
+| **Učitelský cockpit** | Přípravy hodin, účty a oprávnění, přehledy tříd a co je potřeba dnes vyřešit. [src/teacher/](src/teacher/) |
 
-Knihovna a její verzované `*_views.php` patří do stejné oblasti. Názvy souborů zůstávají zachované. Čísla v názvech označují jednotlivé vrstvy aplikace, nikoli samostatná vydání celého repozitáře.
+Rozhraní je v češtině, angličtině a ukrajinštině ([src/i18n/](src/i18n/), [lang/](lang/)). Světlý a tmavý režim se řídí nastavením zařízení, student ho může přepnout ručně.
 
-## Mapa složek
+## Rychlý start
 
-```text
-./                  veřejné vstupy, bootstrap.php, PWA a dokumenty vydání
-src/                interní knihovny, obsah a pohledy podle oblastí
-app/                router, obsluha akcí a segmenty studentských stránek
-assets/             CSS, JavaScript, obrázky a lokální knihovny
-lang/               překladové katalogy a přiřazení zdrojů k doménám
-materials/          výukové materiály a podklady pro učitele
-storage/            provozní data aplikace
-private/            neveřejné soubory; skutečné secrets patří mimo web root
-uploads/            studentské přílohy
-cache/              odvozená cache
-migrations/         migrace dat
-tools/              CLI správa, sestavení vydání a audity
-docs/               provozní dokumentace, vzory nasazení a výsledky kontrol
-```
+Potřebuješ PHP 8.1 nebo novější s rozšířeními `json`, `session`, `fileinfo` a `mbstring` (viz [INSTALL.md](INSTALL.md) a [tools/check_install.php](tools/check_install.php)). Do `storage/` a při používání příloh i do `uploads/` musí uživatel PHP zapisovat.
 
-Veřejné adresy zůstávají stejné: `index.php`, `teacher.php`, `calendar.ics.php`, `progress.php`, `export_extra_csv.php` a API `lab_v57_api.php`, `arena_v58_events_api.php`, `robots_v58_api.php`, `teamgames_v58_api.php`. V kořeni zůstává i obsahový soubor `practice.php`, `lab-offline.html`, `sw.js` a `manifest.webmanifest`. Studentské pohledy vybírá `?view=…`, učitelské záložky `teacher.php?tab=…`; registry jsou v [app/routes.php](app/routes.php) a [teacher_v58.php](src/teacher/teacher_v58.php).
-
-## Instalace a lokální spuštění
-
-Požadavky podle [INSTALL.md](INSTALL.md) a [check_install.php](tools/check_install.php): PHP 8.1 nebo novější s rozšířeními `json`, `session`, `fileinfo` a `mbstring`. Adresář `storage/` a při používání příloh také `uploads/` musí být zapisovatelné uživatelem PHP. Cache sestaví nástroj níže.
-
-Z kořene projektu spusť:
+Z kořene projektu:
 
 ```bash
 read -rsp 'Dočasný učitelský klíč: ' EDUCANET_TEACHER_EXPORT_KEY
@@ -58,70 +47,144 @@ php tools/check_install.php
 php -S 127.0.0.1:8090
 ```
 
-Student otevře `http://127.0.0.1:8090/`, učitel `http://127.0.0.1:8090/teacher.php`. Učitelský formulář vyžaduje jméno a nastavený klíč. Bez nakonfigurovaného přístupu vrací učitelská stránka záměrně HTTP 503. Repozitář nemá výchozí statické učitelské heslo. Po ukončení serveru odstraň dočasnou proměnnou pomocí `unset EDUCANET_TEACHER_EXPORT_KEY`.
+- Student: `http://127.0.0.1:8090/`
+- Učitel: `http://127.0.0.1:8090/teacher.php`, přihlášení jménem a klíčem zadaným výše.
 
-Pro testování použij kopii aplikace včetně kopie `storage/`. Proměnná `EDUCANET_STORAGE_DIR` přesměruje úložiště; sama nenahrazuje izolaci cache a ostatních zapisovaných souborů. Lokální vývojový vstup dovoluje `EDUCANET_DEV_BYPASS=1`; v produkci jej nezapínej. Linux Lab v57+ pracuje jako simulátor a nevyžaduje externí broker.
+Bez nastaveného klíče vrací učitelská stránka záměrně HTTP 503, výchozí heslo v repozitáři není. Po vypnutí serveru proměnnou smaž (`unset EDUCANET_TEACHER_EXPORT_KEY`).
+
+Zkoušej na kopii aplikace i s kopií `storage/`. `EDUCANET_STORAGE_DIR` přesměruje úložiště, cache a ostatní zapisované soubory ale neizoluje. `EDUCANET_DEV_BYPASS=1` zapíná lokální vývojový vstup a v produkci zůstává vypnutý.
+
+## Jak je aplikace poskládaná
+
+Každý veřejný vstup nejdřív načte `bootstrap.php`. Ten připraví úložiště, překlady, učitelské účty a obsah kurikula. Studentská část jde dál přes router v `app/`, učitelská a API vstupy si moduly ze `src/` načítají samy.
+
+```mermaid
+flowchart LR
+  subgraph vstupy["Veřejné vstupy"]
+    idx["index.php<br>student"]
+    tch["teacher.php<br>učitel"]
+    oth["progress.php<br>calendar.ics.php<br>export_extra_csv.php"]
+    api["lab_v57_api.php<br>arena_v58_events_api.php<br>robots_v58_api.php<br>teamgames_v58_api.php"]
+  end
+  boot["bootstrap.php"]
+  app["app/<br>routes.php, actions, views"]
+  subgraph src["src/"]
+    m1["student · teacher · lessons"]
+    m2["linux · teamgames · arena · robots"]
+    m3["assessment · projects · paths · levels"]
+    m4["content · knowledge · i18n · ui · ops"]
+  end
+  data[("storage/<br>uploads/")]
+  cache[("cache/")]
+  idx --> boot
+  tch --> boot
+  oth --> boot
+  api --> boot
+  boot --> m4
+  idx --> app --> m1
+  app --> m3
+  tch --> m1
+  api --> m2
+  m4 --> data
+  m4 --> cache
+  classDef entry fill:#007a87,stroke:#05616c,color:#ffffff
+  classDef core fill:#0c113f,stroke:#0c113f,color:#ffffff
+  classDef mod fill:#e2f6f8,stroke:#007a87,color:#0c113f
+  classDef store fill:#fdeee3,stroke:#ec6b10,color:#0c113f
+  class idx,tch,oth,api entry
+  class boot,app core
+  class m1,m2,m3,m4 mod
+  class data,cache store
+  style vstupy fill:#edf1fd,stroke:#1b2249,color:#0c113f
+  style src fill:#f5f6fa,stroke:#00a8b9,color:#0c113f
+```
+
+Studentské pohledy vybírá parametr `?view=…`, učitelské záložky `teacher.php?tab=…`. Registry najdeš v [app/routes.php](app/routes.php) a [src/teacher/teacher_v58.php](src/teacher/teacher_v58.php). Čísla v názvech souborů (`_v58`, `_v78` …) označují vrstvy, ve kterých soubor vznikl, ne samostatná vydání.
+
+## Mapa složek
+
+```text
+./           veřejné vstupy, bootstrap.php, PWA (sw.js, manifest.webmanifest) a dokumenty vydání
+src/         interní knihovny, obsah a pohledy podle oblastí
+app/         router, obsluha akcí a segmenty studentských stránek
+assets/      CSS, JavaScript, ikony a lokální knihovny
+lang/        překladové katalogy
+materials/   výukové materiály a podklady pro učitele
+storage/     provozní data
+private/     neveřejné soubory; skutečná tajemství patří mimo web root
+uploads/     studentské přílohy
+cache/       odvozená cache (runtime, model lekce)
+migrations/  migrace dat
+tools/       CLI správa, sestavení vydání a audity
+docs/        provozní dokumentace, vzory nasazení a výsledky kontrol
+```
+
+## Quiet Focus
+
+Pravidla, podle kterých je postavené studentské rozhraní ([docs/DESIGN_SYSTEM_V78.md](docs/DESIGN_SYSTEM_V78.md)):
+
+- Domů má přednost karta Dnes s jedním aktuálním krokem a na stránce je nejvýš jedno plné primární tlačítko.
+- Upozornění jsou sbalená. Nápověda se otevírá nativně a funguje i bez JavaScriptu.
+- Pokrok ukazuje nejdřív lekce, témata a projekty. Kruh, cíle a výzvy jsou až pod `Další detail`, XP v Menu účtu.
+- Na Domů nejsou série dní ani jiné tlačení do aktivity.
+- Barvy jdou jen přes tokeny v `assets/tokens-v78.css`. Text má nejméně 14 px, cíl dotyku 44 px a stav se nikdy nesděluje jen barvou.
+
+Barvy vycházejí z identity školy: tmavě modrá `#0c113f`, tyrkysová `#00a8b9` (v tmavém režimu `#3cc8d6`), žlutá `#f3b21f` a oranžová `#ec6b10`.
 
 ## Nasazení na aaPanel
 
-Podrobný postup je v [NASAZENI_AAPANEL.md](docs/NASAZENI_AAPANEL.md), konfigurace v [docs/deploy/aapanel/](docs/deploy/aapanel/). Instalační hodnoty ve vzorech musí správce upravit pro svůj web.
+Celý postup je v [docs/NASAZENI_AAPANEL.md](docs/NASAZENI_AAPANEL.md), vzory konfigurace v [docs/deploy/aapanel/](docs/deploy/aapanel/). Hodnoty ve vzorech si správce upraví pro svůj web.
 
-1. Připrav PHP a zapisovatelné datové adresáře. Učitelský klíč nastav v prostředí PHP-FPM nebo v souboru mimo veřejný kořen podle [ADMIN_ACCESS.md](ADMIN_ACCESS.md); lze použít `EDUCANET_SECRETS_FILE`. Skutečné klíče nepatří do Gitu ani do vydání.
-2. Nastav `EDUCANET_APP_URL` na veřejnou HTTPS adresu aplikace pro ověřovací e-maily a obnovu hesla. Zálohy nastav přes `EDUCANET_BACKUP_DIR` mimo veřejný kořen.
-3. Sestav vydání: `php tools/build_release.php --out=<adresar-vydani> --lint --zip`. Před aktualizací zálohuj data a kód. Prohlédni náhled deploy skriptu; skutečné nasazení používá jeho přepínač `--apply`.
-4. Nahraj také celou složku `src/`. Nginx nečte `.htaccess`: použij dodané pravidlo zakazující přístup do `src/` a pravidla pro ostatní interní adresáře. Apache musí respektovat kořenový i vnořené `.htaccess`.
-5. Podle provozního návodu proveď migrace, sestavení cache, `php tools/check_install.php`, `php tools/preflight.php` a HTTP kontrolu. Obnov OPcache nebo reloadni příslušný PHP-FPM pool.
+1. Připrav PHP a zapisovatelné datové adresáře. Učitelský klíč patří do prostředí PHP-FPM nebo do souboru mimo veřejný kořen ([ADMIN_ACCESS.md](ADMIN_ACCESS.md), proměnná `EDUCANET_SECRETS_FILE`). Do Gitu ani do vydání se nedává.
+2. `EDUCANET_APP_URL` nastav na veřejnou HTTPS adresu kvůli ověřovacím e-mailům a obnově hesla. Zálohy směřuj přes `EDUCANET_BACKUP_DIR` mimo veřejný kořen.
+3. Vydání sestavíš příkazem `php tools/build_release.php --out=<adresar-vydani> --lint --zip`. Před aktualizací zazálohuj data i kód. Deploy skript nejdřív ukáže náhled, skutečné nasazení spouští přepínač `--apply`.
+4. Nahraj i celou složku `src/`. Nginx `.htaccess` nečte, proto použij dodané pravidlo, které zakazuje přístup do `src/` a dalších interních adresářů. Apache musí respektovat kořenový i vnořené `.htaccess`.
+5. Proveď migrace, sestav cache, spusť `php tools/check_install.php`, `php tools/preflight.php` a HTTP kontrolu. Nakonec obnov OPcache nebo reloadni PHP-FPM pool.
 
-### Pravidla PATCH
-
-PATCH nesmí přepsat ani smazat `storage/`, `private/`, `uploads/` ani `cache/`. Aktualizace kódu není obnova dat. Před použitím konkrétního build/deploy nástroje zkontroluj jeho filtry; sestavení vydání a PATCH nejsou zaměnitelné postupy. Migrace dat nebo sestavení cache je samostatný, vědomě spuštěný krok. Přesun PHP souborů nevyžaduje přesun studentských dat.
+**PATCH** nesmí přepsat ani smazat `storage/`, `private/`, `uploads/` ani `cache/`. Aktualizace kódu neobnovuje data. Migrace dat a sestavení cache jsou samostatné kroky, které se spouštějí vědomě.
 
 ## Testy
 
-Syntaxi všech PHP souborů ověříš z kořene projektu:
+Syntaxe všech PHP souborů:
 
 ```bash
 find . -type f -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
 ```
 
-Souhrnný běh auditů: `php tools/run_audits.php --since=all`. Spouštěj jej v testovací kopii. Runner vytváří dočasné kopie úložiště; jednotlivé audity mohou navíc sestavovat cache nebo spouštět HTTP server. Přepínače popisuje [run_audits.php](tools/run_audits.php).
+Všechny audity najednou spustíš v testovací kopii přes `php tools/run_audits.php --since=all`. Runner si vytváří dočasné kopie úložiště a některé audity sestavují cache nebo spouštějí HTTP server. Přepínače jsou popsané v [tools/run_audits.php](tools/run_audits.php).
 
-Pro porovnání při změně struktury slouží:
+Při změně struktury porovnej stav před a po:
 
 ```bash
 node tools/structure_http_2026_10_29.cjs before
 node tools/visual_qa_2026_10_29.cjs structure-before
-# Po úpravě kódu:
+# po úpravě kódu
 node tools/structure_http_2026_10_29.cjs after
 node tools/visual_qa_2026_10_29.cjs structure-after
 ```
 
-Oba nástroje vytvářejí izolovanou kopii aplikace a používají port 8090; spouštěj je postupně. Potřebují Chromium a existující instalaci Playwrightu, jejíž umístění určuje jejich import. V jiném vývojovém prostředí uprav tento import. Nejde o produkční závislost aplikace. HTTP kontrola porovnává stavy a přesměrování pro návštěvníka, studenta i učitele a kontroluje PHP log. Formuláře objevuje, jejich POST akce neodesílá. Vizuální test má 52 zobrazení a 72 interakcí ve světlém a tmavém režimu na šířkách 1440 a 390 px.
+Oba nástroje kopírují aplikaci do izolované složky a používají port 8090, takže je pouštěj postupně. Potřebují Chromium a nainstalovaný Playwright; cestu k němu určuje import ve skriptu a v jiném prostředí ji upravíš. Do produkce nepatří.
 
-Mapa přesunů a výsledky kontrol: [STRUKTURA_2026-10-29.md](docs/STRUKTURA_2026-10-29.md).
+HTTP kontrola porovnává stavy a přesměrování pro návštěvníka, studenta i učitele a hlídá PHP log. Formuláře najde, ale POST neodesílá. Vizuální test prochází 52 zobrazení a 72 interakcí ve světlém i tmavém režimu na šířkách 1440 a 390 px. Poslední běh skončil 52/52 a 72/72 ([docs/TEST_2026-10-29.md](docs/TEST_2026-10-29.md)). Mapa přesunů souborů je v [docs/STRUKTURA_2026-10-29.md](docs/STRUKTURA_2026-10-29.md).
 
 ## Changelog
 
-Historická označení z původního README nepopisují samostatně aktuální stav aplikace. Aktuální provozní návody jsou ve složce [docs/](docs/).
+Zkráceně, podrobnosti jsou v [docs/](docs/). `RELEASE_MANIFEST.json` nese označení v59 ze 14. 10. 2026 a novější vrstvy až po v81 popisují dokumenty v `docs/`.
 
-| Verze / období | Změna |
+| Kdy | Změna |
 | --- | --- |
-| 2026-10-29 | Interní PHP moduly rozděleny do `src/`, veřejné URL zachovány. |
-| v50.7.6 | Quiet Focus: jeden aktuální krok, sbalená upozornění a analytika až v dalším detailu. |
-| v50.7.3, v50.7.2, v50.7.1 | Hustota obsahu, sjednocení komponent a opravy studentského rozhraní. |
-| v50.4, v50.3, v50.2 | Volba studijního cíle, řízený průchod učením a jednodušší navigace. |
-| v50 | Hands-on laboratoře, evidence práce, Skill Passport a dobrovolný Independent Growth. |
-| v48.1, v48 | Praktické laboratoře pro 3.A a společný engine vizuálního učení. |
-| v47.2, v47.1, v47 | Oprava chyb přenosem do nové situace, podpora studia a Learning Coach. |
-| v46.2, v46.1, v46 | Učitelské provozní nástroje, přehledy, intervence a spolehlivost provozu. |
-| v45.7–v45.2 | Uložené a sdílené filtry, hromadné akce, přehled tříd a výkon administrace. |
-| v45, v44, v43, v42, v41 | Vizuální simulace, Learning Studio, vizualizace, adaptivní sady lekcí a Mastery Learning. |
-| v35, v34, v33 | Praktické ukázky, studentské prostředí, skutečný rozvrh a runtime cache. |
-| v32.1, v32, v31 | Instalace a CLI, ISPConfig, jednodušší provoz a adaptivní pomoc. |
-| v30, v29, v28, v27 | Adaptivní učení, školní rok 2026/2027, učitelský přehled, připravenost lekcí a materiály. |
-| v26, v25, v24 | Projektové pracoviště, týmové role, dovednostní stromy, mastery a sociální vrstva. |
-| Starší rozšíření, září 2026 | Kurikulum pro čtyři třídy, znalostní knihovna, grafické studio, praktické úlohy, školní účty, export výsledků, XP a odznaky. |
+| 29. 10. 2026 | Interní PHP moduly přesunuty do `src/`, veřejné URL zůstaly. Oprava Quiet Focus, kontrastu a mobilního ovládání. |
+| v78–v81 | Design systém s tokeny pro světlý a tmavý režim, nový vizuální jazyk cockpitu a Domů. |
+| v58–v66 | Identita a přechod školního roku, týmové hry, robotí liga, překlady, projekty, kompetence a hodnocení. |
+| v50.x | Quiet Focus, volba studijního cíle, hands-on laboratoře, Skill Passport. |
+| v41–v48 | Mastery Learning, adaptivní sady lekcí, Learning Studio, vizuální simulace, praktické laboratoře pro 3.A. |
+| v24–v35 | Projektové pracoviště, adaptivní učení, školní rok 2026/2027, runtime cache, instalace přes CLI. |
+| září 2026 | Kurikulum pro čtyři třídy, znalostní knihovna, grafické studio, školní účty, export výsledků, XP a odznaky. |
+
+## Licence
+
+Repozitář licenci neuvádí. Knihovny v `assets/vendor/` mají vlastní licenční podmínky.
 
 ## English summary
 
-EDUCANET / Quiet Study is a PHP school learning application for students and teachers. Public entry points remain at the project root. Internal modules live in `src/`; student routing remains in `app/`. These instructions describe the repository, not a verified live deployment. Preserve runtime data and secrets during updates.
+EDUCANET / Quiet Study is a PHP school learning app for students and teachers at EDUCANET Brno. Public entry points stay at the project root, internal modules live in `src/`, and student routing lives in `app/`. Data is stored in JSON files under `storage/`. These notes describe the repository, not a verified live deployment. Keep runtime data and secrets intact during updates.
