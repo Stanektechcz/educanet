@@ -10,8 +10,8 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  */
 putenv('EDUCANET_STORAGE_READONLY=1');
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once dirname(__DIR__) . '/intake_v51.php';
-foreach (['identity_v58.php', 'identity_v58_rollover.php', 'competencies_v62.php', 'evidence_v62.php', 'paths_v63.php', 'projects_v60.php', 'projects_v65.php', 'rollover_v67.php'] as $lib) require_once dirname(__DIR__) . '/' . $lib;
+require_once dirname(__DIR__) . '/src/student/intake_v51.php';
+foreach (['src/student/identity_v58.php', 'src/student/identity_v58_rollover.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/paths/paths_v63.php', 'src/projects/projects_v60.php', 'src/projects/projects_v65.php', 'src/ops/rollover_v67.php'] as $lib) require_once dirname(__DIR__) . '/' . $lib;
 $year = (int)date('Y');
 foreach ($argv as $a) if (str_starts_with((string)$a, '--year=')) $year = (int)substr((string)$a, 7);
 $plan = rollover67_plan($year);

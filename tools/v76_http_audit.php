@@ -25,8 +25,8 @@ putenv('EDUCANET_TEACHER_EXPORT_KEY=' . V76H_KEY);
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'cockpit_v70.php', 'tutorial_v52.php', 'learning_v56.php', 'runtime_content.php',
-    'session_v53.php', 'accounts_v53.php', 'intake_v51.php', 'competencies_v62.php', 'evidence_v62.php', 'paths_v63.php', 'taskbank_v75_gen.php', 'taskbank_v75.php', 'portfolio_v75.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/teacher/cockpit_v70.php', 'src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/ops/runtime_content.php',
+    'src/lessons/session_v53.php', 'src/student/accounts_v53.php', 'src/student/intake_v51.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/paths/paths_v63.php', 'src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/student/portfolio_v75.php'] as $lib) require_once $ROOT . '/' . $lib;
 require_once __DIR__ . '/lib/v59_scope_fixtures.php';
 require_once __DIR__ . '/lib/v63_paths_fixtures.php';
 

@@ -8,9 +8,9 @@ require $root.'/bootstrap.php';
 if(!function_exists('teacher_class_label')){
     function teacher_class_label(string $classId): string { return match($classId){'class_1a'=>'1.A Grafika','class_2a'=>'2.A Grafika','class_3a'=>'3.A SOSPS','class_4a'=>'4.A SOSPS',default=>$classId}; }
 }
-require_once $root.'/teacher_curriculum.php';
-require_once $root.'/teacher_overview_dashboard.php';
-require_once $root.'/teacher_class_dashboard.php';
+require_once $root.'/src/teacher/teacher_curriculum.php';
+require_once $root.'/src/teacher/teacher_overview_dashboard.php';
+require_once $root.'/src/teacher/teacher_class_dashboard.php';
 
 $errors=[];$storageBefore=[];
 foreach(glob(STORAGE_DIR.'/*.php')?:[] as $file)$storageBefore[$file]=hash_file('sha256',$file);
@@ -46,9 +46,9 @@ if(!teacher_saved_filter_is_owner($legacy))$errors[]='Legacy personal preset com
 unset($_SESSION['teacher_saved_filter_actor_token']);
 if($originalName===null)unset($_SESSION['teacher_display_name']);else $_SESSION['teacher_display_name']=$originalName;
 
-$tasks=file_get_contents($root.'/teacher_tasks.php')?:'';
+$tasks=file_get_contents($root.'/src/teacher/teacher_tasks.php')?:'';
 foreach(['teacher_team_key','teacher_team_label','teacher_saved_filter_scope','teacher_saved_filter_visible_to_current_teacher','Můžete mazat pouze vlastní uložené filtry'] as $needle)if(!str_contains($tasks,$needle))$errors[]="teacher_tasks.php missing $needle";
-$dashboard=file_get_contents($root.'/teacher_class_dashboard.php')?:'';
+$dashboard=file_get_contents($root.'/src/teacher/teacher_class_dashboard.php')?:'';
 foreach(['filter_scope','Osobní a týmové pohledy','scope-<?=e($filterScope)?>','jen autor','teacher_team_label'] as $needle)if(!str_contains($dashboard,$needle))$errors[]="teacher_class_dashboard.php missing $needle";
 $bootstrap=file_get_contents($root.'/bootstrap.php')?:'';
 foreach(['EDUCANET_TEACHER_TEAM_ID','EDUCANET_TEACHER_TEAM_NAME'] as $needle)if(!str_contains($bootstrap,$needle))$errors[]="bootstrap.php missing $needle";

@@ -24,10 +24,10 @@ $tmp = rtrim(str_replace(chr(92), '/', edu_audit_temp_storage('v81-visual')), '/
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'runtime_content.php', 'app/lib.php', 'ui_v67.php', 'nav_v61.php', 'identity_v58.php',
-    'cockpit_v70.php', 'teacher_prefs_v72_1.php', 'competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'competencies_v75_views.php',
-    'taskbank_v75_views.php', 'taskbank_v76.php', 'learning_v80_views.php', 'widgets_v80_views.php', 'progress_v80_views.php', 'retention_v76.php', 'projects_v65.php',
-    'classmap_v80_1.php', 'support_v80_1.php', 'support_v80_1_teacher.php', 'support_v80_1_views.php', 'classmap_v80_1_views.php', 'insights_v74_views.php', 'student_v55.php', 'ui_v81.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/ops/runtime_content.php', 'app/lib.php', 'src/ui/ui_v67.php', 'src/ui/nav_v61.php', 'src/student/identity_v58.php',
+    'src/teacher/cockpit_v70.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/mastery_v62.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/assessment/competencies_v75_views.php',
+    'src/assessment/taskbank_v75_views.php', 'src/assessment/taskbank_v76.php', 'src/lessons/learning_v80_views.php', 'src/ui/widgets_v80_views.php', 'src/student/progress_v80_views.php', 'src/student/retention_v76.php', 'src/projects/projects_v65.php',
+    'src/teacher/classmap_v80_1.php', 'src/student/support_v80_1.php', 'src/student/support_v80_1_teacher.php', 'src/student/support_v80_1_views.php', 'src/teacher/classmap_v80_1_views.php', 'src/teacher/insights_v74_views.php', 'src/student/student_v55.php', 'src/ui/ui_v81.php'] as $lib) require_once $ROOT . '/' . $lib;
 app_require_libs(['core', 'layout', 'paths', 'projects65']);
 require_once __DIR__ . '/lib/v80_1_fixture.php';
 
@@ -89,7 +89,7 @@ foreach ($budget as $page => [$c, $j]) {
 }
 $layout = $read('app/views/_layout.php');
 $check('kostra žáka: ui_v81.php, vrstva v81 jen na Domů a Můj pokrok (UI81_STUDENT_VIEWS) po opravách v80.2; kouč v47 jen na ?details=1',
-    str_contains($layout, "require_once dirname(__DIR__, 2) . '/ui_v81.php';") && str_contains($layout, 'in_array((string)$view, UI81_STUDENT_VIEWS, true)) echo v81_assets_html(')
+    str_contains($layout, "require_once dirname(__DIR__, 2) . '/src/ui/ui_v81.php';") && str_contains($layout, 'in_array((string)$view, UI81_STUDENT_VIEWS, true)) echo v81_assets_html(')
     && strpos($layout, 'a11y-v80-2.css') < strpos($layout, 'v81_assets_html(') && substr_count($layout, "(string)(\$_GET['details']??'')==='1'") === 2 && substr_count($layout, "\$_GET['details']??'')==='1'") === 2);
 $teacher = $read('teacher.php');
 $check('toast bez JS: hláška cockpitu zůstává v textu stránky (role=status) a nese data-v81-toast; chyba zůstává viditelná i s JS',

@@ -4,7 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/lib/app_source.php';
 if(PHP_SAPI!=='cli'){http_response_code(400);exit("CLI only\n");}
 require dirname(__DIR__).'/bootstrap.php';
-require dirname(__DIR__).'/runtime_content.php';
+require dirname(__DIR__).'/src/ops/runtime_content.php';
 $runtime=runtime_content_load_classes(['class_1a','class_2a','class_3a','class_4a']);
 $nextLessons=$runtime['nextLessons'];$extendedLessons=$runtime['extendedLessons'];
 $errors=[];$counts=[];$families=[];$total=0;$paramIds=[];
@@ -33,14 +33,14 @@ foreach(['class_1a','class_2a','class_3a','class_4a'] as $classId){
 }
 foreach($counts as $c=>$n)if($n!==28)$errors[]="$c has $n simulations, expected 28";
 $root=dirname(__DIR__);
-foreach(['visual_simulation_v45.php','visual_simulation_views_v45.php','assets/visual-simulation-v45.css','assets/visual-simulation-v45.js'] as $f)if(!is_file($root.'/'.$f))$errors[]="missing $f";
-$index=edu_app_source()?:'';$teacher=file_get_contents($root.'/teacher_lesson_mode.php')?:'';$cv=file_get_contents($root.'/cognitive_visualization_views_v43.php')?:'';$boot=file_get_contents($root.'/bootstrap.php')?:'';
-if(!str_contains($boot,'visual_simulation_v45.php'))$errors[]='bootstrap v45 include missing';
-if(!str_contains($index,'visual_simulation_views_v45.php'))$errors[]='student v45 views include missing';
+foreach(['src/lessons/visual_simulation_v45.php','src/lessons/visual_simulation_views_v45.php','assets/visual-simulation-v45.css','assets/visual-simulation-v45.js'] as $f)if(!is_file($root.'/'.$f))$errors[]="missing $f";
+$index=edu_app_source()?:'';$teacher=file_get_contents($root.'/src/teacher/teacher_lesson_mode.php')?:'';$cv=file_get_contents($root.'/src/lessons/cognitive_visualization_views_v43.php')?:'';$boot=file_get_contents($root.'/bootstrap.php')?:'';
+if(!str_contains($boot,'src/lessons/visual_simulation_v45.php'))$errors[]='bootstrap v45 include missing';
+if(!str_contains($index,'src/lessons/visual_simulation_views_v45.php'))$errors[]='student v45 views include missing';
 if(!str_contains($index,"v45_sim_save"))$errors[]='v45 POST save missing';
 if(!str_contains($cv,'v45_render_visual_simulation'))$errors[]='v45 student extension missing';
 if(!str_contains($teacher,'v45_render_teacher_projection'))$errors[]='v45 teacher projection missing';
-$views=file_get_contents($root.'/visual_simulation_views_v45.php')?:'';$client=file_get_contents($root.'/assets/visual-simulation-v45.js')?:'';
+$views=file_get_contents($root.'/src/lessons/visual_simulation_views_v45.php')?:'';$client=file_get_contents($root.'/assets/visual-simulation-v45.js')?:'';
 foreach(['data-v45-scenario-step','data-v45-ab-detail','data-v45-history-list','data-v45-phase','data-v45-spotlight','data-v45-evidence-note'] as $marker)if(!str_contains($views,$marker))$errors[]="experiment layer view marker missing: $marker";
 foreach(['renderCausal','renderHistory','startScenarioWalk','setTeacherPhase','setSpotlight'] as $marker)if(!str_contains($client,$marker))$errors[]="experiment layer JS capability missing: $marker";
 if(!str_contains($index,"\$_POST['note']"))$errors[]='evidence note POST persistence missing';

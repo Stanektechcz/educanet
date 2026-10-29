@@ -26,10 +26,10 @@ $tmp = rtrim(str_replace(chr(92), '/', edu_audit_temp_storage('v80-1-teacher')),
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'runtime_content.php', 'app/lib.php', 'ui_v67.php', 'nav_v61.php', 'identity_v58.php',
-    'cockpit_v70.php', 'teacher_prefs_v72_1.php', 'competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'competencies_v75_views.php',
-    'taskbank_v75_views.php', 'taskbank_v76.php', 'learning_v80_views.php', 'widgets_v80_views.php', 'progress_v80_views.php', 'retention_v76.php', 'projects_v65.php',
-    'classmap_v80_1.php', 'support_v80_1.php', 'support_v80_1_teacher.php', 'support_v80_1_views.php', 'classmap_v80_1_views.php', 'insights_v74_views.php', 'student_v55.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/ops/runtime_content.php', 'app/lib.php', 'src/ui/ui_v67.php', 'src/ui/nav_v61.php', 'src/student/identity_v58.php',
+    'src/teacher/cockpit_v70.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/mastery_v62.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/assessment/competencies_v75_views.php',
+    'src/assessment/taskbank_v75_views.php', 'src/assessment/taskbank_v76.php', 'src/lessons/learning_v80_views.php', 'src/ui/widgets_v80_views.php', 'src/student/progress_v80_views.php', 'src/student/retention_v76.php', 'src/projects/projects_v65.php',
+    'src/teacher/classmap_v80_1.php', 'src/student/support_v80_1.php', 'src/student/support_v80_1_teacher.php', 'src/student/support_v80_1_views.php', 'src/teacher/classmap_v80_1_views.php', 'src/teacher/insights_v74_views.php', 'src/student/student_v55.php'] as $lib) require_once $ROOT . '/' . $lib;
 app_require_libs(['core', 'layout', 'paths', 'projects65']);
 require_once __DIR__ . '/lib/v80_1_fixture.php';
 
@@ -37,7 +37,7 @@ const V801_KEY = 'v80-1-teacher-audit-key';
 const V801_CSS_BUDGET = 15 * 1024;
 const V801_JS_BUDGET = 5 * 1024;
 const V801_PRIKAZY_MAX = (62 - 3) * 1024;   // rozpočet v61 62 kB s rezervou ≥ 3 kB
-const V801_NEW_PHP = ['classmap_v80_1.php', 'classmap_v80_1_views.php', 'support_v80_1.php', 'support_v80_1_teacher.php', 'support_v80_1_views.php'];
+const V801_NEW_PHP = ['src/teacher/classmap_v80_1.php', 'src/teacher/classmap_v80_1_views.php', 'src/student/support_v80_1.php', 'src/student/support_v80_1_teacher.php', 'src/student/support_v80_1_views.php'];
 
 $state = audit_counter();
 $check = audit_checker($state);
@@ -94,10 +94,10 @@ $domains = require $ROOT . '/lang/domains_v59.php';
 $en = require $ROOT . '/lang/en/ui/support_v80_1.php';
 $uk = require $ROOT . '/lang/uk/ui/support_v80_1.php';
 $check('i18n: doména support_v80_1 v manifestu, katalogy en/uk se stejnými klíči; menu žáka (cvičení, opakování) a Další krok „Od učitele“ v en/uk',
-    in_array('support_v80_1_views.php', (array)($domains['domains']['support_v80_1'] ?? []), true) && array_keys($en) === array_keys($uk) && count($en) >= 20
+    in_array('src/student/support_v80_1_views.php', (array)($domains['domains']['support_v80_1'] ?? []), true) && array_keys($en) === array_keys($uk) && count($en) >= 20
     && isset((require $ROOT . '/lang/en/ui/nav_v61.php')['Interaktivní cvičení'], (require $ROOT . '/lang/uk/ui/nav_v61.php')['Opakování chyb'], (require $ROOT . '/lang/uk/ui/learning_v80.php')['Od učitele']));
 $check('retence: retention_v76 maže i zpětnou vazbu a přidělení (ts801_retention_purge), tools/v58_retention.php vypisuje v80_1_data_purged=',
-    str_contains($read('retention_v76.php'), "\$res['support'] = ts801_retention_purge(") && str_contains($read('tools/v58_retention.php'), 'v80_1_data_purged='));
+    str_contains($read('src/student/retention_v76.php'), "\$res['support'] = ts801_retention_purge(") && str_contains($read('tools/v58_retention.php'), 'v80_1_data_purged='));
 
 // ---------------------------------------------------------------- 1b) menší HTML žáka a menu
 $GLOBALS['ui61_primary_nav'] = null;

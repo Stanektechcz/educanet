@@ -29,15 +29,15 @@ $tmp = rtrim(str_replace('\\', '/', edu_audit_temp_storage('v61-motivation')), '
 require_once $ROOT . '/bootstrap.php';   // před jakýmkoli výstupem (session_start)
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['app/lib.php', 'app/views/_layout.php', 'student_v55.php', 'student_v55_views.php', 'zero_friction_v50_6.php', 'unified_page_shell_v50_7.php', 'student_links_v69.php',
-    'goal_navigator_v50_4.php', 'hands_on_learning_v50.php', 'independent_growth_v50.php', 'learning_v56.php', 'session_v53.php', 'tutorial_v52.php', 'linux_v57_lab.php',
-    'arena_v57.php', 'teacher_operations_v46.php', 'teacher_operations_plus_v46_1.php', 'teacher_operations_control_v46_2.php', 'intake_v51.php', 'accounts_v53.php',
-    'runtime_content.php', 'teacher_v58.php', 'robots_v58.php', 'teamgames_v58_teacher_views.php', 'arena_v58_ctf.php', 'arena_v58_incident.php', 'lab_v58_editor.php',
-    'teacher_demo_accounts.php', 'teacher_accounts_v59_admin.php', 'teamgames_v58_projector_views.php', 'intake_v51_teacher.php', 'student_social_views.php', 'skill_views.php',
-    'points_v53.php', 'points_v60.php', 'marketplace_v60.php', 'marketplace_v60_views.php', 'marketplace_v60_teacher_views.php', 'projects_v60.php', 'projects_v60_teacher_views.php',
-    'feedback_v60.php', 'feedback_v60_teacher_views.php', 'profile_v60.php', 'profile_v60_views.php', 'lab_v58_learning.php', 'badges_v60.php', 'arena_v58_weekly.php',
-    'arena_v60_challenge.php', 'arena_v60_challenge_views.php', 'motivation_v61.php', 'motivation_v61_views.php', 'arena_v61_duels.php', 'arena_v61_views.php',
-    'arena_v61_teacher_views.php', 'marketplace_v61.php', 'marketplace_v61_views.php'] as $rel) {
+foreach (['app/lib.php', 'app/views/_layout.php', 'src/student/student_v55.php', 'src/student/student_v55_views.php', 'src/student/zero_friction_v50_6.php', 'src/ui/unified_page_shell_v50_7.php', 'src/student/student_links_v69.php',
+    'src/student/goal_navigator_v50_4.php', 'src/lessons/hands_on_learning_v50.php', 'src/student/independent_growth_v50.php', 'src/lessons/learning_v56.php', 'src/lessons/session_v53.php', 'src/lessons/tutorial_v52.php', 'src/linux/linux_v57_lab.php',
+    'src/arena/arena_v57.php', 'src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_operations_plus_v46_1.php', 'src/teacher/teacher_operations_control_v46_2.php', 'src/student/intake_v51.php', 'src/student/accounts_v53.php',
+    'src/ops/runtime_content.php', 'src/teacher/teacher_v58.php', 'src/robots/robots_v58.php', 'src/teamgames/teamgames_v58_teacher_views.php', 'src/arena/arena_v58_ctf.php', 'src/arena/arena_v58_incident.php', 'src/linux/lab_v58_editor.php',
+    'src/teacher/teacher_demo_accounts.php', 'src/teacher/teacher_accounts_v59_admin.php', 'src/teamgames/teamgames_v58_projector_views.php', 'src/student/intake_v51_teacher.php', 'src/student/student_social_views.php', 'src/assessment/skill_views.php',
+    'src/student/points_v53.php', 'src/student/points_v60.php', 'src/student/marketplace_v60.php', 'src/student/marketplace_v60_views.php', 'src/student/marketplace_v60_teacher_views.php', 'src/projects/projects_v60.php', 'src/projects/projects_v60_teacher_views.php',
+    'src/student/feedback_v60.php', 'src/student/feedback_v60_teacher_views.php', 'src/student/profile_v60.php', 'src/student/profile_v60_views.php', 'src/linux/lab_v58_learning.php', 'src/student/badges_v60.php', 'src/arena/arena_v58_weekly.php',
+    'src/arena/arena_v60_challenge.php', 'src/arena/arena_v60_challenge_views.php', 'src/student/motivation_v61.php', 'src/student/motivation_v61_views.php', 'src/arena/arena_v61_duels.php', 'src/arena/arena_v61_views.php',
+    'src/arena/arena_v61_teacher_views.php', 'src/student/marketplace_v61.php', 'src/student/marketplace_v61_views.php'] as $rel) {
     require_once $ROOT . '/' . $rel;
 }
 require_once __DIR__ . '/lib/v59_scope_fixtures.php';
@@ -63,7 +63,7 @@ $caught = static function (callable $fn): string {
 };
 
 // ---------------------------------------------------------------- 0) soubory a invariant labu
-$mine = ['motivation_v61.php', 'motivation_v61_views.php', 'arena_v61_duels.php', 'arena_v61_views.php', 'arena_v61_teacher_views.php', 'marketplace_v61.php', 'marketplace_v61_views.php', 'app/actions/motivation.php'];
+$mine = ['src/student/motivation_v61.php', 'src/student/motivation_v61_views.php', 'src/arena/arena_v61_duels.php', 'src/arena/arena_v61_views.php', 'src/arena/arena_v61_teacher_views.php', 'src/student/marketplace_v61.php', 'src/student/marketplace_v61_views.php', 'app/actions/motivation.php'];
 $forbiddenCall = '/\b(exec|shell_exec|system|passthru|proc_open|popen|pcntl_exec|eval|assert|create_function|fsockopen|stream_socket_client|mail)\s*\(|`|\bcurl_|\bsocket_/';
 $problems = [];
 foreach ($mine as $rel) {
@@ -77,7 +77,7 @@ $css = $readText('assets/motivation-v61.css');
 $check('CSS motivace: prefers-reduced-motion, cíl dotyku 44 px, jen tokeny značky (žádná pevná barva #hex)', str_contains($css, 'prefers-reduced-motion') && str_contains($css, 'min-height: 44px') && preg_match('/#[0-9a-fA-F]{3,6}\b/', $css) !== 1, false);
 $check('obchodní typy dál na bílé listině (cosmetic, content, lab_hint, other)', MKT60_TYPES === ['cosmetic', 'content', 'lab_hint', 'other']);
 // Obchod nesmí volat nic, co mění XP/body/aréna (token sken volání).
-$shopFiles = ['marketplace_v61.php', 'marketplace_v61_views.php', 'app/actions/motivation.php'];
+$shopFiles = ['src/student/marketplace_v61.php', 'src/student/marketplace_v61_views.php', 'app/actions/motivation.php'];
 $bad = [];
 foreach ($shopFiles as $rel) {
     foreach (token_get_all($readText($rel)) as $tok) {

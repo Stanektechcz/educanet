@@ -60,7 +60,7 @@ server {
     location = /CLAUDE.md { deny all; }
 
     # --- Interní adresáře nikdy z webu -------------------------------------
-    location ~ ^/(storage|private|tools|tests|app|docs|lang|migrations|database|lab-runtime|\.claude|cache|V1|materials)(/|$) {
+    location ~ ^/(storage|private|tools|tests|app|src|docs|lang|migrations|database|lab-runtime|\.claude|cache|V1|materials)(/|$) {
         deny all;
         return 404;
     }

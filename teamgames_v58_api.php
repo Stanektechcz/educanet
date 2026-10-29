@@ -10,16 +10,16 @@ declare(strict_types=1);
  */
 
 require __DIR__ . '/bootstrap.php';
-if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_once __DIR__ . '/i18n_v59.php'; }
-require_once __DIR__ . '/teamgames_v58_registry.php';
-require_once __DIR__ . '/teamgames_v58_quiz.php';
-require_once __DIR__ . '/linux_v58_levels_tg.php';
-require_once __DIR__ . '/teamgames_v58_game_relay.php';
-require_once __DIR__ . '/teamgames_v58_game_bingo.php';
-require_once __DIR__ . '/teamgames_v58_game_jeopardy.php';
-require_once __DIR__ . '/teamgames_v58_game_tug.php';
-require_once __DIR__ . '/teamgames_v58_game_netadmin.php';
-require_once __DIR__ . '/teamgames_v58_game_escape.php';
+if (!function_exists('tr')) { require_once __DIR__ . '/src/i18n/i18n_v58.php'; require_once __DIR__ . '/src/i18n/i18n_v59.php'; }
+require_once __DIR__ . '/src/teamgames/teamgames_v58_registry.php';
+require_once __DIR__ . '/src/teamgames/teamgames_v58_quiz.php';
+require_once __DIR__ . '/src/linux/linux_v58_levels_tg.php';
+require_once __DIR__ . '/src/teamgames/teamgames_v58_game_relay.php';
+require_once __DIR__ . '/src/teamgames/teamgames_v58_game_bingo.php';
+require_once __DIR__ . '/src/teamgames/teamgames_v58_game_jeopardy.php';
+require_once __DIR__ . '/src/teamgames/teamgames_v58_game_tug.php';
+require_once __DIR__ . '/src/teamgames/teamgames_v58_game_netadmin.php';
+require_once __DIR__ . '/src/teamgames/teamgames_v58_game_escape.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');

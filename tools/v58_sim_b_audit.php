@@ -41,16 +41,16 @@ set_error_handler(static function (int $no, string $str, string $file, int $line
 });
 
 const SIMB_FILES = [
-    'linux_v58_cmd_extra.php', 'linux_v58_cmd_extra_bc.php', 'linux_v58_cmd_extra_calc.php', 'linux_v58_cmd_extra_sys.php',
-    'linux_v58_cmd_media.php', 'linux_v58_cmd_media_im.php', 'linux_v58_cmd_media_tools.php',
-    'linux_v58_cmd_tldr_a.php', 'linux_v58_cmd_tldr_b.php', 'linux_v58_cmd_tldr_c.php', 'linux_v58_levels_grafika.php',
+    'src/linux/linux_v58_cmd_extra.php', 'src/linux/linux_v58_cmd_extra_bc.php', 'src/linux/linux_v58_cmd_extra_calc.php', 'src/linux/linux_v58_cmd_extra_sys.php',
+    'src/linux/linux_v58_cmd_media.php', 'src/linux/linux_v58_cmd_media_im.php', 'src/linux/linux_v58_cmd_media_tools.php',
+    'src/linux/linux_v58_cmd_tldr_a.php', 'src/linux/linux_v58_cmd_tldr_b.php', 'src/linux/linux_v58_cmd_tldr_c.php', 'src/linux/linux_v58_levels_grafika.php',
 ];
 const SIMB_NEW = ['identify', 'convert', 'magick', 'mogrify', 'exiftool', 'rename', 'basename', 'dirname', 'realpath', 'readlink', 'seq', 'shuf',
     'paste', 'column', 'fold', 'comm', 'join', 'split', 'yes', 'whereis', 'pgrep', 'lsblk', 'lscpu', 'mount', 'watch', 'time', 'expr', 'factor', 'bc'];
 const SIMB_NOW = 1790000000;
 const SIMB_SEEDS = ['s1', 's2', 's3', 's4', 's5', 's6'];
 
-require_once $ROOT . '/linux_v57_lab.php';
+require_once $ROOT . '/src/linux/linux_v57_lab.php';
 foreach (SIMB_FILES as $f) require_once $ROOT . '/' . $f;
 
 $GLOBALS['simb'] = ['checks' => 0, 'failed' => 0];
@@ -436,11 +436,11 @@ $forbidden = ['exec', 'shell_exec', 'system', 'passthru', 'proc_open', 'popen', 
     'file_get_contents', 'file_put_contents', 'fopen', 'file', 'readfile', 'unlink', 'rename', 'copy', 'mkdir', 'rmdir', 'touch', 'chmod', 'symlink', 'tempnam', 'tmpfile',
     'call_user_func', 'call_user_func_array', 'forward_static_call', 'forward_static_call_array', 'extract', 'parse_str', 'header', 'setcookie'];
 $violations = [];
-$own = array_merge(SIMB_FILES, ['linux_v57_shell.php']);
+$own = array_merge(SIMB_FILES, ['src/linux/linux_v57_shell.php']);
 foreach ($own as $f) {
     $src = (string)file_get_contents($ROOT . '/' . $f);
     $lines = substr_count($src, "\n");
-    if ($f !== 'linux_v57_shell.php' && $lines > 800) $violations[] = "$f: $lines řádků";
+    if ($f !== 'src/linux/linux_v57_shell.php' && $lines > 800) $violations[] = "$f: $lines řádků";
     $tokens = token_get_all($src);
     $n = count($tokens);
     for ($i = 0; $i < $n; $i++) {
@@ -460,7 +460,7 @@ foreach ($own as $f) {
     if (preg_match_all('/preg_replace(_callback)?\s*\(\s*\'(.)(?:(?!\2).)*\2([a-zA-Z]*)\'/', $src, $mm, PREG_SET_ORDER) > 0) {
         foreach ($mm as $m) if (str_contains($m[3], 'e')) $violations[] = "$f: preg_replace /e";
     }
-    if ($f === 'linux_v57_shell.php') continue;
+    if ($f === 'src/linux/linux_v57_shell.php') continue;
     // IPv4 literály (ne čísla verzí typu 8:6.9.11.60+dfsg)
     preg_match_all('/(?<![\w.:])(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(?![\w.+-])/', $src, $ips, PREG_SET_ORDER);
     foreach ($ips as $ip) {

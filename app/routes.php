@@ -47,77 +47,77 @@ return [
     'libs' => [
         // Vždy (index.php): hromadné zakládání účtů a import dotazníků běží na každém requestu.
         // v67: perf_v67.php (přepočet dovedností mimo GET přehledu, paměť požadavku) a ui_v67.php (motiv, prázdné stavy).
-        'core' => ['accounts_v53.php', 'intake_v51.php', 'perf_v67.php', 'ui_v67.php'],
+        'core' => ['src/student/accounts_v53.php', 'src/student/intake_v51.php', 'src/ops/perf_v67.php', 'src/ui/ui_v67.php'],
         // Hlavička a patička žákovských stránek (render_header/render_footer) a vše, co volají.
         // arena_v57.php si při načtení vyžádá linux_v57_lab.php (a ten celý simulátor) – viz INTEGRATION.md.
-        'layout' => ['app/views/_layout.php', 'student_v55.php', 'student_v55_views.php', 'zero_friction_v50_6.php', 'unified_page_shell_v50_7.php', 'student_links_v69.php', 'goal_navigator_v50_4.php', 'hands_on_learning_v50.php', 'independent_growth_v50.php', 'learning_v56.php', 'session_v53.php', 'tutorial_v52.php', 'linux_v57_lab.php', 'arena_v57.php', 'paths_v63.php'],
-        'intake_views' => ['intake_v51_views.php'],
-        'session_views' => ['session_v53.php', 'session_v53_views.php'],
-        'visual_lab' => ['visual_simulation_views_v45.php', 'visual_practical_learning_views_v48.php', 'visual_labs_3a_views_v48_1.php'],
-        'hands_on_views' => ['hands_on_learning_v50.php', 'independent_growth_v50.php', 'hands_on_learning_views_v50.php', 'independent_growth_views_v50.php'],
-        'lesson_kit_views' => ['adaptive_lesson_views_v42.php', 'cognitive_visualization_views_v43.php', 'learning_studio_views_v44.php', 'visual_simulation_views_v45.php'],
-        'tutorial_views' => ['tutorial_v52.php', 'points_v53.php', 'tutorial_v52_views.php'],
-        'lesson_path_views' => ['learning_v56.php', 'question_meta_v66.php', 'assessment_v66.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'lesson_exit_v72_views.php', 'lesson_glossary_v72.php', 'ai_prompts_v72_1.php', 'ai_prompts_v76.php', 'ai_prompts_v77.php', 'taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'levels_v75.php', 'levels_v75_views.php', 'learning_v56_views.php'],   // v75: úrovně aktivit (doporučení čte exit tickety a banku úloh) // v66: sumativní test lekce (pořadí otázek, bez odměn)
+        'layout' => ['app/views/_layout.php', 'src/student/student_v55.php', 'src/student/student_v55_views.php', 'src/student/zero_friction_v50_6.php', 'src/ui/unified_page_shell_v50_7.php', 'src/student/student_links_v69.php', 'src/student/goal_navigator_v50_4.php', 'src/lessons/hands_on_learning_v50.php', 'src/student/independent_growth_v50.php', 'src/lessons/learning_v56.php', 'src/lessons/session_v53.php', 'src/lessons/tutorial_v52.php', 'src/linux/linux_v57_lab.php', 'src/arena/arena_v57.php', 'src/paths/paths_v63.php'],
+        'intake_views' => ['src/student/intake_v51_views.php'],
+        'session_views' => ['src/lessons/session_v53.php', 'src/lessons/session_v53_views.php'],
+        'visual_lab' => ['src/lessons/visual_simulation_views_v45.php', 'src/lessons/visual_practical_learning_views_v48.php', 'src/lessons/visual_labs_3a_views_v48_1.php'],
+        'hands_on_views' => ['src/lessons/hands_on_learning_v50.php', 'src/student/independent_growth_v50.php', 'src/lessons/hands_on_learning_views_v50.php', 'src/student/independent_growth_views_v50.php'],
+        'lesson_kit_views' => ['src/lessons/adaptive_lesson_views_v42.php', 'src/lessons/cognitive_visualization_views_v43.php', 'src/lessons/learning_studio_views_v44.php', 'src/lessons/visual_simulation_views_v45.php'],
+        'tutorial_views' => ['src/lessons/tutorial_v52.php', 'src/student/points_v53.php', 'src/lessons/tutorial_v52_views.php'],
+        'lesson_path_views' => ['src/lessons/learning_v56.php', 'src/assessment/question_meta_v66.php', 'src/assessment/assessment_v66.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/lessons/lesson_approval_v72.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/lessons/lesson_exit_v72.php', 'src/lessons/lesson_exit_v72_views.php', 'src/lessons/lesson_glossary_v72.php', 'src/teacher/ai_prompts_v72_1.php', 'src/teacher/ai_prompts_v76.php', 'src/teacher/ai_prompts_v77.php', 'src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/assessment/taskbank_v76.php', 'src/levels/levels_v75.php', 'src/levels/levels_v75_views.php', 'src/lessons/learning_v56_views.php'],   // v75: úrovně aktivit (doporučení čte exit tickety a banku úloh) // v66: sumativní test lekce (pořadí otázek, bez odměn)
         // v58 · Robotí liga (LAB-01); další herní moduly v58 přidává integrátor po dokončení.
-        'robots' => ['robots_v58.php', 'robots_v58_game.php', 'robots_v58_views.php'],
+        'robots' => ['src/robots/robots_v58.php', 'src/robots/robots_v58_game.php', 'src/robots/robots_v58_views.php'],
         // v58 · CTF týden a Incidenty (ARN-02, ARN-03).
-        'arena_events' => ['arena_v58_ctf.php', 'arena_v58_incident.php', 'arena_v58_events_views.php'],
+        'arena_events' => ['src/arena/arena_v58_ctf.php', 'src/arena/arena_v58_incident.php', 'src/arena/arena_v58_events_views.php'],
         // v58 · Týmové hry (6 her; views si samy načtou registr, kvíz a herní moduly).
-        'teamgames' => ['teamgames_v58_views.php'],
+        'teamgames' => ['src/teamgames/teamgames_v58_views.php'],
         // v58 LAB-08: odznaky za Linux dovednosti na tabuli odznaků v55 (profil a studijní centra).
-        'lab_badges' => ['lab_v58_learning.php'],
+        'lab_badges' => ['src/linux/lab_v58_learning.php'],
         // v58 · ARN-01 Týdenní hádanka (golfové úlohy, mimo třídní závod).
-        'weekly' => ['arena_v58_weekly.php', 'arena_v58_views.php'],
-        'linux_lab' => ['linux_v57_core.php', 'linux_v57_world.php', 'linux_v57_shell.php', 'linux_v57_cmd_files.php', 'linux_v57_cmd_shell.php', 'linux_v57_cmd_text.php', 'linux_v57_cmd_sys.php', 'linux_v57_cmd_net.php', 'linux_v57_manual.php', 'linux_v57_levels.php', 'linux_v57_levels_ops.php', 'linux_v57_lab.php', 'linux_v57_views.php', 'arena_v57.php', 'arena_v57_views.php', 'lab_v58_learning.php', 'lab_v58_review.php'],
-        'kb' => ['assessment_visuals.php', 'app/views/_kb.php'],
-        'lesson_page' => ['reality_demos.php', 'assessment_visuals.php', 'mastery_learning_views_v41.php', 'app/views/_lesson.php'],
-        'structured_lesson' => ['reality_demos.php', 'assessment_visuals.php', 'adaptive_lesson_views_v42.php', 'cognitive_visualization_views_v43.php', 'learning_studio_views_v44.php', 'visual_simulation_views_v45.php', 'app/views/_lesson.php'],
-        'student_hubs' => ['teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'student_learning_accelerator_v47_1.php', 'student_learning_accelerator_views_v47_1.php', 'student_corrective_cycle_v47_2.php', 'student_corrective_cycle_views_v47_2.php', 'student_social_views.php', 'skill_views.php', 'project_workspace_views.php', 'points_v53.php', 'points_v60.php', 'learning_v56_views.php', 'profile_v60.php', 'profile_v60_views.php', 'feedback_v60.php', 'feedback_v60_views.php', 'marketplace_v60.php', 'arena_v60_challenge.php', 'arena_v60_challenge_views.php', 'motivation_v61_views.php', 'arena_v61_views.php'],
+        'weekly' => ['src/arena/arena_v58_weekly.php', 'src/arena/arena_v58_views.php'],
+        'linux_lab' => ['src/linux/linux_v57_core.php', 'src/linux/linux_v57_world.php', 'src/linux/linux_v57_shell.php', 'src/linux/linux_v57_cmd_files.php', 'src/linux/linux_v57_cmd_shell.php', 'src/linux/linux_v57_cmd_text.php', 'src/linux/linux_v57_cmd_sys.php', 'src/linux/linux_v57_cmd_net.php', 'src/linux/linux_v57_manual.php', 'src/linux/linux_v57_levels.php', 'src/linux/linux_v57_levels_ops.php', 'src/linux/linux_v57_lab.php', 'src/linux/linux_v57_views.php', 'src/arena/arena_v57.php', 'src/arena/arena_v57_views.php', 'src/linux/lab_v58_learning.php', 'src/linux/lab_v58_review.php'],
+        'kb' => ['src/assessment/assessment_visuals.php', 'app/views/_kb.php'],
+        'lesson_page' => ['src/content/reality_demos.php', 'src/assessment/assessment_visuals.php', 'src/lessons/mastery_learning_views_v41.php', 'app/views/_lesson.php'],
+        'structured_lesson' => ['src/content/reality_demos.php', 'src/assessment/assessment_visuals.php', 'src/lessons/adaptive_lesson_views_v42.php', 'src/lessons/cognitive_visualization_views_v43.php', 'src/lessons/learning_studio_views_v44.php', 'src/lessons/visual_simulation_views_v45.php', 'app/views/_lesson.php'],
+        'student_hubs' => ['src/teacher/teacher_operations_v46.php', 'src/student/student_learning_coach_v47.php', 'src/student/student_learning_coach_views_v47.php', 'src/student/student_learning_accelerator_v47_1.php', 'src/student/student_learning_accelerator_views_v47_1.php', 'src/student/student_corrective_cycle_v47_2.php', 'src/student/student_corrective_cycle_views_v47_2.php', 'src/student/student_social_views.php', 'src/assessment/skill_views.php', 'src/projects/project_workspace_views.php', 'src/student/points_v53.php', 'src/student/points_v60.php', 'src/lessons/learning_v56_views.php', 'src/student/profile_v60.php', 'src/student/profile_v60_views.php', 'src/student/feedback_v60.php', 'src/student/feedback_v60_views.php', 'src/student/marketplace_v60.php', 'src/arena/arena_v60_challenge.php', 'src/arena/arena_v60_challenge_views.php', 'src/student/motivation_v61_views.php', 'src/arena/arena_v61_views.php'],
         // v60 · obchod bodů (?view=obchod).
-        'marketplace' => ['points_v53.php', 'points_v60.php', 'marketplace_v60.php', 'motivation_v61_views.php', 'marketplace_v60_views.php'],
+        'marketplace' => ['src/student/points_v53.php', 'src/student/points_v60.php', 'src/student/marketplace_v60.php', 'src/student/motivation_v61_views.php', 'src/student/marketplace_v60_views.php'],
         // v60 · nahlášení chyby / návrh vylepšení (?view=hlaseni).
-        'feedback' => ['points_v53.php', 'feedback_v60.php', 'feedback_v60_views.php'],
+        'feedback' => ['src/student/points_v53.php', 'src/student/feedback_v60.php', 'src/student/feedback_v60_views.php'],
         // v60 · projekty podle levelu (?view=projekty).
-        'projects' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'projects_v60.php', 'projects_v60_views.php'], // v65: zámek projektu podle kompetencí (m62_student)
+        'projects' => ['src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/mastery_v62.php', 'src/projects/projects_v60.php', 'src/projects/projects_v60_views.php'], // v65: zámek projektu podle kompetencí (m62_student)
         // v62 · záložka Kompetence v profilu (pilot 3.A); kód se spouští jen na záložce kompetence v pilotní třídě (audit routeru vyžaduje celé skupiny).
-        'competency' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'competency_v62_views.php', 'challenges_v64.php', 'projects_v65.php', 'projects_v65_evidence.php', 'question_meta_v66.php', 'assessment_v66.php', 'grading_v66.php', 'grading_v66_views.php', 'growth_v67.php', 'growth_v67_views.php'], // v67: Můj růst, cíle a SVG přehled oblastí; v65: adaptér projektů volá proj65_*; v66: odkaz Moje hodnocení v mapě kompetencí
+        'competency' => ['src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/evidence_v62_adapters.php', 'src/assessment/mastery_v62.php', 'src/assessment/competency_v62_views.php', 'src/student/challenges_v64.php', 'src/projects/projects_v65.php', 'src/projects/projects_v65_evidence.php', 'src/assessment/question_meta_v66.php', 'src/assessment/assessment_v66.php', 'src/assessment/grading_v66.php', 'src/assessment/grading_v66_views.php', 'src/student/growth_v67.php', 'src/student/growth_v67_views.php'], // v67: Můj růst, cíle a SVG přehled oblastí; v65: adaptér projektů volá proj65_*; v66: odkaz Moje hodnocení v mapě kompetencí
         // v63 · výukové cesty (?view=cesty, ?view=cesta, akce p63_*); jádro paths_v63.php je lehké, obsah a banka se načítají líně.
-        'paths' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'paths_v63_flow.php', 'paths_v63_actions.php', 'paths_v63_views.php'],
-        'dashboard' => ['motivation_v61_views.php', 'competencies_v62.php', 'evidence_v62.php', 'competency_v62_views.php', 'challenges_v64.php', 'paths_v63.php', 'paths_v63_flow.php', 'paths_v63_views.php', 'teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php', 'mastery_learning_views_v41.php', 'learning_studio_views_v44.php', 'skill_views.php', 'project_workspace_views.php'],
+        'paths' => ['src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/mastery_v62.php', 'src/paths/paths_v63.php', 'src/paths/paths_v63_flow.php', 'src/paths/paths_v63_actions.php', 'src/paths/paths_v63_views.php'],
+        'dashboard' => ['src/student/motivation_v61_views.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/competency_v62_views.php', 'src/student/challenges_v64.php', 'src/paths/paths_v63.php', 'src/paths/paths_v63_flow.php', 'src/paths/paths_v63_views.php', 'src/teacher/teacher_operations_v46.php', 'src/student/student_learning_coach_v47.php', 'src/student/student_learning_coach_views_v47.php', 'src/lessons/mastery_learning_views_v41.php', 'src/lessons/learning_studio_views_v44.php', 'src/assessment/skill_views.php', 'src/projects/project_workspace_views.php'],
         // v65 · cyklus projektu, peer review a portfolio (?view=projekt65, ?view=portfolio, akce proj65_s_*).
-        'projects65' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'projects_v60.php', 'projects_v65.php', 'projects_v65_rubrics.php', 'projects_v65_peer.php', 'projects_v65_team.php', 'projects_v65_evidence.php', 'portfolio_v65.php', 'projects_v65_views.php', 'projects_v65_detail_views.php', 'portfolio_v65_views.php',
-            'taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'taskbank_v75_views.php', 'portfolio_v75.php', 'portfolio_v75_views.php',   // v75: připnuté práce v portfoliu
-            'stepper_v79.php', 'stepper_v79_views.php', 'stepper_v79_student.php', 'portfolio_v79.php'],   // v79: připnutí po krocích
+        'projects65' => ['src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/evidence_v62_adapters.php', 'src/assessment/mastery_v62.php', 'src/projects/projects_v60.php', 'src/projects/projects_v65.php', 'src/projects/projects_v65_rubrics.php', 'src/projects/projects_v65_peer.php', 'src/projects/projects_v65_team.php', 'src/projects/projects_v65_evidence.php', 'src/student/portfolio_v65.php', 'src/projects/projects_v65_views.php', 'src/projects/projects_v65_detail_views.php', 'src/student/portfolio_v65_views.php',
+            'src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/assessment/taskbank_v76.php', 'src/assessment/taskbank_v75_views.php', 'src/student/portfolio_v75.php', 'src/student/portfolio_v75_views.php',   // v75: připnuté práce v portfoliu
+            'src/ui/stepper_v79.php', 'src/ui/stepper_v79_views.php', 'src/ui/stepper_v79_student.php', 'src/student/portfolio_v79.php'],   // v79: připnutí po krocích
         // v66 · Moje hodnocení (?view=hodnoceni): řetězec důkazů a převzatá známka; CSS jen na tomto pohledu.
-        'grading66' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'projects_v65.php', 'assessment_v66.php', 'grading_v66.php', 'competency_v62_views.php', 'grading_v66_views.php'],
+        'grading66' => ['src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/mastery_v62.php', 'src/paths/paths_v63.php', 'src/projects/projects_v65.php', 'src/assessment/assessment_v66.php', 'src/assessment/grading_v66.php', 'src/assessment/competency_v62_views.php', 'src/assessment/grading_v66_views.php'],
         // v67 · profil: cíle žáka a sdílení (akce grow67_*); jádro growth_v67.php čte důkazy, cesty a projekty jen pro časovou osu.
-        'growth' => ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'paths_v63.php', 'projects_v60.php', 'projects_v65.php', 'challenges_v64.php', 'growth_v67.php'],
+        'growth' => ['src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/evidence_v62_adapters.php', 'src/assessment/mastery_v62.php', 'src/paths/paths_v63.php', 'src/projects/projects_v60.php', 'src/projects/projects_v65.php', 'src/student/challenges_v64.php', 'src/student/growth_v67.php'],
         // v75 · úlohy s variantami (?view=ulohy, akce tb75_*) a opakování před písemkou (?view=opakovani; čte exit tickety v72).
-        'taskbank75' => ['taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'taskbank_v75_views.php'],
+        'taskbank75' => ['src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/assessment/taskbank_v76.php', 'src/assessment/taskbank_v75_views.php'],
         // v79 · krokové postupy (stepper): jádro, vykreslení a žákovské toky (úloha s variantou; portfolio_v79.php je ve skupině projects65).
-        'stepper79' => ['stepper_v79.php', 'stepper_v79_views.php', 'stepper_v79_student.php'],
-        'review75' => ['lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'taskbank_v75_views.php', 'review_v75.php', 'review_v75_views.php'],
+        'stepper79' => ['src/ui/stepper_v79.php', 'src/ui/stepper_v79_views.php', 'src/ui/stepper_v79_student.php'],
+        'review75' => ['src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/lessons/lesson_approval_v72.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/lessons/lesson_exit_v72.php', 'src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/assessment/taskbank_v76.php', 'src/assessment/taskbank_v75_views.php', 'src/student/review_v75.php', 'src/student/review_v75_views.php'],
         // v75 · POST žáka: úlohy, úroveň aktivity (doporučení čte exit tickety) a portfolio (kandidáti projektů v65).
-        'v75_actions' => ['taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'taskbank_v75_views.php', 'levels_v75.php', 'levels_v75_views.php', 'portfolio_v75.php', 'portfolio_v75_views.php'],
+        'v75_actions' => ['src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/assessment/taskbank_v76.php', 'src/assessment/taskbank_v75_views.php', 'src/levels/levels_v75.php', 'src/levels/levels_v75_views.php', 'src/student/portfolio_v75.php', 'src/student/portfolio_v75_views.php'],
         // v80 · podpora učení: nápovědy a vysvětlení chyb (hints_v80*), opakování chyb, cvičení, cíle (?view=cviceni, ?view=opakovat; háček v tb75_handle_post).
-        'learning80' => ['taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'taskbank_v75_views.php', 'hints_v80_gfx.php', 'hints_v80.php', 'learning_v80.php', 'widgets_v80.php', 'progress_v80.php', 'learning_v80_views.php', 'widgets_v80_views.php'],
+        'learning80' => ['src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/assessment/taskbank_v76.php', 'src/assessment/taskbank_v75_views.php', 'src/lessons/hints_v80_gfx.php', 'src/lessons/hints_v80.php', 'src/lessons/learning_v80.php', 'src/ui/widgets_v80.php', 'src/student/progress_v80.php', 'src/lessons/learning_v80_views.php', 'src/ui/widgets_v80_views.php'],
         // v80 · Můj pokrok (?view=pokrok): kompetence v62 a cesty v63 jen ke čtení + doporučení dalšího kroku.
-        'progress80' => ['competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'paths_v63_flow.php', 'support_v80_1.php', 'support_v80_1_views.php', 'progress_v80_views.php'],   // v80.1: Od učitele
-        'learning80_post' => ['learning_v80_post.php'],
+        'progress80' => ['src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/mastery_v62.php', 'src/paths/paths_v63.php', 'src/paths/paths_v63_flow.php', 'src/student/support_v80_1.php', 'src/student/support_v80_1_views.php', 'src/student/progress_v80_views.php'],   // v80.1: Od učitele
+        'learning80_post' => ['src/lessons/learning_v80_post.php'],
         'diagrams' => ['app/views/_diagrams.php'],
         // POST
-        'lesson_path' => ['tutorial_v52.php', 'session_v53.php', 'learning_v56.php', 'question_meta_v66.php', 'assessment_v66.php'],
-        'hodina' => ['tutorial_v52.php', 'session_v53.php', 'student_v55.php'],
-        'session' => ['session_v53.php'],
-        'points' => ['tutorial_v52.php', 'points_v53.php'],
-        'teacher_ops' => ['teacher_operations_v46.php'],
-        'coach' => ['student_learning_coach_v47.php', 'student_learning_accelerator_v47_1.php', 'student_corrective_cycle_v47_2.php'],
-        'hands_on' => ['hands_on_learning_v50.php', 'independent_growth_v50.php', 'goal_navigator_v50_4.php'],
-        'mastery' => ['teacher_operations_v46.php', 'reality_demos.php', 'assessment_visuals.php'],
-        'project_workspace' => ['teacher_operations_v46.php', 'project_workspace_views.php'],
-        'auth' => ['session_v53.php', 'student_v55.php'],
+        'lesson_path' => ['src/lessons/tutorial_v52.php', 'src/lessons/session_v53.php', 'src/lessons/learning_v56.php', 'src/assessment/question_meta_v66.php', 'src/assessment/assessment_v66.php'],
+        'hodina' => ['src/lessons/tutorial_v52.php', 'src/lessons/session_v53.php', 'src/student/student_v55.php'],
+        'session' => ['src/lessons/session_v53.php'],
+        'points' => ['src/lessons/tutorial_v52.php', 'src/student/points_v53.php'],
+        'teacher_ops' => ['src/teacher/teacher_operations_v46.php'],
+        'coach' => ['src/student/student_learning_coach_v47.php', 'src/student/student_learning_accelerator_v47_1.php', 'src/student/student_corrective_cycle_v47_2.php'],
+        'hands_on' => ['src/lessons/hands_on_learning_v50.php', 'src/student/independent_growth_v50.php', 'src/student/goal_navigator_v50_4.php'],
+        'mastery' => ['src/teacher/teacher_operations_v46.php', 'src/content/reality_demos.php', 'src/assessment/assessment_visuals.php'],
+        'project_workspace' => ['src/teacher/teacher_operations_v46.php', 'src/projects/project_workspace_views.php'],
+        'auth' => ['src/lessons/session_v53.php', 'src/student/student_v55.php'],
         // v72 · exit ticket schválené lekce (akce lx72_answer); důkaz v62 jen v pilotních třídách.
-        'lesson_exit' => ['tutorial_v52.php', 'session_v53.php', 'learning_v56.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php', 'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'competencies_v62.php', 'evidence_v62.php', 'lesson_exit_v72.php'],   // v72.1: režim exit ticketu třídy
+        'lesson_exit' => ['src/lessons/tutorial_v52.php', 'src/lessons/session_v53.php', 'src/lessons/learning_v56.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/lessons/lesson_approval_v72.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/lessons/lesson_exit_v72.php'],   // v72.1: režim exit ticketu třídy
     ],
     // Stránky, které vkládá přímo index.php (globální ochrany).
     'pages' => [

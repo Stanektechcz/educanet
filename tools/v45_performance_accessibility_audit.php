@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if(PHP_SAPI!=='cli'){http_response_code(400);exit("CLI only\n");}
 $root=dirname(__DIR__);$errors=[];
-$css=file_get_contents($root.'/assets/visual-simulation-v45.css')?:'';$js=file_get_contents($root.'/assets/visual-simulation-v45.js')?:'';$views=file_get_contents($root.'/visual_simulation_views_v45.php')?:'';$sw=file_get_contents($root.'/sw.js')?:'';
+$css=file_get_contents($root.'/assets/visual-simulation-v45.css')?:'';$js=file_get_contents($root.'/assets/visual-simulation-v45.js')?:'';$views=file_get_contents($root.'/src/lessons/visual_simulation_views_v45.php')?:'';$sw=file_get_contents($root.'/sw.js')?:'';
 if(!str_contains($css,'prefers-reduced-motion'))$errors[]='CSS reduced-motion fallback missing';
 if(!str_contains($js,'prefers-reduced-motion'))$errors[]='JS reduced-motion detection missing';
 if(!str_contains($views,'aria-live="polite"'))$errors[]='live feedback aria-live missing';

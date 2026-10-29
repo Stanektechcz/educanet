@@ -20,11 +20,11 @@ require_once __DIR__ . '/lib/audit.php';
 $tmp = edu_audit_temp_storage('v59-teacher-accounts');
 putenv('EDUCANET_TEACHER_ROLE=teacher');
 require $root . '/bootstrap.php';
-require_once $root . '/teacher_accounts_v59.php';
-require_once $root . '/teacher_scope_v59.php';
-require_once $root . '/teacher_accounts_v59_admin.php';
-require_once $root . '/teacher_accounts_v59_views.php';
-require_once $root . '/teacher_v58.php';
+require_once $root . '/src/teacher/teacher_accounts_v59.php';
+require_once $root . '/src/teacher/teacher_scope_v59.php';
+require_once $root . '/src/teacher/teacher_accounts_v59_admin.php';
+require_once $root . '/src/teacher/teacher_accounts_v59_views.php';
+require_once $root . '/src/teacher/teacher_v58.php';
 
 $state = audit_counter();
 $check = audit_checker($state);
@@ -65,12 +65,12 @@ $teacherSrc = $read($root . '/teacher.php');
 $postBlock = (string)strstr($teacherSrc, "if (\$action === 'teacher_login')");
 $collect(substr($postBlock, 0, max(0, (int)strpos($postBlock, '$rawFlash'))));
 $handlers = [
-    'intake_v51_teacher.php' => 'intake_v51_teacher_handle_post', 'session_v53_teacher.php' => 'sess53_teacher_handle_post',
-    'arena_v57.php' => 'arena57_teacher_handle_post', 'accounts_v58_views.php' => 'acc58_teacher_apply',
-    'arena_v58_weekly.php' => 'arena58_weekly_teacher_handle_post', 'robots_v58.php' => 'robots58_teacher_handle_post',
-    'teamgames_v58_teacher_views.php' => 'tg58_teacher_handle_post', 'arena_v58_ctf.php' => 'arena58_ctf_teacher_handle_post',
-    'arena_v58_incident.php' => 'arena58_inc_teacher_handle_post', 'lab_v58_teacher.php' => 'lab58t_teacher_handle_post',
-    'lab_v58_editor.php' => 'lab58e_teacher_handle_post', 'identity_v58_views.php' => 'identity58_teacher_handle_post',
+    'src/student/intake_v51_teacher.php' => 'intake_v51_teacher_handle_post', 'src/lessons/session_v53_teacher.php' => 'sess53_teacher_handle_post',
+    'src/arena/arena_v57.php' => 'arena57_teacher_handle_post', 'src/student/accounts_v58_views.php' => 'acc58_teacher_apply',
+    'src/arena/arena_v58_weekly.php' => 'arena58_weekly_teacher_handle_post', 'src/robots/robots_v58.php' => 'robots58_teacher_handle_post',
+    'src/teamgames/teamgames_v58_teacher_views.php' => 'tg58_teacher_handle_post', 'src/arena/arena_v58_ctf.php' => 'arena58_ctf_teacher_handle_post',
+    'src/arena/arena_v58_incident.php' => 'arena58_inc_teacher_handle_post', 'src/linux/lab_v58_teacher.php' => 'lab58t_teacher_handle_post',
+    'src/linux/lab_v58_editor.php' => 'lab58e_teacher_handle_post', 'src/student/identity_v58_views.php' => 'identity58_teacher_handle_post',
 ];
 $missingHandlers = [];
 foreach ($handlers as $file => $fn) {
@@ -124,7 +124,7 @@ $check('neplatné přihlašovací jméno, duplicita a neplatná role odmítnuty'
 $accRaw = $read(teacher59_accounts_path());
 $check('OTP: 4 slova + 4 číslice, unikátní, platnost 72 h, uložen jen hash', !array_filter($otps, static fn(string $o): bool => preg_match(teacher59_otp_pattern(), $o) !== 1) && count(array_unique($otps)) === count($otps)
     && abs((int)$a['account']['otp']['expires_at'] - time() - TEACHER59_OTP_TTL) < 60 && password_verify($a['otp'], (string)teacher59_account($aid)['password_hash']) && !array_filter($otps, static fn(string $o): bool => str_contains($accRaw, $o)));
-require_once $root . '/accounts_v58.php';
+require_once $root . '/src/student/accounts_v58.php';
 $check('entropie OTP ≥ 45 bitů (' . round(TEACHER59_OTP_WORD_COUNT * log(count(acc58_words()), 2) + 4 * log(strlen(ACC58_OTP_DIGITS), 2), 1) . ')', TEACHER59_OTP_WORD_COUNT * log(count(acc58_words()), 2) + 4 * log(strlen(ACC58_OTP_DIGITS), 2) >= 45.0);
 $check('nový účet: must_change, active, session_version 1, žádný e-mail ani IP', !empty(teacher59_account($aid)['must_change_password']) && teacher59_account($aid)['status'] === 'active' && (int)teacher59_account($aid)['session_version'] === 1
     && !str_contains($accRaw, '"email"') && !str_contains($accRaw, '198.51.100'));
@@ -384,7 +384,7 @@ $check('SEC59-05: chybějící soubor + ' . TEACHER59_REQUIRED_ENV . '=1 → bro
     && teacher59_guard_get_check('quality', []) === 'no_session' && !teacher_export_authenticated() && teacher_export_configured() && $throws(static fn() => teacher59_accounts())
     && !teacher59_attempt_login('alena.ucitelova', $pwA)['ok'] && teacher59_owner_account_map() === null);
 // Stránka končí exit – vykreslí ji podproces nad stejným dočasným úložištěm.
-$child = proc_open([PHP_BINARY, '-r', '$_SERVER["SCRIPT_FILENAME"] = "audit-child"; require ' . var_export($root . '/bootstrap.php', true) . '; require_once ' . var_export($root . '/teacher_accounts_v59_views.php', true) . '; teacher59_guard_forced_get(null); echo "NO-EXIT";'],
+$child = proc_open([PHP_BINARY, '-r', '$_SERVER["SCRIPT_FILENAME"] = "audit-child"; require ' . var_export($root . '/bootstrap.php', true) . '; require_once ' . var_export($root . '/src/teacher/teacher_accounts_v59_views.php', true) . '; teacher59_guard_forced_get(null); echo "NO-EXIT";'],
     [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, null, array_merge(getenv(), ['EDUCANET_STORAGE_DIR' => STORAGE_DIR, TEACHER59_REQUIRED_ENV => '1']));
 $unavailable = is_resource($child) ? (string)stream_get_contents($pipes[1]) : '';
 if (is_resource($child)) { fclose($pipes[1]); fclose($pipes[2]); proc_close($child); }
@@ -416,7 +416,7 @@ $createdAfter = count(array_filter(teacher59_log_rows(TEACHER59_LOG_LIMIT), stat
 $check('SEC59-04: záplava scope_denied/legacy_key_used je omezená (' . $floodDenied . '/' . $floodKey . ' ≤ ' . TEACHER59_NOISE_PER_MINUTE . ' za minutu) a nevytlačí „created“ z bezpečnostního logu',
     $floodDenied >= 1 && $floodDenied <= TEACHER59_NOISE_PER_MINUTE * 2 && $floodKey <= TEACHER59_NOISE_PER_MINUTE * 2 && $createdBefore >= 5 && $createdAfter === $createdBefore
     && !str_contains($read(teacher59_log_path()), '"flood"'));
-$files = ['teacher_accounts_v59.php', 'teacher_scope_v59.php', 'teacher_accounts_v59_admin.php', 'teacher_accounts_v59_views.php', 'teacher_accounts_v59_limits.php'];
+$files = ['src/teacher/teacher_accounts_v59.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_accounts_v59_admin.php', 'src/teacher/teacher_accounts_v59_views.php', 'src/teacher/teacher_accounts_v59_limits.php'];
 foreach ($files as $f) {
     $src = $read($root . '/' . $f);
     $check('knihovna ' . $f . ': strict_types + guard, PHP 8.1 (bez readonly/enum/json_validate/typovaných konstant), ≤ 800 řádků',
@@ -427,7 +427,7 @@ foreach (['tools/v59_teacher_accounts.php', 'tools/v59_teacher_accounts_audit.ph
 $js = $read($root . '/assets/teacher-accounts-v59.js');
 $css = $read($root . '/assets/teacher-accounts-v59.css');
 $check('JS bez innerHTML/eval, CSS s viditelným fokusem, cíli 44 px a tiskem', !str_contains($js, 'innerHTML') && !str_contains($js, 'eval(') && str_contains($css, ':focus-visible') && str_contains($css, 'min-height: 44px') && str_contains($css, '@media print'), false);
-$views = $read($root . '/teacher_accounts_v59_views.php');
+$views = $read($root . '/src/teacher/teacher_accounts_v59_views.php');
 $check('pohledy: žádné OTP v URL (jen jednorázový token), no-store u stránek účtů', !preg_match('/http_build_query\([^)]*otp/', $views) && substr_count($views, 'teacher59_no_store()') >= 5, false);
 
 exit(audit_summary($state, 'V59_TEACHER_ACCOUNTS'));

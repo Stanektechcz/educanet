@@ -167,8 +167,8 @@ foreach (['storage' => STORAGE_DIR, 'uploads' => UPLOAD_DIR, 'cache/runtime' => 
 // Načteno už zde (ne až u sekce "Učitelské účty" níže), aby SEC59-05 mohlo rozlišit
 // legacy mód (klíč je jediný způsob přihlášení/exportu) od accounts módu (klíč se
 // pro login ani export už nepoužívá, takže "nenastaveno" je tam v pořádku).
-if (!function_exists('teacher59_mode') && is_file($root . '/teacher_accounts_v59.php')) {
-    require_once $root . '/teacher_accounts_v59.php';
+if (!function_exists('teacher59_mode') && is_file($root . '/src/teacher/teacher_accounts_v59.php')) {
+    require_once $root . '/src/teacher/teacher_accounts_v59.php';
 }
 $teacher59ModeEarly = function_exists('teacher59_mode') ? teacher59_mode() : null;
 

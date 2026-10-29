@@ -36,7 +36,7 @@ set_error_handler(static function (int $no, string $str, string $file, int $line
     return true;
 });
 
-require_once $ROOT . '/linux_v57_lab.php';
+require_once $ROOT . '/src/linux/linux_v57_lab.php';
 
 $GLOBALS['v58a'] = ['checks' => 0, 'failed' => 0];
 function v58a_check(string $name, bool $ok, string $detail = ''): void
@@ -416,10 +416,10 @@ $closePos = strpos($api, 'session_write_close();');
 v58a_check('api:session-write-close-after-csrf', $closePos !== false && $closePos > strpos($api, 'hash_equals') && $closePos > strpos($api, 'adaptive_student_key') && $closePos < strpos($api, 'lab57_session('));
 v58a_check('api:no-session-write-after-close', preg_match('/\$_SESSION\[[^\]]+\]\s*=(?!=)/', substr($api, (int)$closePos)) !== 1);
 v58a_check('api:context-validated-by-registry', str_contains($api, 'lab58_context_valid($context)'));
-v58a_check('api:xp-reopens-session', str_contains((string)file_get_contents($ROOT . '/linux_v57_lab.php'), 'lab58_with_session('));
+v58a_check('api:xp-reopens-session', str_contains((string)file_get_contents($ROOT . '/src/linux/linux_v57_lab.php'), 'lab58_with_session('));
 
 $forbidden = ['exec', 'shell_exec', 'system', 'passthru', 'proc_open', 'popen', 'pcntl_exec', 'eval', 'create_function', 'assert', 'fsockopen', 'pfsockopen', 'stream_socket_client', 'socket_create', 'socket_connect', 'curl_init', 'curl_exec', 'curl_multi_exec', 'dns_get_record', 'gethostbyname', 'gethostbynamel', 'getmxrr', 'checkdnsrr', 'mail'];
-$files = array_merge(glob($ROOT . '/linux_v58_*.php') ?: [], glob($ROOT . '/lab_v58_*.php') ?: [], [__FILE__]);
+$files = array_merge(glob($ROOT . '/src/linux/linux_v58_*.php') ?: [], glob($ROOT . '/src/linux/lab_v58_*.php') ?: [], [__FILE__]);
 $violations = [];
 foreach ($files as $path) {
     $tokens = token_get_all((string)file_get_contents($path));
@@ -442,11 +442,11 @@ foreach ($files as $path) {
 }
 v58a_check('safety:no-exec-network-v58', $violations === [], implode('; ', $violations));
 v58a_check('safety:scanned', count($files) >= 3, (string)count($files));
-foreach (array_merge(glob($ROOT . '/linux_v58_*.php') ?: [], glob($ROOT . '/lab_v58_*.php') ?: []) as $path) {
+foreach (array_merge(glob($ROOT . '/src/linux/linux_v58_*.php') ?: [], glob($ROOT . '/src/linux/lab_v58_*.php') ?: []) as $path) {
     $src = (string)file_get_contents($path);
     v58a_check('convention:' . basename($path), str_contains($src, 'declare(strict_types=1);') && str_contains($src, "basename((string)(\$_SERVER['SCRIPT_FILENAME']") && substr_count($src, "\n") < 800, 'strict_types, guard knihovny, < 800 řádků');
 }
-$extSrc = (string)file_get_contents($ROOT . '/linux_v58_ext.php');
+$extSrc = (string)file_get_contents($ROOT . '/src/linux/linux_v58_ext.php');
 v58a_check('safety:ext-loader-fixed-pattern', str_contains($extSrc, "glob(__DIR__ . '/linux_v58_' . \$kind . '_*.php')") && str_contains($extSrc, 'LAB58_EXT_FILE_RE'));
 
 // ---------------------------------------------------------------------------

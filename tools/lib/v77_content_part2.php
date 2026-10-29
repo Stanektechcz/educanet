@@ -81,7 +81,7 @@ $check('technická fakta: ' . $simTotal . ' příkazů (L1–L4 a dny bez lekce 
 $complete = 0;
 foreach (LM71_CLASSES as $c) foreach (lm71_lessons($c) as $l) $complete += $l['completeness']['complete'] ? 1 : 0;
 $check('úplnost: ' . $complete . ' ze 112 lekcí má 12/12 polí (v76: 96)', $complete === 112);
-$year = require $ROOT . '/school_year.php';
+$year = require $ROOT . '/src/ops/school_year.php';
 $calDays = cd71_calendar_days($year);
 $dayBad = [];
 $cards = [];
@@ -94,7 +94,7 @@ foreach (LM71_CLASSES as $c) {
         $titles[] = $d['title'];
         if (array_sum(array_column($d['flow'], 'minutes')) !== 90 || count($d['flow']) < 3) $dayBad[] = $id . ' průběh';
         foreach ($d['flow'] as $f) if ($f['text'] === '' || $f['student'] === '' || $f['form'] === '') $dayBad[] = $id . ' úsek';
-        if ($d['meta']['status'] !== 'navrh' || !str_starts_with((string)$d['meta']['overlay'], 'lesson_content_v77_days_')) $dayBad[] = $id . ' overlay';
+        if ($d['meta']['status'] !== 'navrh' || !str_starts_with((string)$d['meta']['overlay'], 'src/content/lesson_content_v77_days_')) $dayBad[] = $id . ' overlay';
         if (count($d['tasks']) < 3 || count($d['differentiation']) !== 3 || count($d['teacher_notes']) < 2 || count($d['substitution']) < 2 || $d['safety'] === [] || $d['bring'] === [] || count($d['check']) < 2) $dayBad[] = $id . ' pole';
         if (!str_starts_with($d['title'], trim((string)($row['calendar_label'] ?? ($row['title'] ?? ''))))) $dayBad[] = $id . ' titulek';
     }
@@ -106,7 +106,7 @@ $d29 = lm71_day('class_3a', array_values(array_filter($calDays, static fn(array 
 $extra = lt77_day_extra_html($d29);
 $check('Dnešní hodina: karta dne bez lekce ukazuje úkoly s výstupem, diferenciaci, poznámky, bezpečnost a „Pro zástup a plán B offline“ (každý text přes e())',
     str_contains($extra, 'Úkoly a výstupy dne') && str_contains($extra, 'Diferenciace') && str_contains($extra, 'Poznámky pro učitele') && str_contains($extra, 'Pro zástup a plán B offline')
-    && str_contains($extra, e($d29['tasks'][0]['text'])) && str_contains($read('lesson_today_v71_views.php'), 'lt77_day_extra_html($d)'));
+    && str_contains($extra, e($d29['tasks'][0]['text'])) && str_contains($read('src/lessons/lesson_today_v71_views.php'), 'lt77_day_extra_html($d)'));
 
 // ---------------------------------------------------------------- 7) AI prompty
 $fixture = require __DIR__ . '/v77_kit_prompts_fixture.php';
@@ -141,7 +141,7 @@ foreach (LM71_CLASSES as $c) for ($n = 1; $n <= 28; $n++) $retired[] = 'material
 $retired = array_merge($retired, ['materials/lesson_kits/LESSON_KITS_INDEX.csv', 'materials/lesson_kits/README.md', 'tools/generate_v42_lesson_kits.php', 'tools/v72_1_ai_prompts_build.php', 'tools/lib/ai_prompts_v72_1_build.php']);
 $left = array_values(array_filter($retired, static fn(string $f): bool => file_exists($ROOT . '/' . $f)));
 $refs = [];
-$codeFiles = array_merge(glob($ROOT . '/*.php') ?: [], glob($ROOT . '/app/*.php') ?: [], glob($ROOT . '/app/*/*.php') ?: [], glob($ROOT . '/tools/*.php') ?: [], glob($ROOT . '/tools/lib/*.php') ?: []);
+$codeFiles = array_merge(array_merge(glob($ROOT . '/*.php') ?: [], glob($ROOT . '/src/*/*.php') ?: []), glob($ROOT . '/app/*.php') ?: [], glob($ROOT . '/app/*/*.php') ?: [], glob($ROOT . '/tools/*.php') ?: [], glob($ROOT . '/tools/lib/*.php') ?: []);
 foreach ($codeFiles as $f) {
     foreach (token_get_all((string)file_get_contents($f)) as $tok) {
         if (!is_array($tok) || !in_array($tok[0], [T_CONSTANT_ENCAPSED_STRING, T_ENCAPSED_AND_WHITESPACE], true)) continue;

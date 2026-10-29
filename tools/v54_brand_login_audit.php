@@ -15,16 +15,16 @@ $storageDir = edu_audit_temp_storage('v54');
 $root = dirname(__DIR__);
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 require $root . '/bootstrap.php';
-require $root . '/runtime_content.php';
-require_once $root . '/tutorial_v52.php';
-require_once $root . '/accounts_v53.php';
-require_once $root . '/points_v53.php';
-require_once $root . '/session_v53.php';
+require $root . '/src/ops/runtime_content.php';
+require_once $root . '/src/lessons/tutorial_v52.php';
+require_once $root . '/src/student/accounts_v53.php';
+require_once $root . '/src/student/points_v53.php';
+require_once $root . '/src/lessons/session_v53.php';
 
 $state = audit_counter();
 $check = audit_checker($state);
 $read = static fn(string $rel): string => (string)@file_get_contents($root . '/' . $rel);
-$views = $read('tutorial_v52_views.php');
+$views = $read('src/lessons/tutorial_v52_views.php');
 // v61: barvy značky (--edu-*) jsou v tokens-v61.css, subjektové akcenty a přihlašovací stránka zůstaly v brand-v54.css.
 $brand = $read('assets/brand-v54.css') . "
 " . $read('assets/tokens-v61.css');
@@ -54,9 +54,9 @@ $check('heslo kratší než 10 znaků neprojde', local_password_validate('abc123
 $check('heslo musí mít písmeno i číslici', local_password_validate('abcdefghijk') !== null && local_password_validate('12345678901') !== null);
 $check('sdílené heslo demo001 je zakázané', local_password_validate(ACC53_DEFAULT_PASSWORD) !== null);
 $index = edu_app_source();
-$check('nikde nezůstal starý požadavek na 6 znaků', !preg_match('/alespoň\s*6\s*znak/iu', $index . $read('bootstrap.php') . $read('intake_v51_views.php') . $read('session_v53_views.php')), false);
+$check('nikde nezůstal starý požadavek na 6 znaků', !preg_match('/alespoň\s*6\s*znak/iu', $index . $read('bootstrap.php') . $read('src/student/intake_v51_views.php') . $read('src/lessons/session_v53_views.php')), false);
 $minlen = [];
-foreach (['index.php', 'session_v53_views.php', 'intake_v51_views.php'] as $f) {
+foreach (['index.php', 'src/lessons/session_v53_views.php', 'src/student/intake_v51_views.php'] as $f) {
     if (preg_match_all('/<input[^>]*type="password"[^>]*>/i', $f === 'index.php' ? $index : $read($f), $inputs)) {
         foreach ($inputs[0] as $tag) {
             // Jen pole pro nové heslo; přihlašovací pole (current-password) minlength mít nemá.
@@ -69,7 +69,7 @@ $check('nová hesla vyžadují 10 znaků napříč aplikací (' . implode(',', a
 
 // --- HTTP: přihlašovací stránka, registrace, CSRF, assety, kalendář ---
 audit_prewarm_accounts($modules);
-$schoolYear = require $root . '/school_year.php';
+$schoolYear = require $root . '/src/ops/school_year.php';
 $today = EDU_AUDIT_TEACHING_DATE;
 edu_audit_open_sessions($modules, $schoolYear, $today);
 $harness = Harness::start([

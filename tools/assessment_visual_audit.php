@@ -4,7 +4,7 @@ declare(strict_types=1);
 if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 
 require dirname(__DIR__) . '/bootstrap.php';
-require dirname(__DIR__) . '/assessment_visuals.php';
+require dirname(__DIR__) . '/src/assessment/assessment_visuals.php';
 
 $validKinds = ['dns','dhcp','packet','route','ssh','service','probe','decision','contrast','hierarchy','typography','layout','raster','assets','crop'];
 $errors = [];

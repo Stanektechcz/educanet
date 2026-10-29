@@ -26,8 +26,8 @@ putenv('EDUCANET_TEACHER_EXPORT_KEY=' . V70C_KEY);
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['teacher_operations_v46.php', 'teacher_operations_control_v46_2.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'ui_v67.php',
-    'tutorial_v52.php', 'learning_v56.php', 'runtime_content.php', 'session_v53.php', 'accounts_v53.php', 'intake_v51.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_operations_control_v46_2.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/ui/ui_v67.php',
+    'src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/ops/runtime_content.php', 'src/lessons/session_v53.php', 'src/student/accounts_v53.php', 'src/student/intake_v51.php'] as $lib) require_once $ROOT . '/' . $lib;
 foreach ((array)teacher58_modules()['hodina']['files'] as $f) require_once $ROOT . '/' . $f;
 foreach ((array)teacher58_modules()['sprava_prehled']['files'] as $f) require_once $ROOT . '/' . $f;
 require_once __DIR__ . '/lib/v59_scope_fixtures.php';
@@ -43,7 +43,7 @@ $check('úložiště auditu je dočasné (ne ostrá storage/)', $tmp !== '' && S
 $check('bez souboru účtů je režim legacy', teacher59_mode() === 'legacy');
 
 // ---------------------------------------------------------------- 1) soubory a registr
-$files = ['cockpit_v70.php', 'lesson_today_v70.php', 'lesson_today_v70_views.php', 'admin_overview_v70.php', 'admin_overview_v70_views.php'];
+$files = ['src/teacher/cockpit_v70.php', 'src/lessons/lesson_today_v70.php', 'src/lessons/lesson_today_v70_views.php', 'src/teacher/admin_overview_v70.php', 'src/teacher/admin_overview_v70_views.php'];
 $bad = array_values(array_filter($files, static function (string $f) use ($read): bool {
     $s = $read($f);
     return !str_contains($s, 'declare(strict_types=1);') || !str_contains($s, "basename(__FILE__)) { http_response_code(403); exit; }") || substr_count($s, "\n") > 800;

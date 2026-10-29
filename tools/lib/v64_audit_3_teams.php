@@ -4,7 +4,7 @@ declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
 /** v64 audit · dávka 3: role týmových her, přínos, retrospektiva. Proměnné: $check, $tmp, $root. */
-foreach (['teamgames_v58_registry.php', 'teamgames_v58_game_netadmin.php', 'teamgames_v58_game_escape.php', 'teacher_scope_v59.php'] as $lib) require_once $root . '/' . $lib;
+foreach (['src/teamgames/teamgames_v58_registry.php', 'src/teamgames/teamgames_v58_game_netadmin.php', 'src/teamgames/teamgames_v58_game_escape.php', 'src/teacher/teacher_scope_v59.php'] as $lib) require_once $root . '/' . $lib;
 
 $cid = 'class_3a';
 $m = ['class_3a:s1', 'class_3a:s2', 'class_3a:s3', 'class_3a:s4'];

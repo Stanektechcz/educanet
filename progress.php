@@ -13,7 +13,7 @@ if ($currentClassId === null) {
     exit;
 }
 // v58 · SEC58-08: účet s vynucenou změnou hesla nesmí používat API (stejně jako lab_v57_api.php).
-require_once __DIR__ . '/accounts_v53.php';
+require_once __DIR__ . '/src/student/accounts_v53.php';
 if (acc53_must_change_password()) {
     http_response_code(403);
     echo json_encode(['ok' => false, 'error' => tr('Nejdřív si nastav vlastní heslo.')], JSON_UNESCAPED_UNICODE);
@@ -30,82 +30,82 @@ if (($action === 'kb_step' || $action === 'kb_check' || $method === 'GET') && $r
     }
 }
 $module = $modules[$classId];
-$simulations = require __DIR__ . '/simulations.php';
+$simulations = require __DIR__ . '/src/content/simulations.php';
 if (isset($simulations['class_2a'])) {
     $simulations['class_1a'] = array_replace($simulations['class_2a'], $simulations['class_1a'] ?? []);
 }
-$simulationExtras = require __DIR__ . '/simulations_extra.php';
+$simulationExtras = require __DIR__ . '/src/content/simulations_extra.php';
 foreach ($simulationExtras as $simClassId => $extraMap) {
     if (!isset($simulations[$simClassId])) {
         $simulations[$simClassId] = [];
     }
     $simulations[$simClassId] = array_replace($simulations[$simClassId], $extraMap);
 }
-$simulationPlus = require __DIR__ . '/simulations_plus.php';
+$simulationPlus = require __DIR__ . '/src/content/simulations_plus.php';
 foreach ($simulationPlus as $simClassId => $extraMap) {
     if (!isset($simulations[$simClassId])) $simulations[$simClassId] = [];
     $simulations[$simClassId] = array_replace($simulations[$simClassId], $extraMap);
 }
-$simulationMore = require __DIR__ . '/simulations_more.php';
+$simulationMore = require __DIR__ . '/src/content/simulations_more.php';
 foreach ($simulationMore as $simClassId => $extraMap) {
     if (!isset($simulations[$simClassId])) $simulations[$simClassId] = [];
     $simulations[$simClassId] = array_replace($simulations[$simClassId], $extraMap);
 }
-$simulationEcosystem = require __DIR__ . '/simulations_ecosystem.php';
+$simulationEcosystem = require __DIR__ . '/src/content/simulations_ecosystem.php';
 foreach ($simulationEcosystem as $simClassId => $extraMap) {
     if (!isset($simulations[$simClassId])) $simulations[$simClassId] = [];
     $simulations[$simClassId] = array_replace($simulations[$simClassId], $extraMap);
 }
-$simulationYearpack = require __DIR__ . '/simulations_yearpack.php';
+$simulationYearpack = require __DIR__ . '/src/content/simulations_yearpack.php';
 foreach ($simulationYearpack as $simClassId => $extraMap) {
     if (!isset($simulations[$simClassId])) $simulations[$simClassId] = [];
     $simulations[$simClassId] = array_replace($simulations[$simClassId], $extraMap);
 }
 $simulationMap = is_array($simulations[$classId] ?? null) ? $simulations[$classId] : [];
-$tours = require __DIR__ . '/knowledge_tours.php';
-$tourExtras = require __DIR__ . '/knowledge_tours_next.php';
+$tours = require __DIR__ . '/src/knowledge/knowledge_tours.php';
+$tourExtras = require __DIR__ . '/src/knowledge/knowledge_tours_next.php';
 foreach ($tourExtras as $tourClassId => $tourArticles) {
     if (!isset($tours[$tourClassId])) { $tours[$tourClassId] = []; }
     $tours[$tourClassId] = array_replace($tours[$tourClassId], $tourArticles);
 }
-$tourPlus = require __DIR__ . '/knowledge_tours_plus.php';
+$tourPlus = require __DIR__ . '/src/knowledge/knowledge_tours_plus.php';
 foreach ($tourPlus as $tourClassId => $tourArticles) {
     if (!isset($tours[$tourClassId])) $tours[$tourClassId] = [];
     $tours[$tourClassId] = array_replace($tours[$tourClassId], $tourArticles);
 }
-$tourMore = require __DIR__ . '/knowledge_tours_more.php';
+$tourMore = require __DIR__ . '/src/knowledge/knowledge_tours_more.php';
 foreach ($tourMore as $tourClassId => $tourArticles) {
     if (!isset($tours[$tourClassId])) $tours[$tourClassId] = [];
     $tours[$tourClassId] = array_replace($tours[$tourClassId], $tourArticles);
 }
-$tourEcosystem = require __DIR__ . '/knowledge_tours_ecosystem.php';
+$tourEcosystem = require __DIR__ . '/src/knowledge/knowledge_tours_ecosystem.php';
 foreach ($tourEcosystem as $tourClassId => $tourArticles) {
     if (!isset($tours[$tourClassId])) $tours[$tourClassId] = [];
     $tours[$tourClassId] = array_replace($tours[$tourClassId], $tourArticles);
 }
-$tourYearpack = require __DIR__ . '/knowledge_tours_yearpack.php';
+$tourYearpack = require __DIR__ . '/src/knowledge/knowledge_tours_yearpack.php';
 foreach ($tourYearpack as $tourClassId => $tourArticles) {
     if (!isset($tours[$tourClassId])) $tours[$tourClassId] = [];
     $tours[$tourClassId] = array_replace($tours[$tourClassId], $tourArticles);
 }
-$nextLessons = require __DIR__ . '/next_lessons.php';
-$extendedLessons = require __DIR__ . '/extended_lessons.php';
-$lessonPlus = require __DIR__ . '/lessons_plus.php';
+$nextLessons = require __DIR__ . '/src/content/next_lessons.php';
+$extendedLessons = require __DIR__ . '/src/content/extended_lessons.php';
+$lessonPlus = require __DIR__ . '/src/lessons/lessons_plus.php';
 foreach ($lessonPlus as $plusClassId => $plusLessons) {
     if (!isset($extendedLessons[$plusClassId])) $extendedLessons[$plusClassId] = [];
     $extendedLessons[$plusClassId] = array_merge($extendedLessons[$plusClassId], is_array($plusLessons) ? $plusLessons : []);
 }
-$lessonMore = require __DIR__ . '/lessons_more.php';
+$lessonMore = require __DIR__ . '/src/lessons/lessons_more.php';
 foreach ($lessonMore as $moreClassId => $moreLessons) {
     if (!isset($extendedLessons[$moreClassId])) $extendedLessons[$moreClassId] = [];
     $extendedLessons[$moreClassId] = array_merge($extendedLessons[$moreClassId], is_array($moreLessons) ? $moreLessons : []);
 }
-$lessonEcosystem = require __DIR__ . '/lessons_ecosystem.php';
+$lessonEcosystem = require __DIR__ . '/src/lessons/lessons_ecosystem.php';
 foreach ($lessonEcosystem as $ecoClassId => $ecoLessons) {
     if (!isset($extendedLessons[$ecoClassId])) $extendedLessons[$ecoClassId] = [];
     $extendedLessons[$ecoClassId] = array_merge($extendedLessons[$ecoClassId], is_array($ecoLessons) ? $ecoLessons : []);
 }
-$lessonYearpack = require __DIR__ . '/lessons_yearpack.php';
+$lessonYearpack = require __DIR__ . '/src/lessons/lessons_yearpack.php';
 foreach ($lessonYearpack as $yearClassId => $yearLessons) {
     if (!isset($extendedLessons[$yearClassId])) $extendedLessons[$yearClassId] = [];
     $extendedLessons[$yearClassId] = array_merge($extendedLessons[$yearClassId], is_array($yearLessons) ? $yearLessons : []);

@@ -12,7 +12,7 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  */
 
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once dirname(__DIR__) . '/lesson_reflect_v73.php';
+require_once dirname(__DIR__) . '/src/lessons/lesson_reflect_v73.php';
 
 $args = array_slice($argv, 1);
 $dry = in_array('--dry-run', $args, true);

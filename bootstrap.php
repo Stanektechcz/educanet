@@ -25,15 +25,15 @@ function educanet_is_https(): bool
 }
 
 // v58 (F2): jádro úložiště – storage_read / storage_update / storage_update_many / storage_append / storage_scan.
-require_once __DIR__ . '/storage_v58.php';
+require_once __DIR__ . '/src/ops/storage_v58.php';
 // v58 OPS-02: vícejazyčnost UI (t(), katalogy lang/<jazyk>/<doména>.php, výchozí čeština).
-require_once __DIR__ . '/i18n_v58.php';
+require_once __DIR__ . '/src/i18n/i18n_v58.php';
 // v59 OPS-02: převod UI ve stylu gettext – tr()/trn()/trm(), katalogy lang/<en|uk>/ui/<doména>.php (msgid = čeština).
-require_once __DIR__ . '/i18n_v59.php';
+require_once __DIR__ . '/src/i18n/i18n_v59.php';
 
 // v59 · AUTHZ58-07: učitelské účty (úložiště, přihlášení, relace) a rozsah tříd/předmětů (guardy teacher.php).
-require_once __DIR__ . '/teacher_accounts_v59.php';
-require_once __DIR__ . '/teacher_scope_v59.php';
+require_once __DIR__ . '/src/teacher/teacher_accounts_v59.php';
+require_once __DIR__ . '/src/teacher/teacher_scope_v59.php';
 
 // Bezpečná session cookie + základní bezpečnostní hlavičky (jen pro webové požadavky).
 if (PHP_SAPI !== 'cli' && session_status() === PHP_SESSION_NONE) {
@@ -141,12 +141,12 @@ function educanet_secret(string $key, string $default = ''): string
     return is_scalar($value) ? trim((string)$value) : $default;
 }
 
-$modules = require __DIR__ . '/modules.php';
-$firstYearModule = require __DIR__ . '/first_year.php';
+$modules = require __DIR__ . '/src/content/modules.php';
+$firstYearModule = require __DIR__ . '/src/content/first_year.php';
 if (is_array($firstYearModule) && $firstYearModule) {
     $modules['class_1a'] = $firstYearModule;
 }
-$graphicsCurriculum = require __DIR__ . '/graphics_curriculum.php';
+$graphicsCurriculum = require __DIR__ . '/src/content/graphics_curriculum.php';
 if (isset($modules['class_2a'])) $modules['class_2a']['subject'] = 'Grafika a webdesign';
 foreach ($graphicsCurriculum as $graphicsClassId => $guideOverrides) {
     if (!isset($modules[$graphicsClassId]) || !is_array($guideOverrides)) {
@@ -163,7 +163,7 @@ foreach ($practiceModules as $practiceClassId => $practiceConfig) {
     }
 }
 
-$knowledgeExtensions = require __DIR__ . '/knowledge_extensions.php';
+$knowledgeExtensions = require __DIR__ . '/src/knowledge/knowledge_extensions.php';
 foreach ($knowledgeExtensions as $knowledgeClassId => $articles) {
     if (!isset($modules[$knowledgeClassId]) || !is_array($articles)) {
         continue;
@@ -172,7 +172,7 @@ foreach ($knowledgeExtensions as $knowledgeClassId => $articles) {
     $modules[$knowledgeClassId]['knowledgebase'] = array_replace($current, $articles);
 }
 
-$knowledgeExtensionsPlus = require __DIR__ . '/knowledge_extensions_plus.php';
+$knowledgeExtensionsPlus = require __DIR__ . '/src/knowledge/knowledge_extensions_plus.php';
 foreach ($knowledgeExtensionsPlus as $knowledgeClassId => $articles) {
     if (!isset($modules[$knowledgeClassId]) || !is_array($articles)) {
         continue;
@@ -181,28 +181,28 @@ foreach ($knowledgeExtensionsPlus as $knowledgeClassId => $articles) {
     $modules[$knowledgeClassId]['knowledgebase'] = array_replace($current, $articles);
 }
 
-$knowledgeExtensionsMore = require __DIR__ . '/knowledge_extensions_more.php';
+$knowledgeExtensionsMore = require __DIR__ . '/src/knowledge/knowledge_extensions_more.php';
 foreach ($knowledgeExtensionsMore as $knowledgeClassId => $articles) {
     if (!isset($modules[$knowledgeClassId]) || !is_array($articles)) continue;
     $current = is_array($modules[$knowledgeClassId]['knowledgebase'] ?? null) ? $modules[$knowledgeClassId]['knowledgebase'] : [];
     $modules[$knowledgeClassId]['knowledgebase'] = array_replace($current, $articles);
 }
 
-$knowledgeExtensionsEcosystem = require __DIR__ . '/knowledge_extensions_ecosystem.php';
+$knowledgeExtensionsEcosystem = require __DIR__ . '/src/knowledge/knowledge_extensions_ecosystem.php';
 foreach ($knowledgeExtensionsEcosystem as $knowledgeClassId => $articles) {
     if (!isset($modules[$knowledgeClassId]) || !is_array($articles)) continue;
     $current = is_array($modules[$knowledgeClassId]['knowledgebase'] ?? null) ? $modules[$knowledgeClassId]['knowledgebase'] : [];
     $modules[$knowledgeClassId]['knowledgebase'] = array_replace($current, $articles);
 }
 
-$knowledgeExtensionsYearpack = require __DIR__ . '/knowledge_extensions_yearpack.php';
+$knowledgeExtensionsYearpack = require __DIR__ . '/src/knowledge/knowledge_extensions_yearpack.php';
 foreach ($knowledgeExtensionsYearpack as $knowledgeClassId => $articles) {
     if (!isset($modules[$knowledgeClassId]) || !is_array($articles)) continue;
     $current = is_array($modules[$knowledgeClassId]['knowledgebase'] ?? null) ? $modules[$knowledgeClassId]['knowledgebase'] : [];
     $modules[$knowledgeClassId]['knowledgebase'] = array_replace($current, $articles);
 }
 
-$knowledgeExtensionsV30 = require __DIR__ . '/knowledge_extensions_v30.php';
+$knowledgeExtensionsV30 = require __DIR__ . '/src/knowledge/knowledge_extensions_v30.php';
 foreach ($knowledgeExtensionsV30 as $knowledgeClassId => $articles) {
     if (!isset($modules[$knowledgeClassId]) || !is_array($articles)) continue;
     $current = is_array($modules[$knowledgeClassId]['knowledgebase'] ?? null) ? $modules[$knowledgeClassId]['knowledgebase'] : [];
@@ -874,7 +874,7 @@ function student_directory(): array
 {
     static $rows = null;
     if (is_array($rows)) return $rows;
-    $path = __DIR__ . '/student_directory.php';
+    $path = __DIR__ . '/src/student/student_directory.php';
     $rows = is_file($path) ? (require $path) : [];
     $rows = is_array($rows) ? $rows : [];
     // v51: žáci z importovaného V1 dotazníku a noví respondenti (např. 1.A) doplní adresář.
@@ -1770,14 +1770,14 @@ function learning_project_result_summary(string $classId): array
 function learning_course_completed_count(string $classId): int
 {
     $count = learning_primary_block_complete($classId) ? 1 : 0;
-    if (!function_exists('runtime_content_load_classes') && is_file(__DIR__ . '/runtime_content.php')) require_once __DIR__ . '/runtime_content.php';
+    if (!function_exists('runtime_content_load_classes') && is_file(__DIR__ . '/src/ops/runtime_content.php')) require_once __DIR__ . '/src/ops/runtime_content.php';
     if (function_exists('runtime_content_load_classes')) {
         $runtime = runtime_content_load_classes([$classId]);
         $nextLessons = (array)($runtime['nextLessons'] ?? []);
         $extended = (array)($runtime['extendedLessons'] ?? []);
     } else {
-        $nextLessons = require __DIR__ . '/next_lessons.php';
-        $extended = require __DIR__ . '/extended_lessons.php';
+        $nextLessons = require __DIR__ . '/src/content/next_lessons.php';
+        $extended = require __DIR__ . '/src/content/extended_lessons.php';
     }
     if (isset($nextLessons[$classId]) && is_array($nextLessons[$classId]) && learning_next_lesson_complete($classId, $nextLessons[$classId])) $count++;
     foreach ((array)($extended[$classId] ?? []) as $lesson) {
@@ -2137,7 +2137,7 @@ function project_catalog(): array
 {
     static $catalog = null;
     if (is_array($catalog)) return $catalog;
-    $path = __DIR__ . '/project_assessments.php';
+    $path = __DIR__ . '/src/assessment/project_assessments.php';
     $catalog = is_file($path) ? (require $path) : [];
     return is_array($catalog) ? $catalog : [];
 }
@@ -2652,7 +2652,7 @@ function student_founded_team_count(string $classId, ?string $studentKey=null): 
 // Prestige assessments ------------------------------------------------------
 function special_assessment_catalog(): array
 {
-    static $catalog=null;if(is_array($catalog))return $catalog;$path=__DIR__.'/special_assessments.php';$catalog=is_file($path)?(require $path):[];return is_array($catalog)?$catalog:[];
+    static $catalog=null;if(is_array($catalog))return $catalog;$path=__DIR__.'/src/assessment/special_assessments.php';$catalog=is_file($path)?(require $path):[];return is_array($catalog)?$catalog:[];
 }
 function special_assessments_for(string $classId): array { return array_values(array_filter((array)(special_assessment_catalog()[$classId]??[]),'is_array')); }
 function special_assessment_find(string $classId,string $examId): ?array { foreach(special_assessments_for($classId) as $e)if((string)($e['id']??'')===$examId)return $e;return null; }
@@ -2932,16 +2932,16 @@ function project_student_results(string $classId, string $studentLabel): array
 
 
 // Skill Trees & Mastery v25 --------------------------------------------------
-require_once __DIR__ . '/skill_trees.php';
-require_once __DIR__ . '/project_workspace.php';
-require_once __DIR__ . '/adaptive_learning.php';
-require_once __DIR__ . '/mastery_learning_v41.php';
-require_once __DIR__ . '/adaptive_lesson_kits_v42.php';
-require_once __DIR__ . '/cognitive_visualization_v43.php';
-require_once __DIR__ . '/learning_studio_v44.php';
-require_once __DIR__ . '/visual_simulation_v45.php';
-require_once __DIR__ . '/visual_practical_learning_v48.php';
-require_once __DIR__ . '/visual_labs_3a_v48_1.php';
-require_once __DIR__ . '/teacher_tasks.php';
+require_once __DIR__ . '/src/assessment/skill_trees.php';
+require_once __DIR__ . '/src/projects/project_workspace.php';
+require_once __DIR__ . '/src/lessons/adaptive_learning.php';
+require_once __DIR__ . '/src/lessons/mastery_learning_v41.php';
+require_once __DIR__ . '/src/lessons/adaptive_lesson_kits_v42.php';
+require_once __DIR__ . '/src/lessons/cognitive_visualization_v43.php';
+require_once __DIR__ . '/src/lessons/learning_studio_v44.php';
+require_once __DIR__ . '/src/lessons/visual_simulation_v45.php';
+require_once __DIR__ . '/src/lessons/visual_practical_learning_v48.php';
+require_once __DIR__ . '/src/lessons/visual_labs_3a_v48_1.php';
+require_once __DIR__ . '/src/teacher/teacher_tasks.php';
 // v58 F6: registr identity (stabilní student_id, přechod školního roku).
-require_once __DIR__ . '/identity_v58.php';
+require_once __DIR__ . '/src/student/identity_v58.php';

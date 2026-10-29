@@ -29,15 +29,15 @@ require_once $ROOT . '/tools/lib/audit.php';
 
 foreach ([
     'app/lib.php',
-    'app/views/_layout.php', 'student_v55.php', 'student_v55_views.php', 'zero_friction_v50_6.php',
-    'unified_page_shell_v50_7.php', 'student_links_v69.php', 'goal_navigator_v50_4.php', 'hands_on_learning_v50.php',
-    'independent_growth_v50.php', 'learning_v56.php', 'session_v53.php', 'tutorial_v52.php', 'linux_v57_lab.php', 'arena_v57.php',
-    'teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php',
-    'student_learning_accelerator_v47_1.php', 'student_learning_accelerator_views_v47_1.php',
-    'student_corrective_cycle_v47_2.php', 'student_corrective_cycle_views_v47_2.php', 'student_social_views.php',
-    'skill_views.php', 'project_workspace_views.php', 'points_v53.php', 'learning_v56_views.php',
-    'profile_v60.php', 'profile_v60_views.php', 'lab_v58_learning.php', 'badges_v60.php',
-    'arena_v58_weekly.php', 'arena_v60_challenge.php', 'arena_v60_challenge_views.php',
+    'app/views/_layout.php', 'src/student/student_v55.php', 'src/student/student_v55_views.php', 'src/student/zero_friction_v50_6.php',
+    'src/ui/unified_page_shell_v50_7.php', 'src/student/student_links_v69.php', 'src/student/goal_navigator_v50_4.php', 'src/lessons/hands_on_learning_v50.php',
+    'src/student/independent_growth_v50.php', 'src/lessons/learning_v56.php', 'src/lessons/session_v53.php', 'src/lessons/tutorial_v52.php', 'src/linux/linux_v57_lab.php', 'src/arena/arena_v57.php',
+    'src/teacher/teacher_operations_v46.php', 'src/student/student_learning_coach_v47.php', 'src/student/student_learning_coach_views_v47.php',
+    'src/student/student_learning_accelerator_v47_1.php', 'src/student/student_learning_accelerator_views_v47_1.php',
+    'src/student/student_corrective_cycle_v47_2.php', 'src/student/student_corrective_cycle_views_v47_2.php', 'src/student/student_social_views.php',
+    'src/assessment/skill_views.php', 'src/projects/project_workspace_views.php', 'src/student/points_v53.php', 'src/lessons/learning_v56_views.php',
+    'src/student/profile_v60.php', 'src/student/profile_v60_views.php', 'src/linux/lab_v58_learning.php', 'src/student/badges_v60.php',
+    'src/arena/arena_v58_weekly.php', 'src/arena/arena_v60_challenge.php', 'src/arena/arena_v60_challenge_views.php',
 ] as $rel) {
     require_once $ROOT . '/' . $rel;
 }
@@ -50,8 +50,8 @@ $state = audit_counter();
 $check = audit_checker($state);
 
 // 1) Soubor: lint, strict_types, guard, bezpečnostní invariant, žádné externí URL.
-$src = (string)file_get_contents($ROOT . '/badges_v60.php');
-exec('C:/php/php.exe -l ' . escapeshellarg($ROOT . '/badges_v60.php') . ' 2>&1', $lintOut, $lintCode);
+$src = (string)file_get_contents($ROOT . '/src/student/badges_v60.php');
+exec('C:/php/php.exe -l ' . escapeshellarg($ROOT . '/src/student/badges_v60.php') . ' 2>&1', $lintOut, $lintCode);
 $check('php -l badges_v60.php', $lintCode === 0);
 $check('declare(strict_types=1) a guard proti přímému volání', str_contains($src, 'declare(strict_types=1);') && str_contains($src, 'http_response_code(403)'), false);
 $forbidden = '/\b(exec|shell_exec|system|passthru|proc_open|popen|pcntl_exec|eval|assert|create_function|fsockopen|stream_socket_client|mail)\s*\(|`|\bcurl_|\bsocket_/';

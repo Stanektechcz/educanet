@@ -17,8 +17,8 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 putenv('EDUCANET_STORAGE_READONLY=1');
 $_ENV['EDUCANET_STORAGE_READONLY'] = '1';
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once dirname(__DIR__) . '/intake_v51.php';
-foreach (['identity_v58.php', 'competencies_v62.php', 'evidence_v62.php', 'mastery_v62.php', 'paths_v63.php', 'projects_v60.php', 'projects_v65.php'] as $lib) require_once dirname(__DIR__) . '/' . $lib;
+require_once dirname(__DIR__) . '/src/student/intake_v51.php';
+foreach (['src/student/identity_v58.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/mastery_v62.php', 'src/paths/paths_v63.php', 'src/projects/projects_v60.php', 'src/projects/projects_v65.php'] as $lib) require_once dirname(__DIR__) . '/' . $lib;
 
 const EFFECT67_MIN_GROUP = 5;
 

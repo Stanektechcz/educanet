@@ -24,7 +24,7 @@ require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
 require_once __DIR__ . '/lib/v69_css_usage.php';
 require_once $ROOT . '/app/lib.php';
-require_once $ROOT . '/ui_v67.php';
+require_once $ROOT . '/src/ui/ui_v67.php';
 
 const V69D_GZIP_BUDGET = 15360;
 
@@ -76,7 +76,7 @@ try {
     $pages['cviceni'] = implode('', array_map(static fn(string $q): string => (string)$h->request('GET', '/?view=cviceni' . $q)['body'], ['', '&w=subnet', '&w=chmod', '&w=color', '&w=spec']));
     $pages['opakovat'] = (string)$h->request('GET', '/?view=opakovat')['body'];
     // profil je pro čerstvého žáka přesměrovaný na přehled → třídy se berou ze šablon profilu (literály class="…" v profile_v60*.php)
-    foreach (['profile_v60.php', 'profile_v60_views.php', 'growth_v67_views.php'] as $tpl) if (preg_match_all('~class="([^"<>?]*)"~', (string)file_get_contents($ROOT . '/' . $tpl), $pm) > 0) $pages['profile'] = ($pages['profile'] ?? '') . implode(' ', array_map(static fn(string $c): string => 'class="' . $c . '"', $pm[1]));
+    foreach (['src/student/profile_v60.php', 'src/student/profile_v60_views.php', 'src/student/growth_v67_views.php'] as $tpl) if (preg_match_all('~class="([^"<>?]*)"~', (string)file_get_contents($ROOT . '/' . $tpl), $pm) > 0) $pages['profile'] = ($pages['profile'] ?? '') . implode(' ', array_map(static fn(string $c): string => 'class="' . $c . '"', $pm[1]));
 } finally {
     $h->stop();
 }
@@ -109,7 +109,7 @@ $contrast = $read('assets/teacher-contrast-v69.css');
 $noComment = (string)preg_replace('~/\*.*?\*/~s', '', $contrast);
 $check('teacher-contrast-v69.css: ≥ 25 selektorů, jediná deklarace color: var(--ui-muted), bez pevných barev, načítá se v rámci cockpitu',
     substr_count($noComment, ',') >= 25 && preg_match('~\{\s*color:\s*var\(--ui-muted\);\s*\}~', $noComment) === 1 && preg_match('~#[0-9a-fA-F]{3,6}\b|rgba?\(~', $noComment) !== 1
-    && str_contains($read('teacher_shell_v68.php'), 'assets/teacher-contrast-v69.css'));
+    && str_contains($read('src/teacher/teacher_shell_v68.php'), 'assets/teacher-contrast-v69.css'));
 $td = $read('assets/teacher-dark-v68.css');
 $check('Režim hodiny: tmavá scéna .v45-system-stage drží v tmavém režimu původní paletu (tmavé pozadí #0b1020, světlý text)',
     preg_match('~\.v45-system-stage\s*\{[^}]*--k579:\s*#0b1020[^}]*--k135:\s*#e2e8f0~s', $td) === 1);

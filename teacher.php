@@ -5,44 +5,44 @@ declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
 // v59 · SEC59-18: žádná učitelská stránka (jména žáků, hodnocení, jednorázová hesla) se neukládá do cache – před jakýmkoli výstupem.
 if (PHP_SAPI !== 'cli' && !headers_sent()) { header('Cache-Control: no-store, max-age=0'); header('Pragma: no-cache'); }
-require_once __DIR__ . '/teacher_operations_v46.php';
-require_once __DIR__ . '/teacher_operations_plus_v46_1.php';
-require_once __DIR__ . '/teacher_operations_views_v46.php';
-require_once __DIR__ . '/teacher_operations_plus_views_v46_1.php';
-require_once __DIR__ . '/teacher_operations_control_v46_2.php';
-require_once __DIR__ . '/teacher_operations_control_views_v46_2.php';
-require_once __DIR__ . '/intake_v51.php';
-require_once __DIR__ . '/intake_v51_teacher.php';
-require_once __DIR__ . '/tutorial_v52.php';
-require_once __DIR__ . '/tutorial_v52_views.php';
-require_once __DIR__ . '/tutorial_v52_teacher.php';
-require_once __DIR__ . '/accounts_v53.php';
-require_once __DIR__ . '/accounts_v58_views.php';
-require_once __DIR__ . '/points_v53.php';
-require_once __DIR__ . '/session_v53.php';
-require_once __DIR__ . '/session_v53_teacher.php';
-require_once __DIR__ . '/student_v55.php';
-require_once __DIR__ . '/student_v55_views.php';
-require_once __DIR__ . '/runtime_content.php';
-require_once __DIR__ . '/learning_v56.php';
-require_once __DIR__ . '/learning_v56_views.php';
+require_once __DIR__ . '/src/teacher/teacher_operations_v46.php';
+require_once __DIR__ . '/src/teacher/teacher_operations_plus_v46_1.php';
+require_once __DIR__ . '/src/teacher/teacher_operations_views_v46.php';
+require_once __DIR__ . '/src/teacher/teacher_operations_plus_views_v46_1.php';
+require_once __DIR__ . '/src/teacher/teacher_operations_control_v46_2.php';
+require_once __DIR__ . '/src/teacher/teacher_operations_control_views_v46_2.php';
+require_once __DIR__ . '/src/student/intake_v51.php';
+require_once __DIR__ . '/src/student/intake_v51_teacher.php';
+require_once __DIR__ . '/src/lessons/tutorial_v52.php';
+require_once __DIR__ . '/src/lessons/tutorial_v52_views.php';
+require_once __DIR__ . '/src/lessons/tutorial_v52_teacher.php';
+require_once __DIR__ . '/src/student/accounts_v53.php';
+require_once __DIR__ . '/src/student/accounts_v58_views.php';
+require_once __DIR__ . '/src/student/points_v53.php';
+require_once __DIR__ . '/src/lessons/session_v53.php';
+require_once __DIR__ . '/src/lessons/session_v53_teacher.php';
+require_once __DIR__ . '/src/student/student_v55.php';
+require_once __DIR__ . '/src/student/student_v55_views.php';
+require_once __DIR__ . '/src/ops/runtime_content.php';
+require_once __DIR__ . '/src/lessons/learning_v56.php';
+require_once __DIR__ . '/src/lessons/learning_v56_views.php';
 // v57 · Linux Lab + Aréna (třídní závody); simulace, nic se nespouští doopravdy.
-require_once __DIR__ . '/linux_v57_lab.php';
-if (is_file(__DIR__ . '/arena_v57.php')) require_once __DIR__ . '/arena_v57.php';
-if (is_file(__DIR__ . '/arena_v57_views.php')) require_once __DIR__ . '/arena_v57_views.php';
+require_once __DIR__ . '/src/linux/linux_v57_lab.php';
+if (is_file(__DIR__ . '/src/arena/arena_v57.php')) require_once __DIR__ . '/src/arena/arena_v57.php';
+if (is_file(__DIR__ . '/src/arena/arena_v57_views.php')) require_once __DIR__ . '/src/arena/arena_v57_views.php';
 // v58 · registr učitelských modulů (Robotí liga, týmové hry, CTF, incidenty, analytika labu, editor, provoz).
-require_once __DIR__ . '/teacher_v58.php';
+require_once __DIR__ . '/src/teacher/teacher_v58.php';
 // v68 · rámec cockpitu (tmavý režim); od v78.1 navigace 4 sekce (Dnes · Výuka · Žáci · Správa) v nav_v78_1*.php, rámec deleguje.
-require_once __DIR__ . '/teacher_shell_v68.php';
+require_once __DIR__ . '/src/teacher/teacher_shell_v68.php';
 // v70 · přehledný cockpit: souhrny rozcestníků, „Související“ u každé záložky (Dnešní hodina a Přehled správy jsou moduly v teacher_v58.php).
-require_once __DIR__ . '/cockpit_v70.php';
+require_once __DIR__ . '/src/teacher/cockpit_v70.php';
 // v74 · rychlé hledání (⌘K) bez jmen žáků v HTML: jména až po otevření z JSON (tyden74&paleta=1), nikdy na projektoru, tisku a zástupu.
-require_once __DIR__ . '/palette_v74.php';
+require_once __DIR__ . '/src/ui/palette_v74.php';
 // v59 · AUTHZ58-07: akce a pohledy učitelských účtů (knihovny účtů a rozsahu načítá bootstrap.php).
-require_once __DIR__ . '/teacher_accounts_v59_admin.php';
-require_once __DIR__ . '/teacher_accounts_v59_views.php';
+require_once __DIR__ . '/src/teacher/teacher_accounts_v59_admin.php';
+require_once __DIR__ . '/src/teacher/teacher_accounts_v59_views.php';
 // v61: upozornění administrátorovi z týdenní kontroly provozu (tools/v61_weekly_health.php).
-require_once __DIR__ . '/ops_v61.php';
+require_once __DIR__ . '/src/ops/ops_v61.php';
 // Obsah lekcí pro učitelské přehledy (stejný zdroj jako u žáka).
 $teacherRuntime = runtime_content_load_classes(array_keys($modules));
 $GLOBALS['nextLessons'] = $teacherRuntime['nextLessons'];
@@ -137,31 +137,31 @@ function teacher_record_target_label(array $record): string {
 
 function teacher_require_modules(string $tab,string $action=''): void {
     $curriculumActions=['teacher_curriculum_toggle','teacher_curriculum_lesson_toggle','teacher_curriculum_note'];
-    if(in_array($tab,['overview','calendar','curriculum','teach'],true)||in_array($action,$curriculumActions,true)) require_once __DIR__.'/teacher_curriculum.php';
-    if($tab==='overview') require_once __DIR__.'/teacher_overview_dashboard.php';
+    if(in_array($tab,['overview','calendar','curriculum','teach'],true)||in_array($action,$curriculumActions,true)) require_once __DIR__.'/src/teacher/teacher_curriculum.php';
+    if($tab==='overview') require_once __DIR__.'/src/teacher/teacher_overview_dashboard.php';
     $opsTabs=['attention','reports','communications','quality','student360','interventions','analytics','team_admin','ops_audit'];
     $opsActions=['teacher_note_add','teacher_intervention_create','teacher_intervention_step','teacher_intervention_status','teacher_intervention_note','teacher_bulk_task_due','teacher_bulk_task_priority','teacher_bulk_remind','teacher_bulk_note','teacher_bulk_resource','teacher_bulk_intervention','teacher_team_member_role','teacher_watchlist_save','teacher_watchlist_delete','teacher_followup_create','teacher_followup_update','teacher_template_save','teacher_template_delete','teacher_bulk_undo','teacher_message_template_save','teacher_message_template_delete','teacher_ops_report_export'];
-    if(in_array($tab,array_merge(['class_results'],$opsTabs),true)||in_array($action,$opsActions,true)) require_once __DIR__.'/teacher_class_dashboard.php';
-    if(in_array($tab,$opsTabs,true)||in_array($action,$opsActions,true)) require_once __DIR__.'/teacher_operations_views_v46.php';
-    if($tab==='calendar') require_once __DIR__.'/teacher_calendar.php';
-    if($tab==='workspace') require_once __DIR__.'/teacher_project_workspace_views.php';
-    if($tab==='demo_accounts'||str_starts_with($action,'teacher_demo_account_')) require_once __DIR__.'/teacher_demo_accounts.php';
-    if($tab==='authoring') require_once __DIR__.'/mastery_learning_views_v41.php';
+    if(in_array($tab,array_merge(['class_results'],$opsTabs),true)||in_array($action,$opsActions,true)) require_once __DIR__.'/src/teacher/teacher_class_dashboard.php';
+    if(in_array($tab,$opsTabs,true)||in_array($action,$opsActions,true)) require_once __DIR__.'/src/teacher/teacher_operations_views_v46.php';
+    if($tab==='calendar') require_once __DIR__.'/src/teacher/teacher_calendar.php';
+    if($tab==='workspace') require_once __DIR__.'/src/teacher/teacher_project_workspace_views.php';
+    if($tab==='demo_accounts'||str_starts_with($action,'teacher_demo_account_')) require_once __DIR__.'/src/teacher/teacher_demo_accounts.php';
+    if($tab==='authoring') require_once __DIR__.'/src/lessons/mastery_learning_views_v41.php';
     if(in_array($tab,['analytics','teach'],true)){
-        require_once __DIR__.'/hands_on_learning_v50.php';
-        require_once __DIR__.'/independent_growth_v50.php';
-        require_once __DIR__.'/hands_on_learning_views_v50.php';
-        require_once __DIR__.'/independent_growth_views_v50.php';
+        require_once __DIR__.'/src/lessons/hands_on_learning_v50.php';
+        require_once __DIR__.'/src/student/independent_growth_v50.php';
+        require_once __DIR__.'/src/lessons/hands_on_learning_views_v50.php';
+        require_once __DIR__.'/src/student/independent_growth_views_v50.php';
     }
     if($tab==='teach') {
-        require_once __DIR__.'/assessment_visuals.php';
-        require_once __DIR__.'/reality_demos.php';
-        require_once __DIR__.'/cognitive_visualization_views_v43.php';
-        require_once __DIR__.'/learning_studio_views_v44.php';
-        require_once __DIR__.'/visual_simulation_views_v45.php';
-        require_once __DIR__.'/visual_practical_learning_views_v48.php';
-        require_once __DIR__.'/visual_labs_3a_views_v48_1.php';
-        require_once __DIR__.'/teacher_lesson_mode.php';
+        require_once __DIR__.'/src/assessment/assessment_visuals.php';
+        require_once __DIR__.'/src/content/reality_demos.php';
+        require_once __DIR__.'/src/lessons/cognitive_visualization_views_v43.php';
+        require_once __DIR__.'/src/lessons/learning_studio_views_v44.php';
+        require_once __DIR__.'/src/lessons/visual_simulation_views_v45.php';
+        require_once __DIR__.'/src/lessons/visual_practical_learning_views_v48.php';
+        require_once __DIR__.'/src/lessons/visual_labs_3a_views_v48_1.php';
+        require_once __DIR__.'/src/teacher/teacher_lesson_mode.php';
     }
 }
 
@@ -490,7 +490,7 @@ if($authenticated&&teacher58_handle_get($teacherRequestTab,$modules))exit;
 <section class="teacher-login-card"><div class="teacher-login-brand"><span>EDUCANET</span><h1 class="teacher-login-title">Učitelský hodnoticí cockpit</h1><p>Projekty · rubriky · týmy · historie · publikované výsledky</p></div><?php if($flash): ?><div class="teacher-flash <?= e((string)$flash['type']) ?>"><?= e((string)$flash['message']) ?></div><?php endif; ?><form method="post" autocomplete="off"><input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="action" value="teacher_login"><label>Jméno učitele<input name="teacher_name" maxlength="80" autocomplete="username" value="<?=e(teacher_display_name()==='Učitel'?'':teacher_display_name())?>" placeholder="např. Stanislav Novák"></label><label>Učitelský klíč<input type="password" name="teacher_key" required autocomplete="current-password"></label><button class="btn primary" type="submit">Otevřít učitelské rozhraní →</button></form></section>
 <?php else:
 $tab=$teacherRequestTab; teacher_require_modules($tab);
-$schoolYear=$tab==='calendar'?(require __DIR__.'/school_year.php'):[];
+$schoolYear=$tab==='calendar'?(require __DIR__.'/src/ops/school_year.php'):[];
 $catalog=teacher59_filter_class_map(project_catalog()); $classId=teacher59_default_class((string)($_GET['class']??'class_2a'),array_keys($catalog));
 $projects=(array)($catalog[$classId]??[]); $projectId=(string)($_GET['project']??($projects[0]['id']??''));
 $students=in_array($tab,['sekce','overview','calendar','attention','control','reports','quality','automations','team_admin','demo_accounts'],true)?[]:project_students_for_class($classId);
@@ -590,7 +590,7 @@ $history=$record?project_grade_history((string)$record['id']):[];
 <?php teacher_render_curriculum($classId); ?>
 
 <?php elseif($tab==='teach'): ?>
-<?php $teachLesson=isset($_GET['lesson'])?max(1,min(28,(int)$_GET['lesson'])):v56_current_lesson_number($classId,require __DIR__.'/school_year.php'); /* v70: bez ?lesson= lekce podle kalendáře, ne lekce 1 */ teacher_render_lesson_mode($classId,$teachLesson); v50_render_teacher_lesson_card($classId,$teachLesson); ?>
+<?php $teachLesson=isset($_GET['lesson'])?max(1,min(28,(int)$_GET['lesson'])):v56_current_lesson_number($classId,require __DIR__.'/src/ops/school_year.php'); /* v70: bez ?lesson= lekce podle kalendáře, ne lekce 1 */ teacher_render_lesson_mode($classId,$teachLesson); v50_render_teacher_lesson_card($classId,$teachLesson); ?>
 
 <?php elseif($tab==='workspace'): ?>
 <?php teacher_render_project_workspace($classId,$projectId,(string)($_GET['group']??'')); ?>

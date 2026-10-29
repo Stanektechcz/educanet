@@ -15,7 +15,7 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit('CLI only'); }
 $root = dirname(__DIR__);
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 require $root . '/bootstrap.php';
-require_once $root . '/accounts_v53.php';
+require_once $root . '/src/student/accounts_v53.php';
 
 $args = [];
 foreach (array_slice($argv, 1) as $arg) {

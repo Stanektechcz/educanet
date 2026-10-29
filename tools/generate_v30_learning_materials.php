@@ -4,8 +4,8 @@ declare(strict_types=1);
 if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 
 $root = dirname(__DIR__);
-$lessons = require $root . '/lessons_v30.php';
-$school = require $root . '/school_year.php';
+$lessons = require $root . '/src/lessons/lessons_v30.php';
+$school = require $root . '/src/ops/school_year.php';
 
 $classMeta = [
     'class_1a' => ['label'=>'1.A','subject'=>'Grafika a webdesign · základy'],

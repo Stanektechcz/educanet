@@ -21,7 +21,7 @@ require_once __DIR__ . '/lib/http_harness.php';
 $tmp = rtrim(str_replace('\\', '/', edu_audit_temp_storage('v60-feedback')), '/');
 require $root . '/bootstrap.php';
 require_once $root . '/app/lib.php';
-foreach (['points_v53.php', 'points_v60.php', 'feedback_v60.php', 'feedback_v60_views.php', 'feedback_v60_teacher_views.php', 'teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_accounts_v59.php', 'teacher_v58.php'] as $lib) {
+foreach (['src/student/points_v53.php', 'src/student/points_v60.php', 'src/student/feedback_v60.php', 'src/student/feedback_v60_views.php', 'src/student/feedback_v60_teacher_views.php', 'src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_accounts_v59.php', 'src/teacher/teacher_v58.php'] as $lib) {
     require_once $root . '/' . $lib;
 }
 
@@ -189,15 +189,15 @@ try {
 }
 
 // --- 6b) Profil: souhrn jen ve vlastním profilu ------------------------------------------------------------
-require_once $root . '/profile_v60.php';
-require_once $root . '/profile_v60_views.php';
+require_once $root . '/src/student/profile_v60.php';
+require_once $root . '/src/student/profile_v60_views.php';
 $own = audit_capture(static function () use ($A, $zak): void { profile60_render_badges($A, $zak, ['defs' => [], 'featured' => []], true); });
 $foreign = audit_capture(static function () use ($A, $zak): void { profile60_render_badges($A, $zak, ['defs' => [], 'featured' => []], false); });
 $check('profil: vlastní záložka Odznaky ukáže souhrn nahlášených chyb, cizí profil ne', str_contains($own, 'fb60-profile') && str_contains($own, 'Nahlášeno') && !str_contains($foreign, 'fb60-profile'));
 
 // --- 7) Zdroj: bez CDN, innerHTML, dvojic load+save a zakázaných funkcí ------------------------------
 $src = '';
-foreach (['feedback_v60.php', 'feedback_v60_views.php', 'feedback_v60_teacher_views.php', 'assets/feedback-v60.css', 'app/views/feedback.php', 'app/actions/feedback.php'] as $f) $src .= (string)file_get_contents($root . '/' . $f);
+foreach (['src/student/feedback_v60.php', 'src/student/feedback_v60_views.php', 'src/student/feedback_v60_teacher_views.php', 'assets/feedback-v60.css', 'app/views/feedback.php', 'app/actions/feedback.php'] as $f) $src .= (string)file_get_contents($root . '/' . $f);
 $check('zdroj: žádné innerHTML, CDN ani externí URL', !preg_match('/innerHTML|outerHTML|document\.write|https?:\/\/(?!127\.0\.0\.1)/i', $src), false);
 $check('zdroj: RMW jen přes storage_update (žádné save_php_json/file_put_contents/load_php_json)', !preg_match('/save_php_json|load_php_json|file_put_contents|fopen\(/', $src), false);
 $check('zdroj: žádné exec/eval/curl/mail', !preg_match('/\b(exec|shell_exec|system|passthru|proc_open|popen|eval|curl_\w+|mail|fsockopen)\s*\(/', $src), false);

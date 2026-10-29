@@ -27,9 +27,9 @@ require_once $ROOT . '/bootstrap.php';
 require_once $ROOT . '/tools/lib/audit.php';
 
 foreach ([
-    'linux_v57_lab.php', 'arena_v57.php', 'arena_v58_weekly.php',
-    'arena_v60_challenge.php', 'arena_v60_challenge_views.php',
-    'student_v55.php', 'student_social_views.php',
+    'src/linux/linux_v57_lab.php', 'src/arena/arena_v57.php', 'src/arena/arena_v58_weekly.php',
+    'src/arena/arena_v60_challenge.php', 'src/arena/arena_v60_challenge_views.php',
+    'src/student/student_v55.php', 'src/student/student_social_views.php',
 ] as $rel) {
     require_once $ROOT . '/' . $rel;
 }
@@ -41,7 +41,7 @@ $check = audit_checker($state);
 // =============================================================================================
 // 1) Lint + declare(strict_types=1) + zákaz sítě/CDN/innerHTML v nových souborech.
 // =============================================================================================
-$newFiles = ['arena_v60_challenge.php', 'arena_v60_challenge_views.php', 'app/actions/arena_challenge.php'];
+$newFiles = ['src/arena/arena_v60_challenge.php', 'src/arena/arena_v60_challenge_views.php', 'app/actions/arena_challenge.php'];
 foreach ($newFiles as $rel) {
     $abs = $ROOT . '/' . $rel;
     $check('soubor existuje: ' . $rel, is_file($abs));
@@ -173,7 +173,7 @@ $check('výzva po 48 h vyprší (status expired)', $expRow !== null && (string)$
 // =============================================================================================
 // 8) Žádné body za výzvu (anti-farming) – zdrojový kód nikde nevolá pts53_award/pts60/learning_award.
 // =============================================================================================
-$srcCore = (string)file_get_contents($ROOT . '/arena_v60_challenge.php');
+$srcCore = (string)file_get_contents($ROOT . '/src/arena/arena_v60_challenge.php');
 $srcAction = (string)file_get_contents($ROOT . '/app/actions/arena_challenge.php');
 $check('arena_v60_challenge.php nevolá pts53_award/learning_award_once', !preg_match('/\b(pts53_award|pts60_award|learning_award_once)\s*\(/', $srcCore));
 $check('app/actions/arena_challenge.php nevolá pts53_award/learning_award_once', !preg_match('/\b(pts53_award|pts60_award|learning_award_once)\s*\(/', $srcAction));
@@ -207,7 +207,7 @@ $check('index.php ověřuje CSRF na každý POST (verify_csrf)', str_contains($i
 $enCat = require $ROOT . '/lang/en/ui/arena_challenge.php';
 $ukCat = require $ROOT . '/lang/uk/ui/arena_challenge.php';
 $missingEn = $missingUk = [];
-foreach (['arena_v60_challenge.php', 'arena_v60_challenge_views.php', 'app/actions/arena_challenge.php'] as $rel) {
+foreach (['src/arena/arena_v60_challenge.php', 'src/arena/arena_v60_challenge_views.php', 'app/actions/arena_challenge.php'] as $rel) {
     $src = (string)file_get_contents($ROOT . '/' . $rel);
     if (!preg_match_all("/\\btr\\('((?:[^'\\\\]|\\\\.)*)'/", $src, $m)) continue;
     foreach ($m[1] as $raw) {
@@ -221,8 +221,8 @@ $check('všechny nové msgid mají ukrajinský překlad (arena_challenge)', $mis
 
 $manifest = require $ROOT . '/lang/domains_v59.php';
 $domFiles = (array)($manifest['domains']['arena_challenge'] ?? []);
-$check('manifest domén: arena_v60_challenge.php v doméně arena_challenge', in_array('arena_v60_challenge.php', $domFiles, true));
-$check('manifest domén: arena_v60_challenge_views.php v doméně arena_challenge', in_array('arena_v60_challenge_views.php', $domFiles, true));
+$check('manifest domén: arena_v60_challenge.php v doméně arena_challenge', in_array('src/arena/arena_v60_challenge.php', $domFiles, true));
+$check('manifest domén: arena_v60_challenge_views.php v doméně arena_challenge', in_array('src/arena/arena_v60_challenge_views.php', $domFiles, true));
 $hubsFiles = (array)($manifest['domains']['hubs'] ?? []);
 $enHubs = require $ROOT . '/lang/en/ui/hubs.php';
 $ukHubs = require $ROOT . '/lang/uk/ui/hubs.php';

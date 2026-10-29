@@ -10,8 +10,8 @@ declare(strict_types=1);
  */
 
 require __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/arena_v58_incident.php';
-if (!function_exists('tr')) { require_once __DIR__ . '/i18n_v58.php'; require_once __DIR__ . '/i18n_v59.php'; }
+require_once __DIR__ . '/src/arena/arena_v58_incident.php';
+if (!function_exists('tr')) { require_once __DIR__ . '/src/i18n/i18n_v58.php'; require_once __DIR__ . '/src/i18n/i18n_v59.php'; }
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');

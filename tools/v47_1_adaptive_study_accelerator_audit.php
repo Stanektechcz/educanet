@@ -5,11 +5,11 @@ require_once __DIR__ . '/lib/app_source.php';
 if(PHP_SAPI!=='cli'){http_response_code(403);exit;}
 $root=dirname(__DIR__);
 require $root.'/bootstrap.php';
-require $root.'/runtime_content.php';
-require_once $root.'/teacher_operations_v46.php';
-require_once $root.'/student_learning_coach_v47.php';
-require_once $root.'/student_learning_accelerator_v47_1.php';
-require_once $root.'/student_learning_accelerator_views_v47_1.php';
+require $root.'/src/ops/runtime_content.php';
+require_once $root.'/src/teacher/teacher_operations_v46.php';
+require_once $root.'/src/student/student_learning_coach_v47.php';
+require_once $root.'/src/student/student_learning_accelerator_v47_1.php';
+require_once $root.'/src/student/student_learning_accelerator_views_v47_1.php';
 function v471_fp(string $dir):array{$o=[];foreach(glob($dir.'/*.php')?:[] as $f)$o[basename($f)]=[filesize($f)?:0,filemtime($f)?:0,hash_file('sha256',$f)?:''];ksort($o);return $o;}
 // i18n (v59): tolerate Czech UI text wrapped in trm()/tr() by an i18n builder (see v47_hasLit).
 function v471_hasLit(string $h, string $needle): bool { return (bool)preg_match('~(?:tr(?:m)?\(\s*)?' . preg_quote($needle, '~') . '~', $h); }
@@ -31,11 +31,11 @@ foreach(array_keys($modules) as $classId){
     $classes[$classId]=['focus'=>(string)($focus['topic']??''),'stage'=>(string)($focus['stage']??''),'interleaved'=>count($mix),'mastery_ready'=>!empty($snap['mastery_ready'])];
 }
 $after=v471_fp(STORAGE_DIR);$writes=[];foreach(array_unique(array_merge(array_keys($before),array_keys($after))) as $n)if(($before[$n]??null)!==($after[$n]??null))$writes[]=$n;if($writes)$errors[]='Read-only v47.1 změnilo storage: '.implode(', ',$writes);
-$index=edu_app_source()?:'';$core=file_get_contents($root.'/student_learning_accelerator_v47_1.php')?:'';$views=file_get_contents($root.'/student_learning_accelerator_views_v47_1.php')?:'';$js=file_get_contents($root.'/assets/student-coach-v47.js')?:'';$sw=file_get_contents($root.'/sw.js')?:'';
+$index=edu_app_source()?:'';$core=file_get_contents($root.'/src/student/student_learning_accelerator_v47_1.php')?:'';$views=file_get_contents($root.'/src/student/student_learning_accelerator_views_v47_1.php')?:'';$js=file_get_contents($root.'/assets/student-coach-v47.js')?:'';$sw=file_get_contents($root.'/sw.js')?:'';
 // "'label'=>'Trénink'" žilo jen v mrtvém komentáři app/views/_layout.php ř. 65 (nikdy nerenderováno) –
 // navigace v55 dnes nemá samostatnou položku "Trénink" (viz student_v55.php v55_primary_nav()), takže
 // reálný ekvivalent neexistuje a marker se maže bez náhrady (funkce zůstává ověřená přes route+akce).
-foreach(["student_learning_accelerator_v47_1.php","view === 'study_loop'",'coach_probe_submit','coach_difficulty_feedback'] as $needle)if(!str_contains($index,$needle))$errors[]='index.php chybí '.$needle;
+foreach(["src/student/student_learning_accelerator_v47_1.php","view === 'study_loop'",'coach_probe_submit','coach_difficulty_feedback'] as $needle)if(!str_contains($index,$needle))$errors[]='index.php chybí '.$needle;
 foreach(['v471_topic_evidence','v471_interleaved_topics','v471_probe_submit','v471_session_snapshot','v471_stage_label'] as $needle)if(!str_contains($core,$needle))$errors[]='Core chybí '.$needle;
 foreach(['generation-first','mikrodiagnostika','Interleaving','kalibrace obtížnosti','data-reveal-scaffold'] as $needle)if(!v471_hasLit($views,$needle))$errors[]='Views chybí '.$needle;
 foreach(['data-generation-note','data-reveal-step','educanet:study-break'] as $needle)if(!str_contains($js,$needle))$errors[]='JS chybí '.$needle;

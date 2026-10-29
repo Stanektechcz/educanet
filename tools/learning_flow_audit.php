@@ -15,13 +15,13 @@ if (str_contains($index, 'data-next-complete')) $errors[] = 'Strukturovaná lekc
 if (!str_contains($js, 'kb:visual-complete')) $errors[] = 'Chybí automatické dokončení vizuálního kroku.';
 if (!str_contains($js, 'armDeepAutoComplete')) $errors[] = 'Chybí automatické dokončení Deep Dive po aktivním čtení.';
 if (!str_contains($progress, "'awarded_events'")) $errors[] = 'Progress API nevrací detailní XP události.';
-if (!str_contains($progress, "lessons_more.php")) $errors[] = 'Progress API nemá načtené Lekce 7.';
-if (!str_contains($progress, "lessons_ecosystem.php")) $errors[] = 'Progress API nemá načtené Lekce 8–9.';
-if (!str_contains($progress, "lessons_yearpack.php")) $errors[] = 'Progress API nemá načtené Lekce 10–18.';
-if (!str_contains($progress, "knowledge_tours_yearpack.php")) $errors[] = 'Progress API nemá načtené v27 Knowledge Tours.';
-if (!str_contains($progress, "simulations_yearpack.php")) $errors[] = 'Progress API nemá načtené v27 simulace.';
+if (!str_contains($progress, "src/lessons/lessons_more.php")) $errors[] = 'Progress API nemá načtené Lekce 7.';
+if (!str_contains($progress, "src/lessons/lessons_ecosystem.php")) $errors[] = 'Progress API nemá načtené Lekce 8–9.';
+if (!str_contains($progress, "src/lessons/lessons_yearpack.php")) $errors[] = 'Progress API nemá načtené Lekce 10–18.';
+if (!str_contains($progress, "src/knowledge/knowledge_tours_yearpack.php")) $errors[] = 'Progress API nemá načtené v27 Knowledge Tours.';
+if (!str_contains($progress, "src/content/simulations_yearpack.php")) $errors[] = 'Progress API nemá načtené v27 simulace.';
 
-$files = ['next_lessons.php','extended_lessons.php','lessons_plus.php','lessons_more.php','lessons_ecosystem.php','lessons_yearpack.php'];
+$files = ['src/content/next_lessons.php','src/content/extended_lessons.php','src/lessons/lessons_plus.php','src/lessons/lessons_more.php','src/lessons/lessons_ecosystem.php','src/lessons/lessons_yearpack.php'];
 $totalSteps = 0;
 $autoReady = 0;
 foreach ($files as $file) {

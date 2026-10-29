@@ -4,11 +4,11 @@ declare(strict_types=1);
 if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 $root=dirname(__DIR__);
 require $root.'/bootstrap.php';
-require_once $root.'/teacher_class_dashboard.php';
-require_once $root.'/teacher_operations_v46.php';
-require_once $root.'/teacher_operations_plus_v46_1.php';
-require_once $root.'/teacher_operations_views_v46.php';
-require_once $root.'/teacher_operations_plus_views_v46_1.php';
+require_once $root.'/src/teacher/teacher_class_dashboard.php';
+require_once $root.'/src/teacher/teacher_operations_v46.php';
+require_once $root.'/src/teacher/teacher_operations_plus_v46_1.php';
+require_once $root.'/src/teacher/teacher_operations_views_v46.php';
+require_once $root.'/src/teacher/teacher_operations_plus_views_v46_1.php';
 
 function v461_fingerprint(string $dir): array {
     $out=[];
@@ -52,8 +52,8 @@ foreach(array_unique(array_merge(array_keys($before),array_keys($after))) as $na
 if($writes)$errors[]='Read-only v46.1 operace změnily storage: '.implode(', ',$writes);
 
 $teacher=file_get_contents($root.'/teacher.php')?:'';
-$plus=file_get_contents($root.'/teacher_operations_plus_v46_1.php')?:'';
-$views=file_get_contents($root.'/teacher_operations_plus_views_v46_1.php')?:'';
+$plus=file_get_contents($root.'/src/teacher/teacher_operations_plus_v46_1.php')?:'';
+$views=file_get_contents($root.'/src/teacher/teacher_operations_plus_views_v46_1.php')?:'';
 $js=file_get_contents($root.'/assets/teacher-admin-v46.js')?:'';
 foreach([
     "tab==='ops_audit'"=>'Audit operací není zapojen v teacher.php.',

@@ -69,7 +69,7 @@ function v58oa_section_manual(string $root): void
 
     // Shoda s aktuálním registrem – běží ve vlastním izolovaném úložišti, storage/ se nedotkne.
     $GLOBALS['lab57_storage_override'] = sys_get_temp_dir() . '/v58_offline_audit_' . bin2hex(random_bytes(6));
-    require_once $root . '/linux_v57_lab.php';
+    require_once $root . '/src/linux/linux_v57_lab.php';
     $fresh = function_exists('lab58_manual') ? lab58_manual() : v57_manual_base();
     $freshSorted = v58oa_normalize_manual(is_array($fresh) ? $fresh : []);
     $fileSorted = v58oa_normalize_manual($decoded);

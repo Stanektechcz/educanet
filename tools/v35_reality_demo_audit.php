@@ -5,8 +5,8 @@ require_once __DIR__ . '/lib/app_source.php';
 if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 
 require dirname(__DIR__).'/bootstrap.php';
-require dirname(__DIR__).'/assessment_visuals.php';
-require dirname(__DIR__).'/reality_demos.php';
+require dirname(__DIR__).'/src/assessment/assessment_visuals.php';
+require dirname(__DIR__).'/src/content/reality_demos.php';
 
 $root=dirname(__DIR__);
 $errors=[];$total=0;$scenes=[];$classes=[];
@@ -28,7 +28,7 @@ foreach(glob($root.'/cache/runtime/class_*.php')?:[] as $file){
     }
     $classes[$class]=$count;
 }
-$index=edu_app_source()?:'';$js=file_get_contents($root.'/assets/app.js')?:'';$css=file_get_contents($root.'/assets/app.css')?:'';$teacher=file_get_contents($root.'/teacher_lesson_mode.php')?:'';$teacherShell=file_get_contents($root.'/teacher.php')?:'';
+$index=edu_app_source()?:'';$js=file_get_contents($root.'/assets/app.js')?:'';$css=file_get_contents($root.'/assets/app.css')?:'';$teacher=file_get_contents($root.'/src/teacher/teacher_lesson_mode.php')?:'';$teacherShell=file_get_contents($root.'/teacher.php')?:'';
 foreach(['render_reality_demo','Reality demo · nejdřív situace, potom princip'] as $needle)if(!str_contains($index,$needle))$errors[]="index missing $needle";
 foreach(['data-reality-demo','document.startViewTransition','reality:decision','IntersectionObserver','educanet-reality-motion','kb:visual-complete'] as $needle)if(!str_contains($js,$needle))$errors[]="JS missing $needle";
 foreach(['.reality-demo','container-type:inline-size','content-visibility:auto','@media(prefers-reduced-motion:reduce)','.reality-motion-toggle','.lesson-reality-prompts'] as $needle)if(!str_contains($css,$needle))$errors[]="CSS missing $needle";

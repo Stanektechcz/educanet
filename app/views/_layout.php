@@ -8,9 +8,9 @@ declare(strict_types=1);
  * Spouští ho jen router v index.php (viz app/routes.php).
  */
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
-require_once dirname(__DIR__, 2) . '/nav_v61.php';   // v61: drobečky a spodní lišta
-require_once dirname(__DIR__, 2) . '/ui_v67.php';    // v67: vzhled (data-theme) a prázdné stavy
-require_once dirname(__DIR__, 2) . '/ui_v81.php';    // v81: ikony, hlavička, nápověda, toasty (jen prezentace)
+require_once dirname(__DIR__, 2) . '/src/ui/nav_v61.php';   // v61: drobečky a spodní lišta
+require_once dirname(__DIR__, 2) . '/src/ui/ui_v67.php';    // v67: vzhled (data-theme) a prázdné stavy
+require_once dirname(__DIR__, 2) . '/src/ui/ui_v81.php';    // v81: ikony, hlavička, nápověda, toasty (jen prezentace)
 
 function render_header(string $title, ?array $module = null, bool $titleIsContent = false): void
 {

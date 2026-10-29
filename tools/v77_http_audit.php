@@ -26,9 +26,9 @@ putenv('EDUCANET_TEACHER_EXPORT_KEY=' . V77H_KEY);
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'cockpit_v70.php', 'tutorial_v52.php', 'learning_v56.php', 'runtime_content.php',
-    'session_v53.php', 'accounts_v53.php', 'intake_v51.php', 'lesson_model_v71.php', 'lesson_approval_v72.php', 'svp_v72.php', 'svp_v72_map.php', 'bulk_approval_v74.php',
-    'lesson_glossary_v72.php', 'ai_prompts_v72_1.php', 'ai_prompts_v76.php', 'ai_prompts_v77.php', 't14_v77.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/teacher/cockpit_v70.php', 'src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/ops/runtime_content.php',
+    'src/lessons/session_v53.php', 'src/student/accounts_v53.php', 'src/student/intake_v51.php', 'src/lessons/lesson_model_v71.php', 'src/lessons/lesson_approval_v72.php', 'src/assessment/svp_v72.php', 'src/assessment/svp_v72_map.php', 'src/teacher/bulk_approval_v74.php',
+    'src/lessons/lesson_glossary_v72.php', 'src/teacher/ai_prompts_v72_1.php', 'src/teacher/ai_prompts_v76.php', 'src/teacher/ai_prompts_v77.php', 'src/teacher/t14_v77.php'] as $lib) require_once $ROOT . '/' . $lib;
 require_once __DIR__ . '/lib/v59_scope_fixtures.php';
 
 $state = audit_counter();

@@ -14,11 +14,11 @@ $storageDir = edu_audit_temp_storage('v52');
 $root = dirname(__DIR__);
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 require $root . '/bootstrap.php';
-require $root . '/runtime_content.php';
-require_once $root . '/accounts_v53.php';
-require_once $root . '/tutorial_v52.php';
-require_once $root . '/tutorial_v52_views.php'; // tut52_render_scene()/tut52_render_exercise() – volá je tut52_render_teacher_lesson()
-require_once $root . '/tutorial_v52_teacher.php';
+require $root . '/src/ops/runtime_content.php';
+require_once $root . '/src/student/accounts_v53.php';
+require_once $root . '/src/lessons/tutorial_v52.php';
+require_once $root . '/src/lessons/tutorial_v52_views.php'; // tut52_render_scene()/tut52_render_exercise() – volá je tut52_render_teacher_lesson()
+require_once $root . '/src/lessons/tutorial_v52_teacher.php';
 
 $state = audit_counter();
 $check = audit_checker($state);
@@ -26,10 +26,10 @@ $read = static fn(string $rel): string => (string)@file_get_contents($root . '/'
 $index = edu_app_source();
 $js = $read('assets/tutorial-v52.js');
 $css = $read('assets/tutorial-v52.css');
-$views = $read('tutorial_v52_views.php');
+$views = $read('src/lessons/tutorial_v52_views.php');
 $sw = $read('sw.js');
 
-foreach (['tutorial_v52.php', 'tutorial_v52_views.php'] as $f) {
+foreach (['src/lessons/tutorial_v52.php', 'src/lessons/tutorial_v52_views.php'] as $f) {
     $check('exists ' . $f, is_file($root . '/' . $f), false);
 }
 $check('GSAP is vendored locally (no runtime CDN)', !preg_match('~https?://[^"\']*(gsap|greensock|cdnjs|jsdelivr|unpkg)~i', $views . $js), false);
@@ -80,7 +80,7 @@ try {
     $check('učitel se přihlásí učitelským klíčem', audit_response_clean($teacherLogin['response']));
     $teachTab = $harness->request('GET', '/teacher.php', ['tab' => 'teach', 'class' => 'class_3a']);
     $check('režim hodiny (tab=teach) načítá v52 styl (vykreslená stránka)', audit_response_clean($teachTab) && preg_match('~assets/(cx-)?tutorial-v52.css~', (string)$teachTab['body']) === 1);   // v68: cockpit načítá odvozenou kopii cx-tutorial-v52.css
-    $teacherGuard = $harness->request('GET', '/tutorial_v52_teacher.php');
+    $teacherGuard = $harness->request('GET', '/src/lessons/tutorial_v52_teacher.php');
     $check('přímý přístup k tutorial_v52_teacher.php je zablokovaný (403)', $teacherGuard['status'] === 403);
 } finally {
     $harness->stop();
@@ -96,7 +96,7 @@ $engines = array_flip($em[1] ?? []);
 $check('26 animated scenes in JS (' . count($jsScenes) . ')', count($jsScenes) >= 26);
 $check('6 exercise engines in JS', count(array_intersect_key(array_flip(['order', 'match', 'terminal', 'bits', 'sizes', 'contrast']), $engines)) === 6);
 
-$schoolYear = require $root . '/school_year.php';
+$schoolYear = require $root . '/src/ops/school_year.php';
 $missingScene = []; $missingEngine = []; $badTerminal = []; $noTools = []; $lessonCounts = []; $undated = 0;
 $sampleLesson = null; $sampleClass = null; $sampleModule = null;
 foreach (['class_1a', 'class_2a', 'class_3a', 'class_4a'] as $classId) {
@@ -152,7 +152,7 @@ if ($sampleLesson !== null) {
 } else {
     $check('teacher lesson mode renders the tutorial panel', false);
 }
-$check('projection deck switches demos', str_contains($js, 'data-t52-deck') && str_contains($read('tutorial_v52_teacher.php'), 'data-t52-deck-item'), false);
+$check('projection deck switches demos', str_contains($js, 'data-t52-deck') && str_contains($read('src/lessons/tutorial_v52_teacher.php'), 'data-t52-deck-item'), false);
 $check('teacher demos never save student points', str_contains($views, 'data-no-save') && str_contains($js, "root.hasAttribute('data-no-save')"), false);
 $missingSolution = [];
 foreach (['order', 'match', 'terminal', 'bits', 'sizes', 'contrast'] as $type) {

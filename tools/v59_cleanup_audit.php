@@ -113,8 +113,8 @@ $markerNeedles = [
         'v50.2/v50.4 compatibility markers only',
     ],
     'app/views/_lesson.php' => [], // doplněno níže dynamickým hledáním
-    'unified_page_shell_v50_7.php' => [],
-    'zero_friction_v50_6.php' => [],
+    'src/ui/unified_page_shell_v50_7.php' => [],
+    'src/student/zero_friction_v50_6.php' => [],
     'sw.js' => [
         'compatibility marker',
         'compatibility markers retained for historical audits only',
@@ -126,7 +126,7 @@ foreach ($markerNeedles as $rel => $needles) {
     $hit = false;
     foreach ($needles as $needle) { if ($needle !== '' && str_contains($content, $needle)) { $hit = true; break; } }
     // _lesson.php / unified_page_shell_v50_7.php / zero_friction_v50_6.php: obecné hledání "compatibility" markeru
-    if (!$hit && in_array($rel, ['app/views/_lesson.php', 'unified_page_shell_v50_7.php', 'zero_friction_v50_6.php'], true)) {
+    if (!$hit && in_array($rel, ['app/views/_lesson.php', 'src/ui/unified_page_shell_v50_7.php', 'src/student/zero_friction_v50_6.php'], true)) {
         $hit = (bool)preg_match('~compatibility marker~i', $content);
     }
     if ($hit) $markerFilesWithHits[] = $rel;
@@ -184,10 +184,10 @@ $pendingCheck(!str_contains($layoutNoComments, 'render_student_guided_flow'), 'r
 //    povoleného externího tutora (adaptive_learning.php, gated přes educanet_secret('tutor_endpoint'),
 //    rozhodnutí školy dle PLAN_F4_PROD.md B.1) – ne "mrtvý"/nebezpečný kód, ale zdokumentovaná výjimka.
 // ---------------------------------------------------------------------------
-$allowedNetworkFiles = ['bootstrap.php', 'adaptive_learning.php'];
+$allowedNetworkFiles = ['bootstrap.php', 'src/lessons/adaptive_learning.php'];
 $networkPattern = '~curl_init\s*\(|stream_context_create\s*\(\s*\[\s*[\'"]http|file_get_contents\s*\(\s*[\'"]https?://~';
 $appScanFiles = [];
-foreach (glob($root . '/*.php') ?: [] as $f) $appScanFiles[] = $f;
+foreach (array_merge(glob($root . '/*.php') ?: [], glob($root . '/src/*/*.php') ?: []) as $f) $appScanFiles[] = $f;
 $appDirIt = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root . '/app', FilesystemIterator::SKIP_DOTS));
 foreach ($appDirIt as $f) if ($f->isFile() && strtolower($f->getExtension()) === 'php') $appScanFiles[] = $f->getPathname();
 $unexpectedNetwork = [];
@@ -202,9 +202,9 @@ $check(count($unexpectedNetwork) === 0, 'no unexpected outbound network calls in
 // ---------------------------------------------------------------------------
 // G) Broker v50_oci_exec / v50_runtime_config síťové volání – integrátor už vypnul.
 // ---------------------------------------------------------------------------
-$handsOn = $read('hands_on_learning_v50.php');
+$handsOn = $read('src/lessons/hands_on_learning_v50.php');
 $check(!str_contains($handsOn, 'v50_oci_exec'), 'v50_oci_exec() broker call is gone (hands_on_learning_v50.php)');
-$handsOnViews = $read('hands_on_learning_views_v50.php');
+$handsOnViews = $read('src/lessons/hands_on_learning_views_v50.php');
 $check(!preg_match('~v50_runtime_mode\(\)\s*!==\s*[\'"]simulator[\'"]~', $handsOnViews), "hands-on runtime mode check does not branch away from 'simulator'");
 
 echo "V59_CLEANUP_AUDIT $ok/$total (pending=$pendingCount" . ($strict ? ', strict' : ', report-only') . ")\n";

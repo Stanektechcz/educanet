@@ -53,11 +53,11 @@ set_error_handler(static function (int $errno, string $errstr, string $errfile, 
 // vypneme automatické načítání rozšíření a natáhneme ručně jen naše dva balíčky úloh. Bez téhle izolace by
 // syntaktická chyba v cizím WIP souboru (běžné během paralelní práce) shodila i tenhle audit.
 $GLOBALS['lab58_skip_ext'] = true;
-require_once $ROOT . '/linux_v57_lab.php';
-require_once $ROOT . '/linux_v58_levels_ctf.php';
-require_once $ROOT . '/linux_v58_levels_incident.php';
-require_once $ROOT . '/arena_v58_ctf.php';
-require_once $ROOT . '/arena_v58_incident.php';
+require_once $ROOT . '/src/linux/linux_v57_lab.php';
+require_once $ROOT . '/src/linux/linux_v58_levels_ctf.php';
+require_once $ROOT . '/src/linux/linux_v58_levels_incident.php';
+require_once $ROOT . '/src/arena/arena_v58_ctf.php';
+require_once $ROOT . '/src/arena/arena_v58_incident.php';
 
 // ---------------------------------------------------------------------------
 // Harness (stejný vzor jako tools/v57_linux_lab_audit.php)
@@ -413,8 +413,8 @@ function v58ci_section_safety(string $root): void
     $forbiddenFuncs = ['exec', 'shell_exec', 'system', 'passthru', 'proc_open', 'popen', 'pcntl_exec', 'eval', 'create_function', 'assert', 'fsockopen', 'pfsockopen', 'stream_socket_client', 'socket_create', 'socket_connect', 'curl_init', 'curl_exec', 'curl_multi_exec', 'dns_get_record', 'gethostbyname', 'gethostbynamel', 'getmxrr', 'checkdnsrr', 'mail'];
     $fileFuncs = ['file_get_contents', 'fopen', 'file'];
     $files = array_merge(
-        glob($root . '/arena_v58_*.php') ?: [],
-        [$root . '/linux_v58_levels_ctf.php', $root . '/linux_v58_levels_incident.php'],
+        glob($root . '/src/arena/arena_v58_*.php') ?: [],
+        [$root . '/src/linux/linux_v58_levels_ctf.php', $root . '/src/linux/linux_v58_levels_incident.php'],
     );
     $violations = [];
     foreach ($files as $path) {

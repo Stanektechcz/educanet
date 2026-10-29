@@ -20,9 +20,9 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  */
 
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once dirname(__DIR__) . '/intake_v51.php';
-require_once dirname(__DIR__) . '/identity_v58.php';
-foreach (['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'challenges_v64.php', 'paths_v63.php', 'projects_v60.php', 'projects_v65.php', 'growth_v67.php'] as $nightlyLib) {
+require_once dirname(__DIR__) . '/src/student/intake_v51.php';
+require_once dirname(__DIR__) . '/src/student/identity_v58.php';
+foreach (['src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/evidence_v62_adapters.php', 'src/assessment/mastery_v62.php', 'src/student/challenges_v64.php', 'src/paths/paths_v63.php', 'src/projects/projects_v60.php', 'src/projects/projects_v65.php', 'src/student/growth_v67.php'] as $nightlyLib) {
     require_once dirname(__DIR__) . '/' . $nightlyLib;
 }
 require_once __DIR__ . '/migrate.php'; // migrate_fresh_backup(), migrate_backup_dir()

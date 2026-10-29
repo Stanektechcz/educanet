@@ -35,9 +35,9 @@ $_ENV['EDUCANET_STORAGE_DIR'] = $tmp . '/storage';
 putenv('EDUCANET_LM71_CACHE_DIR=' . $tmp . '/lesson_model');
 
 require_once $ROOT . '/bootstrap.php';
-foreach (['tutorial_v52.php', 'learning_v56.php', 'lesson_model_v71.php', 'calendar_days_v71.php', 'lesson_approval_v72.php', 'lesson_exit_v72.php', 'svp_v72.php', 'ai_prompts_v72_1.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/lessons/lesson_model_v71.php', 'src/ops/calendar_days_v71.php', 'src/lessons/lesson_approval_v72.php', 'src/lessons/lesson_exit_v72.php', 'src/assessment/svp_v72.php', 'src/teacher/ai_prompts_v72_1.php'] as $lib) require_once $ROOT . '/' . $lib;
 
-$year = require $ROOT . '/school_year.php';
+$year = require $ROOT . '/src/ops/school_year.php';
 $lessons = [];
 foreach (LM71_CLASSES as $c) foreach (lm71_lessons($c) as $n => $l) $lessons[$c][$n] = $l;
 $all = array_merge(...array_values(array_map('array_values', $lessons)));
@@ -113,7 +113,7 @@ foreach ($all as $l) {
 $skeletonLessons = array_sum(array_filter($skeletons, static fn(int $n): bool => $n >= LM71_TEMPLATE_MIN_LESSONS));
 
 // ------------------------------------------------------------------ 4) materiály a témata
-$resources = require $ROOT . '/learning_resources.php';
+$resources = require $ROOT . '/src/content/learning_resources.php';
 $resTotal = 0;
 $resUrls = [];
 $resNoMeta = 0;

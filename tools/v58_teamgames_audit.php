@@ -51,16 +51,16 @@ function learning_award_once(string $classId, string $eventKey, int $xp): bool
     return true;
 }
 
-require_once $root . '/linux_v57_lab.php';
-require_once $root . '/linux_v58_levels_tg.php';
-require_once $root . '/teamgames_v58_registry.php';
-require_once $root . '/teamgames_v58_quiz.php';
-require_once $root . '/teamgames_v58_game_relay.php';
-require_once $root . '/teamgames_v58_game_bingo.php';
-require_once $root . '/teamgames_v58_game_jeopardy.php';
-require_once $root . '/teamgames_v58_game_tug.php';
-require_once $root . '/teamgames_v58_game_netadmin.php';
-require_once $root . '/teamgames_v58_game_escape.php';
+require_once $root . '/src/linux/linux_v57_lab.php';
+require_once $root . '/src/linux/linux_v58_levels_tg.php';
+require_once $root . '/src/teamgames/teamgames_v58_registry.php';
+require_once $root . '/src/teamgames/teamgames_v58_quiz.php';
+require_once $root . '/src/teamgames/teamgames_v58_game_relay.php';
+require_once $root . '/src/teamgames/teamgames_v58_game_bingo.php';
+require_once $root . '/src/teamgames/teamgames_v58_game_jeopardy.php';
+require_once $root . '/src/teamgames/teamgames_v58_game_tug.php';
+require_once $root . '/src/teamgames/teamgames_v58_game_netadmin.php';
+require_once $root . '/src/teamgames/teamgames_v58_game_escape.php';
 
 $checks = 0;
 $failed = 0;
@@ -316,7 +316,7 @@ if ($quizCell2 !== null) {
     try { tg58_student_action($bingoId, 'bingo_mark', $member2, ['id' => $quizCell2['id'], 'answer' => 'spatne-x'], $now0 + 8); } catch (RuntimeException $e) { $blocked = true; }
     check($blocked, 'FAIR58-05 Bingo: 6. špatná odpověď za minutu je zablokovaná');
 } else {
-    check(str_contains((string)file_get_contents($root . '/teamgames_v58_game_bingo.php'), 'tg58_wrong_guard('), 'FAIR58-05 Bingo: kvízová políčka mají limit špatných odpovědí');
+    check(str_contains((string)file_get_contents($root . '/src/teamgames/teamgames_v58_game_bingo.php'), 'tg58_wrong_guard('), 'FAIR58-05 Bingo: kvízová políčka mají limit špatných odpovědí');
 }
 tg58_end_session($bingoId, $now0 + 30); // uvolní třídu (jen jedna běžící hra na třídu)
 
@@ -410,10 +410,10 @@ file_put_contents($workerPath, "<?php\n"
     . "\$GLOBALS['tg58_storage_override']=" . var_export($tmp, true) . ";\$GLOBALS['lab57_storage_override']=" . var_export($tmp, true) . ";\n"
     . "\$GLOBALS['lab57_secret_override']=" . var_export($GLOBALS['lab57_secret_override'], true) . ";\$GLOBALS['lab58_skip_ext']=true;\n"
     . "function storage_update(string \$p, callable \$m): array { \$fp=fopen(\$p,'c+'); flock(\$fp,LOCK_EX); \$raw=(string)stream_get_contents(\$fp); \$d=json_decode(trim(preg_replace('/^<\\?php.*?\\?>\\s*/s','',\$raw)??''),true); \$d=\$m(is_array(\$d)?\$d:[]); ftruncate(\$fp,0); rewind(\$fp); fwrite(\$fp,\"<?php http_response_code(403); exit; ?>\\n\".json_encode(\$d,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES).\"\\n\"); fflush(\$fp); flock(\$fp,LOCK_UN); fclose(\$fp); return \$d; }\n"
-    . "require_once " . var_export($root . '/linux_v57_lab.php', true) . ";\n"
-    . "require_once " . var_export($root . '/linux_v58_levels_tg.php', true) . ";\n"
-    . "require_once " . var_export($root . '/teamgames_v58_registry.php', true) . ";\n"
-    . "require_once " . var_export($root . '/teamgames_v58_game_netadmin.php', true) . ";\n"
+    . "require_once " . var_export($root . '/src/linux/linux_v57_lab.php', true) . ";\n"
+    . "require_once " . var_export($root . '/src/linux/linux_v58_levels_tg.php', true) . ";\n"
+    . "require_once " . var_export($root . '/src/teamgames/teamgames_v58_registry.php', true) . ";\n"
+    . "require_once " . var_export($root . '/src/teamgames/teamgames_v58_game_netadmin.php', true) . ";\n"
     . "tg58_netadmin_on_node_complete(\$argv[1], \$argv[2], \$argv[3], (int)\$argv[4]);\n");
 $php = defined('PHP_BINARY') && PHP_BINARY !== '' ? PHP_BINARY : 'php';
 $procs = [];
@@ -486,7 +486,7 @@ $good = tg58_student_action($escId, 'escape_unlock', $sitarStudent, ['parts' => 
 check(($good['correct'] ?? false) === true, 'správný kód ze všech 4 dílů otevře zámek');
 check(in_array($escTeamA, (array)tg58_get($escId)['game']['winners'], true), 'unikající tým se počítá do vítězů (cíl třídy)');
 // FAIR58-05: fragment = HMAC se serverovým tajemstvím; v Labu ho vidí jen jeho role, svět ho vůbec neobsahuje
-$escSrc = (string)file_get_contents($root . '/linux_v58_levels_tg.php') . (string)file_get_contents($root . '/teamgames_v58_game_escape.php');
+$escSrc = (string)file_get_contents($root . '/src/linux/linux_v58_levels_tg.php') . (string)file_get_contents($root . '/src/teamgames/teamgames_v58_game_escape.php');
 check(str_contains($escSrc, 'hash_hmac(\'sha256\', $gameId . \'|\' . $teamId . \'|\' . $role, lab57_secret())') && !str_contains($escSrc, 'escfrag'), 'FAIR58-05: fragment je HMAC(tajemství, hra|tým|role), ne veřejný hash');
 $fragDok = tg58_escape_fragment_expected($escNet, $escTeamA, 'dokumentator', $now0);
 $outOf = static fn(array $r): string => implode('', array_map(static fn($c): string => (string)($c[1] ?? ''), (array)($r['out'] ?? [])));
@@ -544,8 +544,8 @@ $xp2 = tg58_claim_xp(A_CLASS_NET, $studentA);
 check($xp1 > 0 && $xp2 === 0, 'XP za dohranou hru se připíše jen jednou');
 
 echo "== Bezpečnost: zakázané funkce, CSRF, session, polling ==\n";
-$myFiles = glob($root . '/teamgames_v58_*.php') ?: [];
-$myFiles = array_merge($myFiles, [$root . '/linux_v58_levels_tg.php']);
+$myFiles = glob($root . '/src/teamgames/teamgames_v58_*.php') ?: [];
+$myFiles = array_merge($myFiles, [$root . '/src/linux/linux_v58_levels_tg.php']);
 $forbidden = ['exec(', 'shell_exec(', 'system(', 'passthru(', 'proc_open(', 'popen(', 'pcntl_exec(', 'eval(', 'assert(', 'create_function(', 'fsockopen(', 'stream_socket_client(', 'socket_create(', 'curl_init(', 'mail('];
 $tokenOk = true;
 foreach ($myFiles as $file) {
@@ -563,7 +563,7 @@ $apiSrc = (string)file_get_contents($root . '/teamgames_v58_api.php');
 check(str_contains($apiSrc, 'tg58_csrf_ok'), 'API kontroluje CSRF (hash_equals)');
 check(str_contains($apiSrc, 'session_write_close()'), 'API volá session_write_close() po ověření identity');
 check(str_contains($apiSrc, "adaptive_student_key"), 'API bere identitu žáka ze session, ne z parametru');
-$teacherSrc = (string)file_get_contents($root . '/teamgames_v58_teacher_views.php');
+$teacherSrc = (string)file_get_contents($root . '/src/teamgames/teamgames_v58_teacher_views.php');
 check(!str_contains($teacherSrc, 'verify_csrf'), 'POST akce spoléhá na CSRF z teacher.php (žádná duplicitní/chybějící logika)');
 check(str_contains($teacherSrc, "session_write_close()"), 'GET polling učitele/projektoru uvolní zámek session');
 // Pozn.: mapování prefixu 'tg58_' na oprávnění 'students.manage' (deny-by-default) je v

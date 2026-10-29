@@ -58,7 +58,7 @@ for ($i = 0; $i < 300; $i++) {
 }
 $lens = array_map(static fn(int $i): int => strlen((string)tb75_variant('lnx_path', 'x' . $i, 1 + $i % 4)['fields'][0]['answer']), range(0, 3999));
 $check('specificita hn80_spec = klíč generátoru v 300 variantách; nejdelší odpověď cesty (' . max($lens) . ' znaků) se vejde do TB75_ANSWER_MAX = 120 a do maxlength formulářů (dřív 80 = některé varianty nešly vyřešit)',
-    $specBad === 0 && max($lens) <= TB75_ANSWER_MAX && str_contains($read('stepper_v79_student.php'), 'maxlength="120"') && str_contains($read('taskbank_v75_views.php'), 'maxlength="120"') && !str_contains($read('stepper_v79_student.php'), 'maxlength="80"'));
+    $specBad === 0 && max($lens) <= TB75_ANSWER_MAX && str_contains($read('src/ui/stepper_v79_student.php'), 'maxlength="120"') && str_contains($read('src/assessment/taskbank_v75_views.php'), 'maxlength="120"') && !str_contains($read('src/ui/stepper_v79_student.php'), 'maxlength="80"'));
 
 // ---------------------------------------------------------------- 2b) rozložené opakování (čisté funkce)
 $now = (int)strtotime('2026-11-04 10:15:00');
@@ -182,10 +182,10 @@ $gone = lr80_retention_purge([$ref], false);
 $after = lr80_data('class_3a');
 $check('retence: žák bez aktivity přes ' . LR80_RETENTION_DAYS . ' dní se smaže při zápisu třídy; po odchodu (r76 → lr80_retention_purge) dry-run jen spočítá, apply smaže jen jeho záznam; retention_v76 vrací počet „learning“',
     !isset($keep['students']['hold_0000']) && $dry === 1 && isset($keep['students'][$ref]) && $gone === 1 && !isset($after['students'][$ref]) && isset($after['students']['hshort'])
-    && str_contains($read('retention_v76.php'), "\$res['learning'] = lr80_retention_purge(") && str_contains($read('tools/v58_retention.php'), 'v80_data_purged=')
+    && str_contains($read('src/student/retention_v76.php'), "\$res['learning'] = lr80_retention_purge(") && str_contains($read('tools/v58_retention.php'), 'v80_data_purged=')
     && (static function (): bool { $r = r76_retention_purge(true); return array_key_exists('learning', $r); })());
 $h = pg80_exit_rows('class_3a', $key);
 storage_update(STORAGE_DIR . '/lesson_exit_v72_class_3a.json.php', static fn(array $d): array => ['v' => 1, 'answers' => ['3' => [substr(hash('sha256', 'lx72|' . $key), 0, 20) => ['v' => 0, 'c' => 1, 'ok' => 0, 'at' => 'x']], '2' => [substr(hash('sha256', 'lx72|' . $key), 0, 20) => ['ok' => 1]]]]);
-require_once $ROOT . '/lesson_exit_v72.php';
+require_once $ROOT . '/src/lessons/lesson_exit_v72.php';
 $check('exit tickety v Můj pokrok: čte jen soubor v72 se stejným hashem žáka jako lx72_student_hash (bez modelu lekcí), lekce seřazené, správnost bez obsahu odpovědi',
     $h === [] && pg80_exit_rows('class_3a', $key) === [2 => true, 3 => false] && lx72_student_hash($key) === substr(hash('sha256', 'lx72|' . $key), 0, 20) && pg80_exit_rows('../x', $key) === []);

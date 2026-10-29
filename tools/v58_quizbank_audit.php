@@ -149,7 +149,7 @@ try {
     // Skutečný obsahový filtr CNT-03 (staví ho paralelně jiný agent) – když existuje, v58qb_content_ok()
     // ho použije přes function_exists místo záložního filtru. Bezpečné require_once (konstanty uvnitř),
     // chráněné proti tomu, že soubor ještě nemusí existovat nebo se souběžně mění.
-    $contentLibPath = $root . '/lab_v58_content.php';
+    $contentLibPath = $root . '/src/linux/lab_v58_content.php';
     if (is_file($contentLibPath)) {
         try {
             require_once $contentLibPath;
@@ -163,8 +163,8 @@ try {
     }
     // Bez CNT-03 se v58qb_content_ok() automaticky přepne na záložní filtr – to není chyba auditu.
 
-    $netPath = $root . '/teamgames_v58_bank_net.php';
-    $gfxPath = $root . '/teamgames_v58_bank_gfx.php';
+    $netPath = $root . '/src/teamgames/teamgames_v58_bank_net.php';
+    $gfxPath = $root . '/src/teamgames/teamgames_v58_bank_gfx.php';
     check(is_file($netPath), 'soubor teamgames_v58_bank_net.php existuje');
     check(is_file($gfxPath), 'soubor teamgames_v58_bank_gfx.php existuje');
 
@@ -247,8 +247,8 @@ try {
     }
 
     // --- Volitelná zpětná kontrola proti reálnému konzumentovi (TG-CORE), pokud už existuje ---
-    $quizPath = $root . '/teamgames_v58_quiz.php';
-    $corePath = $root . '/teamgames_v58_core.php';
+    $quizPath = $root . '/src/teamgames/teamgames_v58_quiz.php';
+    $corePath = $root . '/src/teamgames/teamgames_v58_core.php';
     if (is_file($corePath) && is_file($quizPath)) {
         try {
             require_once $corePath;

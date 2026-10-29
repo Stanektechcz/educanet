@@ -30,8 +30,8 @@ register_shutdown_function(static function () use ($TMP): void {
 $GLOBALS['ga_warn'] = [];
 set_error_handler(static function (int $no, string $str, string $file, int $line): bool { $GLOBALS['ga_warn'][] = $str . ' (' . basename($file) . ':' . $line . ')'; return true; });
 
-require_once $ROOT . '/linux_v57_lab.php';
-const GA_FILES = ['linux_v58_cmd_git.php', 'linux_v58_cmd_git_store.php', 'linux_v58_cmd_git_diff.php', 'linux_v58_cmd_git_more.php', 'linux_v58_levels_git.php'];
+require_once $ROOT . '/src/linux/linux_v57_lab.php';
+const GA_FILES = ['src/linux/linux_v58_cmd_git.php', 'src/linux/linux_v58_cmd_git_store.php', 'src/linux/linux_v58_cmd_git_diff.php', 'src/linux/linux_v58_cmd_git_more.php', 'src/linux/linux_v58_levels_git.php'];
 foreach (GA_FILES as $file) require_once $ROOT . '/' . $file;
 const GA_NOW = 1790000000;
 

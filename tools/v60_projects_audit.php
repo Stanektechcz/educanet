@@ -17,9 +17,9 @@ require_once __DIR__ . '/lib/audit_storage.php';
 require_once __DIR__ . '/lib/audit.php';
 $tmp = rtrim(str_replace('\\', '/', edu_audit_temp_storage('v60-projects')), '/');
 require $root . '/bootstrap.php';
-require_once $root . '/projects_v60.php';
-require_once $root . '/teacher_operations_v46.php';
-require_once $root . '/teacher_scope_v59.php';
+require_once $root . '/src/projects/projects_v60.php';
+require_once $root . '/src/teacher/teacher_operations_v46.php';
+require_once $root . '/src/teacher/teacher_scope_v59.php';
 
 $state = audit_counter();
 $check = audit_checker($state);
@@ -102,7 +102,7 @@ $appReject = proj60_apply($classA, $studentB, (string)$idKc2, 'x', 9);
 $check('proj60_decide: zamítnutí funguje i bez consentu', proj60_decide((string)($appReject['application_id'] ?? ''), 'rejected', false, 'ucitel'));
 
 // --- 5) Rozsah učitele: proj60_save/status/decide respektují teacher59_action_policy() -----------
-require_once $root . '/teacher_accounts_v59.php';
+require_once $root . '/src/teacher/teacher_accounts_v59.php';
 $teacherId = 't_' . bin2hex(random_bytes(8));
 storage_update(teacher59_accounts_path(), static function (array $store) use ($teacherId, $classA): array {
     $store['mode'] = 'accounts';

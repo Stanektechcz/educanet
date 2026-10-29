@@ -5,11 +5,11 @@ require_once __DIR__ . '/lib/app_source.php';
 if(PHP_SAPI!=='cli'){http_response_code(403);exit;}
 $root=dirname(__DIR__);
 require $root.'/bootstrap.php';
-require $root.'/runtime_content.php';
-require_once $root.'/student_learning_coach_v47.php';
-require_once $root.'/student_learning_accelerator_v47_1.php';
-require_once $root.'/student_corrective_cycle_v47_2.php';
-require_once $root.'/student_corrective_cycle_views_v47_2.php';
+require $root.'/src/ops/runtime_content.php';
+require_once $root.'/src/student/student_learning_coach_v47.php';
+require_once $root.'/src/student/student_learning_accelerator_v47_1.php';
+require_once $root.'/src/student/student_corrective_cycle_v47_2.php';
+require_once $root.'/src/student/student_corrective_cycle_views_v47_2.php';
 function v472_fp(string $dir):array{$o=[];foreach(glob($dir.'/*.php')?:[] as $f)$o[basename($f)]=[filesize($f)?:0,filemtime($f)?:0,hash_file('sha256',$f)?:''];ksort($o);return $o;}
 // i18n (v59): tolerate Czech UI text wrapped in trm()/tr() by an i18n builder (see v47_hasLit).
 function v472_hasLit(string $h, string $needle): bool { return (bool)preg_match('~(?:tr(?:m)?\(\s*)?' . preg_quote($needle, '~') . '~', $h); }
@@ -29,8 +29,8 @@ foreach(array_keys($modules) as $classId){
     $classes[$classId]=['topic'=>$topic,'transfer_mode'=>(string)($spec['transfer_mode']??''),'similar_source'=>(string)($spec['similar']['source']??(!empty($spec['similar']['worked'])?'worked_fallback':''))];
 }
 $after=v472_fp(STORAGE_DIR);$writes=[];foreach(array_unique(array_merge(array_keys($before),array_keys($after))) as $n)if(($before[$n]??null)!==($after[$n]??null))$writes[]=$n;if($writes)$errors[]='Read-only v47.2 změnilo storage: '.implode(', ',$writes);
-$index=edu_app_source()?:'';$core=file_get_contents($root.'/student_corrective_cycle_v47_2.php')?:'';$views=file_get_contents($root.'/student_corrective_cycle_views_v47_2.php')?:'';$js=file_get_contents($root.'/assets/student-coach-v47.js')?:'';$css=file_get_contents($root.'/assets/student-coach-v47.css')?:'';$sw=file_get_contents($root.'/sw.js')?:'';
-foreach(['student_corrective_cycle_v47_2.php','student_corrective_cycle_views_v47_2.php','coach_corrective_complete'] as $needle)if(!str_contains($index,$needle))$errors[]='index.php chybí '.$needle;
+$index=edu_app_source()?:'';$core=file_get_contents($root.'/src/student/student_corrective_cycle_v47_2.php')?:'';$views=file_get_contents($root.'/src/student/student_corrective_cycle_views_v47_2.php')?:'';$js=file_get_contents($root.'/assets/student-coach-v47.js')?:'';$css=file_get_contents($root.'/assets/student-coach-v47.css')?:'';$sw=file_get_contents($root.'/sw.js')?:'';
+foreach(['src/student/student_corrective_cycle_v47_2.php','src/student/student_corrective_cycle_views_v47_2.php','coach_corrective_complete'] as $needle)if(!str_contains($index,$needle))$errors[]='index.php chybí '.$needle;
 foreach(['v472_corrective_cycle_spec','v472_topic_question_bank','v472_corrective_cycle_complete',"'grade_impact'=>false","'mastery_impact'=>false"] as $needle)if(!str_contains($core,$needle))$errors[]='Core chybí '.$needle;
 foreach(['Opravný cyklus','Podobný příklad','Kontrastní příklad','Transfer do nové situace','0 bodů'] as $needle)if(!v472_hasLit($views,$needle))$errors[]='Views chybí '.$needle;
 foreach(['data-corrective-cycle','data-corrective-check','data-corrective-transfer-note'] as $needle)if(!str_contains($js,$needle))$errors[]='JS chybí '.$needle;

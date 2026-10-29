@@ -102,7 +102,7 @@ $ukCat = require $root . '/lang/uk/ui/paths.php';
 $domains = require $root . '/lang/domains_v59.php';
 $navEn = require $root . '/lang/en/ui/nav_v61.php';
 $check('i18n: katalogy en a uk domény paths mají stejné klíče bez prázdných překladů; doména je v manifestu se 4 existujícími soubory; položka navigace „Moje cesty“ je přeložená', array_keys($enCat) === array_keys($ukCat) && count($enCat) >= 60
-    && array_filter(array_merge($enCat, $ukCat), static fn($v): bool => $v === '' || $v === []) === [] && ($domains['domains']['paths'] ?? []) === ['app/views/paths.php', 'app/actions/paths.php', 'paths_v63_views.php', 'paths_v63_actions.php']
+    && array_filter(array_merge($enCat, $ukCat), static fn($v): bool => $v === '' || $v === []) === [] && ($domains['domains']['paths'] ?? []) === ['app/views/paths.php', 'app/actions/paths.php', 'src/paths/paths_v63_views.php', 'src/paths/paths_v63_actions.php']
     && array_filter($domains['domains']['paths'], static fn(string $f): bool => !is_file($root . '/' . $f)) === [] && ($navEn['Moje cesty'] ?? '') === 'My paths');
 
 // --- 15) Parsons bez JS -----------------------------------------------------------------------------------------------------------
@@ -182,7 +182,7 @@ $libs = (array)$routes['libs'];
 $check('router: ?view=cesty a ?view=cesta jdou na views/paths.php, akce p63_* na actions/paths.php; skupiny knihoven paths, dashboard (jádro + tok + šablony) a layout (kvůli navigaci) cesty načítají', array_column(app_segments('views_student', 'cesty'), 'file') === ['views/paths.php']
     && array_column(app_segments('views_student', 'cesta'), 'file') === ['views/paths.php'] && array_column(app_segments('actions_class', 'p63_submit'), 'file') === ['actions/paths.php'] && array_column(app_segments('actions_class', 'p63_reflect'), 'file') === ['actions/paths.php']
     && array_column(app_segments('actions_class', 'p63_parsons_move'), 'file') === ['actions/paths.php'] && array_column(app_segments('actions_pre', 'p63_submit'), 'file') === []
-    && in_array('paths_v63_views.php', $libs['paths'], true) && in_array('paths_v63_actions.php', $libs['paths'], true) && in_array('paths_v63_flow.php', $libs['dashboard'], true) && in_array('paths_v63_views.php', $libs['dashboard'], true) && in_array('paths_v63.php', $libs['layout'], true));
+    && in_array('src/paths/paths_v63_views.php', $libs['paths'], true) && in_array('src/paths/paths_v63_actions.php', $libs['paths'], true) && in_array('src/paths/paths_v63_flow.php', $libs['dashboard'], true) && in_array('src/paths/paths_v63_views.php', $libs['dashboard'], true) && in_array('src/paths/paths_v63.php', $libs['layout'], true));
 $navToday = nav61_group_today(null, 'cesta', $C3);
 $labels = array_column($navToday['items'], 'label');
 $check('navigace: skupina Dnes nabízí „Moje cesty“ jen třídám s cestami (3.A, 1.A), položka je aktivní na ?view=cesty i ?view=cesta; 2.A a nepřihlášený ji nemají', in_array('Moje cesty', $labels, true) && in_array('Moje cesty', array_column(nav61_group_today(null, 'dashboard', $C1)['items'], 'label'), true)
@@ -200,7 +200,7 @@ $check('service worker: malé CSS karty „Co dál“ je v seznamu přednačten�
 // --- 18) Token-sken invariantu labu, hygiena zdrojů, assety ---------------------------------------------------------------------------------
 $forbidden = ['exec', 'shell_exec', 'system', 'passthru', 'proc_open', 'popen', 'pcntl_exec', 'eval', 'assert', 'create_function', 'fsockopen', 'stream_socket_client', 'mail', 'dns_get_record',
     'gethostbyname', 'gethostbyaddr', 'checkdnsrr', 'lab57_world_new', 'lab57_run_line', 'lab57_build_world', 'lab57_session', 'save_php_json_map', 'load_php_json', 'learning_award_once', 'learning_award_xp', 'pts53_award', 'points_award'];
-$appFiles = ['paths_v63.php', 'paths_v63_flow.php', 'paths_v63_class.php', 'paths_v63_actions.php', 'paths_v63_views.php', 'paths_v63_teacher_views.php', 'paths_v63_content_os.php', 'paths_v63_content_gfx.php', 'paths_v63_pre_data.php', 'app/views/paths.php', 'app/actions/paths.php'];
+$appFiles = ['src/paths/paths_v63.php', 'src/paths/paths_v63_flow.php', 'src/paths/paths_v63_class.php', 'src/paths/paths_v63_actions.php', 'src/paths/paths_v63_views.php', 'src/paths/paths_v63_teacher_views.php', 'src/paths/paths_v63_content_os.php', 'src/paths/paths_v63_content_gfx.php', 'src/paths/paths_v63_pre_data.php', 'app/views/paths.php', 'app/actions/paths.php'];
 $hits = [];
 foreach ($appFiles as $f) {
     $src = (string)file_get_contents($root . '/' . $f);
@@ -217,7 +217,7 @@ $srcProblems = [];
 foreach (array_merge($appFiles, ['tools/v63_paths_audit.php', 'tools/v63_paths_build_pre.php', 'tools/lib/v63_pre.php', 'tools/lib/v63_paths_fixtures.php', 'tools/lib/v63_paths_audit_part2.php']) as $f) {
     $src = (string)file_get_contents($root . '/' . $f);
     $lines = count(file($root . '/' . $f));
-    $isData = in_array($f, ['paths_v63_content_os.php', 'paths_v63_content_gfx.php', 'paths_v63_pre_data.php'], true);
+    $isData = in_array($f, ['src/paths/paths_v63_content_os.php', 'src/paths/paths_v63_content_gfx.php', 'src/paths/paths_v63_pre_data.php'], true);
     if (!str_contains($src, 'declare(strict_types=1);')) $srcProblems[] = $f . ': strict_types';
     if (!str_starts_with($f, 'tools/') || str_contains($f, 'lib/')) { if (!str_contains($src, 'http_response_code(403)')) $srcProblems[] = $f . ': guard'; } elseif (!str_contains($src, "PHP_SAPI !== 'cli'") && $f !== 'tools/v63_paths_audit.php') $srcProblems[] = $f . ': cli guard';
     if ($lines > 800 && !$isData) $srcProblems[] = $f . ': ' . $lines . ' řádků';

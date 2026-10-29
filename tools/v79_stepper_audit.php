@@ -24,11 +24,11 @@ $tmp = rtrim(str_replace(chr(92), '/', edu_audit_temp_storage('v79-stepper')), '
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'cockpit_v70.php', 'tutorial_v52.php', 'learning_v56.php', 'runtime_content.php',
-    'session_v53.php', 'accounts_v53.php', 'intake_v51.php', 'app/lib.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/teacher/cockpit_v70.php', 'src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/ops/runtime_content.php',
+    'src/lessons/session_v53.php', 'src/student/accounts_v53.php', 'src/student/intake_v51.php', 'app/lib.php'] as $lib) require_once $ROOT . '/' . $lib;
 $mods = teacher58_modules();
 foreach (['priprava79', 'reflexe73', 'hromadne74', 'opakovani75', 'identita'] as $m) foreach ((array)$mods[$m]['files'] as $f) require_once $ROOT . '/' . $f;
-foreach (['taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'taskbank_v75_views.php', 'portfolio_v75.php', 'portfolio_v75_views.php', 'stepper_v79_student.php', 'portfolio_v79.php'] as $f) require_once $ROOT . '/' . $f;
+foreach (['src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/assessment/taskbank_v76.php', 'src/assessment/taskbank_v75_views.php', 'src/student/portfolio_v75.php', 'src/student/portfolio_v75_views.php', 'src/ui/stepper_v79_student.php', 'src/student/portfolio_v79.php'] as $f) require_once $ROOT . '/' . $f;
 
 const V79S_KEY = 'v79-stepper-audit-key';
 const V79S_CSS_BUDGET = 15 * 1024;
@@ -40,11 +40,11 @@ $read = static fn(string $rel): string => (string)@file_get_contents($ROOT . '/'
 $check('úložiště auditu je dočasné (ne ostrá storage/)', STORAGE_DIR === $tmp && str_contains($tmp, 'educanet-audit-') && !str_starts_with($tmp, $ROOT . '/storage'));
 
 // ---------------------------------------------------------------- 1) soubory, rozpočty, registr, politiky
-$php = ['stepper_v79.php', 'stepper_v79_views.php', 'stepper_v79_student.php', 'lesson_reflect_v79.php', 'bulk_approval_v79.php', 'review_v79.php', 'identity_v79.php', 'priprava_v79.php', 'portfolio_v79.php', 'app/actions/stepper_v79.php'];
+$php = ['src/ui/stepper_v79.php', 'src/ui/stepper_v79_views.php', 'src/ui/stepper_v79_student.php', 'src/lessons/lesson_reflect_v79.php', 'src/teacher/bulk_approval_v79.php', 'src/student/review_v79.php', 'src/student/identity_v79.php', 'src/teacher/priprava_v79.php', 'src/student/portfolio_v79.php', 'app/actions/stepper_v79.php'];
 $guards = array_filter($php, static fn(string $f): bool => str_contains($read($f), 'declare(strict_types=1);') && str_contains($read($f), "=== basename(__FILE__)) { http_response_code(403); exit; }"));
 $check('PHP vrstvy v79: strict_types a 403 guard (' . count($php) . ' souborů)', count($guards) === count($php));
 $all = array_merge($php, ['assets/stepper-v79.css', 'assets/stepper-v79.js', 'tools/v79_stepper_audit.php', 'tools/lib/v79_stepper_http.php', 'tools/lib/v79_stepper_browser.cjs',
-    'lesson_reflect_v73_views.php', 'bulk_approval_v74_views.php', 'review_v75_teacher_views.php', 'identity_v58_views.php', 'taskbank_v75_views.php', 'portfolio_v75_views.php']);
+    'src/lessons/lesson_reflect_v73_views.php', 'src/teacher/bulk_approval_v74_views.php', 'src/student/review_v75_teacher_views.php', 'src/student/identity_v58_views.php', 'src/assessment/taskbank_v75_views.php', 'src/student/portfolio_v75_views.php']);
 $long = array_filter($all, static fn(string $f): bool => substr_count($read($f), "\n") >= 800 || $read($f) === '');
 $check('soubory existují a mají do 800 řádků' . ($long ? ' [' . implode(', ', $long) . ']' : ''), $long === []);
 $css = $read('assets/stepper-v79.css');
@@ -71,7 +71,7 @@ $regBad = [];
 foreach ($flowTabs as $tab => [$post, $getKeys]) {
     $m = $mods[$tab];
     if (array_keys((array)($m['post'] ?? [])) !== $post || array_keys((array)($m['get'] ?? [])) !== $getKeys || !in_array('assets/stepper-v79.css', (array)$m['css'], true) || !in_array('assets/stepper-v79.js', (array)($m['js'] ?? []), true)
-        || !in_array('stepper_v79_views.php', (array)$m['files'], true)) $regBad[] = $tab;
+        || !in_array('src/ui/stepper_v79_views.php', (array)$m['files'], true)) $regBad[] = $tab;
 }
 $check('registr: toky Reflexe / Hromadné / Opakování / Identita mají stejné POST prefixy a GET registr jako dřív, jen CSS/JS a soubory stepperu' . ($regBad ? ' [' . implode(', ', $regBad) . ']' : ''), $regBad === []);
 $pol = teacher59_action_policies();
@@ -85,14 +85,14 @@ $check('politiky GET: <tab>|krok jen informativní (bez omezení) pro 5 zálože
 $routes = app_routes();
 $act = array_values(array_filter($routes['actions_class'], static fn(array $s): bool => in_array('sp79_s_next', (array)$s['match'], true)));
 $check('router žáka: sp79_s_next / _back / _reset v actions_class (CSRF a třída z index.php), knihovny stepperu ve skupinách stepper79 / projects65',
-    count($act) === 1 && $act[0]['match'] === ['sp79_s_next', 'sp79_s_back', 'sp79_s_reset'] && in_array('stepper_v79_student.php', $routes['libs']['stepper79'], true) && in_array('portfolio_v79.php', $routes['libs']['projects65'], true));
+    count($act) === 1 && $act[0]['match'] === ['sp79_s_next', 'sp79_s_back', 'sp79_s_reset'] && in_array('src/ui/stepper_v79_student.php', $routes['libs']['stepper79'], true) && in_array('src/student/portfolio_v79.php', $routes['libs']['projects65'], true));
 $manifest = require $ROOT . '/lang/domains_v59.php';
 $en = require $ROOT . '/lang/en/ui/stepper_v79.php';
 $uk = require $ROOT . '/lang/uk/ui/stepper_v79.php';
-$check('i18n žáka: doména stepper_v79 v manifestu, katalogy en/uk mají stejné klíče (' . count($en) . ')', in_array('stepper_v79_student.php', (array)($manifest['domains']['stepper_v79'] ?? []), true)
+$check('i18n žáka: doména stepper_v79 v manifestu, katalogy en/uk mají stejné klíče (' . count($en) . ')', in_array('src/ui/stepper_v79_student.php', (array)($manifest['domains']['stepper_v79'] ?? []), true)
     && array_keys($en) === array_keys($uk) && isset($en['Krok {n} ze {m}'], $en['Zadání'], $en['Odkaz'], $uk['Co dál']));
 $check('vyřazené formuláře v73/v75 nahradil stepper (lr73_form_html, pf75_forms_html už nejsou); úloha v opakování zůstává bez stepperu',
-    !function_exists('lr73_form_html') && !function_exists('pf75_forms_html') && str_contains($read('taskbank_v75_views.php'), "if (\$returnView === 'ulohy')"));
+    !function_exists('lr73_form_html') && !function_exists('pf75_forms_html') && str_contains($read('src/assessment/taskbank_v75_views.php'), "if (\$returnView === 'ulohy')"));
 
 // ---------------------------------------------------------------- 2) logika konceptu
 $_SESSION = [];

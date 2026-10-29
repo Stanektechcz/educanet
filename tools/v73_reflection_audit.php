@@ -32,8 +32,8 @@ putenv('EDUCANET_TEACHER_EXPORT_KEY=' . V73R_KEY);
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'cockpit_v70.php',
-    'tutorial_v52.php', 'learning_v56.php', 'runtime_content.php', 'session_v53.php', 'accounts_v53.php', 'intake_v51.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/teacher/cockpit_v70.php',
+    'src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/ops/runtime_content.php', 'src/lessons/session_v53.php', 'src/student/accounts_v53.php', 'src/student/intake_v51.php'] as $lib) require_once $ROOT . '/' . $lib;
 $mods = teacher58_modules();
 foreach (array_unique(array_merge((array)$mods['hodina']['files'], (array)$mods['reflexe73']['files'])) as $f) require_once $ROOT . '/' . $f;
 require_once __DIR__ . '/lib/v59_scope_fixtures.php';
@@ -45,7 +45,7 @@ $throws = static function (callable $fn, string $needle = ''): bool { try { $fn(
 $check('úložiště auditu i cache modelu jsou dočasné (ne ostrá storage/ ani cache/ projektu)', STORAGE_DIR === $tmp && str_contains($tmp, 'educanet-audit-') && str_starts_with(lr73_path(), $tmp . '/'));
 
 // ---------------------------------------------------------------- 1) soubory, registr, politiky
-$libs = ['lesson_reflect_v73.php', 'lesson_reflect_v73_views.php', 'tools/lib/v73_prep_http.php', 'tools/lib/v73_reflect_http.php'];
+$libs = ['src/lessons/lesson_reflect_v73.php', 'src/lessons/lesson_reflect_v73_views.php', 'tools/lib/v73_prep_http.php', 'tools/lib/v73_reflect_http.php'];
 $cli = ['tools/v73_reflection_audit.php', 'tools/v73_reflection_purge.php'];
 $bad = [];
 foreach (array_merge($libs, $cli) as $f) {
@@ -58,8 +58,8 @@ $rf = $mods['reflexe73'] ?? [];
 $map = teacher68_tab_map();
 $check('registr: modul `reflexe73` (POST jen prefix lr73_, bez GET), v sekci Dnes a v UI68_TEACHER_DARK_TABS; Dnešní hodina načítá reflexi a dál nemá post/get',
     array_keys((array)($rf['post'] ?? [])) === ['lr73_'] && !isset($rf['get']) && in_array('reflexe73', teacher58_tabs(), true) && ($map['reflexe73']['section'] ?? '') === 'dnes'
-    && in_array('reflexe73', UI68_TEACHER_DARK_TABS, true) && in_array('lesson_reflect_v73.php', (array)$mods['hodina']['files'], true) && !isset($mods['hodina']['post']) && !isset($mods['hodina']['get'])
-    && str_contains($read('lesson_today_v71_views.php'), 'lr73_today_note_html($m)'));
+    && in_array('reflexe73', UI68_TEACHER_DARK_TABS, true) && in_array('src/lessons/lesson_reflect_v73.php', (array)$mods['hodina']['files'], true) && !isset($mods['hodina']['post']) && !isset($mods['hodina']['get'])
+    && str_contains($read('src/lessons/lesson_today_v71_views.php'), 'lr73_today_note_html($m)'));
 $check('politika: lr73_save = třída povinná a v rozsahu; jiné lr73_* zakázané; oprávnění content.manage (učitel ano, asistent ne)',
     teacher59_action_policy('lr73_save') === ['class' => 'required'] && teacher59_action_policy('lr73_delete')['deny'] === true && teacher59_action_policy('lr73_save_all')['deny'] === true
     && teacher_action_permission('lr73_save') === 'content.manage' && !teacher_permission_for_role('assistant', 'content.manage') && teacher_permission_for_role('teacher', 'content.manage'));

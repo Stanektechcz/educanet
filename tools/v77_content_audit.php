@@ -29,11 +29,11 @@ register_shutdown_function(static function () use ($cacheDir): void {
 });
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
-foreach (['tutorial_v52.php', 'learning_v56.php', 'cockpit_v70.php', 'lesson_model_v71.php', 'calendar_days_v71.php', 'lesson_glossary_v72.php', 'competencies_v62.php', 'competencies_v75.php',
-    'lesson_approval_v72.php', 'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'ai_prompts_v72_1.php', 'ai_prompts_v76.php', 'ai_prompts_v77.php', 'svp_v72.php', 'svp_v72_map.php', 'levels_v75.php',
-    'taskbank_v75_gen.php', 'taskbank_v75.php', 'taskbank_v76.php', 'review_v75.php', 'bulk_approval_v74.php', 't14_v77.php', 't14_v77_views.php', 'lesson_today_v70.php', 'lesson_today_v70_views.php', 'lesson_today_v71_views.php',
-    'linux_v57_core.php', 'linux_v57_world.php', 'linux_v57_shell.php', 'linux_v57_cmd_files.php', 'linux_v57_cmd_shell.php', 'linux_v57_cmd_text.php',
-    'linux_v57_cmd_sys.php', 'linux_v57_cmd_net.php', 'linux_v57_manual.php', 'linux_v57_levels.php', 'linux_v57_levels_ops.php', 'linux_v57_lab.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/teacher/cockpit_v70.php', 'src/lessons/lesson_model_v71.php', 'src/ops/calendar_days_v71.php', 'src/lessons/lesson_glossary_v72.php', 'src/assessment/competencies_v62.php', 'src/assessment/competencies_v75.php',
+    'src/lessons/lesson_approval_v72.php', 'src/teacher/teacher_prefs_v72_1.php', 'src/lessons/lesson_exit_v72.php', 'src/teacher/ai_prompts_v72_1.php', 'src/teacher/ai_prompts_v76.php', 'src/teacher/ai_prompts_v77.php', 'src/assessment/svp_v72.php', 'src/assessment/svp_v72_map.php', 'src/levels/levels_v75.php',
+    'src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/assessment/taskbank_v76.php', 'src/student/review_v75.php', 'src/teacher/bulk_approval_v74.php', 'src/teacher/t14_v77.php', 'src/teacher/t14_v77_views.php', 'src/lessons/lesson_today_v70.php', 'src/lessons/lesson_today_v70_views.php', 'src/lessons/lesson_today_v71_views.php',
+    'src/linux/linux_v57_core.php', 'src/linux/linux_v57_world.php', 'src/linux/linux_v57_shell.php', 'src/linux/linux_v57_cmd_files.php', 'src/linux/linux_v57_cmd_shell.php', 'src/linux/linux_v57_cmd_text.php',
+    'src/linux/linux_v57_cmd_sys.php', 'src/linux/linux_v57_cmd_net.php', 'src/linux/linux_v57_manual.php', 'src/linux/linux_v57_levels.php', 'src/linux/linux_v57_levels_ops.php', 'src/linux/linux_v57_lab.php'] as $lib) require_once $ROOT . '/' . $lib;
 
 const V77A_LESSONS = [1, 4];
 $state = audit_counter();
@@ -44,9 +44,9 @@ $check('úložiště auditu i cache modelu jsou dočasné', STORAGE_DIR === $tmp
 // ---------------------------------------------------------------- 1) soubory
 $classes = ['class_1a' => '1a', 'class_2a' => '2a', 'class_3a' => '3a', 'class_4a' => '4a'];
 $contentFiles = [];
-foreach ($classes as $short) $contentFiles[] = 'lesson_content_v77_' . $short . '.php';
-foreach ($classes as $short) $contentFiles[] = 'lesson_content_v77_days_' . $short . '.php';
-$libs = array_merge($contentFiles, ['ai_prompts_v77.php', 't14_v77.php', 't14_v77_views.php', 'tools/lib/v77_kit_prompts_fixture.php', 'tools/lib/v77_content_part2.php', 'tools/lib/v77_http.php']);
+foreach ($classes as $short) $contentFiles[] = 'src/content/lesson_content_v77_' . $short . '.php';
+foreach ($classes as $short) $contentFiles[] = 'src/content/lesson_content_v77_days_' . $short . '.php';
+$libs = array_merge($contentFiles, ['src/teacher/ai_prompts_v77.php', 'src/teacher/t14_v77.php', 'src/teacher/t14_v77_views.php', 'tools/lib/v77_kit_prompts_fixture.php', 'tools/lib/v77_content_part2.php', 'tools/lib/v77_http.php']);
 $bad = [];
 foreach (array_merge($libs, ['tools/v77_content_audit.php', 'tools/v77_http_audit.php']) as $f) {
     $s = $read($f);
@@ -55,7 +55,7 @@ foreach (array_merge($libs, ['tools/v77_content_audit.php', 'tools/v77_http_audi
         || preg_match('/\bjson_validate\s*\(|readonly\s+class|const\s+(?:int|string|array|bool)\s+[A-Z]/', $s) === 1) $bad[] = $f;
 }
 $check('soubory v77 (obsah L1–L4, dny, AI prompty, Středa, audity): strict_types, guard, ≤ 800 řádků, PHP 8.1' . ($bad ? ' [' . implode(', ', $bad) . ']' : ''), $bad === []);
-$v77files = array_values(array_filter(lm71_overlay_files(), static fn(string $f): bool => str_starts_with($f, 'lesson_content_v77_')));
+$v77files = array_values(array_filter(lm71_overlay_files(), static fn(string $f): bool => str_starts_with($f, 'src/content/lesson_content_v77_')));
 sort($contentFiles);
 $check('overlay lm71 načítá 8 souborů v77 (L1–L4 a dny bez lekce po třídách) spolu s vlnou 1 a 2 (24 souborů)', $v77files === $contentFiles && count(lm71_overlay_files()) === 24);
 
@@ -69,7 +69,7 @@ foreach ($classes as $c => $short) {
     if (array_keys($ovs) !== range(V77A_LESSONS[0], V77A_LESSONS[1])) $fieldBad[] = $c . ': overlay není přesně L1–L4';
     foreach ($ovs as $n => $ov) {
         $id = $c . ' L' . $n;
-        if ((string)($ov['_file'] ?? '') !== 'lesson_content_v77_' . $short . '.php') $fieldBad[] = $id . ' soubor';
+        if ((string)($ov['_file'] ?? '') !== 'src/content/lesson_content_v77_' . $short . '.php') $fieldBad[] = $id . ' soubor';
         $rawOv[$c][$n] = $ov;
         $lessons[$c][$n] = lm71_lesson($c, (int)$n);
         if (($ov['status'] ?? '') !== 'navrh' || (int)($ov['version'] ?? 0) !== 1) $fieldBad[] = $id . ' stav';

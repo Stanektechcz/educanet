@@ -30,10 +30,10 @@ register_shutdown_function(static function () use ($cacheDir): void {
 });
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
-foreach (['tutorial_v52.php', 'learning_v56.php', 'lesson_model_v71.php', 'lesson_glossary_v72.php', 'competencies_v62.php', 'competencies_v75.php', 'lesson_approval_v72.php',
-    'teacher_prefs_v72_1.php', 'lesson_exit_v72.php', 'ai_prompts_v72_1.php', 'ai_prompts_v76.php', 'ai_prompts_v77.php', 'svp_v72.php', 'taskbank_v75_gen.php', 'taskbank_v75.php', 'levels_v75.php',
-    'linux_v57_core.php', 'linux_v57_world.php', 'linux_v57_shell.php', 'linux_v57_cmd_files.php', 'linux_v57_cmd_shell.php', 'linux_v57_cmd_text.php',
-    'linux_v57_cmd_sys.php', 'linux_v57_cmd_net.php', 'linux_v57_manual.php', 'linux_v57_levels.php', 'linux_v57_levels_ops.php', 'linux_v57_lab.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/lessons/lesson_model_v71.php', 'src/lessons/lesson_glossary_v72.php', 'src/assessment/competencies_v62.php', 'src/assessment/competencies_v75.php', 'src/lessons/lesson_approval_v72.php',
+    'src/teacher/teacher_prefs_v72_1.php', 'src/lessons/lesson_exit_v72.php', 'src/teacher/ai_prompts_v72_1.php', 'src/teacher/ai_prompts_v76.php', 'src/teacher/ai_prompts_v77.php', 'src/assessment/svp_v72.php', 'src/assessment/taskbank_v75_gen.php', 'src/assessment/taskbank_v75.php', 'src/levels/levels_v75.php',
+    'src/linux/linux_v57_core.php', 'src/linux/linux_v57_world.php', 'src/linux/linux_v57_shell.php', 'src/linux/linux_v57_cmd_files.php', 'src/linux/linux_v57_cmd_shell.php', 'src/linux/linux_v57_cmd_text.php',
+    'src/linux/linux_v57_cmd_sys.php', 'src/linux/linux_v57_cmd_net.php', 'src/linux/linux_v57_manual.php', 'src/linux/linux_v57_levels.php', 'src/linux/linux_v57_levels_ops.php', 'src/linux/linux_v57_lab.php'] as $lib) require_once $ROOT . '/' . $lib;
 
 const V76A_WAVE2 = [17, 28];
 $state = audit_counter();
@@ -44,17 +44,17 @@ $check('úložiště auditu i cache modelu jsou dočasné', STORAGE_DIR === $tmp
 // ---------------------------------------------------------------- 1) soubory
 $classes = ['class_1a' => '1a', 'class_2a' => '2a', 'class_3a' => '3a', 'class_4a' => '4a'];
 $contentFiles = [];
-foreach ($classes as $short) foreach (['a', 'b'] as $part) $contentFiles[] = 'lesson_content_v76_' . $short . '_' . $part . '.php';
+foreach ($classes as $short) foreach (['a', 'b'] as $part) $contentFiles[] = 'src/content/lesson_content_v76_' . $short . '_' . $part . '.php';
 $levelFiles = array_values(LV76_CLASS_FILES);
 $bad = [];
-foreach (array_merge($contentFiles, $levelFiles, ['ai_prompts_v76.php']) as $f) {
+foreach (array_merge($contentFiles, $levelFiles, ['src/teacher/ai_prompts_v76.php']) as $f) {
     $s = $read($f);
     if ($s === '' || !str_contains($s, 'declare(strict_types=1);') || !str_contains($s, "basename(__FILE__)) { http_response_code(403); exit; }") || substr_count($s, "\n") > 800
         || preg_match('/\bjson_validate\s*\(|readonly\s+class|const\s+(?:int|string|array|bool)\s+[A-Z]/', $s) === 1) $bad[] = $f;
 }
 $check('soubory vlny 2 (8 obsahu, 4 úrovní, AI prompty): strict_types, guard, ≤ 800 řádků, PHP 8.1' . ($bad ? ' [' . implode(', ', $bad) . ']' : ''), $bad === []);
-$check('overlay lm71 načítá právě 8 souborů vlny 2 (lesson_content_v76_*) po souborech vlny 1', array_values(array_filter(lm71_overlay_files(), static fn(string $f): bool => str_starts_with($f, 'lesson_content_v76_'))) === $contentFiles
-    && count(array_filter(lm71_overlay_files(), static fn(string $f): bool => preg_match('/^lesson_content_v7[26]_/', $f) === 1)) === 16);   // v77: + lesson_content_v77_* (změna limitu, BUILD_MANIFEST_V77.md)
+$check('overlay lm71 načítá právě 8 souborů vlny 2 (lesson_content_v76_*) po souborech vlny 1', array_values(array_filter(lm71_overlay_files(), static fn(string $f): bool => str_starts_with($f, 'src/content/lesson_content_v76_'))) === $contentFiles
+    && count(array_filter(lm71_overlay_files(), static fn(string $f): bool => preg_match('~^src/content/lesson_content_v7[26]_~', $f) === 1)) === 16);   // v77: + lesson_content_v77_* (změna limitu, BUILD_MANIFEST_V77.md)
 
 // ---------------------------------------------------------------- 2) povinná pole a úplnost
 $rawOv = [];
@@ -65,7 +65,7 @@ foreach ($classes as $c => $short) {
     $ovs = array_filter($all, static fn(int $n): bool => $n >= V76A_WAVE2[0] && $n <= V76A_WAVE2[1], ARRAY_FILTER_USE_KEY);
     if (array_keys($ovs) !== range(V76A_WAVE2[0], V76A_WAVE2[1])) $fieldBad[] = $c . ': overlay není přesně L17–L28';
     foreach ($ovs as $n => $ov) {
-        if (!str_starts_with((string)($ov['_file'] ?? ''), 'lesson_content_v76_' . $short . '_')) $fieldBad[] = $c . ' L' . $n . ' soubor';
+        if (!str_starts_with((string)($ov['_file'] ?? ''), 'src/content/lesson_content_v76_' . $short . '_')) $fieldBad[] = $c . ' L' . $n . ' soubor';
         $rawOv[$c][$n] = $ov;
         $lessons[$c][$n] = lm71_lesson($c, (int)$n);
         $id = $c . ' L' . $n;

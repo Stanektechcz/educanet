@@ -17,8 +17,8 @@ require_once __DIR__ . '/lib/audit_storage.php';
 require_once __DIR__ . '/lib/audit.php';
 $tmp = rtrim(str_replace('\\', '/', edu_audit_temp_storage('v60-points')), '/');
 require $root . '/bootstrap.php';
-require_once $root . '/points_v53.php';
-require_once $root . '/points_v60.php';
+require_once $root . '/src/student/points_v53.php';
+require_once $root . '/src/student/points_v60.php';
 
 $state = audit_counter();
 $check = audit_checker($state);

@@ -74,16 +74,16 @@ function v58la_check(string $name, bool $ok, string $detail = ''): void
 // learning_v56.php se úmyslně načte SAMO, PŘED linux_v57_lab.php – ověří, že v56_lab_gate()/v56_lab_gate_proof()
 // fungují i tehdy, když trasa (např. POST odevzdání v app/actions/lesson_path.php) skupinu knihoven Labu
 // nenačetla (líné require uvnitř v56_lab_ensure_loaded()), místo tichého fail-open bez zámku.
-require_once $ROOT . '/learning_v56.php';
+require_once $ROOT . '/src/lessons/learning_v56.php';
 v58la_check('edu01:lab-lib-not-preloaded-before-gate-check', !function_exists('lab57_level'));
 $coldGate = v56_lab_gate('class_3a', 1);
 v58la_check('edu01:gate-lazy-loads-lab-lib', $coldGate !== null && $coldGate['level'] === 'sit-4' && function_exists('lab57_level'));
 
-require_once $ROOT . '/linux_v57_lab.php';
-require_once $ROOT . '/lab_v58_review.php';
-require_once $ROOT . '/lab_v58_learning.php';
-require_once $ROOT . '/lab_v58_teacher.php';
-require_once $ROOT . '/learning_v56_views.php';
+require_once $ROOT . '/src/linux/linux_v57_lab.php';
+require_once $ROOT . '/src/linux/lab_v58_review.php';
+require_once $ROOT . '/src/linux/lab_v58_learning.php';
+require_once $ROOT . '/src/linux/lab_v58_teacher.php';
+require_once $ROOT . '/src/lessons/learning_v56_views.php';
 
 const V58LA_NOW = 1790000000;
 
@@ -475,7 +475,7 @@ function v58la_security_scan_forbidden_calls(string $src): array
     return array_values(array_unique($hits));
 }
 
-$myFiles = ['linux_v58_levels_review.php', 'lab_v58_review.php', 'lab_v58_learning.php', 'lab_v58_teacher.php', 'lab_v58_teacher_views.php', 'learning_v56.php', 'learning_v56_views.php'];
+$myFiles = ['src/linux/linux_v58_levels_review.php', 'src/linux/lab_v58_review.php', 'src/linux/lab_v58_learning.php', 'src/linux/lab_v58_teacher.php', 'src/linux/lab_v58_teacher_views.php', 'src/lessons/learning_v56.php', 'src/lessons/learning_v56_views.php'];
 foreach ($myFiles as $rel) {
     $src = (string)file_get_contents($ROOT . '/' . $rel);
     $hits = v58la_security_scan_forbidden_calls($src);

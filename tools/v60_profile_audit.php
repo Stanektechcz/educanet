@@ -28,15 +28,15 @@ require_once $ROOT . '/tools/lib/audit.php';
 
 foreach ([
     'app/lib.php',
-    'app/views/_layout.php', 'student_v55.php', 'student_v55_views.php', 'zero_friction_v50_6.php',
-    'unified_page_shell_v50_7.php', 'student_links_v69.php', 'goal_navigator_v50_4.php', 'hands_on_learning_v50.php',
-    'independent_growth_v50.php', 'learning_v56.php', 'session_v53.php', 'tutorial_v52.php', 'linux_v57_lab.php', 'arena_v57.php',
-    'teacher_operations_v46.php', 'student_learning_coach_v47.php', 'student_learning_coach_views_v47.php',
-    'student_learning_accelerator_v47_1.php', 'student_learning_accelerator_views_v47_1.php',
-    'student_corrective_cycle_v47_2.php', 'student_corrective_cycle_views_v47_2.php', 'student_social_views.php',
-    'skill_views.php', 'project_workspace_views.php', 'points_v53.php', 'learning_v56_views.php',
-    'profile_v60.php', 'profile_v60_views.php', 'lab_v58_learning.php',
-    'arena_v58_weekly.php', 'arena_v60_challenge.php', 'arena_v60_challenge_views.php',
+    'app/views/_layout.php', 'src/student/student_v55.php', 'src/student/student_v55_views.php', 'src/student/zero_friction_v50_6.php',
+    'src/ui/unified_page_shell_v50_7.php', 'src/student/student_links_v69.php', 'src/student/goal_navigator_v50_4.php', 'src/lessons/hands_on_learning_v50.php',
+    'src/student/independent_growth_v50.php', 'src/lessons/learning_v56.php', 'src/lessons/session_v53.php', 'src/lessons/tutorial_v52.php', 'src/linux/linux_v57_lab.php', 'src/arena/arena_v57.php',
+    'src/teacher/teacher_operations_v46.php', 'src/student/student_learning_coach_v47.php', 'src/student/student_learning_coach_views_v47.php',
+    'src/student/student_learning_accelerator_v47_1.php', 'src/student/student_learning_accelerator_views_v47_1.php',
+    'src/student/student_corrective_cycle_v47_2.php', 'src/student/student_corrective_cycle_views_v47_2.php', 'src/student/student_social_views.php',
+    'src/assessment/skill_views.php', 'src/projects/project_workspace_views.php', 'src/student/points_v53.php', 'src/lessons/learning_v56_views.php',
+    'src/student/profile_v60.php', 'src/student/profile_v60_views.php', 'src/linux/lab_v58_learning.php',
+    'src/arena/arena_v58_weekly.php', 'src/arena/arena_v60_challenge.php', 'src/arena/arena_v60_challenge_views.php',
 ] as $rel) {
     require_once $ROOT . '/' . $rel;
 }
@@ -52,7 +52,7 @@ $check = audit_checker($state);
 // 1) Lint + declare(strict_types=1) nových souborů.
 // =============================================================================================
 $newFiles = [
-    'profile_v60.php', 'profile_v60_views.php', 'assets/profile-v60.js',
+    'src/student/profile_v60.php', 'src/student/profile_v60_views.php', 'assets/profile-v60.js',
 ];
 foreach ($newFiles as $rel) {
     $abs = $ROOT . '/' . $rel;
@@ -169,7 +169,7 @@ $enHubs = require $ROOT . '/lang/en/ui/hubs.php';
 $ukHubs = require $ROOT . '/lang/uk/ui/hubs.php';
 $missingEn = [];
 $missingUk = [];
-foreach (['profile_v60.php', 'profile_v60_views.php'] as $rel) {
+foreach (['src/student/profile_v60.php', 'src/student/profile_v60_views.php'] as $rel) {
     $src = (string)file_get_contents($ROOT . '/' . $rel);
     if (!preg_match_all("/\\btr\\('((?:[^'\\\\]|\\\\.)*)'/", $src, $m)) continue;
     foreach ($m[1] as $raw) {
@@ -186,8 +186,8 @@ $check('všechny nové msgid mají ukrajinský překlad (hubs)', $missingUk === 
 // =============================================================================================
 $manifest = require $ROOT . '/lang/domains_v59.php';
 $hubsFiles = (array)($manifest['domains']['hubs'] ?? []);
-$check('manifest domén: profile_v60.php v doméně hubs', in_array('profile_v60.php', $hubsFiles, true));
-$check('manifest domén: profile_v60_views.php v doméně hubs', in_array('profile_v60_views.php', $hubsFiles, true));
+$check('manifest domén: profile_v60.php v doméně hubs', in_array('src/student/profile_v60.php', $hubsFiles, true));
+$check('manifest domén: profile_v60_views.php v doméně hubs', in_array('src/student/profile_v60_views.php', $hubsFiles, true));
 
 // =============================================================================================
 // 8) v60.2 · rychlost a velikost: HTML záložek, počet čtených souborů úložiště, sprite, CSS/JS.

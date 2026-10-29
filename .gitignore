@@ -1,0 +1,5 @@
+# Lokální důkazy regresního porovnání mohou obsahovat identifikátory žáků.
+/docs/structure-2026-10-29/before.json
+/docs/structure-2026-10-29/after.json
+/docs/screens-2026-10-29/structure-*.jpg
+/docs/screens-2026-10-29/structure-*-results.json

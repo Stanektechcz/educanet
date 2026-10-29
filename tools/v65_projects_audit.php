@@ -20,9 +20,9 @@ require_once __DIR__ . '/lib/audit_storage.php';
 require_once __DIR__ . '/lib/audit.php';
 $tmp = rtrim(str_replace('\\', '/', edu_audit_temp_storage('v65-projects')), '/');
 require $root . '/bootstrap.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'identity_v58.php', 'linux_v57_lab.php', 'competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php',
-    'mastery_v62.php', 'projects_v60.php', 'projects_v60_views.php', 'projects_v65.php', 'projects_v65_rubrics.php', 'projects_v65_peer.php', 'projects_v65_team.php', 'projects_v65_evidence.php',
-    'portfolio_v65.php', 'projects_v65_views.php', 'projects_v65_detail_views.php', 'portfolio_v65_views.php', 'projects_v65_teacher_views.php', 'teacher_v58.php', 'ops_v58.php', 'app/lib.php'] as $file) {
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/student/identity_v58.php', 'src/linux/linux_v57_lab.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/evidence_v62_adapters.php',
+    'src/assessment/mastery_v62.php', 'src/projects/projects_v60.php', 'src/projects/projects_v60_views.php', 'src/projects/projects_v65.php', 'src/projects/projects_v65_rubrics.php', 'src/projects/projects_v65_peer.php', 'src/projects/projects_v65_team.php', 'src/projects/projects_v65_evidence.php',
+    'src/student/portfolio_v65.php', 'src/projects/projects_v65_views.php', 'src/projects/projects_v65_detail_views.php', 'src/student/portfolio_v65_views.php', 'src/projects/projects_v65_teacher_views.php', 'src/teacher/teacher_v58.php', 'src/ops/ops_v58.php', 'app/lib.php'] as $file) {
     require_once $root . '/' . $file;
 }
 require_once __DIR__ . '/lib/v62_competency_fixtures.php';

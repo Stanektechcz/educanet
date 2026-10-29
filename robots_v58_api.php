@@ -9,8 +9,8 @@ declare(strict_types=1);
  */
 
 require __DIR__ . '/bootstrap.php';
-if (is_file(__DIR__ . '/arena_v57.php')) require_once __DIR__ . '/arena_v57.php';
-require_once __DIR__ . '/robots_v58.php';
+if (is_file(__DIR__ . '/src/arena/arena_v57.php')) require_once __DIR__ . '/src/arena/arena_v57.php';
+require_once __DIR__ . '/src/robots/robots_v58.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');

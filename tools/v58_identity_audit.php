@@ -33,8 +33,8 @@ file_put_contents($dirFile, json_encode($directory, JSON_UNESCAPED_UNICODE));
 putenv('EDUCANET_IDENTITY58_DIRECTORY=' . $dirFile);
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 require $root . '/bootstrap.php';
-require_once $root . '/accounts_v53.php';
-require_once $root . '/identity_v58_views.php';
+require_once $root . '/src/student/accounts_v53.php';
+require_once $root . '/src/student/identity_v58_views.php';
 $_SESSION = [];
 
 $checks = 0; $failed = 0;
@@ -249,7 +249,7 @@ $check('záložka: bez tlačítka --apply a bez skriptů', !str_contains($html, 
 $_GET = [];
 
 // --- 12. Statické kontroly souborů F6
-$files = ['identity_v58.php', 'identity_v58_rollover.php', 'identity_v58_views.php', 'tools/v58_identity.php', 'tools/v58_rollover.php', 'tools/v58_identity_audit.php'];
+$files = ['src/student/identity_v58.php', 'src/student/identity_v58_rollover.php', 'src/student/identity_v58_views.php', 'tools/v58_identity.php', 'tools/v58_rollover.php', 'tools/v58_identity_audit.php'];
 $forbidden = '/\b(exec|shell_exec|system|passthru|popen|pcntl_exec|eval|assert|create_function|fsockopen|stream_socket_client|curl_init|mail)\s*\(/';
 $bad = [];
 foreach ($files as $f) {
@@ -259,10 +259,10 @@ foreach ($files as $f) {
     if (!str_contains($src, 'declare(strict_types=1);')) $bad[] = $f . ' (strict_types)';
 }
 $check('soubory F6: strict_types, < 800 řádků, bez spouštění příkazů a sítě', $bad === []);
-$libs = ['identity_v58.php', 'identity_v58_rollover.php', 'identity_v58_views.php'];
+$libs = ['src/student/identity_v58.php', 'src/student/identity_v58_rollover.php', 'src/student/identity_v58_views.php'];
 $check('knihovny mají guard proti přímému spuštění', count(array_filter($libs, static fn(string $f): bool => str_contains((string)file_get_contents($root . '/' . $f), "basename((string)(\$_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)"))) === 3);
 $check('CLI nástroje mají CLI guard', str_contains((string)file_get_contents($root . '/tools/v58_identity.php'), "PHP_SAPI !== 'cli'") && str_contains((string)file_get_contents($root . '/tools/v58_rollover.php'), "PHP_SAPI !== 'cli'"));
-$views = (string)file_get_contents($root . '/identity_v58_views.php');
+$views = (string)file_get_contents($root . '/src/student/identity_v58_views.php');
 preg_match_all('/<\?=\s*([^;?]+)/', $views, $m);
 $raw = array_filter($m[1], static fn(string $x): bool => !preg_match('/^(e\(|\(int\)|count\()/', trim($x)));
 $check('šablona vypisuje jen přes e() nebo čísla', $raw === []);

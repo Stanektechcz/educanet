@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 
 require __DIR__ . '/bootstrap.php';
-require __DIR__ . '/runtime_content.php';
+require __DIR__ . '/src/ops/runtime_content.php';
 require __DIR__ . '/app/lib.php';
 app_require_libs(['core']);
 try { acc53_provision_all($modules); } catch (Throwable $accError) { error_log('EDUCANET v53 účty: ' . $accError->getMessage()); }
@@ -40,7 +40,7 @@ $nextLessons = $runtime['nextLessons'];
 $extendedLessons = $runtime['extendedLessons'];
 $simulations = $runtime['simulations'];
 $learningResources = $runtime['learningResources'];
-$schoolYear = require __DIR__ . '/school_year.php';
+$schoolYear = require __DIR__ . '/src/ops/school_year.php';
 
 // Volitelná integrace: ?class=class_3a&student=Jméno
 if ($method === 'GET' && educanet_dev_bypass_enabled() && isset($_GET['class']) && is_string($_GET['class']) && isset($modules[$_GET['class']])) {

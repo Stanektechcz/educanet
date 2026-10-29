@@ -7,7 +7,7 @@ require dirname(__DIR__) . '/bootstrap.php';
 if (!function_exists('teacher_class_label')) {
     function teacher_class_label(string $classId): string { return ['class_1a'=>'1.A','class_2a'=>'2.A','class_3a'=>'3.A','class_4a'=>'4.A'][$classId] ?? $classId; }
 }
-require dirname(__DIR__) . '/teacher_curriculum.php';
+require dirname(__DIR__) . '/src/teacher/teacher_curriculum.php';
 
 $root=dirname(__DIR__); $errors=[]; $warnings=[]; $specs=teacher_curriculum_spec();
 $expected=['class_1a','class_2a','class_3a','class_4a'];
@@ -25,6 +25,6 @@ foreach($expected as $cid){
 }
 foreach(['materials/TEACHER_OVERVIEW.md','materials/ASSESSMENT_MASTERY_MATRIX.md','materials/PROJECT_ROLE_GUIDE.md','materials/CURRICULUM_OVERVIEW.csv'] as $f){if(!is_file($root.'/'.$f))$errors[]="Chybí $f";}
 $teacher=file_get_contents($root.'/teacher.php')?:'';
-foreach(["teacher_curriculum.php","tab==='curriculum'","teacher_curriculum_toggle","teacher_curriculum_lesson_toggle","teacher_curriculum_note"] as $needle){if(!str_contains($teacher,$needle))$errors[]="teacher.php: chybí $needle";}
+foreach(["src/teacher/teacher_curriculum.php","tab==='curriculum'","teacher_curriculum_toggle","teacher_curriculum_lesson_toggle","teacher_curriculum_note"] as $needle){if(!str_contains($teacher,$needle))$errors[]="teacher.php: chybí $needle";}
 if($warnings){echo "Warnings:\n- ".implode("\n- ",$warnings)."\n";}
 if($errors){fwrite(STDERR,"ERRORS:\n- ".implode("\n- ",$errors)."\n");exit(1);} echo "Teacher curriculum audit OK\n";

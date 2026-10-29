@@ -22,9 +22,9 @@ putenv('EDUCANET_STORAGE_DIR=' . $tmp);
 putenv('EDUCANET_TEACHER_ROLE=teacher');
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 require $root . '/bootstrap.php';
-require_once $root . '/accounts_v53.php';
-require_once $root . '/accounts_v58_views.php';
-require_once $root . '/teacher_operations_v46.php';
+require_once $root . '/src/student/accounts_v53.php';
+require_once $root . '/src/student/accounts_v58_views.php';
+require_once $root . '/src/teacher/teacher_operations_v46.php';
 unset($GLOBALS['educanet_secrets']['otp_card_key']);
 
 $checks = 0; $failed = 0;
@@ -49,7 +49,7 @@ for ($i = 0; $i < 500; $i++) $samples[] = acc58_generate_otp();
 $check('500 vzorků má formát slovo-číslice-slovo-slovo', !array_filter($samples, static fn(string $o): bool => !preg_match(acc58_otp_pattern(), $o)));
 $check('500 vzorků je unikátních', count(array_unique($samples)) === 500);
 $check('každý vzorek projde validátorem hesel', !array_filter(array_slice($samples, 0, 200), static fn(string $o): bool => local_password_validate($o) !== null));
-$check('generátor používá random_int', str_contains($read($root . '/accounts_v58.php'), 'random_int('));
+$check('generátor používá random_int', str_contains($read($root . '/src/student/accounts_v58.php'), 'random_int('));
 
 // --- 2. SEC-16 validátor ----------------------------------------------------
 $check('SEC-16: kratší než 10 znaků neprojde', local_password_validate('abc12345') !== null);
@@ -216,9 +216,9 @@ $bootSrc = $read($root . '/bootstrap.php');
 $check('SEC-17: odkaz v e-mailu nenese e-mail, stránka má Referrer-Policy no-referrer', !str_contains((string)strstr($bootSrc, 'function send_local_password_reset'), "reset_password&email=") && str_contains($bootSrc, "header('Referrer-Policy: no-referrer')"));
 
 // --- 11. Texty a guardy ----------------------------------------------------------
-$check('texty žáka nezmiňují demo001', !str_contains($read($root . '/session_v53_views.php'), 'ACC53_DEFAULT_PASSWORD') && !str_contains($read($root . '/session_v53_views.php'), 'demo001'));
-$check('registrace kódem hodiny nepustí do existujícího účtu', !str_contains($read($root . '/session_v53.php'), 'password_verify(ACC53_DEFAULT_PASSWORD'));
-foreach (['accounts_v53.php', 'accounts_v58.php', 'accounts_v58_views.php', 'session_v53.php', 'session_v53_views.php'] as $f) {
+$check('texty žáka nezmiňují demo001', !str_contains($read($root . '/src/lessons/session_v53_views.php'), 'ACC53_DEFAULT_PASSWORD') && !str_contains($read($root . '/src/lessons/session_v53_views.php'), 'demo001'));
+$check('registrace kódem hodiny nepustí do existujícího účtu', !str_contains($read($root . '/src/lessons/session_v53.php'), 'password_verify(ACC53_DEFAULT_PASSWORD'));
+foreach (['src/student/accounts_v53.php', 'src/student/accounts_v58.php', 'src/student/accounts_v58_views.php', 'src/lessons/session_v53.php', 'src/lessons/session_v53_views.php'] as $f) {
     $check('guard knihovny ' . $f, str_contains($read($root . '/' . $f), "=== basename(__FILE__)) { http_response_code(403); exit; }"));
 }
 foreach (['tools/v58_issue_passwords.php', 'tools/v58_accounts_audit.php', 'tools/v53_provision_accounts.php'] as $f) {
@@ -237,7 +237,7 @@ $collect = static function (string $code) use (&$actions): void {
 };
 $postBlock = (string)strstr($teacherSrc, "if (\$action === 'teacher_login')");
 $collect(substr($postBlock, 0, max(0, (int)strpos($postBlock, '$rawFlash'))));
-foreach (['intake_v51_teacher.php' => 'intake_v51_teacher_handle_post', 'session_v53_teacher.php' => 'sess53_teacher_handle_post', 'arena_v57.php' => 'arena57_teacher_handle_post', 'accounts_v58_views.php' => 'acc58_teacher_apply'] as $file => $fn) {
+foreach (['src/student/intake_v51_teacher.php' => 'intake_v51_teacher_handle_post', 'src/lessons/session_v53_teacher.php' => 'sess53_teacher_handle_post', 'src/arena/arena_v57.php' => 'arena57_teacher_handle_post', 'src/student/accounts_v58_views.php' => 'acc58_teacher_apply'] as $file => $fn) {
     $code = $src($file);
     $body = (string)strstr($code, 'function ' . $fn . '(');
     $next = strpos($body, "\nfunction ", 10);
@@ -251,8 +251,8 @@ $check('SEC-12: teacher.php ověřuje oprávnění před handlery', (bool)preg_m
 $check('SEC-12: acc58 akce jsou volané z teacher.php [čeká na patch INTEGRATION.md#sec-01-teacher]', str_contains($teacherSrc, 'acc58_teacher_handle_post($action,$modules)') || str_contains($teacherSrc, 'acc58_teacher_handle_post($action, $modules)'));
 
 // --- 13. Revize v58 · skupina A (přihlášení, účty) -------------------------------
-require_once $root . '/intake_v51.php';
-require_once $root . '/session_v53.php';
+require_once $root . '/src/student/intake_v51.php';
+require_once $root . '/src/lessons/session_v53.php';
 $resetLimits = static function (): void { unset($_SESSION['auth_rate_limits']); @unlink(auth_rate_limit_path()); php_json_cache_forget(auth_rate_limit_path()); };
 $as = static function (string $ip, callable $fn) { $prev = $_SERVER['REMOTE_ADDR'] ?? null; $_SERVER['REMOTE_ADDR'] = $ip; unset($_SESSION['auth_rate_limits']); try { return $fn(); } finally { $_SERVER['REMOTE_ADDR'] = $prev; } };
 $regClass = intake_v51_classes($modules)['class_1a'] ?? [];
@@ -286,7 +286,7 @@ if ($regSeat !== '') {
 unset($_SESSION['local_user'], $_SESSION['google_user']);
 $joinSrc = $read($root . '/app/actions/session_join.php');
 $check('SEC58-01: registrace má limit pokusů na IP (40/15 min)', str_contains($joinSrc, "auth_rate_limit_check('sess53-register', SESS53_REGISTER_LIMIT, SESS53_REGISTER_WINDOW)") && SESS53_REGISTER_LIMIT === 40 && SESS53_REGISTER_WINDOW === 900);
-$check('SEC58-01: registrace volá acc58_link_allowed', str_contains((string)strstr($read($root . '/session_v53.php'), 'function sess53_join_register'), 'acc58_link_allowed('));
+$check('SEC58-01: registrace volá acc58_link_allowed', str_contains((string)strstr($read($root . '/src/lessons/session_v53.php'), 'function sess53_join_register'), 'acc58_link_allowed('));
 
 // SEC58-02: odkazy do e-mailu jen z EDUCANET_APP_URL, bez e-mailu v URL, limit 3/h
 $prevAppUrl = getenv('EDUCANET_APP_URL'); $prevBypass = getenv('EDUCANET_DEV_BYPASS');

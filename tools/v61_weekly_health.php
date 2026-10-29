@@ -47,9 +47,9 @@ function wh_load_env_file(?string $path): void
 $argv = $argv ?? [];
 wh_load_env_file(wh_arg($argv, 'env-file'));
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once dirname(__DIR__) . '/ops_v61.php';
+require_once dirname(__DIR__) . '/src/ops/ops_v61.php';
 require_once __DIR__ . '/lib/v61_health_lib.php';
-require_once dirname(__DIR__) . '/ops_v67.php'; // v67: rozšířená kontrola provozu
+require_once dirname(__DIR__) . '/src/ops/ops_v67.php'; // v67: rozšířená kontrola provozu
 
 /** Argumenty podprocesů podle názvu kontroly. @return list<string> */
 function wh_tool_args(string $name, array $argv): array

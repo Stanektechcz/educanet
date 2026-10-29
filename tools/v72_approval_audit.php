@@ -31,10 +31,10 @@ putenv('EDUCANET_TEACHER_EXPORT_KEY=' . V72A_KEY);
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['teacher_operations_v46.php', 'teacher_operations_control_v46_2.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'ui_v67.php',
-    'tutorial_v52.php', 'learning_v56.php', 'runtime_content.php', 'session_v53.php', 'accounts_v53.php', 'intake_v51.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_operations_control_v46_2.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/ui/ui_v67.php',
+    'src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/ops/runtime_content.php', 'src/lessons/session_v53.php', 'src/student/accounts_v53.php', 'src/student/intake_v51.php'] as $lib) require_once $ROOT . '/' . $lib;
 foreach (array_unique(array_merge((array)teacher58_modules()['hodina']['files'], (array)teacher58_modules()['schvalovani']['files'])) as $f) require_once $ROOT . '/' . $f;
-require_once $ROOT . '/lesson_exit_v72_views.php';
+require_once $ROOT . '/src/lessons/lesson_exit_v72_views.php';
 require_once __DIR__ . '/lib/v62_competency_fixtures.php';
 require_once __DIR__ . '/lib/v59_scope_fixtures.php';
 
@@ -44,7 +44,7 @@ $read = static fn(string $rel): string => (string)@file_get_contents($ROOT . '/'
 $check('úložiště auditu i cache modelu jsou dočasné (ne ostrá storage/ ani cache/ projektu)', STORAGE_DIR === $tmp && str_contains($tmp, 'educanet-audit-') && !str_starts_with(lm71_cache_dir(), $ROOT));
 
 // ---------------------------------------------------------------- 1) soubory, registr, politiky
-$libs = ['lesson_approval_v72.php', 'lesson_approval_v72_views.php', 'lesson_exit_v72.php', 'lesson_exit_v72_views.php', 'lesson_glossary_v72.php', 'app/actions/lesson_exit_v72.php'];
+$libs = ['src/lessons/lesson_approval_v72.php', 'src/lessons/lesson_approval_v72_views.php', 'src/lessons/lesson_exit_v72.php', 'src/lessons/lesson_exit_v72_views.php', 'src/lessons/lesson_glossary_v72.php', 'app/actions/lesson_exit_v72.php'];
 $cli = ['tools/v72_lesson_content_audit.php', 'tools/v72_approval_audit.php'];
 $bad = [];
 foreach (array_merge($libs, $cli) as $f) {
@@ -57,7 +57,7 @@ $mods = teacher58_modules();
 $sch = $mods['schvalovani'] ?? [];
 $check('registr: nový modul `schvalovani` (POST jen prefix lc72_, bez zvláštního GET, CSS v71+v72); `hodina` dál bez post/get, jen čte stav a souhrn v72',
     array_keys((array)($sch['post'] ?? [])) === ['lc72_'] && !isset($sch['get']) && ($sch['css'] ?? []) === ['assets/cockpit-v71.css', 'assets/cockpit-v72.css'] && in_array('schvalovani', teacher58_tabs(), true)
-    && !isset($mods['hodina']['post']) && !isset($mods['hodina']['get']) && in_array('lesson_exit_v72_views.php', $mods['hodina']['files'], true));
+    && !isset($mods['hodina']['post']) && !isset($mods['hodina']['get']) && in_array('src/lessons/lesson_exit_v72_views.php', $mods['hodina']['files'], true));
 $map = teacher68_tab_map();
 $check('mapa cockpitu: Schvalování lekcí v sekci Výuka, v UI68_TEACHER_DARK_TABS, „Související“ vede na Dnešní hodinu', ($map['schvalovani']['section'] ?? '') === 'vyuka' && in_array('schvalovani', UI68_TEACHER_DARK_TABS, true)
     && array_column(c70_related_rules()['schvalovani'] ?? [], 0) === ['hodina', 'curriculum'] && in_array('schvalovani', teacher68_visible_tabs('assistant', false, teacher58_tabs()), true));
@@ -136,7 +136,7 @@ $variantsUsed = count(array_unique(array_map(static fn(int $i): int => lx72_vari
 $check('mimo pilot (2.A bez katalogu) se důkaz nezapisuje; retence maže odpovědi starší než ' . LX72_RETENTION_DAYS . ' dní; varianta je deterministická a třída dostane všechny 3',
     $r6['ok'] && $r6['evidence'] === 0 && array_keys(lx72_purge($old, time())['5']) === ['bbbb'] && $variantsUsed === 3 && lx72_variant_index('k1', 5, 3) === lx72_variant_index('k1', 5, 3));
 $check('výchozí režim exit ticketu = jen zpětná vazba (v72.1: „podklad ke známce“ volí učitel třídy, hlídá v72_1_decisions_audit); důkaz „lesson“ dál mimo G66_MASTERY_SOURCES; domácí příprava dobrovolná v limitu',
-    LC72_EXIT_FORMATIVE_ONLY === false && tp721_exit_mode('class_3a') === 'feedback' && $r6['mode'] === 'f' && str_contains($read('grading_v66.php'), "const G66_MASTERY_SOURCES = ['test', 'project', 'lab'];") && lx72_homework('class_3a', 5) !== []
+    LC72_EXIT_FORMATIVE_ONLY === false && tp721_exit_mode('class_3a') === 'feedback' && $r6['mode'] === 'f' && str_contains($read('src/assessment/grading_v66.php'), "const G66_MASTERY_SOURCES = ['test', 'project', 'lab'];") && lx72_homework('class_3a', 5) !== []
     && array_reduce(lx72_homework('class_3a', 5), static fn(bool $ok, array $h): bool => $ok && $h['minutes'] <= LC72_HOMEWORK_MAX_MIN, true) && lx72_homework('class_3a', 6) === []);
 
 // ---------------------------------------------------------------- 4) žákovský blok (bez JS)
@@ -155,7 +155,7 @@ $check('žák po odpovědi: zpětná vazba (tvoje odpověď, správná odpověď
 
 // ---------------------------------------------------------------- 5) HTTP bez účtů
 audit_prewarm_accounts($GLOBALS['modules']);
-$year = require $ROOT . '/school_year.php';
+$year = require $ROOT . '/src/ops/school_year.php';
 $current = v56_current_lesson_number('class_3a', $year);
 $h = Harness::start(['EDUCANET_STORAGE_DIR' => $tmp, 'EDUCANET_TEACHER_EXPORT_KEY' => V72A_KEY, 'EDUCANET_LOCAL_AUTH_REQUIRE_EMAIL_VERIFY' => '0', 'EDUCANET_DEV_BYPASS' => '1', 'EDUCANET_LM71_CACHE_DIR' => $cacheDir]);
 try {

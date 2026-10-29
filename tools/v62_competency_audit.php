@@ -21,8 +21,8 @@ require_once __DIR__ . '/lib/audit_storage.php';
 require_once __DIR__ . '/lib/audit.php';
 $tmp = rtrim(str_replace('\\', '/', edu_audit_temp_storage('v62-competency')), '/');
 require $root . '/bootstrap.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'identity_v58.php', 'linux_v57_lab.php', 'competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php',
-    'mastery_v62.php', 'competency_v62_views.php', 'competency_v62_teacher_views.php', 'profile_v60.php', 'ops_v58.php', 'app/lib.php'] as $file) {
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/student/identity_v58.php', 'src/linux/linux_v57_lab.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/evidence_v62_adapters.php',
+    'src/assessment/mastery_v62.php', 'src/assessment/competency_v62_views.php', 'src/assessment/competency_v62_teacher_views.php', 'src/student/profile_v60.php', 'src/ops/ops_v58.php', 'app/lib.php'] as $file) {
     require_once $root . '/' . $file;
 }
 require_once __DIR__ . '/lib/v62_competency_fixtures.php';
@@ -242,7 +242,7 @@ $check('retence: ops58_apply_retention tuto akci jen přeskočí (neumí smazat 
 $check('učitel: comp62_sync vyžaduje třídu v rozsahu (class required), oprávnění analytics.view; jiné comp62_* i neznámé akce zůstávají zakázané (deny-by-default)',
     teacher59_action_policy('comp62_sync') === ['class' => 'required'] && teacher_action_permission('comp62_sync') === 'analytics.view'
     && (teacher59_action_policy('comp63_sync')['deny'] ?? false) === true && (teacher59_action_policy('comp62_hack')['deny'] ?? false) === true && (teacher59_action_policy('comp62_')['deny'] ?? false) === true && (teacher59_action_policy('neznama_akce')['deny'] ?? false) === true && teacher_action_permission('neznama_akce') === TEACHER_PERMISSION_DENY);
-require_once $root . '/teacher_v58.php';
+require_once $root . '/src/teacher/teacher_v58.php';
 $mod = teacher58_modules()['kompetence'] ?? [];
 $check('učitel: záložka kompetence je v registru modulů se všemi soubory, POST prefixem comp62_ (v76: + ob76_ ruční pozorování) a bez zvláštního GET parametru', $mod !== [] && teacher58_available('kompetence') && array_keys((array)$mod['post']) === ['comp62_', 'ob76_'] && !isset($mod['get'])
     && array_filter((array)$mod['files'], static fn(string $f): bool => !is_file($root . '/' . $f)) === []);
@@ -263,7 +263,7 @@ $check('CSS: ≤ 8 kB, žádný JS asset vrstvy, žádné CDN', $cssSize <= 8192
 // --- 10) Token-sken invariantu labu a zdrojů vrstvy ------------------------------------------------------------
 $forbidden = ['exec', 'shell_exec', 'system', 'passthru', 'proc_open', 'popen', 'pcntl_exec', 'eval', 'assert', 'create_function', 'fsockopen', 'stream_socket_client', 'mail', 'dns_get_record',
     'gethostbyname', 'gethostbyaddr', 'checkdnsrr', 'lab57_build_world', 'lab57_session', 'lab57_cmd_run', 'file_get_contents_url'];
-$layerFiles = ['competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'competency_v62_views.php', 'competency_v62_teacher_views.php'];
+$layerFiles = ['src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/evidence_v62_adapters.php', 'src/assessment/mastery_v62.php', 'src/assessment/competency_v62_views.php', 'src/assessment/competency_v62_teacher_views.php'];
 $hits = [];
 foreach ($layerFiles as $f) {
     foreach (token_get_all((string)file_get_contents($root . '/' . $f)) as $tok) {

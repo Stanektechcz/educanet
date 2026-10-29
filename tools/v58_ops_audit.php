@@ -15,7 +15,7 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  */
 
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once dirname(__DIR__) . '/ops_v58.php';
+require_once dirname(__DIR__) . '/src/ops/ops_v58.php';
 require_once __DIR__ . '/backup_storage.php';
 require_once __DIR__ . '/restore_storage.php';
 

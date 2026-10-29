@@ -4,8 +4,8 @@ declare(strict_types=1);
 if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) { http_response_code(403); exit; }
 
 /** v64 audit · dávka 4: výzva týdne, série s omluvenými dny, odznaky za kompetence, adaptéry robotí ligy/týmových her/arény. */
-foreach (['teacher_operations_v46.php', 'identity_v58.php', 'competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php', 'ops_v58.php', 'app/lib.php',
-    'paths_v63.php', 'paths_v63_flow.php', 'paths_v63_class.php', 'paths_v63_actions.php', 'paths_v63_views.php', 'motivation_v61.php', 'badges_v60.php', 'challenges_v64.php'] as $lib) require_once $root . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/student/identity_v58.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/evidence_v62_adapters.php', 'src/assessment/mastery_v62.php', 'src/ops/ops_v58.php', 'app/lib.php',
+    'src/paths/paths_v63.php', 'src/paths/paths_v63_flow.php', 'src/paths/paths_v63_class.php', 'src/paths/paths_v63_actions.php', 'src/paths/paths_v63_views.php', 'src/student/motivation_v61.php', 'src/student/badges_v60.php', 'src/student/challenges_v64.php'] as $lib) require_once $root . '/' . $lib;
 require_once __DIR__ . '/v63_pre.php';
 require_once __DIR__ . '/v63_paths_fixtures.php';
 

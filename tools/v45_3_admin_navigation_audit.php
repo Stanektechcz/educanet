@@ -5,12 +5,12 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 
 $root = dirname(__DIR__);
 require $root . '/bootstrap.php';
-require $root . '/teacher_curriculum.php';
+require $root . '/src/teacher/teacher_curriculum.php';
 if (!function_exists('teacher_class_label')) {
     function teacher_class_label(string $classId): string { return match($classId){'class_1a'=>'1.A Grafika','class_2a'=>'2.A Grafika','class_3a'=>'3.A SOSPS','class_4a'=>'4.A SOSPS',default=>$classId}; }
 }
-require $root . '/teacher_overview_dashboard.php';
-require $root . '/teacher_class_dashboard.php';
+require $root . '/src/teacher/teacher_overview_dashboard.php';
+require $root . '/src/teacher/teacher_class_dashboard.php';
 
 $errors = [];
 $storageBefore = [];

@@ -7,7 +7,7 @@ $root=dirname(__DIR__);
 $start=microtime(true);
 require $root.'/bootstrap.php';
 $bootstrapMs=(microtime(true)-$start)*1000;
-require_once $root.'/runtime_content.php';
+require_once $root.'/src/ops/runtime_content.php';
 
 $classes=['class_1a','class_2a','class_3a','class_4a'];
 $cacheOk=true;$cacheBytes=0;

@@ -30,8 +30,8 @@ putenv('EDUCANET_TEACHER_EXPORT_KEY=' . V71A_KEY);
 require_once $ROOT . '/bootstrap.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
-foreach (['teacher_operations_v46.php', 'teacher_operations_control_v46_2.php', 'teacher_scope_v59.php', 'teacher_v58.php', 'teacher_nav_v68.php', 'ui_v67.php',
-    'tutorial_v52.php', 'learning_v56.php', 'runtime_content.php', 'session_v53.php', 'accounts_v53.php', 'intake_v51.php', 'teacher_curriculum.php', 'teacher_lesson_mode.php'] as $lib) require_once $ROOT . '/' . $lib;
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_operations_control_v46_2.php', 'src/teacher/teacher_scope_v59.php', 'src/teacher/teacher_v58.php', 'src/teacher/teacher_nav_v68.php', 'src/ui/ui_v67.php',
+    'src/lessons/tutorial_v52.php', 'src/lessons/learning_v56.php', 'src/ops/runtime_content.php', 'src/lessons/session_v53.php', 'src/student/accounts_v53.php', 'src/student/intake_v51.php', 'src/teacher/teacher_curriculum.php', 'src/teacher/teacher_lesson_mode.php'] as $lib) require_once $ROOT . '/' . $lib;
 foreach ((array)teacher58_modules()['hodina']['files'] as $f) require_once $ROOT . '/' . $f;
 require_once __DIR__ . '/run_audits.php';
 
@@ -46,7 +46,7 @@ $check('úložiště auditu i cache modelu jsou dočasné (ne ostrá storage/ an
     && lm71_cache_dir() === str_replace(chr(92), '/', $cacheDir) && !str_starts_with(lm71_cache_dir(), $ROOT));
 
 // ---------------------------------------------------------------- 1) soubory, registr, politiky
-$libs = ['lesson_model_v71_sources.php', 'lesson_model_v71.php', 'calendar_days_v71.php', 'lesson_today_v71_views.php', 'lesson_today_v70.php', 'tools/lib/report_v71.php'];
+$libs = ['src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php', 'src/ops/calendar_days_v71.php', 'src/lessons/lesson_today_v71_views.php', 'src/lessons/lesson_today_v70.php', 'tools/lib/report_v71.php'];
 $cli = ['tools/v71_content_report.php', 'tools/v71_data_report.php', 'tools/v71_lesson_model_audit.php'];
 $bad = [];
 foreach (array_merge($libs, $cli) as $f) {
@@ -58,8 +58,8 @@ $check('soubory v71: strict_types, guard (knihovny SCRIPT_FILENAME, CLI PHP_SAPI
 $mods = teacher58_modules();
 $hodina = $mods['hodina'];
 $check('registr: Dnešní hodina vykresluje v71, načítá model lm71 a karty dnů, má CSS v71 a stále nemá post ani get',
-    !isset($hodina['post']) && !isset($hodina['get']) && array_intersect(['lesson_model_v71.php', 'calendar_days_v71.php', 'lesson_today_v71_views.php'], $hodina['files']) === ['lesson_model_v71.php', 'calendar_days_v71.php', 'lesson_today_v71_views.php']
-    && ($hodina['css'] ?? []) === ['assets/cockpit-v71.css'] && str_contains($read('teacher_v58.php'), 'lt71_render_tab($m, $c)') && in_array('hodina', UI68_TEACHER_DARK_TABS, true));
+    !isset($hodina['post']) && !isset($hodina['get']) && array_intersect(['src/lessons/lesson_model_v71.php', 'src/ops/calendar_days_v71.php', 'src/lessons/lesson_today_v71_views.php'], $hodina['files']) === ['src/lessons/lesson_model_v71.php', 'src/ops/calendar_days_v71.php', 'src/lessons/lesson_today_v71_views.php']
+    && ($hodina['css'] ?? []) === ['assets/cockpit-v71.css'] && str_contains($read('src/teacher/teacher_v58.php'), 'lt71_render_tab($m, $c)') && in_array('hodina', UI68_TEACHER_DARK_TABS, true));
 $post = teacher59_action_policies();
 unset($post['teacher68_theme_set']);
 unset($post['lc72_approve'], $post['lc72_return']);   // v72: nové akce v novém modulu `schvalovani` – vyjmuté ze snímku stejně jako teacher68_theme_set (změna limitu auditu, BUILD_MANIFEST_V72.md)
@@ -110,8 +110,8 @@ $check('žákovská cesta: lm71_bundle = v56_lesson_bundle nad runtime cache u v
 $check('jeden loader: Plán a kurikulum i Režim hodiny čtou lekce přes lm71_curriculum_rows (28 řádků, L1 = lesson_1_primary)', $curriculumSame);
 $status = lm71_cache_status($ROOT . '/cache/lesson_model');
 $builder = $read('tools/build_runtime_cache.php');
-preg_match_all("~'/?([a-z0-9_]+\\.php)'~", $builder, $mm);
-$builderFiles = array_values(array_diff(array_unique($mm[1]), ['bootstrap.php', 'lesson_model_v71_sources.php', 'lesson_model_v71.php']));
+preg_match_all("~'/?([a-z0-9_/]+\\.php)'~", $builder, $mm);
+$builderFiles = array_values(array_diff(array_unique($mm[1]), ['bootstrap.php', 'src/lessons/lesson_model_v71_sources.php', 'src/lessons/lesson_model_v71.php']));
 $check('runtime cache: builder zapisuje _sources_hash ze stejného seznamu souborů, který hlídá lm71; cache všech tříd je aktuální',
     str_contains($builder, "'_sources_hash'=>\$sourcesHash") && count(array_diff($builderFiles, lm71_runtime_cache_files())) === 0 && count(array_diff(lm71_runtime_cache_files(), $builderFiles)) === 0
     && array_unique(array_values($status['runtime'])) === ['aktuální']);
@@ -125,7 +125,7 @@ $check('dny bez lekce: 11 výukových dnů × 4 třídy = 44 karet (cíl, průb�
 
 // precedence overlaye (čisté funkce) a úplnost
 $ov = lm71_overlay_merge(['lessons' => [], 'days' => [], 'files' => []], 'lesson_content_v72_3a.php', ['class_3a' => ['lessons' => [5 => ['title' => 'Starý', 'safety' => ['Jen simulátor.'], 'hack' => 'x'], 40 => ['title' => 'mimo']], 'days' => [29 => ['goal' => 'Cíl dne']]], 'bad id' => ['lessons' => [5 => ['title' => 'x']]]]);
-$ov = lm71_overlay_merge($ov, 'lesson_content_v72_3a_b.php', ['class_3a' => ['lessons' => [5 => ['title' => 'Nový titulek lekce']]]]);
+$ov = lm71_overlay_merge($ov, 'src/content/lesson_content_v72_3a_b.php', ['class_3a' => ['lessons' => [5 => ['title' => 'Nový titulek lekce']]]]);
 $l5 = lm71_lesson('class_3a', 5);
 $full = lm71_apply_overlay($l5, $ov['lessons']['class_3a'][5] + [
     'success_criteria' => ['Umím A.', 'Umím B.'], 'timeline' => [['from' => 0, 'to' => 30, 'phase' => 'Úvod'], ['from' => 30, 'to' => 60, 'phase' => 'Práce'], ['from' => 60, 'to' => 90, 'phase' => 'Závěr']],
@@ -168,7 +168,7 @@ lm71_cache_write($path, $stale);
 $fresh = lm71_build_raw('class_2a');
 $status2 = lm71_cache_status($cacheDir);
 $loader = $cacheDir . '-load.php';
-file_put_contents($loader, "<?php\nrequire " . var_export($ROOT . '/lesson_model_v71.php', true) . ";\nlm71_raw('class_2a');\n");
+file_put_contents($loader, "<?php\nrequire " . var_export($ROOT . '/src/lessons/lesson_model_v71.php', true) . ";\nlm71_raw('class_2a');\n");
 register_shutdown_function(static function () use ($loader): void { @unlink($loader); });
 $loadRaw = static function () use ($loader): void {
     exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($loader) . ' 2>&1');

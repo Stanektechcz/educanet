@@ -10,7 +10,7 @@ function fingerprint(dir) {
  function visit(p) { for(const e of fs.readdirSync(p,{withFileTypes:true}).sort((a,b)=>a.name.localeCompare(b.name))) { const f=path.join(p,e.name);hash.update(path.relative(dir,f));if(e.isDirectory())visit(f);else if(e.isSymbolicLink())hash.update(fs.readlinkSync(f));else hash.update(fs.readFileSync(f)); } }
  visit(dir);return hash.digest('hex');
 }
-const protectedPaths=['storage','private','uploads'];
+const protectedPaths=['storage','private','uploads','cache'].filter(p=>fs.existsSync(root+'/'+p));
 const originalHashes=protectedPaths.map(p=>fingerprint(root+'/'+p));
 fs.mkdirSync(root+'/docs/screens-2026-10-29',{recursive:true});
 fs.cpSync(source,temp+'/app',{recursive:true,filter:s=>!['.git','docs'].includes(path.relative(source,s).split(path.sep)[0])});
@@ -49,7 +49,7 @@ const probe=eval('(function probe(detail) {'+probeCode+')');
     await pg.locator('.v5076-progress-advanced > summary').click();
     check('další detail: analytika dostupná',await pg.locator('.h81-ring:visible').count()===1);
     const p=await pg.evaluate(probe,true);check('rozbalený detail bez posunu',!p.hscroll);
-    await pg.screenshot({path:root+'/docs/screens-2026-10-29/after-detail-'+scheme+'-'+w+'.jpg',type:'jpeg',quality:55,fullPage:true});
+    await pg.screenshot({path:root+'/docs/screens-2026-10-29/'+(phase.startsWith('structure-')?phase:'after')+'-detail-'+scheme+'-'+w+'.jpg',type:'jpeg',quality:55,fullPage:true});
    }
    if(id==='s-kalendar'){
     const first=pg.locator('[data-t52-tab]').first();await first.click();await first.focus();
@@ -75,7 +75,7 @@ const probe=eval('(function probe(detail) {'+probeCode+')');
  await pg.close();}await s.close();await t.close();}
 
  if(phase!=='before'){
-  const fixture=spawnSync('/usr/bin/php',['-r',`require 'bootstrap.php';require 'session_v53.php';sess53_open('class_3a',date('Y-m-d'),$modules,['title'=>'Testovací hodina','steps'=>[]],'work',['lesson_number'=>7]);`],{cwd:temp+'/app',env,encoding:'utf8'});
+  const fixture=spawnSync('/usr/bin/php',['-r',`require 'bootstrap.php';require 'src/lessons/session_v53.php';sess53_open('class_3a',date('Y-m-d'),$modules,['title'=>'Testovací hodina','steps'=>[]],'work',['lesson_number'=>7]);`],{cwd:temp+'/app',env,encoding:'utf8'});
   if(fixture.status!==0)throw Error('Fixture hodiny: '+fixture.stderr);
   for(const scheme of ['light','dark']){
    const ctx=await b.newContext({colorScheme:scheme,reducedMotion:'reduce'}),pg=await ctx.newPage();
@@ -87,7 +87,7 @@ const probe=eval('(function probe(detail) {'+probeCode+')');
     await pg.setViewportSize({width:w,height:900});await pg.goto('http://127.0.0.1:8090/?view=hodina',{waitUntil:'networkidle'});
     if(new URL(pg.url()).searchParams.get('view')!=='hodina')throw Error('Otevřená hodina není dostupná studentovi');
     out.rows.push({id:'s-dnes-aktivni',scheme,w,url:pg.url(),...await pg.evaluate(probe,true)});
-    await pg.screenshot({path:root+'/docs/screens-2026-10-29/'+(phase==='before-active'?'before':'after')+'-s-dnes-aktivni-'+scheme+'-'+w+'.jpg',type:'jpeg',quality:65,fullPage:true});
+    await pg.screenshot({path:root+'/docs/screens-2026-10-29/'+(phase.startsWith('structure-')?phase:(phase==='before-active'?'before':'after'))+'-s-dnes-aktivni-'+scheme+'-'+w+'.jpg',type:'jpeg',quality:65,fullPage:true});
    }await ctx.close();
   }
  }

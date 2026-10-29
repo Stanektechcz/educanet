@@ -234,7 +234,7 @@ $check('normalized_person_name: 3000 volání téhož jména < 15 ms (' . round(
 $memoOn = storage_request_memo_enabled();
 $check('paměti požadavku jsou ve webovém požadavku zapnuté (PHP_SAPI ≠ cli) a v čistém CLI vypnuté', $memoOn === true && (function (): bool {
     $php = is_file('C:/php/php.exe') ? 'C:/php/php.exe' : PHP_BINARY;
-    $code = 'declare(strict_types=1); $_SERVER["SCRIPT_FILENAME"]="x"; require "' . dirname(__DIR__) . '/storage_v58.php"; echo storage_request_memo_enabled() ? "on" : "off";';
+    $code = 'declare(strict_types=1); $_SERVER["SCRIPT_FILENAME"]="x"; require "' . dirname(__DIR__) . '/src/ops/storage_v58.php"; echo storage_request_memo_enabled() ? "on" : "off";';
     $p = proc_open([$php, '-r', $code], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, null, null, ['bypass_shell' => true]);
     if (!is_resource($p)) return false;
     $out = (string)stream_get_contents($pipes[1]);

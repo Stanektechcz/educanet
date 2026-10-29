@@ -281,13 +281,13 @@ function v59sf_owner_note(string $tab, array $leak): string
     if ($leak === []) return '';
     $owners = [
         'arena' => 'arena_v57_views.php / arena_v58_weekly.php', 'roboti' => 'robots_v58_views.php (i18n)', 'ctf' => 'arena_v58_events_views.php (i18n)',
-        'incidenty' => 'arena_v58_events_views.php (i18n)', 'hry' => 'teamgames_v58_teacher_views.php', 'editor' => 'lab_v58_editor_views.php', 'labdata' => 'lab_v58_teacher_views.php',
-        'pristupy' => 'accounts_v58_views.php', 'intake' => 'intake_v51_teacher.php', 'session' => 'session_v53_teacher.php', 'calendar' => 'teacher_calendar.php',
-        'overview' => 'teacher_overview_dashboard.php / teacher.php', 'demo_accounts' => 'teacher_demo_accounts.php', 'filters' => 'teacher_operations_views_v46.php / teacher_tasks.php',
-        'ops_audit' => 'teacher_operations_plus_views_v46_1.php', 'control' => 'teacher_operations_control_views_v46_2.php', 'reports' => 'teacher_operations_control_views_v46_2.php',
-        'communications' => 'teacher_operations_control_views_v46_2.php', 'attention' => 'teacher_operations_views_v46.php', 'workspace' => 'teacher_project_workspace_views.php',
-        'authoring' => 'mastery_learning_views_v41.php', 'teach' => 'teacher.php (teach)',
-        'identita' => 'identity_v58_views.php', 'provoz' => 'ops_v58_views.php',
+        'incidenty' => 'arena_v58_events_views.php (i18n)', 'hry' => 'src/teamgames/teamgames_v58_teacher_views.php', 'editor' => 'src/linux/lab_v58_editor_views.php', 'labdata' => 'src/linux/lab_v58_teacher_views.php',
+        'pristupy' => 'src/student/accounts_v58_views.php', 'intake' => 'src/student/intake_v51_teacher.php', 'session' => 'src/lessons/session_v53_teacher.php', 'calendar' => 'src/teacher/teacher_calendar.php',
+        'overview' => 'teacher_overview_dashboard.php / teacher.php', 'demo_accounts' => 'src/teacher/teacher_demo_accounts.php', 'filters' => 'teacher_operations_views_v46.php / teacher_tasks.php',
+        'ops_audit' => 'src/teacher/teacher_operations_plus_views_v46_1.php', 'control' => 'src/teacher/teacher_operations_control_views_v46_2.php', 'reports' => 'src/teacher/teacher_operations_control_views_v46_2.php',
+        'communications' => 'src/teacher/teacher_operations_control_views_v46_2.php', 'attention' => 'src/teacher/teacher_operations_views_v46.php', 'workspace' => 'src/teacher/teacher_project_workspace_views.php',
+        'authoring' => 'src/lessons/mastery_learning_views_v41.php', 'teach' => 'teacher.php (teach)',
+        'identita' => 'src/student/identity_v58_views.php', 'provoz' => 'src/ops/ops_v58_views.php',
     ];
     return ' – ' . implode(', ', $leak) . ' [DÍRA → ' . ($owners[$tab] ?? 'teacher.php') . ']';
 }
@@ -336,10 +336,10 @@ function v59sf_static_coverage(string $root): array
     $teacherSrc = $read($root . '/teacher.php');
     $postBlock = (string)strstr($teacherSrc, "if (\$action === 'teacher_login')");
     $collect(substr($postBlock, 0, max(0, (int)strpos($postBlock, '$rawFlash'))));
-    foreach (['intake_v51_teacher.php' => 'intake_v51_teacher_handle_post', 'session_v53_teacher.php' => 'sess53_teacher_handle_post', 'arena_v57.php' => 'arena57_teacher_handle_post',
-        'accounts_v58_views.php' => 'acc58_teacher_apply', 'arena_v58_weekly.php' => 'arena58_weekly_teacher_handle_post', 'robots_v58.php' => 'robots58_teacher_handle_post',
-        'teamgames_v58_teacher_views.php' => 'tg58_teacher_handle_post', 'arena_v58_ctf.php' => 'arena58_ctf_teacher_handle_post', 'arena_v58_incident.php' => 'arena58_inc_teacher_handle_post',
-        'lab_v58_teacher.php' => 'lab58t_teacher_handle_post', 'lab_v58_editor.php' => 'lab58e_teacher_handle_post', 'identity_v58_views.php' => 'identity58_teacher_handle_post', 'teacher_overview_v61.php' => 'ov61_teacher_handle_post'] as $file => $fn) {
+    foreach (['src/student/intake_v51_teacher.php' => 'intake_v51_teacher_handle_post', 'src/lessons/session_v53_teacher.php' => 'sess53_teacher_handle_post', 'src/arena/arena_v57.php' => 'arena57_teacher_handle_post',
+        'src/student/accounts_v58_views.php' => 'acc58_teacher_apply', 'src/arena/arena_v58_weekly.php' => 'arena58_weekly_teacher_handle_post', 'src/robots/robots_v58.php' => 'robots58_teacher_handle_post',
+        'src/teamgames/teamgames_v58_teacher_views.php' => 'tg58_teacher_handle_post', 'src/arena/arena_v58_ctf.php' => 'arena58_ctf_teacher_handle_post', 'src/arena/arena_v58_incident.php' => 'arena58_inc_teacher_handle_post',
+        'src/linux/lab_v58_teacher.php' => 'lab58t_teacher_handle_post', 'src/linux/lab_v58_editor.php' => 'lab58e_teacher_handle_post', 'src/student/identity_v58_views.php' => 'identity58_teacher_handle_post', 'src/teacher/teacher_overview_v61.php' => 'ov61_teacher_handle_post'] as $file => $fn) {
         $body = (string)strstr($read($root . '/' . $file), 'function ' . $fn . '(');
         $next = strpos($body, "\nfunction ", 10);
         $collect($next === false ? $body : substr($body, 0, $next));
@@ -351,9 +351,9 @@ function v59sf_static_coverage(string $root): array
         foreach (array_keys((array)($mod['get'] ?? [])) as $param) if (!isset(teacher59_get_policies()[$tab . '|' . $param])) $getMissing[] = $tab . '|' . $param;
     }
     $guardsMissing = [];
-    foreach (['teacher_operations_plus_v46_1.php', 'teacher_operations_control_v46_2.php', 'teacher_operations_plus_views_v46_1.php', 'teacher_operations_views_v46.php', 'teacher_tasks.php',
-        'teacher_class_dashboard.php', 'teacher_overview_dashboard.php', 'teacher_overview_v61.php', 'teacher_calendar.php', 'accounts_v58_views.php', 'lab_v58_teacher.php', 'intake_v51_teacher.php',
-        'session_v53_teacher.php', 'teacher_demo_accounts.php', 'lab_v58_editor.php', 'lab_v58_editor_views.php', 'export_extra_csv.php', 'teamgames_v58_teacher_views.php'] as $file) {
+    foreach (['src/teacher/teacher_operations_plus_v46_1.php', 'src/teacher/teacher_operations_control_v46_2.php', 'src/teacher/teacher_operations_plus_views_v46_1.php', 'src/teacher/teacher_operations_views_v46.php', 'src/teacher/teacher_tasks.php',
+        'src/teacher/teacher_class_dashboard.php', 'src/teacher/teacher_overview_dashboard.php', 'src/teacher/teacher_overview_v61.php', 'src/teacher/teacher_calendar.php', 'src/student/accounts_v58_views.php', 'src/linux/lab_v58_teacher.php', 'src/student/intake_v51_teacher.php',
+        'src/lessons/session_v53_teacher.php', 'src/teacher/teacher_demo_accounts.php', 'src/linux/lab_v58_editor.php', 'src/linux/lab_v58_editor_views.php', 'export_extra_csv.php', 'src/teamgames/teamgames_v58_teacher_views.php'] as $file) {
         $src = $read($root . '/' . $file);
         if (!preg_match("/function_exists\('teacher59_(can_class|can_classes|can_subject|is_admin|owner_key|filter_class_map|mode)'\)/", $src)) $guardsMissing[] = $file;
     }

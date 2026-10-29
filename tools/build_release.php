@@ -62,7 +62,7 @@ const BUILD_EXCLUDE_DIRS = [
     'storage', 'uploads', // s výjimkou .htaccess (viz br_should_include)
     '.claude', 'tests', 'V1', 'lab-runtime', 'database',
     'retired', // v68: kopie vyřazených souborů (tools/v68_retire.php) patří do zálohy, ne do vydání
-    'docs/archive', '.git',
+    'docs/archive', '.git', 'docs/structure-2026-10-29', // lokální HTTP důkazy mohou obsahovat identifikátory žáků
 ];
 // SEC59-01/d: V1/ (legacy aplikace, web-nastavitelné první heslo) se do vydání
 // nedostane vůbec – ani chráněné .htaccess. Pokud škola ještě potřebuje import
@@ -71,10 +71,12 @@ const BUILD_EXCLUDE_DIRS = [
 // intake_v51.php – proměnná je už v aplikaci podporovaná).
 const BUILD_EXCLUDE_TOOLS_SUBDIR = 'tools/legacy';
 const BUILD_EXCLUDE_FILES = [
+    '.gitignore',
     'private/educanet.secrets.php',
     'cache/lesson_model/_overlay_files.json',   // v77: seznam overlaye pro tento kořen (md5 cesty) – na serveru vznikne sám
 ];
 const BUILD_EXCLUDE_GLOBS = [
+    'structure-*.jpg', 'structure-*-results.json', // lokální vizuální porovnání struktury
     '*.lock', '*.bak', '*.tmp', '*.log',
     '*.pem', '*.key', // SEC59-20: soukromé klíče/certifikáty nikdy do vydání.
     'CLAUDE.md', 'PROMPT_*.md', 'AUDIT_*.md',

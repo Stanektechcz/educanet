@@ -8,7 +8,7 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
  * Dev server nad dočasným úložištěm auditu; role učitele z EDUCANET_TEACHER_ROLE (režim legacy, jako v68).
  */
 
-require_once $ROOT . '/t14_v77.php';
+require_once $ROOT . '/src/teacher/t14_v77.php';
 $cacheDir = $tmp . '-lm71';
 @mkdir($cacheDir, 0700, true);
 register_shutdown_function(static function () use ($cacheDir): void { edu_audit_remove_dir($cacheDir); });
@@ -140,7 +140,7 @@ $check('žák (logika): na profilu je aktivní Profil; běží-li hodina, „Dne
 $en = require $ROOT . '/lang/en/ui/nav_v61.php';
 $uk = require $ROOT . '/lang/uk/ui/nav_v61.php';
 $check('žák: popisky lišty přes tr() s překladem en/uk (Domů, Dnes, Úlohy, Profil)', ($en['Úlohy'] ?? '') === 'Tasks' && ($uk['Úlohy'] ?? '') !== '' && isset($en['Domů'], $en['Dnes'], $en['Profil'], $uk['Domů'], $uk['Dnes'], $uk['Profil'])
-    && str_contains($read('nav_v61.php'), "trm('Úlohy')"));
+    && str_contains($read('src/ui/nav_v61.php'), "trm('Úlohy')"));
 
 // ---------------------------------------------------------------- prohlížeč (DOM 11 šířek, klávesnice)
 $node = getenv('EDUCANET_NODE') ?: 'node';

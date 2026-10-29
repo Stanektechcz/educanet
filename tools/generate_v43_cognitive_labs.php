@@ -3,7 +3,7 @@
 declare(strict_types=1);
 if(PHP_SAPI!=='cli'){http_response_code(400);exit("CLI only\n");}
 require dirname(__DIR__).'/bootstrap.php';
-require dirname(__DIR__).'/runtime_content.php';
+require dirname(__DIR__).'/src/ops/runtime_content.php';
 $runtime=runtime_content_load_classes(['class_1a','class_2a','class_3a','class_4a']);
 $nextLessons=$runtime['nextLessons'];$extendedLessons=$runtime['extendedLessons'];
 $base=dirname(__DIR__).'/materials/cognitive_labs';

@@ -31,9 +31,9 @@ register_shutdown_function(static function () use ($TMP): void {
     @rmdir($TMP);
 });
 
-require_once $ROOT . '/linux_v57_lab.php';
-foreach (['archive', 'users', 'ssh', 'cron'] as $f) require_once $ROOT . '/linux_v58_cmd_' . $f . '.php';
-foreach (['keys', 'archives', 'cron', 'users'] as $f) require_once $ROOT . '/linux_v58_levels_' . $f . '.php';
+require_once $ROOT . '/src/linux/linux_v57_lab.php';
+foreach (['archive', 'users', 'ssh', 'cron'] as $f) require_once $ROOT . '/src/linux/linux_v58_cmd_' . $f . '.php';
+foreach (['keys', 'archives', 'cron', 'users'] as $f) require_once $ROOT . '/src/linux/linux_v58_levels_' . $f . '.php';
 
 const SIMA_NOW = 1790000000; // pevný čas (Po 2026-09-21 …)
 
@@ -85,8 +85,8 @@ function sima_sess_out(array $resp, ?int $fd = null): string
         'fsockopen', 'pfsockopen', 'stream_socket_client', 'socket_create', 'socket_connect', 'curl_init', 'curl_exec', 'curl_multi_exec',
         'dns_get_record', 'gethostbyname', 'gethostbynamel', 'getmxrr', 'checkdnsrr', 'mail'];
     $fileFuncs = ['file_get_contents', 'fopen', 'file'];
-    $files = ['linux_v58_cmd_ssh.php', 'linux_v58_cmd_archive.php', 'linux_v58_cmd_cron.php', 'linux_v58_cmd_users.php',
-        'linux_v58_levels_keys.php', 'linux_v58_levels_archives.php', 'linux_v58_levels_cron.php', 'linux_v58_levels_users.php', 'tools/v58_sim_a_audit.php'];
+    $files = ['src/linux/linux_v58_cmd_ssh.php', 'src/linux/linux_v58_cmd_archive.php', 'src/linux/linux_v58_cmd_cron.php', 'src/linux/linux_v58_cmd_users.php',
+        'src/linux/linux_v58_levels_keys.php', 'src/linux/linux_v58_levels_archives.php', 'src/linux/linux_v58_levels_cron.php', 'src/linux/linux_v58_levels_users.php', 'tools/v58_sim_a_audit.php'];
     $violations = [];
     foreach ($files as $rel) {
         $src = (string)file_get_contents($ROOT . '/' . $rel);

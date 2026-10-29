@@ -9,7 +9,7 @@ if (basename((string)($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)
  *   b) v režimu účtů: cizí třída 403 (tisk, CSV, pozorování), asistent pozorování nezapíše.
  */
 
-require_once dirname(__DIR__, 2) . '/observation_v76.php';
+require_once dirname(__DIR__, 2) . '/src/teacher/observation_v76.php';
 $env = ['EDUCANET_STORAGE_DIR' => $tmp, 'EDUCANET_TEACHER_EXPORT_KEY' => V76H_KEY, 'EDUCANET_LOCAL_AUTH_REQUIRE_EMAIL_VERIFY' => '0', 'EDUCANET_DEV_BYPASS' => '1', 'EDUCANET_LM71_CACHE_DIR' => $cacheDir];
 $redirect = static fn(array $r): bool => in_array((int)$r['status'], [302, 303], true);
 $h = Harness::start($env);

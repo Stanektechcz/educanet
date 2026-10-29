@@ -40,7 +40,7 @@ $forbiddenScan = static function (string $source): array {
     return $hits;
 };
 $check('token-sken: detekuje zakázané tokeny (xp, points, coins, kc, elo, economy_, learning_award, points_v53, eco64_, arena_) a nehlásí běžný kód', $forbiddenScan('$x = learning_award_once(1); $max_points = 3;') !== [] && $forbiddenScan('$a = eco64_x(); // XP') !== [] && $forbiddenScan('$expected = explode(",", $s); $kcal = 1;') === [] && $forbiddenScan('arena_race()') !== [] && $forbiddenScan('$score = 1; $weights = []; $chain = [];') === []);
-$scanFiles = array_merge(glob($root . '/grading_v66*.php') ?: [], glob($root . '/assessment_v66*.php') ?: [], [$root . '/question_meta_v66.php', $root . '/integrity_v66.php', $root . '/morning_v66.php']);
+$scanFiles = array_merge(glob($root . '/src/assessment/grading_v66*.php') ?: [], glob($root . '/src/assessment/assessment_v66*.php') ?: [], [$root . '/src/assessment/question_meta_v66.php', $root . '/src/assessment/integrity_v66.php', $root . '/src/teacher/morning_v66.php']);
 $hitsByFile = [];
 foreach ($scanFiles as $file) {
     $hits = $forbiddenScan((string)file_get_contents($file));
@@ -62,7 +62,7 @@ foreach ($v66Php as $file) {
     }
 }
 $check('invariant: kód v66 nevolá exec/system/proc_open/popen/eval/curl_/socket_/mail/DNS funkce a nemá zpětné apostrofy (nic se nespouští ani nepřipojuje)', $badCalls === [], false);
-$linuxLab = array_merge(glob($root . '/linux_v57_*.php') ?: [], [$root . '/lab_v57_api.php']);
+$linuxLab = array_merge(glob($root . '/src/linux/linux_v57_*.php') ?: [], [$root . '/lab_v57_api.php']);
 $mentions = array_filter($linuxLab, static fn(string $f): bool => str_contains((string)file_get_contents($f), 'v66') || str_contains((string)file_get_contents($f), 'a66_'));
 $check('Linux Lab se nezměnil: žádný soubor simulátoru neodkazuje na vrstvu v66', $mentions === [], false);
 $tooLong = array_filter(array_merge($v66Php, [$root . '/tools/v66_assessment_audit.php', $root . '/tools/lib/v66_audit_part2.php', $root . '/tools/lib/v66_audit_part3.php', $root . '/tools/lib/v66_audit_part4.php']), static fn(string $f): bool => count(file($f)) > 800);
@@ -72,12 +72,12 @@ $check('každá knihovna v66 má declare(strict_types=1) a guard proti přímém
 $assetText = (string)file_get_contents($root . '/assets/assessment-v66.css') . (string)file_get_contents($root . '/assets/assessment-v66.js') . (string)file_get_contents($root . '/assets/assessment-v66-print.css');
 $check('assety v66: žádné externí zdroje (http/https/CDN), celkem do 60 kB, JS bez innerHTML, CSS má prefers-reduced-motion a viditelný fokus', !preg_match('#https?://|//cdn#i', $assetText) && strlen($assetText) < 60000 && !str_contains((string)file_get_contents($root . '/assets/assessment-v66.js'), 'innerHTML')
     && str_contains((string)file_get_contents($root . '/assets/assessment-v66.css'), 'prefers-reduced-motion') && str_contains((string)file_get_contents($root . '/assets/assessment-v66.css'), 'focus-visible'), false);
-$jsText = (string)file_get_contents($root . '/teacher_v58.php');
+$jsText = (string)file_get_contents($root . '/src/teacher/teacher_v58.php');
 $check('registr cockpitu: záložka hodnoceni66 existuje, její JS se načítá s defer (teacher58_foot_assets) a CSS jen na této záložce', isset(teacher58_modules()['hodnoceni66']) && teacher58_modules()['hodnoceni66']['js'] === ['assets/assessment-v66.js'] && str_contains($jsText, "defer")
     && array_filter(teacher58_modules(), static fn(array $m, string $k): bool => $k !== 'hodnoceni66' && in_array('assets/assessment-v66.css', (array)($m['css'] ?? []), true), ARRAY_FILTER_USE_BOTH) === []);
 $routesSrc = (string)file_get_contents($root . '/app/routes.php');
 $layoutSrc = (string)file_get_contents($root . '/app/views/_layout.php') . (string)file_get_contents($root . '/app/views/dashboard.php');
-$check('CSS v66 se na dashboardu ani v hlavičce všech stránek nenačítá (rozpočet), jen v pohledu hodnoceni a záložce hodnoceni66', !str_contains($layoutSrc, 'assessment-v66') && str_contains((string)file_get_contents($root . '/grading_v66_views.php'), 'assessment-v66.css'), false);
+$check('CSS v66 se na dashboardu ani v hlavičce všech stránek nenačítá (rozpočet), jen v pohledu hodnoceni a záložce hodnoceni66', !str_contains($layoutSrc, 'assessment-v66') && str_contains((string)file_get_contents($root . '/src/assessment/grading_v66_views.php'), 'assessment-v66.css'), false);
 
 // --- 12) Politiky, oprávnění, CSRF ------------------------------------------------------------------------
 $pol = static fn(string $a): array => teacher59_action_policy($a);

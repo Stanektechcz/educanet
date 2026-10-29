@@ -45,8 +45,8 @@ function learning_award_once(string $classId, string $eventKey, int $xp): bool
     return true;
 }
 
-require_once $root . '/robots_v58.php';
-require_once $root . '/robots_v58_views.php';
+require_once $root . '/src/robots/robots_v58.php';
+require_once $root . '/src/robots/robots_v58_views.php';
 
 $checks = 0;
 $failed = 0;
@@ -94,7 +94,7 @@ $examples = robots58_examples();
 // 1. Bezpečnostní invariant: token-sken vlastních souborů
 // ---------------------------------------------------------------------------
 $forbidden = ['exec', 'shell_exec', 'system', 'passthru', 'proc_open', 'popen', 'pcntl_exec', 'assert', 'create_function', 'fsockopen', 'pfsockopen', 'stream_socket_client', 'stream_socket_server', 'gethostbyname', 'gethostbynamel', 'gethostbyaddr', 'dns_get_record', 'checkdnsrr', 'getmxrr', 'mail', 'curl_init', 'curl_exec', 'socket_create', 'unserialize'];
-$phpFiles = ['robots_v58.php', 'robots_v58_lang.php', 'robots_v58_game.php', 'robots_v58_views.php', 'robots_v58_api.php', 'tools/v58_robots_audit.php'];
+$phpFiles = ['src/robots/robots_v58.php', 'src/robots/robots_v58_lang.php', 'src/robots/robots_v58_game.php', 'src/robots/robots_v58_views.php', 'robots_v58_api.php', 'tools/v58_robots_audit.php'];
 foreach ($phpFiles as $file) {
     $src = (string)file_get_contents($root . '/' . $file);
     $tokens = token_get_all($src);
@@ -119,10 +119,10 @@ foreach ($phpFiles as $file) {
     }
     check($bad === [], 'invariant: ' . $file . ' nevolá exec/eval/sockety/síť/zpětné apostrofy', implode(', ', array_unique($bad)));
     $lines = substr_count($src, "\n") + 1;
-    check($lines <= 800 || $file === 'robots_v58_lang.php' || $file === 'tools/v58_robots_audit.php', 'velikost: ' . $file . ' má ' . $lines . ' řádků (limit 800, výjimka jen interpret a audit)');
+    check($lines <= 800 || $file === 'src/robots/robots_v58_lang.php' || $file === 'tools/v58_robots_audit.php', 'velikost: ' . $file . ' má ' . $lines . ' řádků (limit 800, výjimka jen interpret a audit)');
     check(str_contains($src, 'declare(strict_types=1);'), 'konvence: ' . $file . ' má strict_types');
 }
-foreach (['robots_v58.php', 'robots_v58_lang.php', 'robots_v58_game.php', 'robots_v58_views.php'] as $file) {
+foreach (['src/robots/robots_v58.php', 'src/robots/robots_v58_lang.php', 'src/robots/robots_v58_game.php', 'src/robots/robots_v58_views.php'] as $file) {
     check(str_contains((string)file_get_contents($root . '/' . $file), "basename((string)(\$_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)"), 'konvence: ' . $file . ' má guard proti přímému spuštění');
 }
 $js = (string)file_get_contents($root . '/assets/robots-v58.js');
@@ -375,8 +375,8 @@ $second = robots58_claim_xp($class, $keys[0]);
 $place = robots58_place(robots58_match($solo['id']), $keys[0]);
 check($first === 2 && $second === 0 && ($GLOBALS['audit_xp'][$class . '|robots58:' . $solo['id']] ?? 0) === robots58_xp_for($place), 'XP: vyzvednutí za 2 zápasy proběhne jen jednou (' . ($GLOBALS['audit_xp'][$class . '|robots58:' . $solo['id']] ?? 0) . ' XP za ' . $place . '. místo)');
 check(robots58_claim_xp($class, 'k_nehral') === 0 && robots58_claim_xp($class, '') === 0, 'XP: kdo nehrál, nic nedostane');
-$views = (string)file_get_contents($root . '/robots_v58_views.php') . (string)file_get_contents($root . '/robots_v58.php');
-check(substr_count($views, 'robots58_claim_xp(') === 2 && !str_contains((string)preg_replace('/function robots58_claim_xp.*?\n}\n/s', '', (string)file_get_contents($root . '/robots_v58.php')), 'learning_award_once('), 'XP: učitelské akce XP nezapisují – jen vyzvednutí v požadavku žáka');
+$views = (string)file_get_contents($root . '/src/robots/robots_v58_views.php') . (string)file_get_contents($root . '/src/robots/robots_v58.php');
+check(substr_count($views, 'robots58_claim_xp(') === 2 && !str_contains((string)preg_replace('/function robots58_claim_xp.*?\n}\n/s', '', (string)file_get_contents($root . '/src/robots/robots_v58.php')), 'learning_award_once('), 'XP: učitelské akce XP nezapisují – jen vyzvednutí v požadavku žáka');
 
 // Rate limit
 $_SESSION['robots58_rl'] = [];

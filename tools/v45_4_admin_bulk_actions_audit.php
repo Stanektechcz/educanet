@@ -6,12 +6,12 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 
 $root=dirname(__DIR__);
 require $root.'/bootstrap.php';
-require_once $root.'/teacher_curriculum.php';
+require_once $root.'/src/teacher/teacher_curriculum.php';
 if(!function_exists('teacher_class_label')){
     function teacher_class_label(string $classId): string { return match($classId){'class_1a'=>'1.A Grafika','class_2a'=>'2.A Grafika','class_3a'=>'3.A SOSPS','class_4a'=>'4.A SOSPS',default=>$classId}; }
 }
-require_once $root.'/teacher_overview_dashboard.php';
-require_once $root.'/teacher_class_dashboard.php';
+require_once $root.'/src/teacher/teacher_overview_dashboard.php';
+require_once $root.'/src/teacher/teacher_class_dashboard.php';
 
 $errors=[];$summary=[];$storageBefore=[];
 foreach(glob(STORAGE_DIR.'/*.php')?:[] as $file)$storageBefore[$file]=hash_file('sha256',$file);
@@ -36,7 +36,7 @@ if(teacher_student_priority($dummy,'resolved')!=='normal')$errors[]='Resolved ma
 $teacherSource=file_get_contents($root.'/teacher.php')?:'';
 foreach(['teacher_bulk_mark','teacher_bulk_export','teacher_bulk_assign_task'] as $needle)if(!str_contains($teacherSource,$needle))$errors[]="teacher.php missing $needle";
 if(!str_contains($teacherSource,'teacher-admin-v45-4.js')&&!str_contains($teacherSource,'teacher-admin-v45-5.js')&&!str_contains($teacherSource,'teacher-admin-v45-6.js')&&!str_contains($teacherSource,'teacher-admin-v45-7.js'))$errors[]='teacher.php missing compatible teacher admin JS';
-$dashboardSource=file_get_contents($root.'/teacher_class_dashboard.php')?:'';
+$dashboardSource=file_get_contents($root.'/src/teacher/teacher_class_dashboard.php')?:'';
 foreach(['data-class-result-status','data-class-result-priority','data-select-visible','data-row-select','teacher_class_export_csv'] as $needle)if(!str_contains($dashboardSource,$needle))$errors[]="teacher_class_dashboard.php missing $needle";
 $studentSource=edu_app_source()?:'';
 foreach(['teacher_task_complete','Úkoly od učitele','teacher_tasks_for_student'] as $needle)if(!str_contains($studentSource,$needle))$errors[]="index.php missing $needle";

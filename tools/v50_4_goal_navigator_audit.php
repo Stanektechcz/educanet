@@ -6,15 +6,15 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 $root=dirname(__DIR__);$checks=[];
 $check=static function(bool $ok,string $label) use (&$checks):void{$checks[]=[$ok,$label];echo ($ok?'[PASS] ':'[FAIL] ').$label.PHP_EOL;};
 $index=(string)edu_app_source();
-$goal=(string)file_get_contents($root.'/goal_navigator_v50_4.php');
-$growth=(string)file_get_contents($root.'/independent_growth_v50.php');
-$views=(string)file_get_contents($root.'/independent_growth_views_v50.php');
+$goal=(string)file_get_contents($root.'/src/student/goal_navigator_v50_4.php');
+$growth=(string)file_get_contents($root.'/src/student/independent_growth_v50.php');
+$views=(string)file_get_contents($root.'/src/student/independent_growth_views_v50.php');
 $layout=(string)file_get_contents($root.'/app/views/_layout.php');
 $activeCss=(string)file_get_contents($root.'/assets/student-ui-v50-7-7.css');
 $sw=(string)file_get_contents($root.'/sw.js');
 $routes=edu_app_routes();
 
-$check(str_contains($index,"goal_navigator_v50_4.php"),'Goal Navigator runtime is loaded');
+$check(str_contains($index,"src/student/goal_navigator_v50_4.php"),'Goal Navigator runtime is loaded');
 // v59 F4: kompaktní menu s „Můj cíl“ bylo mrtvé ($menuItems v _layout.php) a je odstraněné; stránka cíle je dostupná
 // přes routu goal_nav (kontrola výš) a má nadpis „Můj cíl“ (i18n: tr('Můj cíl')).
 $check((bool)preg_match('~render_header\(\s*(?:tr\(\s*)?\'Můj cíl\'~',$goal),'goal page is titled Můj cíl');

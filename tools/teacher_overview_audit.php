@@ -3,11 +3,11 @@
 declare(strict_types=1);
 if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
 require dirname(__DIR__) . '/bootstrap.php';
-require dirname(__DIR__) . '/teacher_curriculum.php';
+require dirname(__DIR__) . '/src/teacher/teacher_curriculum.php';
 if (!function_exists('teacher_class_label')) {
     function teacher_class_label(string $classId): string { return match($classId){'class_1a'=>'1.A Grafika','class_2a'=>'2.A Grafika','class_3a'=>'3.A SOSPS','class_4a'=>'4.A SOSPS',default=>$classId}; }
 }
-require dirname(__DIR__) . '/teacher_overview_dashboard.php';
+require dirname(__DIR__) . '/src/teacher/teacher_overview_dashboard.php';
 
 $errors=[];
 foreach(['class_1a','class_2a','class_3a','class_4a'] as $classId){

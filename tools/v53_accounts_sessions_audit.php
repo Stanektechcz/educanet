@@ -15,13 +15,13 @@ $storageDir = edu_audit_temp_storage('v53');
 $root = dirname(__DIR__);
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 require $root . '/bootstrap.php';
-require $root . '/runtime_content.php';
-require_once $root . '/tutorial_v52.php';
-require_once $root . '/intake_v51.php';
-require_once $root . '/accounts_v53.php';
-require_once $root . '/points_v53.php';
-require_once $root . '/session_v53.php';
-require_once $root . '/session_v53_teacher.php';
+require $root . '/src/ops/runtime_content.php';
+require_once $root . '/src/lessons/tutorial_v52.php';
+require_once $root . '/src/student/intake_v51.php';
+require_once $root . '/src/student/accounts_v53.php';
+require_once $root . '/src/student/points_v53.php';
+require_once $root . '/src/lessons/session_v53.php';
+require_once $root . '/src/lessons/session_v53_teacher.php';
 
 $state = audit_counter();
 $check = audit_checker($state);
@@ -29,7 +29,7 @@ $read = static fn(string $rel): string => (string)@file_get_contents($root . '/'
 $index = edu_app_source();
 $teacher = $read('teacher.php');
 
-foreach (['points_v53.php', 'tools/v53_provision_accounts.php'] as $f) {
+foreach (['src/student/points_v53.php', 'tools/v53_provision_accounts.php'] as $f) {
     $check('exists ' . $f, is_file($root . '/' . $f), false);
 }
 
@@ -58,16 +58,16 @@ $check('nápověda stojí 2 body', PTS53_HINT_COST === 2);
 $check('české skloňování bodů', pts53_points_label(1) === '1 bod' && pts53_points_label(3) === '3 body' && pts53_points_label(5) === '5 bodů');
 $hints = pts53_hints('dns');
 $check('každý úkol má 3 nápovědy: první zdarma, další za body', count($hints) === 3 && (int)$hints[0]['cost'] === 0 && (int)$hints[1]['cost'] === PTS53_HINT_COST && (int)$hints[2]['cost'] === PTS53_HINT_COST);
-$check('text nápovědy nechodí do HTML předem', !str_contains($read('tutorial_v52_views.php'), 'pts53_hints(') && str_contains($read('assets/tutorial-v52.js'), "action: 'pts53_hint'"), false);
+$check('text nápovědy nechodí do HTML předem', !str_contains($read('src/lessons/tutorial_v52_views.php'), 'pts53_hints(') && str_contains($read('assets/tutorial-v52.js'), "action: 'pts53_hint'"), false);
 $walletBefore = pts53_balance('class_3a', 'audit-wallet-key');
 pts53_award('class_3a', 'audit-wallet-key', 'audit:test-event', 5, 'Audit test');
 $check('body z úkolů/známky se opravdu připíší do peněženky', pts53_balance('class_3a', 'audit-wallet-key') === $walletBefore + 5);
-$check('body z úkolů volají pts53_award (napojení tutoriálu)', str_contains($read('tutorial_v52.php'), 'pts53_award($classId, $studentKey'), false);
-$check('známka posílá body žákovi (napojení hodnocení)', str_contains($read('session_v53.php'), 'pts53_award($session[\'class_id\']'), false);
+$check('body z úkolů volají pts53_award (napojení tutoriálu)', str_contains($read('src/lessons/tutorial_v52.php'), 'pts53_award($classId, $studentKey'), false);
+$check('známka posílá body žákovi (napojení hodnocení)', str_contains($read('src/lessons/session_v53.php'), 'pts53_award($session[\'class_id\']'), false);
 
 // --- HTTP: vstup kódem, CSRF, přehled, export přístupů, přímý přístup ke knihovnám ---
 audit_prewarm_accounts($modules);
-$schoolYear = require $root . '/school_year.php';
+$schoolYear = require $root . '/src/ops/school_year.php';
 $today = EDU_AUDIT_TEACHING_DATE;
 edu_audit_open_sessions($modules, $schoolYear, $today);
 $todaySession = sess53_for_class_date('class_3a', $today);
@@ -92,7 +92,7 @@ try {
     $noCsrf = $harness->request('POST', '/', ['action' => 'sess53_code', 'code' => 'NEPLATNY']);
     $check('POST sess53_code bez CSRF je odmítnut (419)', $noCsrf['status'] === 419);
 
-    foreach (['accounts_v53.php', 'session_v53.php', 'session_v53_views.php', 'session_v53_teacher.php'] as $lib) {
+    foreach (['src/student/accounts_v53.php', 'src/lessons/session_v53.php', 'src/lessons/session_v53_views.php', 'src/lessons/session_v53_teacher.php'] as $lib) {
         $resp = $harness->request('GET', '/' . $lib);
         $check('přímý přístup k ' . $lib . ' je zablokovaný (403)', $resp['status'] === 403);
     }

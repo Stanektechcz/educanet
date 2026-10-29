@@ -27,8 +27,8 @@ require_once $ROOT . '/app/lib.php';
 require_once __DIR__ . '/lib/audit.php';
 require_once __DIR__ . '/lib/http_harness.php';
 require_once __DIR__ . '/lib/v61_design_css.php';
-foreach (['teacher_operations_v46.php', 'teacher_scope_v59.php', 'identity_v58.php', 'linux_v57_lab.php', 'competencies_v62.php', 'evidence_v62.php', 'evidence_v62_adapters.php', 'mastery_v62.php',
-    'paths_v63.php', 'projects_v60.php', 'projects_v65.php', 'student_v55.php', 'nav_v61.php', 'ui_v67.php'] as $lib) { require_once $ROOT . '/' . $lib; }
+foreach (['src/teacher/teacher_operations_v46.php', 'src/teacher/teacher_scope_v59.php', 'src/student/identity_v58.php', 'src/linux/linux_v57_lab.php', 'src/assessment/competencies_v62.php', 'src/assessment/evidence_v62.php', 'src/assessment/evidence_v62_adapters.php', 'src/assessment/mastery_v62.php',
+    'src/paths/paths_v63.php', 'src/projects/projects_v60.php', 'src/projects/projects_v65.php', 'src/student/student_v55.php', 'src/ui/nav_v61.php', 'src/ui/ui_v67.php'] as $lib) { require_once $ROOT . '/' . $lib; }
 app_require_libs(['core', 'layout', 'competency', 'paths', 'projects65', 'grading66']);
 require_once __DIR__ . '/lib/v62_competency_fixtures.php';
 
@@ -136,7 +136,7 @@ foreach (glob($ROOT . '/assets/*.css') ?: [] as $cssFile) {
     $css = $noComments((string)file_get_contents($cssFile));
     if (preg_match('/(^|[;{\s])(animation|transition)\s*:|@keyframes/', $css) !== 1) continue;
     $animated++;
-    if (str_contains($layout, 'assets/' . $name) || preg_match('/assets\/' . preg_quote($name, '/') . '/', implode("\n", array_map('file_get_contents', glob($ROOT . '/*_views*.php') ?: [])) . $layout . $read('app/views/precache.php')) === 1) {
+    if (str_contains($layout, 'assets/' . $name) || preg_match('/assets\/' . preg_quote($name, '/') . '/', implode("\n", array_map('file_get_contents', glob($ROOT . '/src/*/*_views*.php') ?: [])) . $layout . $read('app/views/precache.php')) === 1) {
         if ($globalMotion === '' && preg_match('/prefers-reduced-motion/', $css) !== 1) $uncovered[] = $name;
     }
 }

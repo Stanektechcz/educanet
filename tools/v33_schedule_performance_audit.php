@@ -9,7 +9,7 @@ if (PHP_SAPI !== 'cli') { http_response_code(400); exit; }
 $root=dirname(__DIR__);
 $tmpStorage=rtrim(str_replace('\\','/',edu_audit_temp_storage('v33-schedule')),'/'); // v61: audit nikdy nesahá na ostrou storage/
 require $root.'/bootstrap.php';
-$schoolYear=require $root.'/school_year.php';
+$schoolYear=require $root.'/src/ops/school_year.php';
 $errors=[];
 $expected=[
  'class_1a'=>['08:00','09:40',[1,2]],
@@ -41,8 +41,8 @@ try{
         echo $cid." · stránka kalendáře: čas bloku a odkaz .ics ověřeny\n";
     }
 }finally{$v33Http->stop();}
-$v55Views=file_get_contents($root.'/student_v55_views.php')?:'';
-$v56Views=file_get_contents($root.'/learning_v56_views.php')?:'';
+$v55Views=file_get_contents($root.'/src/student/student_v55_views.php')?:'';
+$v56Views=file_get_contents($root.'/src/lessons/learning_v56_views.php')?:'';
 // i18n (v59): rendering of $window['range'] may be wrapped in e()/tr()/interpolated into a template
 // string with placeholders (e.g. tr('… {range}', ['range'=>$window['range']])) – check for the literal
 // key access itself rather than one exact wrapping shape.

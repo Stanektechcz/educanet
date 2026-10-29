@@ -15,10 +15,10 @@ $storageDir = edu_audit_temp_storage('v51');
 $root = dirname(__DIR__);
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 require $root . '/bootstrap.php';
-require_once $root . '/accounts_v53.php';
-require_once $root . '/teacher_operations_v46.php'; // teacher_permission() – vyžaduje intake_v51_render_teacher_tab()
-require_once $root . '/intake_v51.php';
-require_once $root . '/intake_v51_teacher.php';
+require_once $root . '/src/student/accounts_v53.php';
+require_once $root . '/src/teacher/teacher_operations_v46.php'; // teacher_permission() – vyžaduje intake_v51_render_teacher_tab()
+require_once $root . '/src/student/intake_v51.php';
+require_once $root . '/src/student/intake_v51_teacher.php';
 require_once $root . '/app/views/_diagrams.php'; // u51_practice_points()
 
 $state = audit_counter();
@@ -31,7 +31,7 @@ $js = $read('assets/ui-v51.js');
 $sw = $read('sw.js');
 
 // --- Soubory (knihovny bez vlastního vstupu – zapojení do stránek ověřuje HTTP blok níže) ---
-foreach (['intake_v51.php', 'intake_v51_views.php', 'intake_v51_teacher.php'] as $file) {
+foreach (['src/student/intake_v51.php', 'src/student/intake_v51_views.php', 'src/student/intake_v51_teacher.php'] as $file) {
     $check('exists ' . $file, is_file($root . '/' . $file), false);
 }
 
